@@ -19,15 +19,21 @@
 
 namespace RiotAPI;
 
-use RiotAPI\Exceptions\APILimitException;
-use RiotAPI\Objects;
 use RiotAPI\Definitions\IPlatform;
 use RiotAPI\Definitions\Platform;
 use RiotAPI\Definitions\IRegion;
 use RiotAPI\Definitions\Region;
+use RiotAPI\Definitions\IRateLimitControl;
+use RiotAPI\Definitions\RateLimitControl;
+
+use RiotAPI\Objects;
 use RiotAPI\Objects\ProviderRegistrationParameters;
 use RiotAPI\Objects\TournamentCodeParameters;
 use RiotAPI\Objects\TournamentRegistrationParameters;
+
+use RiotAPI\Exceptions\APIException;
+use RiotAPI\Exceptions\APILimitException;
+use RiotAPI\Exceptions\GeneralException;
 
 
 /**
@@ -46,46 +52,60 @@ class RiotAPI
 
 	/** Settings constants. */
 	const
-		SET_REGION         = 'region',
-		SET_PLATFORM       = 'platform', // Set internally by setting region
-		SET_KEY            = 'api_key', // API key used by default
-		SET_TOURNAMENT_KEY = 'api_key:tournament', // API key used when working with tournaments
-		SET_API_BASEURL    = 'api_url';
+		SET_REGION               = 20,
+		SET_PLATFORM             = 21, // Set internally by setting region
+		SET_KEY                  = 30, // API key used by default
+		SET_TOURNAMENT_KEY       = 31, // API key used when working with tournaments
+		SET_TOURNAMENT_APP_STATE = 40, // Used to set whether your application is in Interim mode (Tournament STUB endpoints) or not,
+		SET_CACHE_DIRECTORY      = 50,
+		SET_CACHE_RATELIMIT      = 51,
+		SET_CACHE_RATELIMIT_FILE = 52,
+		SET_API_BASEURL          = 60;
+
+	const
+		API_RATELIMIT_HEADER = 'X-Rate-Limit-Count';
 
 
 	/**
-	 * Contains library settings.
+	 *   Contains library settings.
 	 *
 	 * @var $settings array
 	 */
 	protected $settings = array(
-		self::SET_KEY            => null,
-		self::SET_TOURNAMENT_KEY => null,
-		self::SET_API_BASEURL    => '.api.pvp.net',
-		self::SET_REGION         => Region::EUROPE_EAST,
-		self::SET_PLATFORM       => Platform::EUROPE_EAST,
+		self::SET_API_BASEURL          => '.api.pvp.net',
+		self::SET_CACHE_RATELIMIT      => false,
+		self::SET_CACHE_RATELIMIT_FILE => 'rate-limit.cache',
+		self::SET_CACHE_DIRECTORY      => __DIR__ . DIRECTORY_SEPARATOR . "cache" . DIRECTORY_SEPARATOR,
 	);
 
-	/** @var $used_key string */
+	/** @var IRegion $regions */
+	public $regions;
+
+	/** @var IPlatform $platforms */
+	public $platforms;
+
+	/** @var IRateLimitControl $rate_limit_control */
+	protected $rate_limit_control;
+
+	/** @var string $rate_limit_control_file */
+	protected $rate_limit_control_file;
+
+
+	/** @var string $used_key */
 	protected $used_key = self::SET_KEY;
 
-	/** @var $endpoint string */
+	/** @var string $endpoint */
 	protected $endpoint;
 
-	/** @var $query_data array */
+
+	/** @var array $query_data */
 	protected $query_data = array();
 
-	/** @var $post_data array */
+	/** @var array $post_data */
 	protected $post_data = array();
 
-	/** @var $result_data array */
+	/** @var array $result_data */
 	protected $result_data;
-
-	/** @var $regions IRegion */
-	protected $regions;
-
-	/** @var $platforms IPlatform */
-	protected $platforms;
 
 
 	/**
@@ -99,6 +119,7 @@ class RiotAPI
 	 */
 	public final function __construct( array $settings, IRegion $custom_regionDataProvider = null, IPlatform $custom_platformDataProvider = null )
 	{
+		//  List of required setting keys
 		$required_settings = [
 			self::SET_KEY,
 			self::SET_REGION,
@@ -107,12 +128,16 @@ class RiotAPI
 		//  Checks if required settings are present
 		foreach ($required_settings as $key)
 			if (array_search($key, array_keys($settings), true) === false)
-				throw new Exceptions\GeneralException("Required settings parameter '$key' was not specified!");
+				throw new GeneralException("Required settings parameter '$key' was not specified!");
 
-		$allowed_settings = [
-			self::SET_KEY,
-			self::SET_REGION,
-		];
+		//  List of allowed setting keys
+		$allowed_settings = array_merge([
+			self::SET_TOURNAMENT_KEY,
+			self::SET_TOURNAMENT_APP_STATE,
+			self::SET_CACHE_DIRECTORY,
+			self::SET_CACHE_RATELIMIT,
+			self::SET_CACHE_RATELIMIT_FILE,
+		], $required_settings);
 
 		//  Assigns allowed settings
 		foreach ($allowed_settings as $key)
@@ -128,6 +153,77 @@ class RiotAPI
 			: new Platform();
 
 		$this->settings[self::SET_PLATFORM] = $this->platforms->getPlatform($settings[self::SET_REGION]);
+
+		//  Caching API's rate limit headers
+		$this->loadCacheFiles();
+	}
+
+	/**
+	 *   RiotAPI destructor.
+	 *
+	 * Saves cache files (if needed) before destroying the object.
+	 */
+	public function __destruct()
+	{
+		$this->saveCacheFiles();
+	}
+
+	public function __wakeup()
+	{
+		$this->loadCacheFiles();
+	}
+
+	public function __sleep()
+	{
+		$this->saveCacheFiles();
+	}
+
+	/**
+	 *   Loads required cache objects
+	 *
+	 * @throws GeneralException
+	 */
+	protected function loadCacheFiles()
+	{
+		if ($this->settings[self::SET_CACHE_RATELIMIT] == false)
+			return;
+
+		$path = $this->rate_limit_control_file = $this->settings[self::SET_CACHE_DIRECTORY] . $this->settings[self::SET_CACHE_RATELIMIT_FILE];
+		$res  = @fopen($path, 'a+');
+
+		if ($res != false)
+		{
+			$object = @unserialize(fread($res, filesize($path)));
+			if ($object == false)
+				$object = new RateLimitControl();
+
+			$this->rate_limit_control = $object;
+			fclose($res);
+		}
+		else
+			throw new GeneralException("Loading: Cache file ($path) failed to be opened/created.");
+	}
+
+	/**
+	 *   Saves required cache objects
+	 *
+	 * @throws GeneralException
+	 */
+	protected function saveCacheFiles()
+	{
+		if ($this->settings[self::SET_CACHE_RATELIMIT] == false)
+			return;
+
+		$path = $this->rate_limit_control_file ?: $this->settings[self::SET_CACHE_DIRECTORY] . $this->settings[self::SET_CACHE_RATELIMIT_FILE];
+		$res  = @fopen($path, 'w+');
+
+		if ($res != false)
+		{
+			fwrite($res, serialize($this->rate_limit_control));
+			fclose($res);
+		}
+		else
+			throw new GeneralException("Saving: Cache file ($path) failed to be opened/created.");
 	}
 
 
@@ -219,11 +315,16 @@ class RiotAPI
 	 * @param string $override_region
 	 * @param string $method
 	 *
+	 * @throws APILimitException
 	 * @throws Exceptions\APIException
-	 * @throws Exceptions\GeneralException
+	 * @throws GeneralException
 	 */
 	final protected function makeCall( $override_region = null, $method = self::METHOD_GET )
 	{
+		if ($this->settings[self::SET_CACHE_RATELIMIT] && $this->rate_limit_control != false)
+			if (!$this->rate_limit_control->canCall($this->settings[$this->used_key]))
+				throw new APILimitException('API call rate limit would be exceeded with this call.');
+
 		$url_regionPart = $this->regions->getRegion($override_region ? $override_region : $this->settings[self::SET_REGION]);
 
 		if (strpos($url_regionPart, 'http') !== false)
@@ -242,6 +343,7 @@ class RiotAPI
 		$ch = curl_init();
 
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+		curl_setopt($ch, CURLOPT_HEADER, true);
 
 		//  If you're having problems with API requests (mainly on localhost)
 		//  change this cURL option to false
@@ -271,27 +373,34 @@ class RiotAPI
 			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
 		}
 		else
-			throw new Exceptions\GeneralException('Invalid method selected');
+			throw new GeneralException('Invalid method selected');
 
-		$response = curl_exec($ch);
+		$raw_data = curl_exec($ch);
+		$header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+
+		$headers = http_parse_headers(substr($raw_data, 0, $header_size));
+		$response = substr($raw_data, $header_size);
 		$response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
 		if ($response_code == 500)
 		{
-			throw new Exceptions\APIException('Internal server error');
+			throw new APIException('Internal server error');
 		}
 		elseif ($response_code == 429)
 		{
-			throw new Exceptions\APIException('Rate limit exceeded');
+			throw new APIException('Rate limit exceeded');
 		}
 		elseif ($response_code == 403)
 		{
-			throw new Exceptions\APIException('Forbidden');
+			throw new APIException('Forbidden');
 		}
 		elseif ($response_code == 400)
 		{
-			throw new Exceptions\APIException('Bad request');
+			throw new APIException('Bad request');
 		}
+
+		if ($this->settings[self::SET_CACHE_RATELIMIT] && $this->rate_limit_control != false && isset($headers[self::API_RATELIMIT_HEADER]))
+			$this->rate_limit_control->registerCall($this->settings[$this->used_key], $headers[self::API_RATELIMIT_HEADER]);
 
 		$this->result_data  = json_decode($response, true);
 		$this->query_data   = array();
@@ -301,7 +410,7 @@ class RiotAPI
 		curl_close($ch);
 
 		if (isset($this->result_data->status->message) && !empty($this->result_data->status->message))
-			throw new Exceptions\APIException($this->result_data->status->message, $this->result_data->status->status_code);
+			throw new APIException($this->result_data->status->message, $this->result_data->status->status_code);
 	}
 
 	/**
@@ -1299,6 +1408,27 @@ class RiotAPI
 	/**
 	 *   Tournament Provider Endpoint Methods
 	 *
+	 * @link
+	 **/
+	const ENDPOINT_VERSION_TOURNAMENTPROVIDER = 'v1';
+
+	/**
+	 * @param int                      $tournament_id
+	 * @param int                      $count
+	 * @param TournamentCodeParameters $parameters
+	 *
+	 * @return string[]
+	 * @link
+	 */
+	public function createTournamentCodes( int $tournament_id, int $count, TournamentCodeParameters $parameters ): array
+	{
+		return $this->createTournamentCodes_STUB($tournament_id, $count, $parameters);
+	}
+
+
+	/**
+	 *   Tournament Provider STUB Endpoint Methods
+	 *
 	 * @link https://developer.riotgames.com/api/methods#!/1090/3760
 	 **/
 	const ENDPOINT_VERSION_TOURNAMENTPROVIDER_STUB = 'v1';
@@ -1318,7 +1448,7 @@ class RiotAPI
 		$this->setEndpoint("/tournament/stub/" . self::ENDPOINT_VERSION_TOURNAMENTPROVIDER_STUB . "/code")
 			->addQuery('tournamentId', $tournament_id)
 			->addQuery('count', $count)
-			->setData($parameters)
+			->setData($parameters->getData())
 			->useKey(self::SET_TOURNAMENT_KEY)
 			->makeCall( Region::GLOBAL, self::METHOD_POST );
 
@@ -1336,7 +1466,7 @@ class RiotAPI
 	public function createTournamentProvider_STUB( ProviderRegistrationParameters $parameters ): int
 	{
 		$this->setEndpoint("/tournament/stub/" . self::ENDPOINT_VERSION_TOURNAMENTPROVIDER_STUB . "/provider")
-			->setData($parameters)
+			->setData($parameters->getData())
 			->useKey(self::SET_TOURNAMENT_KEY)
 			->makeCall( Region::GLOBAL, self::METHOD_POST );
 
@@ -1354,7 +1484,7 @@ class RiotAPI
 	public function createTournament_STUB( TournamentRegistrationParameters $parameters ): int
 	{
 		$this->setEndpoint("/tournament/stub/" . self::ENDPOINT_VERSION_TOURNAMENTPROVIDER_STUB . "/tournament")
-			->setData($parameters)
+			->setData($parameters->getData())
 			->useKey(self::SET_TOURNAMENT_KEY)
 			->makeCall( Region::GLOBAL, self::METHOD_POST );
 

@@ -1,2 +1,3 @@
-/.idea/
-/tests/
+.idea/
+tests/
+src/RiotAPI/cache/

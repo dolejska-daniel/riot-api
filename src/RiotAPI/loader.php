@@ -21,6 +21,9 @@
 if (PHP_VERSION_ID < 70000)
 	trigger_error('This library requires PHP version 7.0.0 or newer!', E_USER_ERROR);
 
+//  PHP Fixes
+require_once __DIR__ . '/Fixes/functions.php';
+
 //  Exceptions
 require_once __DIR__ . '/Exceptions/APIException.php';
 require_once __DIR__ . '/Exceptions/APILimitException.php';
@@ -29,10 +32,13 @@ require_once __DIR__ . '/Exceptions/GeneralException.php';
 //  Definition interfaces
 require_once __DIR__ . '/Definitions/IPlatform.php';
 require_once __DIR__ . '/Definitions/IRegion.php';
+require_once __DIR__ . '/Definitions/IRateLimitControl.php';
 
 //  Definitions
 require_once __DIR__ . '/Definitions/Platform.php';
 require_once __DIR__ . '/Definitions/Region.php';
+require_once __DIR__ . '/Definitions/RateLimitControl.php';
+require_once __DIR__ . '/Definitions/RateLimitStorage.php';
 
 //  Object interfaces
 require_once __DIR__ . '/Objects/IApiObject.php';

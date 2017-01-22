@@ -88,7 +88,7 @@ class Region implements IRegion
 	public function getRegion( string $region ): string
 	{
 		if (!isset(self::$list[$region]))
-			throw new GeneralException('Invalid region selected. Can not find requested platform.');
+			throw new GeneralException('Invalid region selected. Can not find requested region.');
 
 		return self::$list[$region];
 	}

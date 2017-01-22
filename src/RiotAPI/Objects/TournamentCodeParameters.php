@@ -19,9 +19,12 @@
 
 namespace RiotAPI\Objects;
 
+use RiotAPI\Exceptions\APIObjectParameterException;
+
 
 /**
  *   Class TournamentCodeParameters
+ * This object contains parameters required for requesting TournamentCodes
  *
  * @package RiotAPI\Objects
  */
@@ -64,4 +67,20 @@ class TournamentCodeParameters extends ApiObject
 	 * @var int $teamSize
 	 */
 	public $teamSize;
+
+
+	public function __construct( array $data )
+	{
+		foreach ([
+	         'allowedSummonerIds',
+	         'mapType',
+	         'pickType',
+	         'spectatorType',
+	         'teamSize',
+		         ] as $requiredParam)
+			if (!isset($data[$requiredParam]))
+				throw new APIObjectParameterException("Property '$requiredParam' is required to be set by RiotAPI.");
+
+		parent::__construct( $data );
+	}
 }
