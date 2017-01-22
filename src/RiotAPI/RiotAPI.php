@@ -423,7 +423,7 @@ class RiotAPI
 			if (!$this->rate_limit_control->canCall($this->settings[$this->used_key]))
 				throw new ServerLimitException('API call rate limit would be exceeded by this call.');
 
-		$url_regionPart = $this->regions->getRegion($override_region ? $override_region : $this->settings[self::SET_REGION]);
+		$url_regionPart = $this->regions->getRegionName($override_region ? $override_region : $this->settings[self::SET_REGION]);
 
 		if (strpos($url_regionPart, 'http') !== false)
 		{
