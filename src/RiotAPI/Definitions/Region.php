@@ -85,7 +85,7 @@ class Region implements IRegion
 		return self::$list;
 	}
 
-	public function getRegion( string $region ): string
+	public function getRegionName( string $region ): string
 	{
 		if (!isset(self::$list[$region]))
 			throw new GeneralException('Invalid region selected. Can not find requested region.');

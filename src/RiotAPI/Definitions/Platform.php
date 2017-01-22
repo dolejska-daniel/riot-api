@@ -83,7 +83,7 @@ class Platform implements IPlatform
 		return self::$list;
 	}
 
-	public function getPlatform( string $region ): string
+	public function getPlatformName( string $region ): string
 	{
 		if (!isset(self::$list[$region]))
 			throw new GeneralException('Invalid region selected. Can not find requested platform.');

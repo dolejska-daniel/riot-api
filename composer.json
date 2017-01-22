@@ -14,7 +14,7 @@
 	],
 	"require": {
 		"php": ">=7.0.0",
-		"curl/curl": "1.6.0"
+		"curl/curl": ">=1.6.0"
 	},
 	"autoload": {
 		"psr-4": {

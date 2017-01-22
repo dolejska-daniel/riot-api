@@ -21,25 +21,36 @@ namespace RiotAPI\Definitions;
 
 
 /**
- *   Interface IPlatform
+ *   Interface ICacheProvider
  *
  * @package RiotAPI\Definitions
  */
-interface IPlatform
+interface ICacheProvider
 {
 	/**
-	 *   Returns platform list by region.
+	 *   Loads data stored in cache memory.
 	 *
-	 * @return array
+	 * @param string $name
 	 */
-	public function getList(): array;
+	public function load( string $name );
 
 	/**
-	 *   Returns platform name based on region identifier (can either be string or internal numeric ID).
+	 *   Saves data to cache memory.
 	 *
-	 * @param string $region
+	 * @param string $name
+	 * @param        $data
+	 * @param int    $length
 	 *
-	 * @return string
+	 * @return bool
 	 */
-	public function getPlatformName( string $region ): string;
+	public function save( string $name, $data, int $length): bool;
+
+	/**
+	 *   Checks whether or not is saved in cache.
+	 *
+	 * @param string $name
+	 *
+	 * @return bool
+	 */
+	public function isSaved( string $name ): bool;
 }

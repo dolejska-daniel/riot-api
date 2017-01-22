@@ -44,5 +44,5 @@ interface IRegion
 	 *
 	 * @return string
 	 */
-	public function getRegion( string $region ): string;
+	public function getRegionName( string $region ): string;
 }

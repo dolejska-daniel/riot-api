@@ -19,7 +19,11 @@
 
 namespace RiotAPI;
 
+use RiotAPI\Definitions\FileCacheProvider;
+use RiotAPI\Definitions\FileCacheStorage;
+use RiotAPI\Definitions\ICacheProvider;
 use RiotAPI\Definitions\IPlatform;
+use RiotAPI\Definitions\MemcachedCacheProvider;
 use RiotAPI\Definitions\Platform;
 use RiotAPI\Definitions\IRegion;
 use RiotAPI\Definitions\Region;
@@ -55,15 +59,24 @@ class RiotAPI
 
 	/** Settings constants. */
 	const
-		SET_REGION               = 20,
-		SET_PLATFORM             = 21, // Set internally by setting region
-		SET_KEY                  = 30, // API key used by default
-		SET_TOURNAMENT_KEY       = 31, // API key used when working with tournaments
-		SET_TOURNAMENT_INTERIM   = 40, // Used to set whether your application is in Interim mode (Tournament STUB endpoints) or not,
-		SET_CACHE_DIRECTORY      = 50, // Specifies cache directory
-		SET_CACHE_RATELIMIT      = 51, // Used to set whether
-		SET_CACHE_RATELIMIT_FILE = 52,
-		SET_API_BASEURL          = 60;
+		SET_REGION                = 20,
+		SET_PLATFORM              = 21, // Set internally by setting region
+		SET_KEY                   = 30, // API key used by default
+		SET_TOURNAMENT_KEY        = 31, // API key used when working with tournaments
+		SET_TOURNAMENT_INTERIM    = 40, // Used to set whether your application is in Interim mode (Tournament STUB endpoints) or not,
+		SET_CACHE_PROVIDER        = 50, // Specifies CacheProvider class name
+		SET_CACHE_PROVIDER_PARAMS = 51, // Specifies parameters passed to CacheProvider class when initializing
+		SET_CACHE_RATELIMIT       = 52, // Used to set whether or not to save and check API key's rate limit
+		SET_CACHE_CALLS           = 53, // Used to set whether or not to temporary save API call's results
+		SET_CACHE_CALLS_LENGTH    = 54, // Specifies for how long are call results saved
+		SET_API_BASEURL           = 60;
+
+	const
+		CACHE_PROVIDER_FILE     = FileCacheStorage::class,
+		CACHE_PROVIDER_MEMCACHE = MemcachedCacheProvider::class;
+
+	const
+		CACHE_KEY_RLC = 'rate-limit.cache';
 
 	const
 		API_RATELIMIT_HEADER = 'X-Rate-Limit-Count';
@@ -75,10 +88,9 @@ class RiotAPI
 	 * @var $settings array
 	 */
 	protected $settings = array(
-		self::SET_API_BASEURL          => '.api.pvp.net',
-		self::SET_CACHE_RATELIMIT      => false,
-		self::SET_CACHE_RATELIMIT_FILE => 'rate-limit.cache',
-		self::SET_CACHE_DIRECTORY      => __DIR__ . DIRECTORY_SEPARATOR . "cache" . DIRECTORY_SEPARATOR,
+		self::SET_API_BASEURL     => '.api.pvp.net',
+		self::SET_CACHE_RATELIMIT => false,
+		self::SET_CACHE_CALLS     => false,
 	);
 
 	/** @var IRegion $regions */
@@ -87,11 +99,12 @@ class RiotAPI
 	/** @var IPlatform $platforms */
 	public $platforms;
 
+	/** @var ICacheProvider $cache */
+	protected $cache;
+
+
 	/** @var IRateLimitControl $rate_limit_control */
 	protected $rate_limit_control;
-
-	/** @var string $rate_limit_control_file */
-	protected $rate_limit_control_file;
 
 
 	/** @var string $used_key */
@@ -137,7 +150,8 @@ class RiotAPI
 		$allowed_settings = array_merge([
 			self::SET_TOURNAMENT_KEY,
 			self::SET_TOURNAMENT_INTERIM,
-			self::SET_CACHE_DIRECTORY,
+			self::SET_CACHE_PROVIDER,
+			self::SET_CACHE_PROVIDER_PARAMS,
 			self::SET_CACHE_RATELIMIT,
 		], $required_settings);
 
@@ -154,7 +168,36 @@ class RiotAPI
 			? $custom_platformDataProvider
 			: new Platform();
 
-		$this->settings[self::SET_PLATFORM] = $this->platforms->getPlatform($settings[self::SET_REGION]);
+		if ($this->settings[self::SET_CACHE_CALLS]
+			|| $this->settings[self::SET_CACHE_RATELIMIT])
+		{
+			if ($this->isSettingSet(self::SET_CACHE_PROVIDER) == false)
+			{
+				//  Set default cache provider if not already set
+				$this->setSettings([
+					self::SET_CACHE_PROVIDER        => FileCacheProvider::class,
+					self::SET_CACHE_PROVIDER_PARAMS => [
+						__DIR__ . DIRECTORY_SEPARATOR . "cache" . DIRECTORY_SEPARATOR,
+					]
+				]);
+			}
+
+			try
+			{
+				$cacheProvider = new \ReflectionClass($this->getSetting(self::SET_CACHE_PROVIDER));
+				$this->cache = $cacheProvider->newInstanceArgs($this->getSetting(self::SET_CACHE_PROVIDER_PARAMS, null));
+			}
+			catch (\ReflectionException $ex)
+			{
+				throw new SettingsException("Failed to initialize CacheProvider class: " . $ex->getMessage(), 0, $ex);
+			}
+			catch (SettingsException $ex)
+			{
+				throw new SettingsException("CacheProvider class failed to be initialized: " . $ex->getMessage(), 0, $ex);
+			}
+		}
+
+		$this->settings[self::SET_PLATFORM] = $this->platforms->getPlatformName($settings[self::SET_REGION]);
 
 		//  Caching API's rate limit headers
 		$this->loadCache();
@@ -182,52 +225,87 @@ class RiotAPI
 
 	/**
 	 *   Loads required cache objects
-	 *
-	 * @throws GeneralException
 	 */
 	protected function loadCache()
 	{
-		if ($this->settings[self::SET_CACHE_RATELIMIT] == false)
-			return;
-
-		$path = $this->rate_limit_control_file = $this->settings[self::SET_CACHE_DIRECTORY] . $this->settings[self::SET_CACHE_RATELIMIT_FILE];
-		$res  = @fopen($path, 'a+');
-
-		if ($res != false)
+		if ($this->settings[self::SET_CACHE_RATELIMIT])
 		{
-			$object = @unserialize(fread($res, filesize($path)));
-			if ($object == false)
-				$object = new RateLimitControl();
+			$rlc = $this->cache->load(self::CACHE_KEY_RLC);
+			if (!$rlc)
+				$rlc = new RateLimitControl();
 
-			$this->rate_limit_control = $object;
-			fclose($res);
+			$this->rate_limit_control = $rlc;
 		}
-		else
-			throw new GeneralException("Loading: Cache file ($path) failed to be opened/created.");
 	}
 
 	/**
-	 *   Saves required cache objects
+	 *   Saves required cache objects.
 	 *
 	 * @throws GeneralException
 	 */
 	protected function saveCache()
 	{
-		if ($this->settings[self::SET_CACHE_RATELIMIT] == false)
-			return;
-
-		$path = $this->rate_limit_control_file ?: $this->settings[self::SET_CACHE_DIRECTORY] . $this->settings[self::SET_CACHE_RATELIMIT_FILE];
-		$res  = @fopen($path, 'w+');
-
-		if ($res != false)
+		if ($this->settings[self::SET_CACHE_RATELIMIT])
 		{
-			fwrite($res, serialize($this->rate_limit_control));
-			fclose($res);
+			$this->cache->save(self::CACHE_KEY_RLC, $this->rate_limit_control, 600);
 		}
-		else
-			throw new GeneralException("Saving: Cache file ($path) failed to be opened/created.");
 	}
 
+	/**
+	 *   Returns vaue of requested key from settings.
+	 *
+	 * @param string $name
+	 * @param null   $defaultValue
+	 *
+	 * @return mixed
+	 */
+	public function getSetting( string $name, $defaultValue = null )
+	{
+		return $this->isSettingSet($name)
+			? $this->settings[$name]
+			: $defaultValue;
+	}
+
+	/**
+	 *   Sets new value for specified key in settings.
+	 *
+	 * @param string $name
+	 * @param        $value
+	 *
+	 * @return RiotAPI
+	 *
+	 */
+	public function setSetting( string $name, $value ): self
+	{
+		$this->settings[$name] = $value;
+		return $this;
+	}
+
+	/**
+	 *   Sets new values for specified set of keys in settings.
+	 *
+	 * @param array $values
+	 *
+	 * @return RiotAPI
+	 */
+	public function setSettings( array $values ): self
+	{
+		foreach ($values as $name => $value)
+			$this->setSetting($name, $value);
+		return $this;
+	}
+
+	/**
+	 *   Checks if specified settings key is set.
+	 *
+	 * @param string $name
+	 *
+	 * @return bool|RiotAPI
+	 */
+	public function isSettingSet( string $name ): bool
+	{
+		return isset($this->settings[$name]) && !empty($this->settings[$name]);
+	}
 
 	/**
 	 *   Sets new region to be used on API calls.
@@ -238,8 +316,7 @@ class RiotAPI
 	 */
 	public function setRegion( string $region ): self
 	{
-		$this->settings[self::SET_REGION] = $region;
-		return $this;
+		return $this->setSetting(self::SET_REGION, $region);
 	}
 
 	/**
@@ -344,7 +421,7 @@ class RiotAPI
 
 		if ($this->settings[self::SET_CACHE_RATELIMIT] && $this->rate_limit_control != false)
 			if (!$this->rate_limit_control->canCall($this->settings[$this->used_key]))
-				throw new ServerLimitException('API call rate limit would be exceeded with this call.');
+				throw new ServerLimitException('API call rate limit would be exceeded by this call.');
 
 		$url_regionPart = $this->regions->getRegion($override_region ? $override_region : $this->settings[self::SET_REGION]);
 
@@ -407,6 +484,10 @@ class RiotAPI
 		{
 			throw new ServerException('Internal server error');
 		}
+		elseif ($response_code == 503)
+		{
+			throw new ServerException('Service unavailable');
+		}
 		elseif ($response_code == 429)
 		{
 			throw new ServerLimitException('Rate limit exceeded');
@@ -414,6 +495,10 @@ class RiotAPI
 		elseif ($response_code == 403)
 		{
 			throw new CallException('Forbidden');
+		}
+		elseif ($response_code == 401)
+		{
+			throw new CallException('Unauthorized');
 		}
 		elseif ($response_code == 400)
 		{
@@ -586,7 +671,7 @@ class RiotAPI
 	 */
 	public function getCurrentGame( int $summoner_id ): Objects\CurrentGameInfo
 	{
-		$this->setEndpoint("/observer-mode/rest/consumer/getSpectatorGameInfo/{$this->platforms->getPlatform($this->settings[self::SET_REGION])}/{$summoner_id}")
+		$this->setEndpoint("/observer-mode/rest/consumer/getSpectatorGameInfo/{$this->platforms->getPlatformName($this->settings[self::SET_REGION])}/{$summoner_id}")
 			->makeCall();
 
 		return new Objects\CurrentGameInfo($this->result());
@@ -1155,7 +1240,7 @@ class RiotAPI
 
 	public function getTournamentMatch( int $match_id, string $tournament_code, bool $include_timeline = false )
 	{
-		return false;
+		throw new GeneralException('Not yet implemented.');
 
 		$this->setEndpoint("/api/lol/{$this->settings[self::SET_REGION]}/" . self::ENDPOINT_VERSION_MATCH . "/match/for-tournament/{$match_id}")
 			->addQuery('tournamentCode', $tournament_code)
@@ -1168,7 +1253,7 @@ class RiotAPI
 
 	public function getTournamentMatchIds( string $tournament_code )
 	{
-		return false;
+		throw new GeneralException('Not yet implemented.');
 
 		$this->setEndpoint("/api/lol/{$this->settings[self::SET_REGION]}/" . self::ENDPOINT_VERSION_MATCH . "/match/by-tournament/{$tournament_code}/ids")
 			->useKey(self::SET_TOURNAMENT_KEY)

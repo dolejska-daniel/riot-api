@@ -21,25 +21,26 @@ namespace RiotAPI\Definitions;
 
 
 /**
- *   Interface IPlatform
+ *   Class FileCacheStorage
  *
  * @package RiotAPI\Definitions
  */
-interface IPlatform
+class FileCacheStorage
 {
-	/**
-	 *   Returns platform list by region.
-	 *
-	 * @return array
-	 */
-	public function getList(): array;
+	/** @var int $created_at */
+	public $created_at;
 
-	/**
-	 *   Returns platform name based on region identifier (can either be string or internal numeric ID).
-	 *
-	 * @param string $region
-	 *
-	 * @return string
-	 */
-	public function getPlatformName( string $region ): string;
+	/** @var int $expires_at */
+	public $expires_at;
+
+	/** @var mixed $data */
+	public $data;
+
+
+	public function __construct( $data, int $time )
+	{
+		$this->created_at = time();
+		$this->expires_at = time() + $time;
+		$this->data = $data;
+	}
 }

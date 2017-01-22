@@ -83,9 +83,7 @@ class DataDragonAPI
 			if (array_search($key, array_keys($settings), true) === false)
 				throw new Exceptions\GeneralException("Required settings parameter '$key' was not specified!");
 
-		$allowed_settings = [
-			self::SET_ENDPOINT,
-			self::SET_VERSION,
+		$allowed_settings = array_merge([
 			self::SET_DEFAULT_CLASS,
 			self::SET_PROFILE_ICON_CLASS,
 			self::SET_MASTERY_ICON_CLASS,
@@ -98,7 +96,7 @@ class DataDragonAPI
 			self::SET_ITEM_ICON_CLASS,
 			self::SET_UI_ICON_CLASS,
 			self::SET_MINIMAP_CLASS,
-		];
+		], $required_settings);
 
 		//  Assigns allowed settings
 		foreach ($allowed_settings as $key)

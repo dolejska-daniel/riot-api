@@ -71,7 +71,7 @@ class RateLimitStorage
 	}
 
 	/**
-	 *   Determines whether or not API call can be made
+	 *   Determines whether or not API call can be made.
 	 *
 	 * @return bool
 	 */
@@ -90,7 +90,7 @@ class RateLimitStorage
 	}
 
 	/**
-	 *   Registers that new API call has been made
+	 *   Registers that new API call has been made.
 	 *
 	 * @param string $header
 	 */
