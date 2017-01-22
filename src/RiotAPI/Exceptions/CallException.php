@@ -21,8 +21,8 @@ namespace RiotAPI\Exceptions;
 
 
 /**
- *   Class APIObjectParameterException
+ *   Class CallException
  *
  * @package RiotAPI\Exceptions
  */
-class APIObjectParameterException extends \Exception {}
+class CallException extends \Exception {}

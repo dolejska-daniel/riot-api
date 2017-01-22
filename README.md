@@ -42,14 +42,14 @@ Working with RiotAPI can not be easier, just watch:
 ```php
 //  Fetches the summoner data (returns list of SummonerDto objects)
 $summoners = $api->getSummonerByName('I am TheKronnY');
-//  Let's get the first one (the ONLY one there is)
+//  Let's get the first one (the only one there is)
 $summoner = reset($summoners);
 
-echo $summoner->id . "<br>"; //  Outputs: 30904166
-echo $summoner->name . "<br>"; //  Outputs: I am TheKronnY
-echo $summoner->summonerLevel . "<br>"; //  Outputs: 30
+echo $summoner->id;             //  Outputs: 30904166
+echo $summoner->name;           //  Outputs: I am TheKronnY
+echo $summoner->summonerLevel;  //  Outputs: 30
 
-print_r($summoner->getData()); //  Or array of all the data
+print_r($summoner->getData());  //  Or array of all the data
 /* Array
  * (
  *    [id] => 30904166
@@ -61,7 +61,119 @@ print_r($summoner->getData()); //  Or array of all the data
  */
 ```
 
-_MORE TBA_
+### Known problems
+- Non-STUB TournamentProvider endpoint functions are not yet implemented
+- Calls on static data endpoint returns only JSON decoded response (no custom object)
+- No request caching
+
+### API Methods
+
+Below you can find list of methods by endpoints with usage examples.
+
+#### Champion
+
+Available methods:
+- getChampions
+- getChampion
+
+#### ChampionMastery
+
+Available methods:
+- getChampionMastery
+- getChampionMasteryList
+- getChampionMasteryScore
+- getChampionMasteryTopList
+
+#### CurrentGame
+
+Available methods:
+- getCurrentGame
+
+#### FeaturedGames
+
+Available methods:
+- getFeaturedGames
+
+#### Game
+
+Available methods:
+- getRecentGames
+
+#### League
+
+Available methods:
+- getLeagueMappingBySummoner
+- getLeagueEntryBySummoner
+- getLeagueMappingChallenger
+- getLeagueMappingMaster
+
+#### StaticData
+
+Available methods:
+- getStaticChampions
+- getStaticChampion
+- getStaticItems
+- getStaticItem
+- getLanguageStrings
+- getLanguages
+- getMaps
+- getMasteries
+- getMastery
+- getRealm
+- getRunes
+- getRune
+- getSummonerSpells
+- getSummonerSpell
+- getVersions
+
+#### Status
+
+Available methods:
+- getShards
+- getShardInfo
+
+#### Match
+
+Available methods:
+- getMatch
+- _getTournamentMatch_
+- _getTournamentMatchIds_
+
+#### MatchList
+
+Available methods:
+- getMatchlist
+
+#### Stats
+
+Available methods:
+- getRankedStats
+- getSummaryStats
+
+#### Summoner
+
+Available methods:
+- getSummonerByName
+- getSummoner
+- getSummonerMasteries
+- getSummonerName
+- getSummonerRunes
+
+#### TournamentProvider
+
+Available methods:
+- _createTournamentCodes_
+- _createTournamentProvider_
+- _createTournament_
+- _getTournamentLobbyEvents_
+
+#### TournamentSTUB
+
+Available methods:
+- createTournamentCodes_STUB
+- createTournamentProvider_STUB
+- createTournament_STUB
+- getTournamentLobbyEvents_STUB
 
 ## DataDragon API
 _TBA_

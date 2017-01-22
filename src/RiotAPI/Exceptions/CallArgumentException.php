@@ -21,8 +21,8 @@ namespace RiotAPI\Exceptions;
 
 
 /**
- *   Class APILimitException
+ *   Class CallArgumentException
  *
  * @package RiotAPI\Exceptions
  */
-class APILimitException extends \Exception {}
+class CallArgumentException extends \Exception {}

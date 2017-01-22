@@ -111,7 +111,5 @@ class RateLimitStorage
 		$this->limit600 = intval($e[1][1]);
 		if ($this->used600 == 1)
 			$this->expires600_at = strtotime("+10 minutes");
-
-		var_dump($this);
 	}
 }

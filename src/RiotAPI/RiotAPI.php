@@ -31,9 +31,12 @@ use RiotAPI\Objects\ProviderRegistrationParameters;
 use RiotAPI\Objects\TournamentCodeParameters;
 use RiotAPI\Objects\TournamentRegistrationParameters;
 
-use RiotAPI\Exceptions\APIException;
-use RiotAPI\Exceptions\APILimitException;
 use RiotAPI\Exceptions\GeneralException;
+use RiotAPI\Exceptions\CallException;
+use RiotAPI\Exceptions\CallArgumentException;
+use RiotAPI\Exceptions\ServerException;
+use RiotAPI\Exceptions\ServerLimitException;
+use RiotAPI\Exceptions\SettingsException;
 
 
 /**
@@ -56,9 +59,9 @@ class RiotAPI
 		SET_PLATFORM             = 21, // Set internally by setting region
 		SET_KEY                  = 30, // API key used by default
 		SET_TOURNAMENT_KEY       = 31, // API key used when working with tournaments
-		SET_TOURNAMENT_APP_STATE = 40, // Used to set whether your application is in Interim mode (Tournament STUB endpoints) or not,
-		SET_CACHE_DIRECTORY      = 50,
-		SET_CACHE_RATELIMIT      = 51,
+		SET_TOURNAMENT_INTERIM   = 40, // Used to set whether your application is in Interim mode (Tournament STUB endpoints) or not,
+		SET_CACHE_DIRECTORY      = 50, // Specifies cache directory
+		SET_CACHE_RATELIMIT      = 51, // Used to set whether
 		SET_CACHE_RATELIMIT_FILE = 52,
 		SET_API_BASEURL          = 60;
 
@@ -115,9 +118,9 @@ class RiotAPI
 	 * @param IRegion   $custom_regionDataProvider
 	 * @param IPlatform $custom_platformDataProvider
 	 *
-	 * @throws Exceptions\GeneralException
+	 * @throws SettingsException
 	 */
-	public final function __construct( array $settings, IRegion $custom_regionDataProvider = null, IPlatform $custom_platformDataProvider = null )
+	final public function __construct( array $settings, IRegion $custom_regionDataProvider = null, IPlatform $custom_platformDataProvider = null )
 	{
 		//  List of required setting keys
 		$required_settings = [
@@ -128,15 +131,14 @@ class RiotAPI
 		//  Checks if required settings are present
 		foreach ($required_settings as $key)
 			if (array_search($key, array_keys($settings), true) === false)
-				throw new GeneralException("Required settings parameter '$key' was not specified!");
+				throw new SettingsException("Required settings parameter '$key' was not specified!");
 
 		//  List of allowed setting keys
 		$allowed_settings = array_merge([
 			self::SET_TOURNAMENT_KEY,
-			self::SET_TOURNAMENT_APP_STATE,
+			self::SET_TOURNAMENT_INTERIM,
 			self::SET_CACHE_DIRECTORY,
 			self::SET_CACHE_RATELIMIT,
-			self::SET_CACHE_RATELIMIT_FILE,
 		], $required_settings);
 
 		//  Assigns allowed settings
@@ -155,7 +157,7 @@ class RiotAPI
 		$this->settings[self::SET_PLATFORM] = $this->platforms->getPlatform($settings[self::SET_REGION]);
 
 		//  Caching API's rate limit headers
-		$this->loadCacheFiles();
+		$this->loadCache();
 	}
 
 	/**
@@ -165,17 +167,17 @@ class RiotAPI
 	 */
 	public function __destruct()
 	{
-		$this->saveCacheFiles();
+		$this->saveCache();
 	}
 
 	public function __wakeup()
 	{
-		$this->loadCacheFiles();
+		$this->loadCache();
 	}
 
 	public function __sleep()
 	{
-		$this->saveCacheFiles();
+		$this->saveCache();
 	}
 
 	/**
@@ -183,7 +185,7 @@ class RiotAPI
 	 *
 	 * @throws GeneralException
 	 */
-	protected function loadCacheFiles()
+	protected function loadCache()
 	{
 		if ($this->settings[self::SET_CACHE_RATELIMIT] == false)
 			return;
@@ -209,7 +211,7 @@ class RiotAPI
 	 *
 	 * @throws GeneralException
 	 */
-	protected function saveCacheFiles()
+	protected function saveCache()
 	{
 		if ($this->settings[self::SET_CACHE_RATELIMIT] == false)
 			return;
@@ -315,15 +317,34 @@ class RiotAPI
 	 * @param string $override_region
 	 * @param string $method
 	 *
-	 * @throws APILimitException
-	 * @throws Exceptions\APIException
-	 * @throws GeneralException
+	 * @throws CallException
+	 * @throws ServerException
+	 * @throws ServerLimitException
 	 */
 	final protected function makeCall( $override_region = null, $method = self::METHOD_GET )
 	{
+		if (!function_exists('http_parse_headers'))
+		{
+			function http_parse_headers( $string )
+			{
+				$r = array();
+				foreach (explode("\r\n", $string) as $line)
+				{
+					if (strpos($line, ':'))
+					{
+						$e = explode(": ", $line);
+						$r[$e[0]] = @$e[1];
+					}
+					elseif (strlen($line))
+						$r[] = $line;
+				}
+				return $r;
+			}
+		}
+
 		if ($this->settings[self::SET_CACHE_RATELIMIT] && $this->rate_limit_control != false)
 			if (!$this->rate_limit_control->canCall($this->settings[$this->used_key]))
-				throw new APILimitException('API call rate limit would be exceeded with this call.');
+				throw new ServerLimitException('API call rate limit would be exceeded with this call.');
 
 		$url_regionPart = $this->regions->getRegion($override_region ? $override_region : $this->settings[self::SET_REGION]);
 
@@ -373,7 +394,7 @@ class RiotAPI
 			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
 		}
 		else
-			throw new GeneralException('Invalid method selected');
+			throw new CallException('Invalid method selected.');
 
 		$raw_data = curl_exec($ch);
 		$header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
@@ -384,19 +405,19 @@ class RiotAPI
 
 		if ($response_code == 500)
 		{
-			throw new APIException('Internal server error');
+			throw new ServerException('Internal server error');
 		}
 		elseif ($response_code == 429)
 		{
-			throw new APIException('Rate limit exceeded');
+			throw new ServerLimitException('Rate limit exceeded');
 		}
 		elseif ($response_code == 403)
 		{
-			throw new APIException('Forbidden');
+			throw new CallException('Forbidden');
 		}
 		elseif ($response_code == 400)
 		{
-			throw new APIException('Bad request');
+			throw new CallException('Bad request');
 		}
 
 		if ($this->settings[self::SET_CACHE_RATELIMIT] && $this->rate_limit_control != false && isset($headers[self::API_RATELIMIT_HEADER]))
@@ -408,9 +429,6 @@ class RiotAPI
 		$this->used_key     = self::SET_KEY;
 
 		curl_close($ch);
-
-		if (isset($this->result_data->status->message) && !empty($this->result_data->status->message))
-			throw new APIException($this->result_data->status->message, $this->result_data->status->status_code);
 	}
 
 	/**
@@ -631,7 +649,7 @@ class RiotAPI
 	 * @param int|array $summoner_ids
 	 *
 	 * @return Objects\LeagueDto[]
-	 * @throws APILimitException
+	 * @throws CallArgumentException
 	 *
 	 * @link https://developer.riotgames.com/api/methods#!/1215/4701
 	 */
@@ -640,7 +658,7 @@ class RiotAPI
 		if (is_array($summoner_ids))
 		{
 			if (count($summoner_ids) > 10)
-				throw new APILimitException("Maximum allowed summoner id count is 10.");
+				throw new CallArgumentException("Maximum allowed summoner id count is 10.");
 
 			$summoner_ids = implode(',', $summoner_ids);
 		}
@@ -667,7 +685,7 @@ class RiotAPI
 	 * @param int|array $summoner_ids
 	 *
 	 * @return Objects\LeagueDto[]
-	 * @throws APILimitException
+	 * @throws CallArgumentException
 	 *
 	 * @link https://developer.riotgames.com/api/methods#!/1215/4705
 	 */
@@ -676,7 +694,7 @@ class RiotAPI
 		if (is_array($summoner_ids))
 		{
 			if (count($summoner_ids) > 10)
-				throw new APILimitException("Maximum allowed summoner id count is 10.");
+				throw new CallArgumentException("Maximum allowed summoner id count is 10.");
 
 			$summoner_ids = implode(',', $summoner_ids);
 		}
@@ -1261,7 +1279,7 @@ class RiotAPI
 	 * @param string|array $summoner_names
 	 *
 	 * @return Objects\SummonerDto[]
-	 * @throws APILimitException
+	 * @throws CallArgumentException
 	 *
 	 * @link https://developer.riotgames.com/api/methods#!/1221/4746
 	 */
@@ -1270,7 +1288,7 @@ class RiotAPI
 		if (is_array($summoner_names))
 		{
 			if (count($summoner_names) > 40)
-				throw new APILimitException("Maximum allowed summoner name count is 40.");
+				throw new CallArgumentException("Maximum allowed summoner name count is 40.");
 
 			$summoner_names = implode(',', $summoner_names);
 		}
@@ -1294,7 +1312,7 @@ class RiotAPI
 	 * @param int|array $summoner_ids
 	 *
 	 * @return Objects\SummonerDto[]
-	 * @throws APILimitException
+	 * @throws CallArgumentException
 	 *
 	 * @link https://developer.riotgames.com/api/methods#!/1221/4745
 	 */
@@ -1303,7 +1321,7 @@ class RiotAPI
 		if (is_array($summoner_ids))
 		{
 			if (count($summoner_ids) > 40)
-				throw new APILimitException("Maximum allowed summoner id count is 40.");
+				throw new CallArgumentException("Maximum allowed summoner id count is 40.");
 
 			$summoner_ids = implode(',', $summoner_ids);
 		}
@@ -1324,7 +1342,7 @@ class RiotAPI
 	 * @param int|array $summoner_ids
 	 *
 	 * @return Objects\MasteryPagesDto[]
-	 * @throws APILimitException
+	 * @throws CallArgumentException
 	 *
 	 * @link https://developer.riotgames.com/api/methods#!/1208/4683
 	 */
@@ -1333,7 +1351,7 @@ class RiotAPI
 		if (is_array($summoner_ids))
 		{
 			if (count($summoner_ids) > 40)
-				throw new APILimitException("Maximum allowed summoner id count is 40.");
+				throw new CallArgumentException("Maximum allowed summoner id count is 40.");
 
 			$summoner_ids = implode(',', $summoner_ids);
 		}
@@ -1354,7 +1372,7 @@ class RiotAPI
 	 * @param int|array $summoner_ids
 	 *
 	 * @return array
-	 * @throws APILimitException
+	 * @throws CallArgumentException
 	 *
 	 * @link https://developer.riotgames.com/api/methods#!/1208/4685
 	 */
@@ -1363,7 +1381,7 @@ class RiotAPI
 		if (is_array($summoner_ids))
 		{
 			if (count($summoner_ids) > 40)
-				throw new APILimitException("Maximum allowed summoner id count is 40.");
+				throw new CallArgumentException("Maximum allowed summoner id count is 40.");
 
 			$summoner_ids = implode(',', $summoner_ids);
 		}
@@ -1380,7 +1398,7 @@ class RiotAPI
 	 * @param int|array $summoner_ids
 	 *
 	 * @return Objects\RunePagesDto[]
-	 * @throws APILimitException
+	 * @throws CallArgumentException
 	 *
 	 * @link https://developer.riotgames.com/api/methods#!/1208/4682
 	 */
@@ -1389,7 +1407,7 @@ class RiotAPI
 		if (is_array($summoner_ids))
 		{
 			if (count($summoner_ids) > 40)
-				throw new APILimitException("Maximum allowed summoner id count is 40.");
+				throw new CallArgumentException("Maximum allowed summoner id count is 40.");
 
 			$summoner_ids = implode(',', $summoner_ids);
 		}
@@ -1417,12 +1435,57 @@ class RiotAPI
 	 * @param int                      $count
 	 * @param TournamentCodeParameters $parameters
 	 *
-	 * @return string[]
-	 * @link
+	 * @return array|\string[]
+	 * @throws GeneralException
 	 */
 	public function createTournamentCodes( int $tournament_id, int $count, TournamentCodeParameters $parameters ): array
 	{
-		return $this->createTournamentCodes_STUB($tournament_id, $count, $parameters);
+		if ($this->settings[self::SET_TOURNAMENT_INTERIM])
+			return $this->createTournamentCodes_STUB($tournament_id, $count, $parameters);
+
+		throw new GeneralException('Not yet implemented.');
+	}
+
+	/**
+	 * @param ProviderRegistrationParameters $parameters
+	 *
+	 * @return int
+	 * @throws GeneralException
+	 */
+	public function createTournamentProvider( ProviderRegistrationParameters $parameters ): int
+	{
+		if ($this->settings[self::SET_TOURNAMENT_INTERIM])
+			return $this->createTournamentProvider_STUB($parameters);
+
+		throw new GeneralException('Not yet implemented.');
+	}
+
+	/**
+	 * @param TournamentRegistrationParameters $parameters
+	 *
+	 * @return int
+	 * @throws GeneralException
+	 */
+	public function createTournament( TournamentRegistrationParameters $parameters ): int
+	{
+		if ($this->settings[self::SET_TOURNAMENT_INTERIM])
+			return $this->createTournament_STUB($parameters);
+
+		throw new GeneralException('Not yet implemented.');
+	}
+
+	/**
+	 * @param string $tournament_code
+	 *
+	 * @return Objects\LobbyEventDTOWrapper
+	 * @throws GeneralException
+	 */
+	public function getTournamentLobbyEvents( string $tournament_code ): Objects\LobbyEventDTOWrapper
+	{
+		if ($this->settings[self::SET_TOURNAMENT_INTERIM])
+			return $this->getTournamentLobbyEvents_STUB($tournament_code);
+
+		throw new GeneralException('Not yet implemented.');
 	}
 
 

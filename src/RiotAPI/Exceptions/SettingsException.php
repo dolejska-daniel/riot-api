@@ -17,24 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-//  PHP version check
-if (PHP_VERSION_ID < 70000)
-	trigger_error('This library requires PHP version 7.0.0 or newer!', E_USER_ERROR);
+namespace RiotAPI\Exceptions;
 
-//  Exceptions
-require_once __DIR__ . '/Exceptions/GeneralException.php';
 
-//  Nette Utilities
-require_once __DIR__ . '/Utils/IHtmlString.php';
-require_once __DIR__ . '/Utils/StaticClass.php';
-require_once __DIR__ . '/Utils/Callback.php';
-require_once __DIR__ . '/Utils/ObjectMixin.php';
-require_once __DIR__ . '/Utils/SmartObject.php';
-require_once __DIR__ . '/Utils/Html.php';
-
-//  Definitions
-require_once __DIR__ . '/Definitions/Map.php';
-require_once __DIR__ . '/Definitions/UI.php';
-
-//  Core class
-require_once __DIR__ . '/DataDragonAPI.php';
+/**
+ *   Class SettingsException
+ *
+ * @package RiotAPI\Exceptions
+ */
+class SettingsException extends \Exception {}
