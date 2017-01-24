@@ -34,10 +34,11 @@ use RiotAPI\Objects;
 use RiotAPI\Objects\ProviderRegistrationParameters;
 use RiotAPI\Objects\TournamentCodeParameters;
 use RiotAPI\Objects\TournamentRegistrationParameters;
+use RiotAPI\Objects\StaticData;
 
 use RiotAPI\Exceptions\GeneralException;
-use RiotAPI\Exceptions\CallException;
-use RiotAPI\Exceptions\CallArgumentException;
+use RiotAPI\Exceptions\RequestException;
+use RiotAPI\Exceptions\RequestParameterException;
 use RiotAPI\Exceptions\ServerException;
 use RiotAPI\Exceptions\ServerLimitException;
 use RiotAPI\Exceptions\SettingsException;
@@ -254,8 +255,8 @@ class RiotAPI
 	/**
 	 *   Returns vaue of requested key from settings.
 	 *
-	 * @param string $name
-	 * @param null   $defaultValue
+	 * @param string     $name
+	 * @param mixed|null $defaultValue
 	 *
 	 * @return mixed
 	 */
@@ -270,7 +271,7 @@ class RiotAPI
 	 *   Sets new value for specified key in settings.
 	 *
 	 * @param string $name
-	 * @param        $value
+	 * @param mixed  $value
 	 *
 	 * @return RiotAPI
 	 *
@@ -300,7 +301,7 @@ class RiotAPI
 	 *
 	 * @param string $name
 	 *
-	 * @return bool|RiotAPI
+	 * @return bool
 	 */
 	public function isSettingSet( string $name ): bool
 	{
@@ -335,11 +336,11 @@ class RiotAPI
 	/**
 	 *   Sets call target for script.
 	 *
-	 * @param $endpoint
+	 * @param string $endpoint
 	 *
 	 * @return RiotAPI
 	 */
-	protected function setEndpoint( $endpoint ): self
+	protected function setEndpoint( string $endpoint ): self
 	{
 		$this->endpoint = $endpoint;
 		return $this;
@@ -348,14 +349,14 @@ class RiotAPI
 	/**
 	 *   Adds GET parameter to called URL.
 	 *
-	 * @param $name
-	 * @param $value
+	 * @param string      $name
+	 * @param string|null $value
 	 *
 	 * @return RiotAPI
 	 */
-	protected function addQuery( $name, $value ): self
+	protected function addQuery( string $name, $value ): self
 	{
-		if ($value !== null)
+		if (!is_null($value))
 			$this->query_data[$name] = $value;
 
 		return $this;
@@ -364,11 +365,11 @@ class RiotAPI
 	/**
 	 *   Sets POST/PUT data.
 	 *
-	 * @param array|\Traversable $data
+	 * @param array $data
 	 *
 	 * @return RiotAPI
 	 */
-	protected function setData( $data ): self
+	protected function setData( array $data ): self
 	{
 		$this->post_data = $data;
 		return $this;
@@ -377,12 +378,12 @@ class RiotAPI
 	/**
 	 *   Adds POST/PUT data to array.
 	 *
-	 * @param $name
-	 * @param $value
+	 * @param string      $name
+	 * @param string|null $value
 	 *
 	 * @return RiotAPI
 	 */
-	protected function addData( $name, $value ): self
+	protected function addData( string $name, $value ): self
 	{
 		$this->post_data[$name] = $value;
 		return $this;
@@ -394,11 +395,11 @@ class RiotAPI
 	 * @param string $override_region
 	 * @param string $method
 	 *
-	 * @throws CallException
+	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
 	 */
-	final protected function makeCall( $override_region = null, $method = self::METHOD_GET )
+	final protected function makeCall( string $override_region = null, string $method = self::METHOD_GET )
 	{
 		if (!function_exists('http_parse_headers'))
 		{
@@ -471,7 +472,7 @@ class RiotAPI
 			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
 		}
 		else
-			throw new CallException('Invalid method selected.');
+			throw new RequestException('Invalid method selected.');
 
 		$raw_data = curl_exec($ch);
 		$header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
@@ -494,15 +495,15 @@ class RiotAPI
 		}
 		elseif ($response_code == 403)
 		{
-			throw new CallException('Forbidden');
+			throw new RequestException('Forbidden');
 		}
 		elseif ($response_code == 401)
 		{
-			throw new CallException('Unauthorized');
+			throw new RequestException('Unauthorized');
 		}
 		elseif ($response_code == 400)
 		{
-			throw new CallException('Bad request');
+			throw new RequestException('Bad request');
 		}
 
 		if ($this->settings[self::SET_CACHE_RATELIMIT] && $this->rate_limit_control != false && isset($headers[self::API_RATELIMIT_HEADER]))
@@ -517,7 +518,7 @@ class RiotAPI
 	}
 
 	/**
-	 *   Returns result data from call.
+	 *   Returns result data from the last call.
 	 *
 	 * @return mixed
 	 */
@@ -582,7 +583,9 @@ class RiotAPI
 	 **/
 
 	/**
-	 *   Get a champion mastery by player id and champion id.
+	 *   Get a champion mastery by player id and champion id. Response code 204 means
+	 * there were no masteries found for given player id or player id and champion id
+	 * combination. (RPC)
 	 *
 	 * @param int $summoner_id
 	 * @param int $champion_id
@@ -599,7 +602,8 @@ class RiotAPI
 	}
 
 	/**
-	 *   Get all champion mastery entries sorted by number of champion points descending.
+	 *   Get all champion mastery entries sorted by number of champion points descending
+	 * (RPC)
 	 *
 	 * @param int $summoner_id
 	 *
@@ -619,7 +623,8 @@ class RiotAPI
 	}
 
 	/**
-	 *   Get a player's total champion mastery score, which is sum of individual champion mastery levels.
+	 *   Get a player's total champion mastery score, which is sum of individual champion
+	 * mastery levels (RPC)
 	 *
 	 * @param int $summoner_id
 	 *
@@ -635,7 +640,8 @@ class RiotAPI
 	}
 
 	/**
-	 *   Get specified number of top champion mastery entries sorted by number of champion points descending.
+	 *   Get specified number of top champion mastery entries sorted by number of
+	 * champion points descending (RPC)
 	 *
 	 * @param int $summoner_id
 	 *
@@ -702,6 +708,7 @@ class RiotAPI
 	 *  Game Endpoint Methods
 	 *
 	 * @link https://developer.riotgames.com/api/methods#!/1207
+	 * @deprecated
 	 **/
 	const ENDPOINT_VERSION_GAME = 'v1.3';
 
@@ -712,6 +719,8 @@ class RiotAPI
 	 *
 	 * @return Objects\RecentGamesDto
 	 * @link https://developer.riotgames.com/api/methods#!/1207/4679
+	 *
+	 * @deprecated
 	 */
 	public function getRecentGames( int $summoner_id ): Objects\RecentGamesDto
 	{
@@ -734,7 +743,7 @@ class RiotAPI
 	 * @param int|array $summoner_ids
 	 *
 	 * @return Objects\LeagueDto[]
-	 * @throws CallArgumentException
+	 * @throws RequestParameterException
 	 *
 	 * @link https://developer.riotgames.com/api/methods#!/1215/4701
 	 */
@@ -743,7 +752,7 @@ class RiotAPI
 		if (is_array($summoner_ids))
 		{
 			if (count($summoner_ids) > 10)
-				throw new CallArgumentException("Maximum allowed summoner id count is 10.");
+				throw new RequestParameterException("Maximum allowed summoner id count is 10.");
 
 			$summoner_ids = implode(',', $summoner_ids);
 		}
@@ -770,7 +779,7 @@ class RiotAPI
 	 * @param int|array $summoner_ids
 	 *
 	 * @return Objects\LeagueDto[]
-	 * @throws CallArgumentException
+	 * @throws RequestParameterException
 	 *
 	 * @link https://developer.riotgames.com/api/methods#!/1215/4705
 	 */
@@ -779,7 +788,7 @@ class RiotAPI
 		if (is_array($summoner_ids))
 		{
 			if (count($summoner_ids) > 10)
-				throw new CallArgumentException("Maximum allowed summoner id count is 10.");
+				throw new RequestParameterException("Maximum allowed summoner id count is 10.");
 
 			$summoner_ids = implode(',', $summoner_ids);
 		}
@@ -842,20 +851,20 @@ class RiotAPI
 	const ENDPOINT_VERSION_STATICDATA = 'v1.2';
 
 	/**
-	 *   Retrieves champion list
+	 *   Retrieves champion list.
 	 *
-	 * @param bool|false $locale
-	 * @param bool|false $version
-	 * @param bool|false $data_by_id
-	 * @param bool|false $champ_data
+	 * @param string       $locale
+	 * @param string       $version
+	 * @param bool         $data_by_id
+	 * @param string|array $champ_data
 	 *
-	 * @return mixed
+	 * @return StaticData\SChampionListDto
+	 * @link https://developer.riotgames.com/api/methods#!/1055/3633
 	 */
-	public function getStaticChampions( $locale = false, $version = false, $data_by_id = false, $champ_data = false )
+	public function getStaticChampions( string $locale = null, string $version = null, bool $data_by_id = null, $champ_data = null ): StaticData\SChampionListDto
 	{
-		if (!is_array($champ_data))
-			$champ_data = [$champ_data];
-		$champ_data = implode(',', $champ_data);
+		if (is_array($champ_data))
+			$champ_data = implode(',', $champ_data);
 
 		$this->setEndpoint("/api/lol/static-data/{$this->settings[self::SET_REGION]}/" . self::ENDPOINT_VERSION_STATICDATA . "/champion")
 			->addQuery("locale", $locale)
@@ -864,24 +873,24 @@ class RiotAPI
 			->addQuery("champData", $champ_data)
 			->makeCall(Region::GLOBAL);
 
-		return $this->result();
+		return new StaticData\SChampionListDto($this->result());
 	}
 
 	/**
-	 *   Retrieves a champion by its ID
+	 *   Retrieves a champion by its ID.
 	 *
-	 * @param            $champion_id
-	 * @param bool|false $locale
-	 * @param bool|false $version
-	 * @param bool|false $champ_data
+	 * @param int          $champion_id
+	 * @param string       $locale
+	 * @param string       $version
+	 * @param string|array $champ_data
 	 *
-	 * @return mixed
+	 * @return StaticData\SChampionDto
+	 * @link https://developer.riotgames.com/api/methods#!/1055/3622
 	 */
-	public function getStaticChampion( $champion_id, $locale = false, $version = false, $champ_data = false )
+	public function getStaticChampion( int $champion_id, string $locale = null, string $version = null, $champ_data = null ): StaticData\SChampionDto
 	{
-		if (!is_array($champ_data))
-			$champ_data = [$champ_data];
-		$champ_data = implode(',', $champ_data);
+		if (is_array($champ_data))
+			$champ_data = implode(',', $champ_data);
 
 		$this->setEndpoint("/api/lol/static-data/{$this->settings[self::SET_REGION]}/" . self::ENDPOINT_VERSION_STATICDATA . "/champion/{$champion_id}")
 			->addQuery("locale", $locale)
@@ -889,23 +898,23 @@ class RiotAPI
 			->addQuery("champData", $champ_data)
 			->makeCall(Region::GLOBAL);
 
-		return $this->result();
+		return new StaticData\SChampionDto($this->result());
 	}
 
 	/**
-	 *   Retrieves item list
+	 *   Retrieves item list.
 	 *
-	 * @param bool|false $locale
-	 * @param bool|false $version
-	 * @param bool|false $item_list_data
+	 * @param string       $locale
+	 * @param string       $version
+	 * @param string|array $item_list_data
 	 *
-	 * @return mixed
+	 * @return StaticData\SItemListDto
+	 * @link https://developer.riotgames.com/api/methods#!/1055/3621
 	 */
-	public function getStaticItems( $locale = false, $version = false, $item_list_data = false )
+	public function getStaticItems( string $locale = null, string $version = null, $item_list_data = null ): StaticData\SItemListDto
 	{
-		if (!is_array($item_list_data))
-			$item_list_data = [$item_list_data];
-		$item_list_data = implode(',', $item_list_data);
+		if (is_array($item_list_data))
+			$item_list_data = implode(',', $item_list_data);
 
 		$this->setEndpoint("/api/lol/static-data/{$this->settings[self::SET_REGION]}/" . self::ENDPOINT_VERSION_STATICDATA . "/item")
 			->addQuery("locale", $locale)
@@ -913,24 +922,24 @@ class RiotAPI
 			->addQuery("itemListData", $item_list_data)
 			->makeCall(Region::GLOBAL);
 
-		return $this->result();
+		return new StaticData\SItemListDto($this->result());
 	}
 
 	/**
-	 *   Retrieves item by its unique ID
+	 *   Retrieves item by its unique ID.
 	 *
-	 * @param            $item_id
-	 * @param bool|false $locale
-	 * @param bool|false $version
-	 * @param bool|false $item_list_data
+	 * @param int          $item_id
+	 * @param string       $locale
+	 * @param string       $version
+	 * @param string|array $item_list_data
 	 *
-	 * @return mixed
+	 * @return StaticData\SItemDto
+	 * @link https://developer.riotgames.com/api/methods#!/1055/3627
 	 */
-	public function getStaticItem( $item_id, $locale = false, $version = false, $item_list_data = false )
+	public function getStaticItem( int $item_id, string $locale = null, string $version = null, $item_list_data = null ): StaticData\SItemDto
 	{
-		if (!is_array($item_list_data))
-			$item_list_data = [$item_list_data];
-		$item_list_data = implode(',', $item_list_data);
+		if (is_array($item_list_data))
+			$item_list_data = implode(',', $item_list_data);
 
 		$this->setEndpoint("/api/lol/static-data/{$this->settings[self::SET_REGION]}/" . self::ENDPOINT_VERSION_STATICDATA . "/item/{$item_id}")
 			->addQuery("locale", $locale)
@@ -938,33 +947,35 @@ class RiotAPI
 			->addQuery("itemListData", $item_list_data)
 			->makeCall(Region::GLOBAL);
 
-		return $this->result();
+		return new StaticData\SItemDto($this->result());
 	}
 
 	/**
-	 *   Retrieve language strings data
+	 *   Retrieve language strings data.
 	 *
-	 * @param bool|false $locale
-	 * @param bool|false $version
+	 * @param string $locale
+	 * @param string $version
 	 *
-	 * @return mixed
+	 * @return StaticData\SLanguageStringsDto
+	 * @link https://developer.riotgames.com/api/methods#!/1055/3624
 	 */
-	public function getLanguageStrings( $locale = false, $version = false )
+	public function getStaticLanguageStrings( string $locale = null, string $version = null ): StaticData\SLanguageStringsDto
 	{
 		$this->setEndpoint("/api/lol/static-data/{$this->settings[self::SET_REGION]}/" . self::ENDPOINT_VERSION_STATICDATA . "/language-strings")
 			->addQuery("locale", $locale)
 			->addQuery("version", $version)
 			->makeCall(Region::GLOBAL);
 
-		return $this->result();
+		return new StaticData\SLanguageStringsDto($this->result());
 	}
 
 	/**
-	 *   Retrieve supported languages data
+	 *   Retrieve supported languages data.
 	 *
-	 * @return mixed
+	 * @return array
+	 * @link https://developer.riotgames.com/api/methods#!/1055/3631
 	 */
-	public function getLanguages()
+	public function getStaticLanguages(): array
 	{
 		$this->setEndpoint("/api/lol/static-data/{$this->settings[self::SET_REGION]}/" . self::ENDPOINT_VERSION_STATICDATA . "/languages")
 			->makeCall(Region::GLOBAL);
@@ -973,198 +984,194 @@ class RiotAPI
 	}
 
 	/**
-	 *   Retrieve map data
+	 *   Retrieve map data.
 	 *
-	 * @param bool|false $locale
-	 * @param bool|false $version
+	 * @param string $locale
+	 * @param string $version
 	 *
-	 * @return mixed
+	 * @return StaticData\SMapDataDto
+	 * @link https://developer.riotgames.com/api/methods#!/1055/3635
 	 */
-	public function getMaps( $locale = false, $version = false )
+	public function getStaticMaps( string $locale = null, string $version = null ): StaticData\SMapDataDto
 	{
 		$this->setEndpoint("/api/lol/static-data/{$this->settings[self::SET_REGION]}/" . self::ENDPOINT_VERSION_STATICDATA . "/map")
 			->addQuery("locale", $locale)
 			->addQuery("version", $version)
 			->makeCall(Region::GLOBAL);
 
-		return $this->result();
+		return new StaticData\SMapDataDto($this->result());
 	}
 
 	/**
-	 *   Retrieves mastery list
+	 *   Retrieves mastery list.
 	 *
 	 * @param string       $locale
 	 * @param string       $version
 	 * @param string|array $mastery_list_data
 	 *
-	 * @return mixed
+	 * @return StaticData\SMasteryListDto
+	 * @link https://developer.riotgames.com/api/methods#!/1055/3625
 	 */
-	public function getMasteries( string $locale = null, string $version = null, $mastery_list_data = null )
+	public function getStaticMasteries( string $locale = null, string $version = null, $mastery_list_data = null ): StaticData\SMasteryListDto
 	{
-		if (!is_array($mastery_list_data))
-			$mastery_list_data = [$mastery_list_data];
-		$mastery_list_data = implode(',', $mastery_list_data);
+		if (is_array($mastery_list_data))
+			$mastery_list_data = implode(',', $mastery_list_data);
 
 		$this->setEndpoint("/api/lol/static-data/{$this->settings[self::SET_REGION]}/" . self::ENDPOINT_VERSION_STATICDATA . "/mastery")
-			->addQuery("locale", $locale ?: false)
-			->addQuery("version", $version ?: false)
-			->addQuery("masteryListData", $mastery_list_data ?: false)
+			->addQuery("locale", $locale)
+			->addQuery("version", $version)
+			->addQuery("masteryListData", $mastery_list_data)
 			->makeCall(Region::GLOBAL);
 
-		return $this->result();
+		return new StaticData\SMasteryListDto($this->result());
 	}
 
 	/**
-	 *   Retrieves mastery item by its unique ID
+	 *   Retrieves mastery by its unique ID.
 	 *
 	 * @param int          $mastery_id
 	 * @param string       $locale
 	 * @param string       $version
 	 * @param string|array $mastery_list_data
 	 *
-	 * @return mixed
+	 * @return StaticData\SMasteryDto
 	 * @link https://developer.riotgames.com/api/methods#!/1055/3626
 	 */
-	public function getMastery( int $mastery_id, string $locale = null, string $version = null, $mastery_list_data = null )
+	public function getStaticMastery( int $mastery_id, string $locale = null, string $version = null, $mastery_list_data = null ): StaticData\SMasteryDto
 	{
-		if (!is_array($mastery_list_data))
-			$mastery_list_data = [$mastery_list_data];
-		$mastery_list_data = implode(',', $mastery_list_data);
+		if (is_array($mastery_list_data))
+			$mastery_list_data = implode(',', $mastery_list_data);
 
 		$this->setEndpoint("/api/lol/static-data/{$this->settings[self::SET_REGION]}/" . self::ENDPOINT_VERSION_STATICDATA . "/mastery/{$mastery_id}")
-			->addQuery("locale", $locale ?: false)
-			->addQuery("version", $version ?: false)
-			->addQuery("masteryListData", $mastery_list_data ?: false)
+			->addQuery("locale", $locale)
+			->addQuery("version", $version)
+			->addQuery("masteryListData", $mastery_list_data)
 			->makeCall(Region::GLOBAL);
 
-		return $this->result();
+		return new StaticData\SMasteryDto($this->result());
 	}
 
 	/**
-	 *   Retrieve realm data
+	 *   Retrieve realm data. (Region versions)
 	 *
-	 * @return mixed
+	 * @return StaticData\SRealmDto
 	 * @link https://developer.riotgames.com/api/methods#!/1055/3632
 	 */
-	public function getRealm()
+	public function getStaticRealm(): StaticData\SRealmDto
 	{
 		$this->setEndpoint("/api/lol/static-data/{$this->settings[self::SET_REGION]}/" . self::ENDPOINT_VERSION_STATICDATA . "/realm")
 			->makeCall(Region::GLOBAL);
 
-		return $this->result();
+		return new StaticData\SRealmDto($this->result());
 	}
 
 	/**
-	 *   Retrieves rune list
+	 *   Retrieves rune list.
 	 *
 	 * @param string       $locale
 	 * @param string       $version
 	 * @param string|array $rune_list_data
 	 *
-	 * @return mixed
+	 * @return StaticData\SRuneListDto
 	 * @link https://developer.riotgames.com/api/methods#!/1055/3623
 	 */
-	public function getRunes( string $locale = null, string $version = null, $rune_list_data = null )
+	public function getStaticRunes( string $locale = null, string $version = null, $rune_list_data = null ): StaticData\SRuneListDto
 	{
-		if (!is_array($rune_list_data))
-			$rune_list_data = [$rune_list_data];
-		$rune_list_data = implode(',', $rune_list_data);
+		if (is_array($rune_list_data))
+			$rune_list_data = implode(',', $rune_list_data);
 
 		$this->setEndpoint("/api/lol/static-data/{$this->settings[self::SET_REGION]}/" . self::ENDPOINT_VERSION_STATICDATA . "/rune")
-			->addQuery("locale", $locale ?: false)
-			->addQuery("version", $version ?: false)
-			->addQuery("runeListData", $rune_list_data ?: false)
+			->addQuery("locale", $locale)
+			->addQuery("version", $version)
+			->addQuery("runeListData", $rune_list_data)
 			->makeCall(Region::GLOBAL);
 
-		return $this->result();
+		return new StaticData\SRuneListDto($this->result());
 	}
 
 	/**
-	 *   Retrieves rune by its unique ID
+	 *   Retrieves rune by its unique ID.
 	 *
 	 * @param int          $rune_id
 	 * @param string       $locale
 	 * @param string       $version
 	 * @param string|array $rune_list_data
 	 *
-	 * @return mixed
+	 * @return StaticData\SRuneDto
 	 * @link https://developer.riotgames.com/api/methods#!/1055/3629
 	 */
-	public function getRune( int $rune_id, string $locale = null, string $version = null, $rune_list_data = null )
+	public function getStaticRune( int $rune_id, string $locale = null, string $version = null, $rune_list_data = null ): StaticData\SRuneDto
 	{
-		if (!is_array($rune_list_data))
-			$rune_list_data = [$rune_list_data];
-		$rune_list_data = implode(',', $rune_list_data);
+		if (is_array($rune_list_data))
+			$rune_list_data = implode(',', $rune_list_data);
 
 		$this->setEndpoint("/api/lol/static-data/{$this->settings[self::SET_REGION]}/" . self::ENDPOINT_VERSION_STATICDATA . "/rune/{$rune_id}")
-			->addQuery("locale", $locale ?: false)
-			->addQuery("version", $version ?: false)
-			->addQuery("runeListData", $rune_list_data ?: false)
+			->addQuery("locale", $locale)
+			->addQuery("version", $version)
+			->addQuery("runeListData", $rune_list_data)
 			->makeCall(Region::GLOBAL);
 
-		return $this->result();
+		return new StaticData\SRuneDto($this->result());
 	}
 
 	/**
-	 *   Retrieves summoner spell list
+	 *   Retrieves summoner spell list.
 	 *
 	 * @param string       $locale
 	 * @param string       $version
 	 * @param bool         $data_by_id
 	 * @param string|array $spell_data
 	 *
-	 * @return mixed
+	 * @return StaticData\SSummonerSpellListDto
 	 * @link https://developer.riotgames.com/api/methods#!/1055/3634
 	 */
-	public function getSummonerSpells( string $locale = null, string $version = null, bool $data_by_id = false, $spell_data = null )
+	public function getStaticSummonerSpells( string $locale = null, string $version = null, bool $data_by_id = false, $spell_data = null ): StaticData\SSummonerSpellListDto
 	{
-		if (!is_array($spell_data))
-			$spell_data = [$spell_data];
-		$spell_data = implode(',', $spell_data);
+		if (is_array($spell_data))
+			$spell_data = implode(',', $spell_data);
 
 		$this->setEndpoint("/api/lol/static-data/{$this->settings[self::SET_REGION]}/" . self::ENDPOINT_VERSION_STATICDATA . "/summoner-spell")
-			->addQuery("locale", $locale ?: false)
-			->addQuery("version", $version ?: false)
-			->addQuery("dataById", $data_by_id ?: false)
-			->addQuery("spellData", $spell_data ?: false)
+			->addQuery("locale", $locale)
+			->addQuery("version", $version)
+			->addQuery("dataById", $data_by_id)
+			->addQuery("spellData", $spell_data)
 			->makeCall(Region::GLOBAL);
 
-		return $this->result();
+		return new StaticData\SSummonerSpellListDto($this->result());
 	}
 
 	/**
-	 *   Retrieves summoner spell by its unique ID
+	 *   Retrieves summoner spell by its unique ID.
 	 *
-	 * @param int    $summoner_spell_id
-	 * @param string $locale
-	 * @param string $version
-	 * @param false  $spell_data
+	 * @param int          $summoner_spell_id
+	 * @param string       $locale
+	 * @param string       $version
+	 * @param string|array $spell_data
 	 *
-	 * @return mixed
+	 * @return StaticData\SSummonerSpellDto
 	 * @link https://developer.riotgames.com/api/methods#!/1055/3628
 	 */
-	public function getSummonerSpell( int $summoner_spell_id, string $locale = null, string $version = null, $spell_data = null )
+	public function getStaticSummonerSpell( int $summoner_spell_id, string $locale = null, string $version = null, $spell_data = null ): StaticData\SSummonerSpellDto
 	{
-		if (!is_array($spell_data))
-			$spell_data = [$spell_data];
-		$spell_data = implode(',', $spell_data);
+		if (is_array($spell_data))
+			$spell_data = implode(',', $spell_data);
 
 		$this->setEndpoint("/api/lol/static-data/{$this->settings[self::SET_REGION]}/" . self::ENDPOINT_VERSION_STATICDATA . "/summoner-spell/{$summoner_spell_id}")
-			->addQuery("locale", $locale ?: false)
-			->addQuery("version", $version ?: false)
-			->addQuery("spellData", $spell_data ?: false)
+			->addQuery("locale", $locale)
+			->addQuery("version", $version)
+			->addQuery("spellData", $spell_data)
 			->makeCall(Region::GLOBAL);
 
-		return $this->result();
+		return new StaticData\SSummonerSpellDto($this->result());
 	}
 
 	/**
-	 *   Retrieve version data
+	 *   Retrieve version data.
 	 *
-	 * @return mixed
+	 * @return array
 	 * @link https://developer.riotgames.com/api/methods#!/1055/3630
 	 */
-	public function getVersions()
+	public function getStaticVersions(): array
 	{
 		$this->setEndpoint("/api/lol/static-data/{$this->settings[self::SET_REGION]}/" . self::ENDPOINT_VERSION_STATICDATA . "/versions")
 			->makeCall(Region::GLOBAL);
@@ -1364,7 +1371,7 @@ class RiotAPI
 	 * @param string|array $summoner_names
 	 *
 	 * @return Objects\SummonerDto[]
-	 * @throws CallArgumentException
+	 * @throws RequestParameterException
 	 *
 	 * @link https://developer.riotgames.com/api/methods#!/1221/4746
 	 */
@@ -1373,7 +1380,7 @@ class RiotAPI
 		if (is_array($summoner_names))
 		{
 			if (count($summoner_names) > 40)
-				throw new CallArgumentException("Maximum allowed summoner name count is 40.");
+				throw new RequestParameterException("Maximum allowed summoner name count is 40.");
 
 			$summoner_names = implode(',', $summoner_names);
 		}
@@ -1397,7 +1404,7 @@ class RiotAPI
 	 * @param int|array $summoner_ids
 	 *
 	 * @return Objects\SummonerDto[]
-	 * @throws CallArgumentException
+	 * @throws RequestParameterException
 	 *
 	 * @link https://developer.riotgames.com/api/methods#!/1221/4745
 	 */
@@ -1406,7 +1413,7 @@ class RiotAPI
 		if (is_array($summoner_ids))
 		{
 			if (count($summoner_ids) > 40)
-				throw new CallArgumentException("Maximum allowed summoner id count is 40.");
+				throw new RequestParameterException("Maximum allowed summoner id count is 40.");
 
 			$summoner_ids = implode(',', $summoner_ids);
 		}
@@ -1427,7 +1434,7 @@ class RiotAPI
 	 * @param int|array $summoner_ids
 	 *
 	 * @return Objects\MasteryPagesDto[]
-	 * @throws CallArgumentException
+	 * @throws RequestParameterException
 	 *
 	 * @link https://developer.riotgames.com/api/methods#!/1208/4683
 	 */
@@ -1436,7 +1443,7 @@ class RiotAPI
 		if (is_array($summoner_ids))
 		{
 			if (count($summoner_ids) > 40)
-				throw new CallArgumentException("Maximum allowed summoner id count is 40.");
+				throw new RequestParameterException("Maximum allowed summoner id count is 40.");
 
 			$summoner_ids = implode(',', $summoner_ids);
 		}
@@ -1457,7 +1464,7 @@ class RiotAPI
 	 * @param int|array $summoner_ids
 	 *
 	 * @return array
-	 * @throws CallArgumentException
+	 * @throws RequestParameterException
 	 *
 	 * @link https://developer.riotgames.com/api/methods#!/1208/4685
 	 */
@@ -1466,7 +1473,7 @@ class RiotAPI
 		if (is_array($summoner_ids))
 		{
 			if (count($summoner_ids) > 40)
-				throw new CallArgumentException("Maximum allowed summoner id count is 40.");
+				throw new RequestParameterException("Maximum allowed summoner id count is 40.");
 
 			$summoner_ids = implode(',', $summoner_ids);
 		}
@@ -1483,7 +1490,7 @@ class RiotAPI
 	 * @param int|array $summoner_ids
 	 *
 	 * @return Objects\RunePagesDto[]
-	 * @throws CallArgumentException
+	 * @throws RequestParameterException
 	 *
 	 * @link https://developer.riotgames.com/api/methods#!/1208/4682
 	 */
@@ -1492,7 +1499,7 @@ class RiotAPI
 		if (is_array($summoner_ids))
 		{
 			if (count($summoner_ids) > 40)
-				throw new CallArgumentException("Maximum allowed summoner id count is 40.");
+				throw new RequestParameterException("Maximum allowed summoner id count is 40.");
 
 			$summoner_ids = implode(',', $summoner_ids);
 		}

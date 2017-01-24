@@ -14,7 +14,7 @@ _MORE TBA_
 This is fully object oriented API wrapper for League of Legends. Here are some features:
 
 - Rate limit caching and exceeding prevention
-- Objects!
+- Objects everywhere! API calls return data in special objects
 
 How to begin?
 
@@ -23,7 +23,7 @@ use RiotAPI\Definitions;
 use RiotAPI\RiotAPI;
 
 //  Include all required files
-require_once "./src/RiotAPI/loader.php";
+require_once "./vendor/autoload.php";
 
 //  Initialize the library
 $api = new RiotAPI([
@@ -37,6 +37,26 @@ $api = new RiotAPI([
 
 //  And now you are ready to go!
 ```
+
+And there is a lot more, you can set when initializing the library, here is a complete list:
+
+- `RiotAPI::SET_REGION` -- this specifies on which region endpoints we are working
+  - `Definitions\Region::EUROPE_EAST`
+  - `Definitions\Region::EUROPE_WEST`
+  - `Definitions\Region::NORTH_AMERICA`
+  - `Definitions\Region::BRASIL`
+  - `Definitions\Region::RUSSIA`
+  - …
+- `RiotAPI::SET_KEY` -- this will set the default API key for all the calls
+- `RiotAPI::SET_TOURNAMENT_KEY` -- with this, you can specify your tournament-endpoints-only API key
+- `RiotAPI::SET_TOURNAMENT_INTERIM` -- by specifying this, you tell the library to use STUB endpoints (Tournament Applications in Interim state)
+- `RiotAPI::SET_CACHE_RATELIMIT` -- this tells the library to take care of not exceeding your API key's rate limit
+- `RiotAPI::SET_CACHE_CALLS` -- _not yet implemented_
+- `RiotAPI::SET_CACHE_CALLS_LENGTH` -- _not yet implemented_
+- `RiotAPI::SET_CACHE_PROVIDER` -- this option will allow you to either select from provided CacheProviders or to select your own
+  - `RiotAPI::CACHE_PROVIDER_FILE`
+  - `RiotAPI::CACHE_PROVIDER_MEMCACHE`
+- `RiotAPI::SET_CACHE_PROVIDER_PARAMS` -- these are parameters, that will be passed to the CacheProvider on initialization
 
 Working with RiotAPI can not be easier, just watch:
 ```php
@@ -63,7 +83,6 @@ print_r($summoner->getData());  //  Or array of all the data
 
 ### Known problems
 - Non-STUB TournamentProvider endpoint functions are not yet implemented
-- Calls on static data endpoint returns only JSON decoded response (no custom object)
 - No request caching
 
 ### API Methods

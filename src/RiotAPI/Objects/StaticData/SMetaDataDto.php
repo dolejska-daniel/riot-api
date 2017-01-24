@@ -17,12 +17,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace RiotAPI\Exceptions;
+namespace RiotAPI\Objects\StaticData;
+
+use RiotAPI\Objects\ApiObject;
 
 
 /**
- *   Class CallException
+ *   Class SMetaDataDto
+ * This object contains meta data.
  *
- * @package RiotAPI\Exceptions
+ * Used in:
+ *   lol-static-data (v1.2)
+ *     @link https://developer.riotgames.com/api/methods#!/1055/3621
+ *     @link https://developer.riotgames.com/api/methods#!/1055/3627
+ *     @link https://developer.riotgames.com/api/methods#!/1055/3623
+ *     @link https://developer.riotgames.com/api/methods#!/1055/3629
+ *
+ * @package RiotAPI\Objects\StaticData
  */
-class CallException extends \Exception {}
+class SMetaDataDto extends ApiObject
+{
+	/** @var bool $isRune */
+	public $isRune;
+
+	/** @var string $tier */
+	public $tier;
+
+	/** @var string $type */
+	public $type;
+}
