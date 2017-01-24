@@ -19,7 +19,7 @@
 
 namespace RiotAPI\Objects\StaticData;
 
-use RiotAPI\Objects\ApiObject;
+use RiotAPI\Objects\ApiObjectIterable;
 
 
 /**
@@ -30,9 +30,11 @@ use RiotAPI\Objects\ApiObject;
  *   lol-static-data (v1.2)
  *     @link https://developer.riotgames.com/api/methods#!/1055/3635
  *
+ * @iterable $data
+ *
  * @package RiotAPI\Objects\StaticData
  */
-class SMapDataDto extends ApiObject
+class SMapDataDto extends ApiObjectIterable
 {
 	/** @var SMapDetailsDto[] $data */
 	public $data;

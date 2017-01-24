@@ -28,9 +28,11 @@ namespace RiotAPI\Objects;
  *   match (v2.2)
  *     @link https://developer.riotgames.com/api/methods#!/1224/4756
  *
+ * @iterable $events
+ *
  * @package RiotAPI\Objects
  */
-class Frame extends ApiObject
+class Frame extends ApiObjectIterable
 {
 	/**
 	 *   List of events for this frame.

@@ -19,7 +19,7 @@
 
 namespace RiotAPI\Objects\StaticData;
 
-use RiotAPI\Objects\ApiObject;
+use RiotAPI\Objects\ApiObjectIterable;
 
 
 /**
@@ -30,9 +30,11 @@ use RiotAPI\Objects\ApiObject;
  *   lol-static-data (v1.2)
  *     @link https://developer.riotgames.com/api/methods#!/1055/3623
  *
+ * @iterable $data
+ *
  * @package RiotAPI\Objects\StaticData
  */
-class SRuneListDto extends ApiObject
+class SRuneListDto extends ApiObjectIterable
 {
 	/** @var SBasicDataDto $basic */
 	public $basic;

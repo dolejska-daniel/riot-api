@@ -28,9 +28,11 @@ namespace RiotAPI\Objects;
  *   summoner (v1.4)
  *     @link https://developer.riotgames.com/api/methods#!/1208/4682
  *
+ * @iterable $slots
+ *
  * @package RiotAPI\Objects
  */
-class RunePageDto extends ApiObject
+class RunePageDto extends ApiObjectIterable
 {
 	/**
 	 *   Indicates if the page is the current page.
@@ -56,7 +58,7 @@ class RunePageDto extends ApiObject
 	/**
 	 *   Collection of rune slots associated with the rune page.
 	 *
-	 * @var Set[RuneSlotDto] $slots
+	 * @var RuneSlotDto[] $slots
 	 */
 	public $slots;
 }

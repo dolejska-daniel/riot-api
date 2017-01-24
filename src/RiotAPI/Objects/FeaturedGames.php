@@ -27,9 +27,11 @@ namespace RiotAPI\Objects;
  *   featured-games (v1.0)
  *     @link https://developer.riotgames.com/api/methods#!/977/3337
  *
+ * @iterable $gameList
+ *
  * @package RiotAPI\Objects
  */
-class FeaturedGames extends ApiObject
+class FeaturedGames extends ApiObjectIterable
 {
 	/**
 	 *   The suggested interval to wait before requesting FeaturedGames again.

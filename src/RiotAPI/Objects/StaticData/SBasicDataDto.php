@@ -81,7 +81,7 @@ class SBasicDataDto extends ApiObject
 	/** @var string[] $into */
 	public $into;
 
-	/** @var boolean[] $maps */
+	/** @var bool[] $maps */
 	public $maps;
 
 	/** @var string $name */

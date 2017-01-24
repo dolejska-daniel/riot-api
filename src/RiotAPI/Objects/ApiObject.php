@@ -22,11 +22,9 @@ namespace RiotAPI\Objects;
 /**
  *   Class ApiObject
  *
- * @property $_data
- *
  * @package RiotAPI\Objects
  */
-class ApiObject implements IApiObject
+abstract class ApiObject implements IApiObject
 {
 	/**
 	 *   ApiObject constructor.
@@ -43,6 +41,9 @@ class ApiObject implements IApiObject
 		// Tries to assigns data to class properties
 		$selfRef = new \ReflectionClass($this);
 		$namespace = $selfRef->getNamespaceName();
+		$iterableProp = $selfRef->hasProperty('_iterable')
+			? self::getIterablePropertyName($selfRef->getDocComment())
+			: false;
 
 		foreach ($data as $property => $value)
 		{
@@ -52,7 +53,7 @@ class ApiObject implements IApiObject
 				{
 					//  Object has required property, time to discover if it's
 					$dataType = self::getPropertyDataType($propRef->getDocComment());
-					if ($dataType !== false)
+					if ($dataType !== false && is_array($value))
 					{
 						//  Property is special DataType
 						$newRef = new \ReflectionClass("$namespace\\$dataType->class");
@@ -63,6 +64,9 @@ class ApiObject implements IApiObject
 							{
 								$this->$property[$identifier] = $newRef->newInstance($d);
 							}
+
+							if ($iterableProp == $property)
+								$this->_iterable = $this->$property;
 						}
 						else
 							$this->$property = $newRef->newInstance($value);
@@ -74,6 +78,22 @@ class ApiObject implements IApiObject
 			//  If property does not exist
 			catch (\ReflectionException $ex) {}
 		}
+	}
+
+	/**
+	 *   Returns DataType specified in PHPDoc comment.
+	 *
+	 * @param string $phpDocComment
+	 *
+	 * @return bool|string
+	 */
+	protected static function getIterablePropertyName( string $phpDocComment )
+	{
+		preg_match('/@iterable\s([\w\$]+)/', $phpDocComment, $matches);
+		if (isset($matches[1]))
+			return substr($matches[1], 1);
+
+		return false;
 	}
 
 	/**
@@ -104,7 +124,7 @@ class ApiObject implements IApiObject
 	 *
 	 * @var array
 	 */
-	protected $_data;
+	protected $_data = array();
 
 	/**
 	 *   Gets all the original data fetched from RiotAPI.

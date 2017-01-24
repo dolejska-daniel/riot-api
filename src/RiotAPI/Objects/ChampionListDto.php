@@ -28,9 +28,11 @@ namespace RiotAPI\Objects;
  *   champion (v1.2)
  *     @link https://developer.riotgames.com/api/methods#!/1206/4678
  *
+ * @iterable $champions
+ *
  * @package RiotAPI\Objects
  */
-class ChampionListDto extends ApiObject
+class ChampionListDto extends ApiObjectIterable
 {
 	/**
 	 *   The collection of champion information.

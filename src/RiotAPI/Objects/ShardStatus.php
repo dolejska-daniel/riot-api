@@ -27,9 +27,11 @@ namespace RiotAPI\Objects;
  *   lol-status (v1.0)
  *     @link https://developer.riotgames.com/api/methods#!/1085/3739
  *
+ * @iterable $services
+ *
  * @package RiotAPI\Objects
  */
-class ShardStatus extends ApiObject
+class ShardStatus extends ApiObjectIterable
 {
 	/** @var string $hostname */
 	public $hostname;

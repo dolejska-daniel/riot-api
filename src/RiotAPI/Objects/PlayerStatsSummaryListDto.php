@@ -28,9 +28,11 @@ namespace RiotAPI\Objects;
  *   stats (v1.3)
  *     @link https://developer.riotgames.com/api/methods#!/1209/4687
  *
+ * @iterable $playerStatSummaries
+ *
  * @package RiotAPI\Objects
  */
-class PlayerStatsSummaryListDto extends ApiObject
+class PlayerStatsSummaryListDto extends ApiObjectIterable
 {
 	/**
 	 *   Collection of player stats summaries associated with the summoner.

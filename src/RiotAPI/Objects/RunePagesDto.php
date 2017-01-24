@@ -28,14 +28,16 @@ namespace RiotAPI\Objects;
  *   summoner (v1.4)
  *     @link https://developer.riotgames.com/api/methods#!/1208/4682
  *
+ * @iterable $pages
+ *
  * @package RiotAPI\Objects
  */
-class RunePagesDto extends ApiObject
+class RunePagesDto extends ApiObjectIterable
 {
 	/**
 	 *   Collection of rune pages associated with the summoner.
 	 *
-	 * @var Set[RunePageDto] $pages
+	 * @var RunePageDto[] $pages
 	 */
 	public $pages;
 

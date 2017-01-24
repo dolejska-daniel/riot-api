@@ -27,9 +27,11 @@ namespace RiotAPI\Objects;
  *   lol-status (v1.0)
  *     @link https://developer.riotgames.com/api/methods#!/1085/3739
  *
+ * @iterable $incidents
+ *
  * @package RiotAPI\Objects
  */
-class Service extends ApiObject
+class Service extends ApiObjectIterable
 {
 	/** @var Incident[] $incidents */
 	public $incidents;

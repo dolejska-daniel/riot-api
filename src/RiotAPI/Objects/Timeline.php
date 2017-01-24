@@ -28,9 +28,11 @@ namespace RiotAPI\Objects;
  *   match (v2.2)
  *     @link https://developer.riotgames.com/api/methods#!/1224/4756
  *
+ * @iterable $frames
+ *
  * @package RiotAPI\Objects
  */
-class Timeline extends ApiObject
+class Timeline extends ApiObjectIterable
 {
 	/**
 	 *   Time between each returned frame in milliseconds.

@@ -28,9 +28,11 @@ namespace RiotAPI\Objects;
  *   matchlist (v2.2)
  *     @link https://developer.riotgames.com/api/methods#!/1223/4754
  *
+ * @iterable $matches
+ *
  * @package RiotAPI\Objects
  */
-class MatchList extends ApiObject
+class MatchList extends ApiObjectIterable
 {
 	/** @var int $endIndex */
 	public $endIndex;

@@ -28,14 +28,16 @@ namespace RiotAPI\Objects;
  *   summoner (v1.4)
  *     @link https://developer.riotgames.com/api/methods#!/1208/4683
  *
+ * @iterable $pages
+ *
  * @package RiotAPI\Objects
  */
-class MasteryPagesDto extends ApiObject
+class MasteryPagesDto extends ApiObjectIterable
 {
 	/**
 	 *   Collection of mastery pages associated with the summoner.
 	 *
-	 * @var Set[MasteryPageDto] $pages
+	 * @var MasteryPageDto[] $pages
 	 */
 	public $pages;
 

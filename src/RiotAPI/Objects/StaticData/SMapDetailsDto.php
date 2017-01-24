@@ -43,6 +43,6 @@ class SMapDetailsDto extends ApiObject
 	/** @var string $mapName */
 	public $mapName;
 
-	/** @var Slong[] $unpurchasableItemList */
+	/** @var int[] $unpurchasableItemList */
 	public $unpurchasableItemList;
 }

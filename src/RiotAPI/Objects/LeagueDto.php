@@ -31,9 +31,11 @@ namespace RiotAPI\Objects;
  *     @link https://developer.riotgames.com/api/methods#!/1215/4704
  *     @link https://developer.riotgames.com/api/methods#!/1215/4706
  *
+ * @iterable $entries
+ *
  * @package RiotAPI\Objects
  */
-class LeagueDto extends ApiObject
+class LeagueDto extends ApiObjectIterable
 {
 	/**
 	 *   The requested league entries.

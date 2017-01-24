@@ -17,34 +17,39 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace RiotAPI\Objects\StaticData;
-
-use RiotAPI\Objects\ApiObjectIterable;
-
+namespace RiotAPI\Objects;
 
 /**
- *   Class SMasteryListDto
- * This object contains mastery list data.
+ *   Class ApiObjectIterable
  *
- * Used in:
- *   lol-static-data (v1.2)
- *     @link https://developer.riotgames.com/api/methods#!/1055/3625
- *
- * @iterable $data
- *
- * @package RiotAPI\Objects\StaticData
+ * @package RiotAPI\Objects
  */
-class SMasteryListDto extends ApiObjectIterable
+abstract class ApiObjectIterable extends ApiObject implements \Iterator
 {
-	/** @var SMasteryDto[] $data */
-	public $data;
+	protected $_iterable = array();
 
-	/** @var SMasteryTreeDto $tree */
-	public $tree;
+	public function rewind()
+	{
+		reset($this->_iterable);
+	}
 
-	/** @var string $type */
-	public $type;
+	public function current()
+	{
+		return current($this->_iterable);
+	}
 
-	/** @var string $version */
-	public $version;
+	public function key()
+	{
+		return key($this->_iterable);
+	}
+
+	public function next()
+	{
+		return next($this->_iterable);
+	}
+
+	public function valid()
+	{
+		return ($this->key() !== null && $this->key() !== false);
+	}
 }

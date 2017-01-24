@@ -28,9 +28,11 @@ namespace RiotAPI\Objects;
  *   summoner (v1.4)
  *     @link https://developer.riotgames.com/api/methods#!/1208/4683
  *
+ * @iterable $masteries
+ *
  * @package RiotAPI\Objects
  */
-class MasteryPageDto extends ApiObject
+class MasteryPageDto extends ApiObjectIterable
 {
 	/**
 	 *   Indicates if the mastery page is the current mastery page.

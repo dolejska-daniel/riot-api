@@ -28,14 +28,16 @@ namespace RiotAPI\Objects;
  *   game (v1.3)
  *     @link https://developer.riotgames.com/api/methods#!/1207/4679
  *
+ * @iterable $games
+ *
  * @package RiotAPI\Objects
  */
-class RecentGamesDto extends ApiObject
+class RecentGamesDto extends ApiObjectIterable
 {
 	/**
 	 *   Collection of recent games played (max 10).
 	 *
-	 * @var Set[GameDto] $games
+	 * @var GameDto[] $games
 	 */
 	public $games;
 

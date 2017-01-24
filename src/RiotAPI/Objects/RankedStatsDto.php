@@ -28,9 +28,11 @@ namespace RiotAPI\Objects;
  *   stats (v1.3)
  *     @link https://developer.riotgames.com/api/methods#!/1209/4686
  *
+ * @iterable $champions
+ *
  * @package RiotAPI\Objects
  */
-class RankedStatsDto extends ApiObject
+class RankedStatsDto extends ApiObjectIterable
 {
 	/**
 	 *   Collection of aggregated stats summarized by champion.
