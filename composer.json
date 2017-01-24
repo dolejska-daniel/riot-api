@@ -17,6 +17,9 @@
 		"curl/curl": ">=1.6.0"
 	},
 	"autoload": {
+		"classmap": [
+			"src/DataDragonAPI/Utils"
+		],
 		"psr-4": {
 			"RiotAPI\\": "src/RiotAPI",
 			"DataDragonAPI\\": "src/DataDragonAPI"

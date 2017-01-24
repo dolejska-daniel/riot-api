@@ -28,11 +28,21 @@ class ComposerStaticInit2def223a05f68d0df9052a98c1840e34
         ),
     );
 
+    public static $classMap = array (
+        'Nette\\SmartObject' => __DIR__ . '/../..' . '/src/DataDragonAPI/Utils/SmartObject.php',
+        'Nette\\StaticClass' => __DIR__ . '/../..' . '/src/DataDragonAPI/Utils/StaticClass.php',
+        'Nette\\Utils\\Callback' => __DIR__ . '/../..' . '/src/DataDragonAPI/Utils/Callback.php',
+        'Nette\\Utils\\Html' => __DIR__ . '/../..' . '/src/DataDragonAPI/Utils/Html.php',
+        'Nette\\Utils\\IHtmlString' => __DIR__ . '/../..' . '/src/DataDragonAPI/Utils/IHtmlString.php',
+        'Nette\\Utils\\ObjectMixin' => __DIR__ . '/../..' . '/src/DataDragonAPI/Utils/ObjectMixin.php',
+    );
+
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
             $loader->prefixLengthsPsr4 = ComposerStaticInit2def223a05f68d0df9052a98c1840e34::$prefixLengthsPsr4;
             $loader->prefixDirsPsr4 = ComposerStaticInit2def223a05f68d0df9052a98c1840e34::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit2def223a05f68d0df9052a98c1840e34::$classMap;
 
         }, null, ClassLoader::class);
     }
