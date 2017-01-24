@@ -29,6 +29,7 @@ class ComposerStaticInit2def223a05f68d0df9052a98c1840e34
     );
 
     public static $classMap = array (
+        'Fixes\\Functions' => __DIR__ . '/../..' . '/src/RiotAPI/Fixes/Functions.php',
         'Nette\\SmartObject' => __DIR__ . '/../..' . '/src/DataDragonAPI/Utils/SmartObject.php',
         'Nette\\StaticClass' => __DIR__ . '/../..' . '/src/DataDragonAPI/Utils/StaticClass.php',
         'Nette\\Utils\\Callback' => __DIR__ . '/../..' . '/src/DataDragonAPI/Utils/Callback.php',
