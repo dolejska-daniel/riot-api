@@ -18,6 +18,7 @@
 	},
 	"autoload": {
 		"classmap": [
+			"src/RiotAPI/Fixes",
 			"src/DataDragonAPI/Utils"
 		],
 		"psr-4": {

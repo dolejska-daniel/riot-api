@@ -401,25 +401,6 @@ class RiotAPI
 	 */
 	final protected function makeCall( string $override_region = null, string $method = self::METHOD_GET )
 	{
-		if (!function_exists('http_parse_headers'))
-		{
-			function http_parse_headers( $string )
-			{
-				$r = array();
-				foreach (explode("\r\n", $string) as $line)
-				{
-					if (strpos($line, ':'))
-					{
-						$e = explode(": ", $line);
-						$r[$e[0]] = @$e[1];
-					}
-					elseif (strlen($line))
-						$r[] = $line;
-				}
-				return $r;
-			}
-		}
-
 		if ($this->settings[self::SET_CACHE_RATELIMIT] && $this->rate_limit_control != false)
 			if (!$this->rate_limit_control->canCall($this->settings[$this->used_key]))
 				throw new ServerLimitException('API call rate limit would be exceeded by this call.');
@@ -492,6 +473,10 @@ class RiotAPI
 		elseif ($response_code == 429)
 		{
 			throw new ServerLimitException('Rate limit exceeded');
+		}
+		elseif ($response_code == 404)
+		{
+			throw new RequestException('Not found');
 		}
 		elseif ($response_code == 403)
 		{
