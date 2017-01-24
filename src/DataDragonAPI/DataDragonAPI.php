@@ -200,7 +200,7 @@ class DataDragonAPI
 	public static function getSetting( string $name, $defaultValue = null )
 	{
 		return self::isSettingSet($name)
-			? self::getSetting($name)
+			? self::$settings[$name]
 			: $defaultValue;
 	}
 
@@ -407,6 +407,7 @@ class DataDragonAPI
 		$attrs = array_merge([
 			'class' => self::getSetting(self::SET_DEFAULT_CLASS) . " " . self::getSetting(self::SET_SPRITE_CLASS),
 			'style' => 'background: transparent url(' . self::getSetting(self::SET_ENDPOINT) . self::getSetting(self::SET_VERSION) . "/img/sprite/{$source}" . ") -{$x}px -{$y}px; width: {$w}px; height: {$h}px;",
+			'src'   => 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
 			'alt'   => 'Sprite Icon',
 		], self::getSetting(self::SET_CUSTOM_IMG_ATTRS, []));
 		
