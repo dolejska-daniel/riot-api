@@ -24,196 +24,454 @@ namespace RiotAPI\Objects;
  *   Class ParticipantStats
  * This object contains participant statistics information
  *
+ * Used in:
+ *   match (v2.2)
+ *     @link https://developer.riotgames.com/api/methods#!/1224/4756
+ *
  * @package RiotAPI\Objects
  */
 class ParticipantStats extends ApiObject
 {
-	/** @var int $assists */
+	/**
+	 *   Number of assists.
+	 *
+	 * @var int $assists
+	 */
 	public $assists;
 
-	/** @var int $champLevel */
+	/**
+	 *   Champion level achieved.
+	 *
+	 * @var int $champLevel
+	 */
 	public $champLevel;
 
-	/** @var int $combatPlayerScore */
+	/**
+	 *   If game was a dominion game, player's combat score, otherwise 0.
+	 *
+	 * @var int $combatPlayerScore
+	 */
 	public $combatPlayerScore;
 
-	/** @var int $deaths */
+	/**
+	 *   Number of deaths.
+	 *
+	 * @var int $deaths
+	 */
 	public $deaths;
 
-	/** @var int $doubleKills */
+	/**
+	 *   Number of double kills.
+	 *
+	 * @var int $doubleKills
+	 */
 	public $doubleKills;
 
-	/** @var bool $firstBloodAssist */
+	/**
+	 *   Flag indicating if participant got an assist on first blood.
+	 *
+	 * @var bool $firstBloodAssist
+	 */
 	public $firstBloodAssist;
 
-	/** @var bool $firstBloodKill */
+	/**
+	 *   Flag indicating if participant got first blood.
+	 *
+	 * @var bool $firstBloodKill
+	 */
 	public $firstBloodKill;
 
-	/** @var bool $firstInhibitorAssist */
+	/**
+	 *   Flag indicating if participant got an assist on the first inhibitor.
+	 *
+	 * @var bool $firstInhibitorAssist
+	 */
 	public $firstInhibitorAssist;
 
-	/** @var bool $firstInhibitorKill */
+	/**
+	 *   Flag indicating if participant destroyed the first inhibitor.
+	 *
+	 * @var bool $firstInhibitorKill
+	 */
 	public $firstInhibitorKill;
 
-	/** @var bool $wardsPlaced */
+	/**
+	 *   Flag indicating if participant got an assist on the first tower.
+	 *
+	 * @var bool $firstTowerAssist
+	 */
 	public $firstTowerAssist;
 
-	/** @var bool $firstTowerKill */
+	/**
+	 *   Flag indicating if participant destroyed the first tower.
+	 *
+	 * @var bool $firstTowerKill
+	 */
 	public $firstTowerKill;
 
-	/** @var int $goldEarned */
+	/**
+	 *   Gold earned.
+	 *
+	 * @var int $goldEarned
+	 */
 	public $goldEarned;
 
-	/** @var int $goldSpent */
+	/**
+	 *   Gold spent.
+	 *
+	 * @var int $goldSpent
+	 */
 	public $goldSpent;
 
-	/** @var int $inhibitorKills */
+	/**
+	 *   Number of inhibitor kills.
+	 *
+	 * @var int $inhibitorKills
+	 */
 	public $inhibitorKills;
 
-	/** @var int $item0 */
+	/**
+	 *   First item ID.
+	 *
+	 * @var int $item0
+	 */
 	public $item0;
 
-	/** @var int $item1 */
+	/**
+	 *   Second item ID.
+	 *
+	 * @var int $item1
+	 */
 	public $item1;
 
-	/** @var int $item2 */
+	/**
+	 *   Third item ID.
+	 *
+	 * @var int $item2
+	 */
 	public $item2;
 
-	/** @var int $item3 */
+	/**
+	 *   Fourth item ID.
+	 *
+	 * @var int $item3
+	 */
 	public $item3;
 
-	/** @var int $item4 */
+	/**
+	 *   Fifth item ID.
+	 *
+	 * @var int $item4
+	 */
 	public $item4;
 
-	/** @var int $item5 */
+	/**
+	 *   Sixth item ID.
+	 *
+	 * @var int $item5
+	 */
 	public $item5;
 
-	/** @var int $item6 */
+	/**
+	 *   Seventh item ID.
+	 *
+	 * @var int $item6
+	 */
 	public $item6;
 
-	/** @var int $killingSprees */
+	/**
+	 *   Number of killing sprees.
+	 *
+	 * @var int $killingSprees
+	 */
 	public $killingSprees;
 
-	/** @var int $kills */
+	/**
+	 *   Number of kills.
+	 *
+	 * @var int $kills
+	 */
 	public $kills;
 
-	/** @var int $largestCriticalStrike */
+	/**
+	 *   Largest critical strike.
+	 *
+	 * @var int $largestCriticalStrike
+	 */
 	public $largestCriticalStrike;
 
-	/** @var int $largestKillingSpree */
+	/**
+	 *   Largest killing spree.
+	 *
+	 * @var int $largestKillingSpree
+	 */
 	public $largestKillingSpree;
 
-	/** @var int $largestMultiKill */
+	/**
+	 *   Largest multi kill.
+	 *
+	 * @var int $largestMultiKill
+	 */
 	public $largestMultiKill;
 
-	/** @var int $magicDamageDealt */
+	/**
+	 *   Magical damage dealt.
+	 *
+	 * @var int $magicDamageDealt
+	 */
 	public $magicDamageDealt;
 
-	/** @var int $magicDamageDealtToChampions */
+	/**
+	 *   Magical damage dealt to champions.
+	 *
+	 * @var int $magicDamageDealtToChampions
+	 */
 	public $magicDamageDealtToChampions;
 
-	/** @var int $magicDamageTaken */
+	/**
+	 *   Magic damage taken.
+	 *
+	 * @var int $magicDamageTaken
+	 */
 	public $magicDamageTaken;
 
-	/** @var int $minionsKilled */
+	/**
+	 *   Minions killed.
+	 *
+	 * @var int $minionsKilled
+	 */
 	public $minionsKilled;
 
-	/** @var int $neutralMinionsKilled */
+	/**
+	 *   Neutral minions killed.
+	 *
+	 * @var int $neutralMinionsKilled
+	 */
 	public $neutralMinionsKilled;
 
-	/** @var int $neutralMinionsKilledEnemyJungle */
+	/**
+	 *   Neutral jungle minions killed in the enemy team's jungle.
+	 *
+	 * @var int $neutralMinionsKilledEnemyJungle
+	 */
 	public $neutralMinionsKilledEnemyJungle;
 
-	/** @var int $neutralMinionsKilledTeamJungle */
+	/**
+	 *   Neutral jungle minions killed in your team's jungle.
+	 *
+	 * @var int $neutralMinionsKilledTeamJungle
+	 */
 	public $neutralMinionsKilledTeamJungle;
 
-	/** @var int $nodeCapture */
+	/**
+	 *   If game was a dominion game, number of node captures.
+	 *
+	 * @var int $nodeCapture
+	 */
 	public $nodeCapture;
 
-	/** @var int $nodeCaptureAssist */
+	/**
+	 *   If game was a dominion game, number of node capture assists.
+	 *
+	 * @var int $nodeCaptureAssist
+	 */
 	public $nodeCaptureAssist;
 
-	/** @var int $nodeNeutralize */
+	/**
+	 *   If game was a dominion game, number of node neutralizations.
+	 *
+	 * @var int $nodeNeutralize
+	 */
 	public $nodeNeutralize;
 
-	/** @var int $nodeNeutralizeAssist */
+	/**
+	 *   If game was a dominion game, number of node neutralization assists.
+	 *
+	 * @var int $nodeNeutralizeAssist
+	 */
 	public $nodeNeutralizeAssist;
 
-	/** @var int $objectivePlayerScore */
+	/**
+	 *   If game was a dominion game, player's objectives score, otherwise 0.
+	 *
+	 * @var int $objectivePlayerScore
+	 */
 	public $objectivePlayerScore;
 
-	/** @var int $pentaKills */
+	/**
+	 *   Number of penta kills.
+	 *
+	 * @var int $pentaKills
+	 */
 	public $pentaKills;
 
-	/** @var int $physicalDamageDealt */
+	/**
+	 *   Physical damage dealt.
+	 *
+	 * @var int $physicalDamageDealt
+	 */
 	public $physicalDamageDealt;
 
-	/** @var int $physicalDamageDealtToChampions */
+	/**
+	 *   Physical damage dealt to champions.
+	 *
+	 * @var int $physicalDamageDealtToChampions
+	 */
 	public $physicalDamageDealtToChampions;
 
-	/** @var int $physicalDamageTaken */
+	/**
+	 *   Physical damage taken.
+	 *
+	 * @var int $physicalDamageTaken
+	 */
 	public $physicalDamageTaken;
 
-	/** @var int $quadraKills */
+	/**
+	 *   Number of quadra kills.
+	 *
+	 * @var int $quadraKills
+	 */
 	public $quadraKills;
 
-	/** @var int $sightWardsBoughtInGame */
+	/**
+	 *   Sight wards purchased.
+	 *
+	 * @var int $sightWardsBoughtInGame
+	 */
 	public $sightWardsBoughtInGame;
 
-	/** @var int $teamObjective */
+	/**
+	 *   If game was a dominion game, number of completed team objectives (i.e., 
+	 * quests).
+	 *
+	 * @var int $teamObjective
+	 */
 	public $teamObjective;
 
-	/** @var int $totalDamageDealt */
+	/**
+	 *   Total damage dealt.
+	 *
+	 * @var int $totalDamageDealt
+	 */
 	public $totalDamageDealt;
 
-	/** @var int $totalDamageDealtToChampions */
+	/**
+	 *   Total damage dealt to champions.
+	 *
+	 * @var int $totalDamageDealtToChampions
+	 */
 	public $totalDamageDealtToChampions;
 
-	/** @var int $totalDamageTaken */
+	/**
+	 *   Total damage taken.
+	 *
+	 * @var int $totalDamageTaken
+	 */
 	public $totalDamageTaken;
 
-	/** @var int $totalHeal */
+	/**
+	 *   Total heal amount.
+	 *
+	 * @var int $totalHeal
+	 */
 	public $totalHeal;
 
-	/** @var int $totalPlayerScore */
+	/**
+	 *   If game was a dominion game, player's total score, otherwise 0.
+	 *
+	 * @var int $totalPlayerScore
+	 */
 	public $totalPlayerScore;
 
-	/** @var int $totalScoreRank */
+	/**
+	 *   If game was a dominion game, team rank of the player's total score (e.g., 
+	 * 1-5).
+	 *
+	 * @var int $totalScoreRank
+	 */
 	public $totalScoreRank;
 
-	/** @var int $totalTimeCrowdControlDealt */
+	/**
+	 *   Total dealt crowd control time.
+	 *
+	 * @var int $totalTimeCrowdControlDealt
+	 */
 	public $totalTimeCrowdControlDealt;
 
-	/** @var int $totalUnitsHealed */
+	/**
+	 *   Total units healed.
+	 *
+	 * @var int $totalUnitsHealed
+	 */
 	public $totalUnitsHealed;
 
-	/** @var int $towerKills */
+	/**
+	 *   Number of tower kills.
+	 *
+	 * @var int $towerKills
+	 */
 	public $towerKills;
 
-	/** @var int $tripleKills */
+	/**
+	 *   Number of triple kills.
+	 *
+	 * @var int $tripleKills
+	 */
 	public $tripleKills;
 
-	/** @var int $trueDamageDealt */
+	/**
+	 *   True damage dealt.
+	 *
+	 * @var int $trueDamageDealt
+	 */
 	public $trueDamageDealt;
 
-	/** @var int $trueDamageDealtToChampions */
+	/**
+	 *   True damage dealt to champions.
+	 *
+	 * @var int $trueDamageDealtToChampions
+	 */
 	public $trueDamageDealtToChampions;
 
-	/** @var int $trueDamageTaken */
+	/**
+	 *   True damage taken.
+	 *
+	 * @var int $trueDamageTaken
+	 */
 	public $trueDamageTaken;
 
-	/** @var int $unrealKills */
+	/**
+	 *   Number of unreal kills.
+	 *
+	 * @var int $unrealKills
+	 */
 	public $unrealKills;
 
-	/** @var int $visionWardsBoughtInGame */
+	/**
+	 *   Vision wards purchased.
+	 *
+	 * @var int $visionWardsBoughtInGame
+	 */
 	public $visionWardsBoughtInGame;
 
-	/** @var int $wardsKilled */
+	/**
+	 *   Number of wards killed.
+	 *
+	 * @var int $wardsKilled
+	 */
 	public $wardsKilled;
 
-	/** @var int $wardsPlaced */
+	/**
+	 *   Number of wards placed.
+	 *
+	 * @var int $wardsPlaced
+	 */
 	public $wardsPlaced;
 
-	/** @var bool $winner */
+	/**
+	 *   Flag indicating whether or not the participant won.
+	 *
+	 * @var bool $winner
+	 */
 	public $winner;
 }

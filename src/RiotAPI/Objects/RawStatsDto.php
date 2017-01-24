@@ -22,6 +22,11 @@ namespace RiotAPI\Objects;
 
 /**
  *   Class RawStatsDto
+ * This object contains raw stat information.
+ *
+ * Used in:
+ *   game (v1.3)
+ *     @link https://developer.riotgames.com/api/methods#!/1207/4679
  *
  * @package RiotAPI\Objects
  */
@@ -31,7 +36,8 @@ class RawStatsDto extends ApiObject
 	public $assists;
 
 	/**
-	 * Number of enemy inhibitors killed.
+	 *   Number of enemy inhibitors killed.
+	 *
 	 * @var int $barracksKilled
 	 */
 	public $barracksKilled;
@@ -103,7 +109,8 @@ class RawStatsDto extends ApiObject
 	public $largestMultiKill;
 
 	/**
-	 * Number of tier 3 items built.
+	 *   Number of tier 3 items built.
+	 *
 	 * @var int $legendaryItemsCreated
 	 */
 	public $legendaryItemsCreated;
@@ -136,7 +143,8 @@ class RawStatsDto extends ApiObject
 	public $neutralMinionsKilledYourJungle;
 
 	/**
-	 * Flag specifying if the summoner got the killing blow on the nexus.
+	 *   Flag specifying if the summoner got the killing blow on the nexus.
+	 *
 	 * @var bool $nexusKilled
 	 */
 	public $nexusKilled;
@@ -175,13 +183,15 @@ class RawStatsDto extends ApiObject
 	public $physicalDamageTaken;
 
 	/**
-	 * Player position (Legal values: TOP(1), MIDDLE(2), JUNGLE(3), BOT(4))
+	 *   Player position (Legal values: TOP(1), MIDDLE(2), JUNGLE(3), BOT(4)).
+	 *
 	 * @var int $playerPosition
 	 */
 	public $playerPosition;
 
 	/**
-	 * Player role (Legal values: DUO(1), SUPPORT(2), CARRY(3), SOLO(4))
+	 *   Player role (Legal values: DUO(1), SUPPORT(2), CARRY(3), SOLO(4)).
+	 *
 	 * @var int $playerRole
 	 */
 	public $playerRole;
@@ -223,25 +233,29 @@ class RawStatsDto extends ApiObject
 	public $sightWardsBought;
 
 	/**
-	 * 	Number of times (Q) first champion spell was cast.
+	 *   Number of times first champion spell was cast.
+	 *
 	 * @var int $spell1Cast
 	 */
 	public $spell1Cast;
 
 	/**
-	 * Number of times (W) second champion spell was cast.
+	 *   Number of times second champion spell was cast.
+	 *
 	 * @var int $spell2Cast
 	 */
 	public $spell2Cast;
 
 	/**
-	 * 	Number of times (E) third champion spell was cast.
+	 *   Number of times third champion spell was cast.
+	 *
 	 * @var int $spell3Cast
 	 */
 	public $spell3Cast;
 
 	/**
-	 * 	Number of times (R) fourth champion spell was cast.
+	 *   Number of times fourth champion spell was cast.
+	 *
 	 * @var int $spell4Cast
 	 */
 	public $spell4Cast;
@@ -322,7 +336,8 @@ class RawStatsDto extends ApiObject
 	public $wardPlaced;
 
 	/**
-	 * Flag specifying whether or not this game was won.
+	 *   Flag specifying whether or not this game was won.
+	 *
 	 * @var bool $win
 	 */
 	public $win;

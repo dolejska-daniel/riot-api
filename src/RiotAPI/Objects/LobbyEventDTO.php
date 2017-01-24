@@ -21,26 +21,33 @@ namespace RiotAPI\Objects;
 
 
 /**
- *   Class LobbyEventDTO
+ *   Class LobbyEventDto
+ *
+ * Used in:
+ *   tournament-stub (v1)
+ *     @link https://developer.riotgames.com/api/methods#!/1090/3761
  *
  * @package RiotAPI\Objects
  */
-class LobbyEventDTO extends ApiObject
+class LobbyEventDto extends ApiObject
 {
 	/**
-	 * The type of event that was triggered.
+	 *   The type of event that was triggered.
+	 *
 	 * @var string $eventType
 	 */
 	public $eventType;
 
 	/**
-	 * The summoner that triggered the event.
+	 *   The summoner that triggered the event.
+	 *
 	 * @var string $summonerId
 	 */
 	public $summonerId;
 
 	/**
-	 * Timestamp from the event.
+	 *   Timestamp from the event.
+	 *
 	 * @var string $timestamp
 	 */
 	public $timestamp;

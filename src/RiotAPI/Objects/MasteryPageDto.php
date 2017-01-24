@@ -24,30 +24,38 @@ namespace RiotAPI\Objects;
  *   Class MasteryPageDto
  * This object contains mastery page information.
  *
+ * Used in:
+ *   summoner (v1.4)
+ *     @link https://developer.riotgames.com/api/methods#!/1208/4683
+ *
  * @package RiotAPI\Objects
  */
 class MasteryPageDto extends ApiObject
 {
 	/**
-	 * Indicates if the mastery page is the current mastery page.
+	 *   Indicates if the mastery page is the current mastery page.
+	 *
 	 * @var bool $current
 	 */
 	public $current;
 
 	/**
-	 * Mastery page ID.
+	 *   Mastery page ID.
+	 *
 	 * @var int $id
 	 */
 	public $id;
 
 	/**
-	 * Collection of masteries associated with the mastery page.
+	 *   Collection of masteries associated with the mastery page.
+	 *
 	 * @var MasteryDto[] $masteries
 	 */
 	public $masteries;
 
 	/**
-	 * Mastery page name.
+	 *   Mastery page name.
+	 *
 	 * @var string $name
 	 */
 	public $name;

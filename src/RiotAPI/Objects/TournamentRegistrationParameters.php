@@ -19,25 +19,31 @@
 
 namespace RiotAPI\Objects;
 
-use RiotAPI\Exceptions\APIObjectParameterException;
+use RiotAPI\Exceptions\RequestParameterException;
 
 
 /**
  *   Class TournamentRegistrationParameters
- * This object contains required parameters for reqistering Tournament
+ *
+ * Used in:
+ *   tournament-stub (v1)
+ *     @link https://developer.riotgames.com/api/methods#!/1090/3763
  *
  * @package RiotAPI\Objects
  */
 class TournamentRegistrationParameters extends ApiObject
 {
 	/**
-	 * The optional name of the tournament.
+	 *   The optional name of the tournament.
+	 *
 	 * @var string $name
 	 */
 	public $name;
 
 	/**
-	 * The provider ID to specify the regional registered provider data to associate this tournament.
+	 *   The provider ID to specify the regional registered provider data to 
+	 * associate this tournament.
+	 *
 	 * @var int $providerId
 	 */
 	public $providerId;
@@ -49,7 +55,7 @@ class TournamentRegistrationParameters extends ApiObject
 	         'providerId',
 		         ] as $requiredParam)
 			if (!isset($data[$requiredParam]))
-				throw new APIObjectParameterException("Property '$requiredParam' is required to be set by RiotAPI.");
+				throw new RequestParameterException("Property '$requiredParam' is required to be set by RiotAPI.");
 
 		parent::__construct( $data );
 	}

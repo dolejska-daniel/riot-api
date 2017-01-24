@@ -24,31 +24,39 @@ namespace RiotAPI\Objects;
  *   Class RunePageDto
  * This object contains rune page information.
  *
+ * Used in:
+ *   summoner (v1.4)
+ *     @link https://developer.riotgames.com/api/methods#!/1208/4682
+ *
  * @package RiotAPI\Objects
  */
 class RunePageDto extends ApiObject
 {
 	/**
-	 * Indicates if the page is the current page.
+	 *   Indicates if the page is the current page.
+	 *
 	 * @var bool $current
 	 */
 	public $current;
 
 	/**
-	 * Rune page ID.
+	 *   Rune page ID.
+	 *
 	 * @var int $id
 	 */
 	public $id;
 
 	/**
-	 * Rune page name.
+	 *   Rune page name.
+	 *
 	 * @var string $name
 	 */
 	public $name;
 
 	/**
-	 * Collection of rune slots associated with the rune page.
-	 * @var RuneSlotDto[] $slots
+	 *   Collection of rune slots associated with the rune page.
+	 *
+	 * @var Set[RuneSlotDto] $slots
 	 */
 	public $slots;
 }

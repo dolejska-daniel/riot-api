@@ -22,14 +22,27 @@ namespace RiotAPI\Objects;
 
 /**
  *   Class RecentGamesDto
+ * This object contains recent games information.
+ *
+ * Used in:
+ *   game (v1.3)
+ *     @link https://developer.riotgames.com/api/methods#!/1207/4679
  *
  * @package RiotAPI\Objects
  */
 class RecentGamesDto extends ApiObject
 {
-	/** @var GameDto[] $games */
+	/**
+	 *   Collection of recent games played (max 10).
+	 *
+	 * @var Set[GameDto] $games
+	 */
 	public $games;
 
-	/** @var int $summonerId */
+	/**
+	 *   Summoner ID.
+	 *
+	 * @var int $summonerId
+	 */
 	public $summonerId;
 }

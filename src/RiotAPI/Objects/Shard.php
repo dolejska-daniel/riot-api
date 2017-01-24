@@ -23,6 +23,10 @@ namespace RiotAPI\Objects;
 /**
  *   Class Shard
  *
+ * Used in:
+ *   lol-status (v1.0)
+ *     @link https://developer.riotgames.com/api/methods#!/1085/3740
+ *
  * @package RiotAPI\Objects
  */
 class Shard extends ApiObject

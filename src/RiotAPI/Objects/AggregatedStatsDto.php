@@ -24,41 +24,90 @@ namespace RiotAPI\Objects;
  *   Class AggregatedStatsDto
  * This object contains aggregated stat information.
  *
+ * Used in:
+ *   stats (v1.3)
+ *     @link https://developer.riotgames.com/api/methods#!/1209/4686
+ *     @link https://developer.riotgames.com/api/methods#!/1209/4687
+ *
  * @package RiotAPI\Objects
  */
 class AggregatedStatsDto extends ApiObject
 {
-	/** @var int $averageAssists */
+	/**
+	 *   Dominion only.
+	 *
+	 * @var int $averageAssists
+	 */
 	public $averageAssists;
 
-	/** @var int $averageChampionsKilled */
+	/**
+	 *   Dominion only.
+	 *
+	 * @var int $averageChampionsKilled
+	 */
 	public $averageChampionsKilled;
 
-	/** @var int $averageCombatPlayerScore */
+	/**
+	 *   Dominion only.
+	 *
+	 * @var int $averageCombatPlayerScore
+	 */
 	public $averageCombatPlayerScore;
 
-	/** @var int $averageNodeCapture */
+	/**
+	 *   Dominion only.
+	 *
+	 * @var int $averageNodeCapture
+	 */
 	public $averageNodeCapture;
 
-	/** @var int $averageNodeCaptureAssist */
+	/**
+	 *   Dominion only.
+	 *
+	 * @var int $averageNodeCaptureAssist
+	 */
 	public $averageNodeCaptureAssist;
 
-	/** @var int $averageNodeNeutralize */
+	/**
+	 *   Dominion only.
+	 *
+	 * @var int $averageNodeNeutralize
+	 */
 	public $averageNodeNeutralize;
 
-	/** @var int $averageNodeNeutralizeAssist */
+	/**
+	 *   Dominion only.
+	 *
+	 * @var int $averageNodeNeutralizeAssist
+	 */
 	public $averageNodeNeutralizeAssist;
 
-	/** @var int $averageNumDeaths */
+	/**
+	 *   Dominion only.
+	 *
+	 * @var int $averageNumDeaths
+	 */
 	public $averageNumDeaths;
 
-	/** @var int $averageObjectivePlayerScore */
+	/**
+	 *   Dominion only.
+	 *
+	 * @var int $averageObjectivePlayerScore
+	 */
 	public $averageObjectivePlayerScore;
 
-	/** @var int $averageTeamObjective */
+	/**
+	 *   Dominion only.
+	 *
+	 * @var int $averageTeamObjective
+	 */
 	public $averageTeamObjective;
 
-	/** @var int $averageTotalPlayerScore */
+	/**
+	 *   Dominion only.
+	 *
+	 * @var int $averageTotalPlayerScore
+	 */
 	public $averageTotalPlayerScore;
 
 	/** @var int $botGamesPlayed */
@@ -67,13 +116,21 @@ class AggregatedStatsDto extends ApiObject
 	/** @var int $killingSpree */
 	public $killingSpree;
 
-	/** @var int $maxAssists */
+	/**
+	 *   Dominion only.
+	 *
+	 * @var int $maxAssists
+	 */
 	public $maxAssists;
 
 	/** @var int $maxChampionsKilled */
 	public $maxChampionsKilled;
 
-	/** @var int $maxCombatPlayerScore */
+	/**
+	 *   Dominion only.
+	 *
+	 * @var int $maxCombatPlayerScore
+	 */
 	public $maxCombatPlayerScore;
 
 	/** @var int $maxLargestCriticalStrike */
@@ -82,25 +139,53 @@ class AggregatedStatsDto extends ApiObject
 	/** @var int $maxLargestKillingSpree */
 	public $maxLargestKillingSpree;
 
-	/** @var int $maxNodeCapture */
+	/**
+	 *   Dominion only.
+	 *
+	 * @var int $maxNodeCapture
+	 */
 	public $maxNodeCapture;
 
-	/** @var int $maxNodeCaptureAssist */
+	/**
+	 *   Dominion only.
+	 *
+	 * @var int $maxNodeCaptureAssist
+	 */
 	public $maxNodeCaptureAssist;
 
-	/** @var int $maxNodeNeutralize */
+	/**
+	 *   Dominion only.
+	 *
+	 * @var int $maxNodeNeutralize
+	 */
 	public $maxNodeNeutralize;
 
-	/** @var int $maxNodeNeutralizeAssist */
+	/**
+	 *   Dominion only.
+	 *
+	 * @var int $maxNodeNeutralizeAssist
+	 */
 	public $maxNodeNeutralizeAssist;
 
-	/** @var int $maxNumDeaths */
+	/**
+	 *   Only returned for ranked statistics.
+	 *
+	 * @var int $maxNumDeaths
+	 */
 	public $maxNumDeaths;
 
-	/** @var int $maxObjectivePlayerScore */
+	/**
+	 *   Dominion only.
+	 *
+	 * @var int $maxObjectivePlayerScore
+	 */
 	public $maxObjectivePlayerScore;
 
-	/** @var int $maxTeamObjective */
+	/**
+	 *   Dominion only.
+	 *
+	 * @var int $maxTeamObjective
+	 */
 	public $maxTeamObjective;
 
 	/** @var int $maxTimePlayed */
@@ -109,7 +194,11 @@ class AggregatedStatsDto extends ApiObject
 	/** @var int $maxTimeSpentLiving */
 	public $maxTimeSpentLiving;
 
-	/** @var int $maxTotalPlayerScore */
+	/**
+	 *   Dominion only.
+	 *
+	 * @var int $maxTotalPlayerScore
+	 */
 	public $maxTotalPlayerScore;
 
 	/** @var int $mostChampionKillsPerSession */
@@ -139,7 +228,11 @@ class AggregatedStatsDto extends ApiObject
 	/** @var int $totalDamageTaken */
 	public $totalDamageTaken;
 
-	/** @var int $totalDeathsPerSession */
+	/**
+	 *   Only returned for ranked statistics.
+	 *
+	 * @var int $totalDeathsPerSession
+	 */
 	public $totalDeathsPerSession;
 
 	/** @var int $totalDoubleKills */
@@ -163,10 +256,18 @@ class AggregatedStatsDto extends ApiObject
 	/** @var int $totalNeutralMinionsKilled */
 	public $totalNeutralMinionsKilled;
 
-	/** @var int $totalNodeCapture */
+	/**
+	 *   Dominion only.
+	 *
+	 * @var int $totalNodeCapture
+	 */
 	public $totalNodeCapture;
 
-	/** @var int $totalNodeNeutralize */
+	/**
+	 *   Dominion only.
+	 *
+	 * @var int $totalNodeNeutralize
+	 */
 	public $totalNodeNeutralize;
 
 	/** @var int $totalPentaKills */

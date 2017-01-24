@@ -24,102 +24,123 @@ namespace RiotAPI\Objects;
  *   Class Team
  * This object contains team information
  *
+ * Used in:
+ *   match (v2.2)
+ *     @link https://developer.riotgames.com/api/methods#!/1224/4756
+ *
  * @package RiotAPI\Objects
  */
 class Team extends ApiObject
 {
 	/**
-	 * If game was draft mode, contains banned champion data, otherwise null.
-	 * @var BannedChampion[]|null $bans
+	 *   If game was draft mode, contains banned champion data, otherwise null.
+	 *
+	 * @var BannedChampion[] $bans
 	 */
 	public $bans;
 
 	/**
-	 * 	Number of times the team killed baron.
+	 *   Number of times the team killed baron.
+	 *
 	 * @var int $baronKills
 	 */
 	public $baronKills;
 
 	/**
-	 * 	If game was a dominion game, specifies the points the team had at game end, otherwise null.
-	 * @var int|null $dominionVictoryScore
+	 *   If game was a dominion game, specifies the points the team had at game 
+	 * end, otherwise null.
+	 *
+	 * @var int $dominionVictoryScore
 	 */
 	public $dominionVictoryScore;
 
 	/**
-	 * Number of times the team killed dragon.
+	 *   Number of times the team killed dragon.
+	 *
 	 * @var int $dragonKills
 	 */
 	public $dragonKills;
 
 	/**
-	 * Flag indicating whether or not the team got the first baron kill.
+	 *   Flag indicating whether or not the team got the first baron kill.
+	 *
 	 * @var bool $firstBaron
 	 */
 	public $firstBaron;
 
 	/**
-	 * Flag indicating whether or not the team got first blood.
+	 *   Flag indicating whether or not the team got first blood.
+	 *
 	 * @var bool $firstBlood
 	 */
 	public $firstBlood;
 
 	/**
-	 * Flag indicating whether or not the team got the first dragon kill.
+	 *   Flag indicating whether or not the team got the first dragon kill.
+	 *
 	 * @var bool $firstDragon
 	 */
 	public $firstDragon;
 
 	/**
-	 * Flag indicating whether or not the team destroyed the first inhibitor.
+	 *   Flag indicating whether or not the team destroyed the first inhibitor.
+	 *
 	 * @var bool $firstInhibitor
 	 */
 	public $firstInhibitor;
 
 	/**
-	 * Flag indicating whether or not the team got the first rift herald kill.
+	 *   Flag indicating whether or not the team got the first rift herald kill.
+	 *
 	 * @var bool $firstRiftHerald
 	 */
 	public $firstRiftHerald;
 
 	/**
-	 * Flag indicating whether or not the team destroyed the first tower.
+	 *   Flag indicating whether or not the team destroyed the first tower.
+	 *
 	 * @var bool $firstTower
 	 */
 	public $firstTower;
 
 	/**
-	 * Number of inhibitors the team destroyed.
+	 *   Number of inhibitors the team destroyed.
+	 *
 	 * @var int $inhibitorKills
 	 */
 	public $inhibitorKills;
 
 	/**
-	 * Number of times the team killed rift herald.
+	 *   Number of times the team killed rift herald.
+	 *
 	 * @var int $riftHeraldKills
 	 */
 	public $riftHeraldKills;
 
 	/**
-	 * Team ID.
+	 *   Team ID.
+	 *
 	 * @var int $teamId
 	 */
 	public $teamId;
 
 	/**
-	 * Number of towers the team destroyed.
+	 *   Number of towers the team destroyed.
+	 *
 	 * @var int $towerKills
 	 */
 	public $towerKills;
 
 	/**
-	 * Number of times the team killed vilemaw.
+	 *   Number of times the team killed vilemaw.
+	 *
 	 * @var int $vilemawKills
 	 */
 	public $vilemawKills;
 
 	/**
-	 * Flag indicating whether or not the team won.
+	 *   Flag indicating whether or not the team won.
+	 *
 	 * @var bool $winner
 	 */
 	public $winner;

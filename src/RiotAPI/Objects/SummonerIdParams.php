@@ -23,13 +23,18 @@ namespace RiotAPI\Objects;
 /**
  *   Class SummonerIdParams
  *
+ * Used in:
+ *   tournament-stub (v1)
+ *     @link https://developer.riotgames.com/api/methods#!/1090/3760
+ *
  * @package RiotAPI\Objects
  */
 class SummonerIdParams extends ApiObject
 {
 	/**
-	 * The tournament participants.
-	 * @var array[int] $participants
+	 *   the tournament participants.
+	 *
+	 * @var int[] $participants
 	 */
 	public $participants = array();
 }

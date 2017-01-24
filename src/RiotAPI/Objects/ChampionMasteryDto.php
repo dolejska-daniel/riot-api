@@ -22,32 +22,75 @@ namespace RiotAPI\Objects;
 
 /**
  *   Class ChampionMasteryDto
+ * This object contains single Champion Mastery information for player and champion combination.
+ *
+ * Used in:
+ *   championmastery (unknown)
+ *     @link https://developer.riotgames.com/api/methods#!/1091/3769
+ *     @link https://developer.riotgames.com/api/methods#!/1091/3768
+ *     @link https://developer.riotgames.com/api/methods#!/1091/3764
  *
  * @package RiotAPI\Objects
  */
 class ChampionMasteryDto extends ApiObject
 {
-	/** @var int $playerId */
-	public $playerId;
-
-	/** @var int $championId */
+	/**
+	 *   Champion ID for this entry.
+	 *
+	 * @var int $championId
+	 */
 	public $championId;
 
-	/** @var int $championLevel */
+	/**
+	 *   Champion level for specified player and champion combination.
+	 *
+	 * @var int $championLevel
+	 */
 	public $championLevel;
 
-	/** @var int $championPoints */
+	/**
+	 *   Total number of champion points for this player and champion combination - 
+	 * they are used to determine championLevel.
+	 *
+	 * @var int $championPoints
+	 */
 	public $championPoints;
 
-	/** @var int $lastPlayTime */
-	public $lastPlayTime;
-
-	/** @var bool */
-	public $chestGranted;
-
-	/** @var int $championPointsSinceLastLevel */
+	/**
+	 *   Number of points earned since current level has been achieved. Zero if 
+	 * player reached maximum champion level for this champion.
+	 *
+	 * @var int $championPointsSinceLastLevel
+	 */
 	public $championPointsSinceLastLevel;
 
-	/** @var int $championPointsUntilNextLevel */
+	/**
+	 *   Number of points needed to achieve next level. Zero if player reached 
+	 * maximum champion level for this champion.
+	 *
+	 * @var int $championPointsUntilNextLevel
+	 */
 	public $championPointsUntilNextLevel;
+
+	/**
+	 *   Is chest granted for this champion or not in current season.
+	 *
+	 * @var bool $chestGranted
+	 */
+	public $chestGranted;
+
+	/**
+	 *   Last time this champion was played by this player - in Unix milliseconds 
+	 * time format.
+	 *
+	 * @var int $lastPlayTime
+	 */
+	public $lastPlayTime;
+
+	/**
+	 *   Player ID for this entry.
+	 *
+	 * @var int $playerId
+	 */
+	public $playerId;
 }

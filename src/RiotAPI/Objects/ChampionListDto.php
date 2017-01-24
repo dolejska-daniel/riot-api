@@ -22,11 +22,20 @@ namespace RiotAPI\Objects;
 
 /**
  *   Class ChampionListDto
+ * This object contains a collection of champion information.
+ *
+ * Used in:
+ *   champion (v1.2)
+ *     @link https://developer.riotgames.com/api/methods#!/1206/4678
  *
  * @package RiotAPI\Objects
  */
 class ChampionListDto extends ApiObject
 {
-	/** @var ChampionDto[] $champions */
+	/**
+	 *   The collection of champion information.
+	 *
+	 * @var ChampionDto[] $champions
+	 */
 	public $champions;
 }

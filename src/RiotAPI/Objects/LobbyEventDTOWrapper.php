@@ -21,11 +21,15 @@ namespace RiotAPI\Objects;
 
 
 /**
- *   Class LobbyEventDTOWrapper
+ *   Class LobbyEventDtoWrapper
+ *
+ * Used in:
+ *   tournament-stub (v1)
+ *     @link https://developer.riotgames.com/api/methods#!/1090/3761
  *
  * @package RiotAPI\Objects
  */
-class LobbyEventDTOWrapper extends ApiObject
+class LobbyEventDtoWrapper extends ApiObject
 {
 	/** @var LobbyEventDTO[] $eventList */
 	public $eventList;

@@ -22,31 +22,40 @@ namespace RiotAPI\Objects;
 
 /**
  *   Class Player
+ * This object contains match player information
+ *
+ * Used in:
+ *   match (v2.2)
+ *     @link https://developer.riotgames.com/api/methods#!/1224/4756
  *
  * @package RiotAPI\Objects
  */
 class Player extends ApiObject
 {
 	/**
-	 * Match history URI.
+	 *   Match history URI.
+	 *
 	 * @var string $matchHistoryUri
 	 */
 	public $matchHistoryUri;
 
 	/**
-	 * Profile icon ID.
+	 *   Profile icon ID.
+	 *
 	 * @var int $profileIcon
 	 */
 	public $profileIcon;
 
 	/**
-	 * Summoner ID.
+	 *   Summoner ID.
+	 *
 	 * @var int $summonerId
 	 */
 	public $summonerId;
 
 	/**
-	 * Summoner name.
+	 *   Summoner name.
+	 *
 	 * @var string $summonerName
 	 */
 	public $summonerName;

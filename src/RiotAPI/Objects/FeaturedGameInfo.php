@@ -23,40 +23,89 @@ namespace RiotAPI\Objects;
 /**
  *   Class FeaturedGameInfo
  *
+ * Used in:
+ *   featured-games (v1.0)
+ *     @link https://developer.riotgames.com/api/methods#!/977/3337
+ *
  * @package RiotAPI\Objects
  */
 class FeaturedGameInfo extends ApiObject
 {
-	/** @var BannedChampion[] $bannedChampions */
+	/**
+	 *   Banned champion information.
+	 *
+	 * @var BannedChampion[] $bannedChampions
+	 */
 	public $bannedChampions;
 
-	/** @var int $gameId */
+	/**
+	 *   The ID of the game.
+	 *
+	 * @var int $gameId
+	 */
 	public $gameId;
 
-	/** @var int $gameLength */
+	/**
+	 *   The amount of time in seconds that has passed since the game started.
+	 *
+	 * @var int $gameLength
+	 */
 	public $gameLength;
 
-	/** @var string $gameMode */
+	/**
+	 *   The game mode (Legal values: CLASSIC, ODIN, ARAM, TUTORIAL, ONEFORALL, 
+	 * ASCENSION, FIRSTBLOOD, KINGPORO).
+	 *
+	 * @var string $gameMode
+	 */
 	public $gameMode;
 
-	/** @var int $gameQueueConfigId */
+	/**
+	 *   The queue type (queue types are documented on the Game Constants page).
+	 *
+	 * @var int $gameQueueConfigId
+	 */
 	public $gameQueueConfigId;
 
-	/** @var int $gameStartTime */
+	/**
+	 *   The game start time represented in epoch milliseconds.
+	 *
+	 * @var int $gameStartTime
+	 */
 	public $gameStartTime;
 
-	/** @var string $gameType */
+	/**
+	 *   The game type (Legal values: CUSTOM_GAME, MATCHED_GAME, TUTORIAL_GAME).
+	 *
+	 * @var string $gameType
+	 */
 	public $gameType;
 
-	/** @var int $mapId */
+	/**
+	 *   The ID of the map.
+	 *
+	 * @var int $mapId
+	 */
 	public $mapId;
 
-	/** @var Observer $observers */
+	/**
+	 *   The observer information.
+	 *
+	 * @var Observer $observers
+	 */
 	public $observers;
 
-	/** @var Participant[] $participants */
+	/**
+	 *   The participant information.
+	 *
+	 * @var Participant[] $participants
+	 */
 	public $participants;
 
-	/** @var string $platformId */
+	/**
+	 *   The ID of the platform on which the game is being played.
+	 *
+	 * @var string $platformId
+	 */
 	public $platformId;
 }

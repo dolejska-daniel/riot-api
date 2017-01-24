@@ -24,6 +24,10 @@ namespace RiotAPI\Objects;
  *   Class MatchList
  * This object contains match list information
  *
+ * Used in:
+ *   matchlist (v2.2)
+ *     @link https://developer.riotgames.com/api/methods#!/1223/4754
+ *
  * @package RiotAPI\Objects
  */
 class MatchList extends ApiObject

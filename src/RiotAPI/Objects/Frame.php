@@ -24,25 +24,32 @@ namespace RiotAPI\Objects;
  *   Class Frame
  * This object contains game frame information
  *
+ * Used in:
+ *   match (v2.2)
+ *     @link https://developer.riotgames.com/api/methods#!/1224/4756
+ *
  * @package RiotAPI\Objects
  */
 class Frame extends ApiObject
 {
 	/**
-	 * List of events for this frame.
+	 *   List of events for this frame.
+	 *
 	 * @var Event[] $events
 	 */
 	public $events;
 
 	/**
-	 * Map of each participant ID to the participant's information for the frame.
+	 *   Map of each participant ID to the participant's information for the frame.
+	 *
 	 * @var ParticipantFrame[] $participantFrames
 	 */
 	public $participantFrames;
 
 	/**
-	 * Represents how many milliseconds into the game the frame occurred.
-	 * @var int
+	 *   Represents how many milliseconds into the game the frame occurred.
+	 *
+	 * @var int $timestamp
 	 */
 	public $timestamp;
 }

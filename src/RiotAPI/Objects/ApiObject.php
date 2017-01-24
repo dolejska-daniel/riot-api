@@ -26,7 +26,7 @@ namespace RiotAPI\Objects;
  *
  * @package RiotAPI\Objects
  */
-abstract class ApiObject implements IApiObject
+class ApiObject implements IApiObject
 {
 	/**
 	 *   ApiObject constructor.
@@ -40,20 +40,22 @@ abstract class ApiObject implements IApiObject
 
 		$this->_data = $data;
 
-		// Assigns data to class properties
-		$ref = new \ReflectionClass($this);
+		// Tries to assigns data to class properties
+		$selfRef = new \ReflectionClass($this);
+		$namespace = $selfRef->getNamespaceName();
+
 		foreach ($data as $property => $value)
 		{
 			try
 			{
-				if ($propRef = $ref->getProperty($property))
+				if ($propRef = $selfRef->getProperty($property))
 				{
-					//  Object has required property
+					//  Object has required property, time to discover if it's
 					$dataType = self::getPropertyDataType($propRef->getDocComment());
 					if ($dataType !== false)
 					{
 						//  Property is special DataType
-						$newRef = new \ReflectionClass('RiotAPI\Objects\\' . $dataType->class);
+						$newRef = new \ReflectionClass("$namespace\\$dataType->class");
 						if ($dataType->isArray)
 						{
 							//  Property is array of special DataType
@@ -69,10 +71,18 @@ abstract class ApiObject implements IApiObject
 						$this->$property = $value;
 				}
 			}
+			//  If property does not exist
 			catch (\ReflectionException $ex) {}
 		}
 	}
 
+	/**
+	 *   Returns DataType specified in PHPDoc comment.
+	 *
+	 * @param string $phpDocComment
+	 *
+	 * @return bool|\stdClass
+	 */
 	protected static function getPropertyDataType( string $phpDocComment )
 	{
 		$o = new \stdClass();
@@ -82,19 +92,18 @@ abstract class ApiObject implements IApiObject
 		$o->class = $matches[1];
 		$o->isArray = isset($matches[2]);
 
-		if (in_array($o->class, [ 'int', 'string', 'bool', 'double' ]))
+		if (in_array($o->class, [ 'integer', 'int', 'string', 'bool', 'boolean', 'double', 'float', 'array' ]))
 			return false;
 
 		return $o;
-		/*
-		if (new \ReflectionClass('RiotAPI\Objects\\' . $o->class))
-			return $o;
-		else
-			return false;*/
 	}
 
 
-	/** @var array */
+	/**
+	 *   This variable contains all the data in an array.
+	 *
+	 * @var array
+	 */
 	protected $_data;
 
 	/**

@@ -19,27 +19,33 @@
 
 namespace RiotAPI\Objects;
 
-use RiotAPI\Exceptions\APIObjectParameterException;
+use RiotAPI\Exceptions\RequestParameterException;
 
 
 /**
  *   Class ProviderRegistrationParameters
- * This object contains parameters required for registering TournamentProvider
+ *
+ * Used in:
+ *   tournament-stub (v1)
+ *     @link https://developer.riotgames.com/api/methods#!/1090/3762
  *
  * @package RiotAPI\Objects
  */
 class ProviderRegistrationParameters extends ApiObject
 {
 	/**
-	 * The region in which the provider will be running tournaments.
+	 *   The region in which the provider will be running tournaments.
+	 *
 	 * @var string $region
 	 */
 	public $region;
 
 	/**
-	 * The provider's callback URL to which tournament game results in this region should be posted. The URL must be well-formed,
-	 * use the http or https protocol, and use the default port for the protocol (http URLs must use port 80, https URLs must
-	 * use port 443).
+	 *   The provider's callback URL to which tournament game results in this 
+	 * region should be posted. The URL must be well-formed, use the http or https 
+	 * protocol, and use the default port for the protocol (http URLs must use port 80, 
+	 * https URLs must use port 443).
+	 *
 	 * @var string $url
 	 */
 	public $url;
@@ -52,7 +58,7 @@ class ProviderRegistrationParameters extends ApiObject
 			'url',
 		         ] as $requiredParam)
 			if (!isset($data[$requiredParam]))
-				throw new APIObjectParameterException("Property '$requiredParam' is required to be set by RiotAPI.");
+				throw new RequestParameterException("Property '$requiredParam' is required to be set by RiotAPI.");
 
 		parent::__construct( $data );
 	}

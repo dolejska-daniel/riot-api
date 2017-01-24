@@ -24,18 +24,25 @@ namespace RiotAPI\Objects;
  *   Class MasteryDto
  * This object contains mastery information.
  *
+ * Used in:
+ *   summoner (v1.4)
+ *     @link https://developer.riotgames.com/api/methods#!/1208/4683
+ *
  * @package RiotAPI\Objects
  */
 class MasteryDto extends ApiObject
 {
 	/**
-	 * Mastery ID. For static information correlating to masteries, please refer to the LoL Static Data API.
+	 *   Mastery ID. For static information correlating to masteries, please refer 
+	 * to the LoL Static Data API.
+	 *
 	 * @var int $id
 	 */
 	public $id;
 
 	/**
-	 * Mastery rank (i.e., the number of points put into this mastery).
+	 *   Mastery rank (i.e., the number of points put into this mastery).
+	 *
 	 * @var int $rank
 	 */
 	public $rank;

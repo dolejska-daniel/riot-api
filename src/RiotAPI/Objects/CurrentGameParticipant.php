@@ -23,37 +23,81 @@ namespace RiotAPI\Objects;
 /**
  *   Class CurrentGameParticipant
  *
+ * Used in:
+ *   current-game (v1.0)
+ *     @link https://developer.riotgames.com/api/methods#!/976/3336
+ *
  * @package RiotAPI\Objects
  */
 class CurrentGameParticipant extends ApiObject
 {
-	/** @var bool $bot */
+	/**
+	 *   Flag indicating whether or not this participant is a bot.
+	 *
+	 * @var bool $bot
+	 */
 	public $bot;
 
-	/** @var int $championId */
+	/**
+	 *   The ID of the champion played by this participant.
+	 *
+	 * @var int $championId
+	 */
 	public $championId;
 
-	/** @var Mastery[] $masteries */
+	/**
+	 *   The masteries used by this participant.
+	 *
+	 * @var Mastery[] $masteries
+	 */
 	public $masteries;
 
-	/** @var int $profileIconId */
+	/**
+	 *   The ID of the profile icon used by this participant.
+	 *
+	 * @var int $profileIconId
+	 */
 	public $profileIconId;
 
-	/** @var Rune[] $runes */
+	/**
+	 *   The runes used by this participant.
+	 *
+	 * @var Rune[] $runes
+	 */
 	public $runes;
 
-	/** @var int $spell1Id */
+	/**
+	 *   The ID of the first summoner spell used by this participant.
+	 *
+	 * @var int $spell1Id
+	 */
 	public $spell1Id;
 
-	/** @var int $spell2Id */
+	/**
+	 *   The ID of the second summoner spell used by this participant.
+	 *
+	 * @var int $spell2Id
+	 */
 	public $spell2Id;
 
-	/** @var int $summonerId */
+	/**
+	 *   The summoner ID of this participant.
+	 *
+	 * @var int $summonerId
+	 */
 	public $summonerId;
 
-	/** @var string $summonerName */
+	/**
+	 *   The summoner name of this participant.
+	 *
+	 * @var string $summonerName
+	 */
 	public $summonerName;
 
-	/** @var int $teamId */
+	/**
+	 *   The team ID of this participant, indicating the participant's team.
+	 *
+	 * @var int $teamId
+	 */
 	public $teamId;
 }

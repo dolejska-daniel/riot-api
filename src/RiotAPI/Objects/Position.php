@@ -24,6 +24,10 @@ namespace RiotAPI\Objects;
  *   Class Position
  * This object contains participant frame position information
  *
+ * Used in:
+ *   match (v2.2)
+ *     @link https://developer.riotgames.com/api/methods#!/1224/4756
+ *
  * @package RiotAPI\Objects
  */
 class Position extends ApiObject

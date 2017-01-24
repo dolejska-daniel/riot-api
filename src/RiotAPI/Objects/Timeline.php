@@ -24,18 +24,24 @@ namespace RiotAPI\Objects;
  *   Class Timeline
  * This object contains game timeline information
  *
+ * Used in:
+ *   match (v2.2)
+ *     @link https://developer.riotgames.com/api/methods#!/1224/4756
+ *
  * @package RiotAPI\Objects
  */
 class Timeline extends ApiObject
 {
 	/**
-	 * Time between each returned frame in milliseconds.
+	 *   Time between each returned frame in milliseconds.
+	 *
 	 * @var int $frameInterval
 	 */
 	public $frameInterval;
 
 	/**
-	 * List of timeline frames for the game.
+	 *   List of timeline frames for the game.
+	 *
 	 * @var Frame[] $frames
 	 */
 	public $frames;

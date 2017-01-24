@@ -20,37 +20,54 @@
 namespace RiotAPI\Objects;
 
 
+/**
+ *   Class PlayerStatsSummaryDto
+ * This object contains player stats summary information.
+ *
+ * Used in:
+ *   stats (v1.3)
+ *     @link https://developer.riotgames.com/api/methods#!/1209/4687
+ *
+ * @package RiotAPI\Objects
+ */
 class PlayerStatsSummaryDto extends ApiObject
 {
 	/**
-	 * Aggregated stats.
+	 *   Aggregated stats.
+	 *
 	 * @var AggregatedStatsDto $aggregatedStats
 	 */
 	public $aggregatedStats;
 
 	/**
-	 * Number of losses for this queue type. Returned for ranked queue types only.
+	 *   Number of losses for this queue type. Returned for ranked queue types 
+	 * only.
+	 *
 	 * @var int $losses
 	 */
 	public $losses;
 
 	/**
-	 * Date stats were last modified specified as epoch milliseconds.
+	 *   Date stats were last modified specified as epoch milliseconds.
+	 *
 	 * @var int $modifyDate
 	 */
 	public $modifyDate;
 
 	/**
-	 * Player stats summary type. (Legal values: AramUnranked5x5, Ascension, Bilgewater, CAP5x5, CoopVsAI, CoopVsAI3x3,
-	 * CounterPick, FirstBlood1x1, FirstBlood2x2, Hexakill, KingPoro, NightmareBot, OdinUnranked, OneForAll5x5, RankedPremade3x3,
-	 * RankedPremade5x5, RankedSolo5x5, RankedTeam3x3, RankedTeam5x5, SummonersRift6x6, Unranked, Unranked3x3, URF, URFBots,
-	 * Siege, RankedFlexSR, RankedFlexTT)
+	 *   Player stats summary type. (Legal values: AramUnranked5x5, Ascension, 
+	 * Bilgewater, CAP5x5, CoopVsAI, CoopVsAI3x3, CounterPick, FirstBlood1x1, FirstBlood2x2, 
+	 * Hexakill, KingPoro, NightmareBot, OdinUnranked, OneForAll5x5, RankedPremade3x3, 
+	 * RankedPremade5x5, RankedSolo5x5, RankedTeam3x3, RankedTeam5x5, SummonersRift6x6, Unranked, 
+	 * Unranked3x3, URF, URFBots, Siege, RankedFlexSR, RankedFlexTT).
+	 *
 	 * @var string $playerStatSummaryType
 	 */
 	public $playerStatSummaryType;
 
 	/**
-	 * Number of wins for this queue type.
+	 *   Number of wins for this queue type.
+	 *
 	 * @var int $wins
 	 */
 	public $wins;

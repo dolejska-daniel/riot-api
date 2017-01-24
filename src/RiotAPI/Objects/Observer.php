@@ -23,10 +23,20 @@ namespace RiotAPI\Objects;
 /**
  *   Class Observer
  *
+ * Used in:
+ *   current-game (v1.0)
+ *     @link https://developer.riotgames.com/api/methods#!/976/3336
+ *   featured-games (v1.0)
+ *     @link https://developer.riotgames.com/api/methods#!/977/3337
+ *
  * @package RiotAPI\Objects
  */
 class Observer extends ApiObject
 {
-	/** @var string $encryptionKey */
+	/**
+	 *   Key used to decrypt the spectator grid game data for playback.
+	 *
+	 * @var string $encryptionKey
+	 */
 	public $encryptionKey;
 }

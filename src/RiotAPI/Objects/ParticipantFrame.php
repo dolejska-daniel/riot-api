@@ -24,37 +24,81 @@ namespace RiotAPI\Objects;
  *   Class ParticipantFrame
  * This object contains participant frame information
  *
+ * Used in:
+ *   match (v2.2)
+ *     @link https://developer.riotgames.com/api/methods#!/1224/4756
+ *
  * @package RiotAPI\Objects
  */
 class ParticipantFrame extends ApiObject
 {
-	/** @var int $currentGold */
+	/**
+	 *   Participant's current gold.
+	 *
+	 * @var int $currentGold
+	 */
 	public $currentGold;
 
-	/** @var int $dominionScore */
+	/**
+	 *   Dominion score of the participant.
+	 *
+	 * @var int $dominionScore
+	 */
 	public $dominionScore;
 
-	/** @var int $jungleMinionsKilled */
+	/**
+	 *   Number of jungle minions killed by participant.
+	 *
+	 * @var int $jungleMinionsKilled
+	 */
 	public $jungleMinionsKilled;
 
-	/** @var int $level */
+	/**
+	 *   Participant's current level.
+	 *
+	 * @var int $level
+	 */
 	public $level;
 
-	/** @var int $minionsKilled */
+	/**
+	 *   Number of minions killed by participant.
+	 *
+	 * @var int $minionsKilled
+	 */
 	public $minionsKilled;
 
-	/** @var int $participantId */
+	/**
+	 *   Participant ID.
+	 *
+	 * @var int $participantId
+	 */
 	public $participantId;
 
-	/** @var Position $position */
+	/**
+	 *   Participant's position.
+	 *
+	 * @var Position $position
+	 */
 	public $position;
 
-	/** @var int $teamScore */
+	/**
+	 *   Team score of the participant.
+	 *
+	 * @var int $teamScore
+	 */
 	public $teamScore;
 
-	/** @var int $totalGold */
+	/**
+	 *   Participant's total gold.
+	 *
+	 * @var int $totalGold
+	 */
 	public $totalGold;
 
-	/** @var int $xp */
+	/**
+	 *   Experience earned by participant.
+	 *
+	 * @var int $xp
+	 */
 	public $xp;
 }

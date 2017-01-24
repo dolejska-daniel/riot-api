@@ -22,76 +22,181 @@ namespace RiotAPI\Objects;
 
 /**
  *   Class Event
- * This object contains game event information. Note that not all legal type values documented below are valid for all games.
- * Event data evolves over time and certain values may be relevant only for older or newer games.
+ * This object contains game event information. Note that not all legal type values documented below are valid for all games. Event data evolves over time and certain values may be relevant only for older or newer games.
+ *
+ * Used in:
+ *   match (v2.2)
+ *     @link https://developer.riotgames.com/api/methods#!/1224/4756
  *
  * @package RiotAPI\Objects
  */
 class Event extends ApiObject
 {
-	/** @var string $ascendedType */
+	/**
+	 *   The ascended type of the event. Only present if relevant. Note that 
+	 * CLEAR_ASCENDED refers to when a participants kills the ascended player. (Legal values: 
+	 * CHAMPION_ASCENDED, CLEAR_ASCENDED, MINION_ASCENDED).
+	 *
+	 * @var string $ascendedType
+	 */
 	public $ascendedType;
 
-	/** @var int[] $assistingParticipantIds */
+	/**
+	 *   The assisting participant IDs of the event. Only present if relevant.
+	 *
+	 * @var int[] $assistingParticipantIds
+	 */
 	public $assistingParticipantIds;
 
-	/** @var string $buildingType */
+	/**
+	 *   The building type of the event. Only present if relevant. (Legal values: 
+	 * INHIBITOR_BUILDING, TOWER_BUILDING).
+	 *
+	 * @var string $buildingType
+	 */
 	public $buildingType;
 
-	/** @var int $creatorId */
+	/**
+	 *   The creator ID of the event. Only present if relevant.
+	 *
+	 * @var int $creatorId
+	 */
 	public $creatorId;
 
-	/** @var string $eventType */
+	/**
+	 *   Event type. (Legal values: ASCENDED_EVENT, BUILDING_KILL, CAPTURE_POINT, 
+	 * CHAMPION_KILL, ELITE_MONSTER_KILL, ITEM_DESTROYED, ITEM_PURCHASED, ITEM_SOLD, ITEM_UNDO, 
+	 * PORO_KING_SUMMON, SKILL_LEVEL_UP, WARD_KILL, WARD_PLACED).
+	 *
+	 * @var string $eventType
+	 */
 	public $eventType;
 
-	/** @var int $itemAfter */
+	/**
+	 *   The ending item ID of the event. Only present if relevant.
+	 *
+	 * @var int $itemAfter
+	 */
 	public $itemAfter;
 
-	/** @var int $itemBefore */
+	/**
+	 *   The starting item ID of the event. Only present if relevant.
+	 *
+	 * @var int $itemBefore
+	 */
 	public $itemBefore;
 
-	/** @var int $itemId */
+	/**
+	 *   The item ID of the event. Only present if relevant.
+	 *
+	 * @var int $itemId
+	 */
 	public $itemId;
 
-	/** @var int $killerId */
+	/**
+	 *   The killer ID of the event. Only present if relevant. Killer ID 0 
+	 * indicates a minion.
+	 *
+	 * @var int $killerId
+	 */
 	public $killerId;
 
-	/** @var string $laneType */
+	/**
+	 *   The lane type of the event. Only present if relevant. (Legal values: 
+	 * BOT_LANE, MID_LANE, TOP_LANE).
+	 *
+	 * @var string $laneType
+	 */
 	public $laneType;
 
-	/** @var string $levelUpType */
+	/**
+	 *   The level up type of the event. Only present if relevant. (Legal values: 
+	 * EVOLVE, NORMAL).
+	 *
+	 * @var string $levelUpType
+	 */
 	public $levelUpType;
 
-	/** @var string $monsterSubType */
+	/**
+	 *   The monster subtype of the event. Only present if relevant.
+	 *
+	 * @var string $monsterSubType
+	 */
 	public $monsterSubType;
 
-	/** @var string $monsterType */
+	/**
+	 *   The monster type of the event. Only present if relevant. (Legal values: 
+	 * BARON_NASHOR, BLUE_GOLEM, DRAGON, RED_LIZARD, RIFTHERALD, VILEMAW).
+	 *
+	 * @var string $monsterType
+	 */
 	public $monsterType;
 
-	/** @var int $participantId */
+	/**
+	 *   The participant ID of the event. Only present if relevant.
+	 *
+	 * @var int $participantId
+	 */
 	public $participantId;
 
-	/** @var string $pointCaptured */
+	/**
+	 *   The point captured in the event. Only present if relevant. (Legal values: 
+	 * POINT_A, POINT_B, POINT_C, POINT_D, POINT_E).
+	 *
+	 * @var string $pointCaptured
+	 */
 	public $pointCaptured;
 
-	/** @var Position $position */
+	/**
+	 *   The position of the event. Only present if relevant.
+	 *
+	 * @var Position $position
+	 */
 	public $position;
 
-	/** @var int $skillSlot */
+	/**
+	 *   The skill slot of the event. Only present if relevant.
+	 *
+	 * @var int $skillSlot
+	 */
 	public $skillSlot;
 
-	/** @var int $teamId */
+	/**
+	 *   The team ID of the event. Only present if relevant.
+	 *
+	 * @var int $teamId
+	 */
 	public $teamId;
 
-	/** @var int $timestamp */
+	/**
+	 *   Represents how many milliseconds into the game the event occurred.
+	 *
+	 * @var int $timestamp
+	 */
 	public $timestamp;
 
-	/** @var string $towerType */
+	/**
+	 *   The tower type of the event. Only present if relevant. (Legal values: 
+	 * BASE_TURRET, FOUNTAIN_TURRET, INNER_TURRET, NEXUS_TURRET, OUTER_TURRET, 
+	 * UNDEFINED_TURRET).
+	 *
+	 * @var string $towerType
+	 */
 	public $towerType;
 
-	/** @var int $victimId */
+	/**
+	 *   The victim ID of the event. Only present if relevant.
+	 *
+	 * @var int $victimId
+	 */
 	public $victimId;
 
-	/** @var string $wardType */
+	/**
+	 *   The ward type of the event. Only present if relevant. (Legal values: 
+	 * BLUE_TRINKET, SIGHT_WARD, TEEMO_MUSHROOM, UNDEFINED, VISION_WARD, YELLOW_TRINKET, 
+	 * YELLOW_TRINKET_UPGRADE).
+	 *
+	 * @var string $wardType
+	 */
 	public $wardType;
 }

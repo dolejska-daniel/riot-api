@@ -22,26 +22,58 @@ namespace RiotAPI\Objects;
 
 /**
  *   Class ChampionDto
+ * This object contains champion information.
+ *
+ * Used in:
+ *   champion (v1.2)
+ *     @link https://developer.riotgames.com/api/methods#!/1206/4678
+ *     @link https://developer.riotgames.com/api/methods#!/1206/4677
  *
  * @package RiotAPI\Objects
  */
 class ChampionDto extends ApiObject
 {
-	/** @var int */
-	public $id;
-
-	/** @var bool */
+	/**
+	 *   Indicates if the champion is active.
+	 *
+	 * @var bool $active
+	 */
 	public $active;
 
-	/** @var bool */
-	public $rankedPlayEnabled;
-
-	/** @var bool */
+	/**
+	 *   Bot enabled flag (for custom games).
+	 *
+	 * @var bool $botEnabled
+	 */
 	public $botEnabled;
 
-	/** @var bool */
+	/**
+	 *   Bot Match Made enabled flag (for Co-op vs. AI games).
+	 *
+	 * @var bool $botMmEnabled
+	 */
 	public $botMmEnabled;
 
-	/** @var bool */
+	/**
+	 *   Indicates if the champion is free to play. Free to play champions are 
+	 * rotated periodically.
+	 *
+	 * @var bool $freeToPlay
+	 */
 	public $freeToPlay;
+
+	/**
+	 *   Champion ID. For static information correlating to champion IDs, please 
+	 * refer to the LoL Static Data API.
+	 *
+	 * @var int $id
+	 */
+	public $id;
+
+	/**
+	 *   Ranked play enabled flag.
+	 *
+	 * @var bool $rankedPlayEnabled
+	 */
+	public $rankedPlayEnabled;
 }

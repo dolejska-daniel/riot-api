@@ -24,24 +24,31 @@ namespace RiotAPI\Objects;
  *   Class PlayerDto
  * This object contains player information.
  *
+ * Used in:
+ *   game (v1.3)
+ *     @link https://developer.riotgames.com/api/methods#!/1207/4679
+ *
  * @package RiotAPI\Objects
  */
 class PlayerDto extends ApiObject
 {
 	/**
-	 * Champion id associated with player.
+	 *   Champion id associated with player.
+	 *
 	 * @var int $championId
 	 */
 	public $championId;
 
 	/**
-	 * Summoner id associated with player.
+	 *   Summoner id associated with player.
+	 *
 	 * @var int $summonerId
 	 */
 	public $summonerId;
 
 	/**
-	 * Team id associated with player.
+	 *   Team id associated with player.
+	 *
 	 * @var int $teamId
 	 */
 	public $teamId;

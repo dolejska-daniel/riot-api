@@ -24,24 +24,31 @@ namespace RiotAPI\Objects;
  *   Class RankedStatsDto
  * This object contains ranked stats information.
  *
+ * Used in:
+ *   stats (v1.3)
+ *     @link https://developer.riotgames.com/api/methods#!/1209/4686
+ *
  * @package RiotAPI\Objects
  */
 class RankedStatsDto extends ApiObject
 {
 	/**
-	 * Collection of aggregated stats summarized by champion.
+	 *   Collection of aggregated stats summarized by champion.
+	 *
 	 * @var ChampionStatsDto[] $champions
 	 */
 	public $champions;
 
 	/**
-	 * Date stats were last modified specified as epoch milliseconds.
+	 *   Date stats were last modified specified as epoch milliseconds.
+	 *
 	 * @var int $modifyDate
 	 */
 	public $modifyDate;
 
 	/**
-	 * Summoner ID.
+	 *   Summoner ID.
+	 *
 	 * @var int $summonerId
 	 */
 	public $summonerId;

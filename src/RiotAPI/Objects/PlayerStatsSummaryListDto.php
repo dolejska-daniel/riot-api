@@ -24,18 +24,24 @@ namespace RiotAPI\Objects;
  *   Class PlayerStatsSummaryListDto
  * This object contains a collection of player stats summary information.
  *
+ * Used in:
+ *   stats (v1.3)
+ *     @link https://developer.riotgames.com/api/methods#!/1209/4687
+ *
  * @package RiotAPI\Objects
  */
 class PlayerStatsSummaryListDto extends ApiObject
 {
 	/**
-	 * Collection of player stats summaries associated with the summoner.
+	 *   Collection of player stats summaries associated with the summoner.
+	 *
 	 * @var PlayerStatsSummaryDto[] $playerStatSummaries
 	 */
 	public $playerStatSummaries;
 
 	/**
-	 * Summoner ID.
+	 *   Summoner ID.
+	 *
 	 * @var int $summonerId
 	 */
 	public $summonerId;

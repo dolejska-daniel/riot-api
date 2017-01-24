@@ -22,39 +22,50 @@ namespace RiotAPI\Objects;
 
 /**
  *   Class SummonerDto
- * Represents a summoner
+ * This object contains summoner information.
+ *
+ * Used in:
+ *   summoner (v1.4)
+ *     @link https://developer.riotgames.com/api/methods#!/1208/4684
+ *     @link https://developer.riotgames.com/api/methods#!/1208/4681
  *
  * @package RiotAPI\Objects
  */
 class SummonerDto extends ApiObject
 {
 	/**
-	 * Summoner ID.
+	 *   Summoner ID.
+	 *
 	 * @var int $id
 	 */
 	public $id;
 
 	/**
-	 * Summoner name.
+	 *   Summoner name.
+	 *
 	 * @var string $name
 	 */
 	public $name;
 
 	/**
-	 * ID of the summoner icon associated with the summoner.
+	 *   ID of the summoner icon associated with the summoner.
+	 *
 	 * @var int $profileIconId
 	 */
 	public $profileIconId;
 
 	/**
-	 * Date summoner was last modified specified as epoch milliseconds. The following events will update this timestamp:
-	 * profile icon change, playing the tutorial or advanced tutorial, finishing a game, summoner name change
+	 *   Date summoner was last modified specified as epoch milliseconds. The 
+	 * following events will update this timestamp: profile icon change, playing the 
+	 * tutorial or advanced tutorial, finishing a game, summoner name change.
+	 *
 	 * @var int $revisionDate
 	 */
 	public $revisionDate;
 
 	/**
-	 * Summoner level associated with the summoner.
+	 *   Summoner level associated with the summoner.
+	 *
 	 * @var int $summonerLevel
 	 */
 	public $summonerLevel;

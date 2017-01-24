@@ -23,6 +23,10 @@ namespace RiotAPI\Objects;
 /**
  *   Class Translation
  *
+ * Used in:
+ *   lol-status (v1.0)
+ *     @link https://developer.riotgames.com/api/methods#!/1085/3739
+ *
  * @package RiotAPI\Objects
  */
 class Translation extends ApiObject

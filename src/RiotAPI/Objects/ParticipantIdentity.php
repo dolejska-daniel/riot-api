@@ -22,19 +22,26 @@ namespace RiotAPI\Objects;
 
 /**
  *   Class ParticipantIdentity
+ * This object contains participant identity information
+ *
+ * Used in:
+ *   match (v2.2)
+ *     @link https://developer.riotgames.com/api/methods#!/1224/4756
  *
  * @package RiotAPI\Objects
  */
 class ParticipantIdentity extends ApiObject
 {
 	/**
-	 * Participant ID.
+	 *   Participant ID.
+	 *
 	 * @var int $participantId
 	 */
 	public $participantId;
 
 	/**
-	 * Player information.
+	 *   Player information.
+	 *
 	 * @var Player $player
 	 */
 	public $player;

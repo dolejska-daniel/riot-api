@@ -22,15 +22,28 @@ namespace RiotAPI\Objects;
 
 /**
  *   Class Mastery
- * This object contains mastery information
+ *
+ * Used in:
+ *   current-game (v1.0)
+ *     @link https://developer.riotgames.com/api/methods#!/976/3336
+ *   match (v2.2)
+ *     @link https://developer.riotgames.com/api/methods#!/1224/4756
  *
  * @package RiotAPI\Objects
  */
 class Mastery extends ApiObject
 {
-	/** @var int $masteryId */
+	/**
+	 *   The ID of the mastery.
+	 *
+	 * @var int $masteryId
+	 */
 	public $masteryId;
 
-	/** @var int $rank */
+	/**
+	 *   The number of points put into this mastery by the user.
+	 *
+	 * @var int $rank
+	 */
 	public $rank;
 }

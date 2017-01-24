@@ -24,18 +24,24 @@ namespace RiotAPI\Objects;
  *   Class RunePagesDto
  * This object contains rune pages information.
  *
+ * Used in:
+ *   summoner (v1.4)
+ *     @link https://developer.riotgames.com/api/methods#!/1208/4682
+ *
  * @package RiotAPI\Objects
  */
 class RunePagesDto extends ApiObject
 {
 	/**
-	 * Collection of rune pages associated with the summoner.
-	 * @var RunePageDto[] $pages
+	 *   Collection of rune pages associated with the summoner.
+	 *
+	 * @var Set[RunePageDto] $pages
 	 */
 	public $pages;
 
 	/**
-	 * Summoner ID.
+	 *   Summoner ID.
+	 *
 	 * @var int $summonerId
 	 */
 	public $summonerId;

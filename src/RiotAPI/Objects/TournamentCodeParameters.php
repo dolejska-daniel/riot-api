@@ -19,51 +19,64 @@
 
 namespace RiotAPI\Objects;
 
-use RiotAPI\Exceptions\APIObjectParameterException;
+use RiotAPI\Exceptions\RequestParameterException;
 
 
 /**
  *   Class TournamentCodeParameters
- * This object contains parameters required for requesting TournamentCodes
+ *
+ * Used in:
+ *   tournament-stub (v1)
+ *     @link https://developer.riotgames.com/api/methods#!/1090/3760
  *
  * @package RiotAPI\Objects
  */
 class TournamentCodeParameters extends ApiObject
 {
 	/**
-	 * Optional list of participants in order to validate the players eligible to join the lobby. NOTE: We currently do not
-	 * enforce participants at the team level, but rather the aggregate of teamOne and teamTwo. We may add the ability to
+	 *   Optional list of participants in order to validate the players eligible to 
+	 * join the lobby. NOTE: We currently do not enforce participants at the team 
+	 * level, but rather the aggregate of teamOne and teamTwo. We may add the ability to 
 	 * enforce at the team level in the future.
+	 *
 	 * @var SummonerIdParams $allowedSummonerIds
 	 */
 	public $allowedSummonerIds;
 
 	/**
-	 * The map type of the game. Valid values are SUMMONERS_RIFT, TWISTED_TREELINE, CRYSTAL_SCAR, and HOWLING_ABYSS.
+	 *   The map type of the game. Valid values are SUMMONERS_RIFT, 
+	 * TWISTED_TREELINE, CRYSTAL_SCAR, and HOWLING_ABYSS.
+	 *
 	 * @var string $mapType
 	 */
 	public $mapType;
 
 	/**
-	 * Optional string that may contain any data in any format, if specified at all. Used to denote any custom information about the game.
+	 *   Optional string that may contain any data in any format, if specified at 
+	 * all. Used to denote any custom information about the game.
+	 *
 	 * @var string $metadata
 	 */
 	public $metadata;
 
 	/**
-	 * The pick type of the game. Valid values are BLIND_PICK, DRAFT_MODE, ALL_RANDOM, TOURNAMENT_DRAFT.
+	 *   The pick type of the game. Valid values are BLIND_PICK, DRAFT_MODE, 
+	 * ALL_RANDOM, TOURNAMENT_DRAFT.
+	 *
 	 * @var string $pickType
 	 */
 	public $pickType;
 
 	/**
-	 * The spectator type of the game. Valid values are NONE, LOBBYONLY, ALL.
+	 *   The spectator type of the game. Valid values are NONE, LOBBYONLY, ALL.
+	 *
 	 * @var string $spectatorType
 	 */
 	public $spectatorType;
 
 	/**
-	 * The team size of the game. Valid values are 1-5.
+	 *   The team size of the game. Valid values are 1-5.
+	 *
 	 * @var int $teamSize
 	 */
 	public $teamSize;
@@ -79,7 +92,7 @@ class TournamentCodeParameters extends ApiObject
 	         'teamSize',
 		         ] as $requiredParam)
 			if (!isset($data[$requiredParam]))
-				throw new APIObjectParameterException("Property '$requiredParam' is required to be set by RiotAPI.");
+				throw new RequestParameterException("Property '$requiredParam' is required to be set by RiotAPI.");
 
 		parent::__construct( $data );
 	}

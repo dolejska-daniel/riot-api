@@ -24,20 +24,27 @@ namespace RiotAPI\Objects;
  *   Class ChampionStatsDto
  * This object contains a collection of champion stats information.
  *
+ * Used in:
+ *   stats (v1.3)
+ *     @link https://developer.riotgames.com/api/methods#!/1209/4686
+ *
  * @package RiotAPI\Objects
  */
 class ChampionStatsDto extends ApiObject
 {
 	/**
-	 * Champion ID. Note that champion ID 0 represents the combined stats for all champions. For static information correlating
-	 * to champion IDs, please refer to the LoL Static Data API.
+	 *   Champion ID. Note that champion ID 0 represents the combined stats for all 
+	 * champions. For static information correlating to champion IDs, please refer to the 
+	 * LoL Static Data API.
+	 *
 	 * @var int $id
 	 */
 	public $id;
 
 	/**
-	 * Aggregated stats associated with the champion.
-	 * @var AggregatedStatsDto[] $stats
+	 *   Aggregated stats associated with the champion.
+	 *
+	 * @var AggregatedStatsDto $stats
 	 */
 	public $stats;
 }

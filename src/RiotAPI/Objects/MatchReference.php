@@ -24,6 +24,10 @@ namespace RiotAPI\Objects;
  *   Class MatchReference
  * This object contains match reference information
  *
+ * Used in:
+ *   matchlist (v2.2)
+ *     @link https://developer.riotgames.com/api/methods#!/1223/4754
+ *
  * @package RiotAPI\Objects
  */
 class MatchReference extends ApiObject
@@ -32,7 +36,8 @@ class MatchReference extends ApiObject
 	public $champion;
 
 	/**
-	 * Legal values: MID, MIDDLE, TOP, JUNGLE, BOT, BOTTOM
+	 *   Legal values: MID, MIDDLE, TOP, JUNGLE, BOT, BOTTOM.
+	 *
 	 * @var string $lane
 	 */
 	public $lane;
@@ -44,27 +49,31 @@ class MatchReference extends ApiObject
 	public $platformId;
 
 	/**
-	 * Legal values: RANKED_FLEX_SR, RANKED_SOLO_5x5, RANKED_TEAM_3x3, RANKED_TEAM_5x5, TEAM_BUILDER_DRAFT_RANKED_5x5,
-	 * TEAM_BUILDER_RANKED_SOLO
+	 *   Legal values: RANKED_FLEX_SR, RANKED_SOLO_5x5, RANKED_TEAM_3x3, 
+	 * RANKED_TEAM_5x5, TEAM_BUILDER_DRAFT_RANKED_5x5, TEAM_BUILDER_RANKED_SOLO.
+	 *
 	 * @var string $queue
 	 */
 	public $queue;
 
 	/**
-	 * Legal values: br, eune, euw, jp, kr, lan, las, na, oce, ru, tr
+	 *   Legal values: br, eune, euw, jp, kr, lan, las, na, oce, ru, tr.
+	 *
 	 * @var string $region
 	 */
 	public $region;
 
 	/**
-	 * Legal values: DUO, NONE, SOLO, DUO_CARRY, DUO_SUPPORT
+	 *   Legal values: DUO, NONE, SOLO, DUO_CARRY, DUO_SUPPORT.
+	 *
 	 * @var string $role
 	 */
 	public $role;
 
 	/**
-	 * Legal values: PRESEASON3, SEASON3, PRESEASON2014, SEASON2014, PRESEASON2015, SEASON2015, PRESEASON2016, SEASON2016,
-	 * PRESEASON2017, SEASON2017
+	 *   Legal values: PRESEASON3, SEASON3, PRESEASON2014, SEASON2014, 
+	 * PRESEASON2015, SEASON2015, PRESEASON2016, SEASON2016, PRESEASON2017, SEASON2017.
+	 *
 	 * @var string $season
 	 */
 	public $season;

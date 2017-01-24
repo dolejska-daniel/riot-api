@@ -23,6 +23,10 @@ namespace RiotAPI\Objects;
 /**
  *   Class Message
  *
+ * Used in:
+ *   lol-status (v1.0)
+ *     @link https://developer.riotgames.com/api/methods#!/1085/3739
+ *
  * @package RiotAPI\Objects
  */
 class Message extends ApiObject
@@ -45,6 +49,6 @@ class Message extends ApiObject
 	/** @var Translation[] $translations */
 	public $translations;
 
-	/** @var int $updated_at */
+	/** @var string $updated_at */
 	public $updated_at;
 }

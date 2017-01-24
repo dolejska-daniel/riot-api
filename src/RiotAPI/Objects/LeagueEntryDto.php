@@ -24,78 +24,100 @@ namespace RiotAPI\Objects;
  *   Class LeagueEntryDto
  * This object contains league participant information representing a summoner or team.
  *
+ * Used in:
+ *   league (v2.5)
+ *     @link https://developer.riotgames.com/api/methods#!/1215/4701
+ *     @link https://developer.riotgames.com/api/methods#!/1215/4705
+ *     @link https://developer.riotgames.com/api/methods#!/1215/4704
+ *     @link https://developer.riotgames.com/api/methods#!/1215/4706
+ *
  * @package RiotAPI\Objects
  */
 class LeagueEntryDto extends ApiObject
 {
 	/**
-	 * The league division of the participant.
+	 *   The league division of the participant.
+	 *
 	 * @var string $division
 	 */
 	public $division;
 
 	/**
-	 * Specifies if the participant is fresh blood.
+	 *   Specifies if the participant is fresh blood.
+	 *
 	 * @var bool $isFreshBlood
 	 */
 	public $isFreshBlood;
 
 	/**
-	 * Specifies if the participant is on a hot streak.
+	 *   Specifies if the participant is on a hot streak.
+	 *
 	 * @var bool $isHotStreak
 	 */
 	public $isHotStreak;
 
 	/**
-	 * Specifies if the participant is inactive.
+	 *   Specifies if the participant is inactive.
+	 *
 	 * @var bool $isInactive
 	 */
 	public $isInactive;
 
 	/**
-	 * Specifies if the participant is a veteran.
+	 *   Specifies if the participant is a veteran.
+	 *
 	 * @var bool $isVeteran
 	 */
 	public $isVeteran;
 
 	/**
-	 * The league points of the participant.
+	 *   The league points of the participant.
+	 *
 	 * @var int $leaguePoints
 	 */
 	public $leaguePoints;
 
 	/**
-	 * The number of losses for the participant.
+	 *   The number of losses for the participant.
+	 *
 	 * @var int $losses
 	 */
 	public $losses;
 
 	/**
-	 * Mini series data for the participant. Only present if the participant is currently in a mini series.
+	 *   Mini series data for the participant. Only present if the participant is 
+	 * currently in a mini series.
+	 *
 	 * @var MiniSeriesDto $miniSeries
 	 */
 	public $miniSeries;
 
 	/**
-	 * The ID of the participant (i.e., summoner or team) represented by this entry.
+	 *   The ID of the participant (i.e., summoner or team) represented by this 
+	 * entry.
+	 *
 	 * @var string $playerOrTeamId
 	 */
 	public $playerOrTeamId;
 
 	/**
-	 * The name of the the participant (i.e., summoner or team) represented by this entry.
+	 *   The name of the the participant (i.e., summoner or team) represented by 
+	 * this entry.
+	 *
 	 * @var string $playerOrTeamName
 	 */
 	public $playerOrTeamName;
 
 	/**
-	 * The playstyle of the participant. (Legal values: NONE, SOLO, SQUAD, TEAM)
+	 *   The playstyle of the participant. (Legal values: NONE, SOLO, SQUAD, TEAM).
+	 *
 	 * @var string $playstyle
 	 */
 	public $playstyle;
 
 	/**
-	 * The number of wins for the participant.
+	 *   The number of wins for the participant.
+	 *
 	 * @var int $wins
 	 */
 	public $wins;

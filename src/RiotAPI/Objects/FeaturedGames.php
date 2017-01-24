@@ -23,13 +23,25 @@ namespace RiotAPI\Objects;
 /**
  *   Class FeaturedGames
  *
+ * Used in:
+ *   featured-games (v1.0)
+ *     @link https://developer.riotgames.com/api/methods#!/977/3337
+ *
  * @package RiotAPI\Objects
  */
 class FeaturedGames extends ApiObject
 {
-	/** @var int $clientRefreshInterval */
+	/**
+	 *   The suggested interval to wait before requesting FeaturedGames again.
+	 *
+	 * @var int $clientRefreshInterval
+	 */
 	public $clientRefreshInterval;
 
-	/** @var FeaturedGameInfo[] $gameList */
+	/**
+	 *   The list of featured games.
+	 *
+	 * @var FeaturedGameInfo[] $gameList
+	 */
 	public $gameList;
 }

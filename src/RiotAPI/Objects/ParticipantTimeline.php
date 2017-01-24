@@ -24,88 +24,201 @@ namespace RiotAPI\Objects;
  *   Class ParticipantTimeline
  * This object contains all timeline information
  *
+ * Used in:
+ *   match (v2.2)
+ *     @link https://developer.riotgames.com/api/methods#!/1224/4756
+ *
  * @package RiotAPI\Objects
  */
 class ParticipantTimeline extends ApiObject
 {
-	/** @var ParticipantTimelineData $ancientGolemAssistsPerMinCounts */
+	/**
+	 *   Ancient golem assists per minute timeline counts.
+	 *
+	 * @var ParticipantTimelineData $ancientGolemAssistsPerMinCounts
+	 */
 	public $ancientGolemAssistsPerMinCounts;
 
-	/** @var ParticipantTimelineData $ancientGolemKillsPerMinCounts */
+	/**
+	 *   Ancient golem kills per minute timeline counts.
+	 *
+	 * @var ParticipantTimelineData $ancientGolemKillsPerMinCounts
+	 */
 	public $ancientGolemKillsPerMinCounts;
 
-	/** @var ParticipantTimelineData $assistedLaneDeathsPerMinDeltas */
+	/**
+	 *   Assisted lane deaths per minute timeline data.
+	 *
+	 * @var ParticipantTimelineData $assistedLaneDeathsPerMinDeltas
+	 */
 	public $assistedLaneDeathsPerMinDeltas;
 
-	/** @var ParticipantTimelineData $assistedLaneKillsPerMinDeltas */
+	/**
+	 *   Assisted lane kills per minute timeline data.
+	 *
+	 * @var ParticipantTimelineData $assistedLaneKillsPerMinDeltas
+	 */
 	public $assistedLaneKillsPerMinDeltas;
 
-	/** @var ParticipantTimelineData $baronAssistsPerMinCounts */
+	/**
+	 *   Baron assists per minute timeline counts.
+	 *
+	 * @var ParticipantTimelineData $baronAssistsPerMinCounts
+	 */
 	public $baronAssistsPerMinCounts;
 
-	/** @var ParticipantTimelineData $baronKillsPerMinCounts */
+	/**
+	 *   Baron kills per minute timeline counts.
+	 *
+	 * @var ParticipantTimelineData $baronKillsPerMinCounts
+	 */
 	public $baronKillsPerMinCounts;
 
-	/** @var ParticipantTimelineData $creepsPerMinDeltas */
+	/**
+	 *   Creeps per minute timeline data.
+	 *
+	 * @var ParticipantTimelineData $creepsPerMinDeltas
+	 */
 	public $creepsPerMinDeltas;
 
-	/** @var ParticipantTimelineData $csDiffPerMinDeltas */
+	/**
+	 *   Creep score difference per minute timeline data.
+	 *
+	 * @var ParticipantTimelineData $csDiffPerMinDeltas
+	 */
 	public $csDiffPerMinDeltas;
 
-	/** @var ParticipantTimelineData $damageTakenDiffPerMinDeltas */
+	/**
+	 *   Damage taken difference per minute timeline data.
+	 *
+	 * @var ParticipantTimelineData $damageTakenDiffPerMinDeltas
+	 */
 	public $damageTakenDiffPerMinDeltas;
 
-	/** @var ParticipantTimelineData $damageTakenPerMinDeltas */
+	/**
+	 *   Damage taken per minute timeline data.
+	 *
+	 * @var ParticipantTimelineData $damageTakenPerMinDeltas
+	 */
 	public $damageTakenPerMinDeltas;
 
-	/** @var ParticipantTimelineData $dragonAssistsPerMinCounts */
+	/**
+	 *   Dragon assists per minute timeline counts.
+	 *
+	 * @var ParticipantTimelineData $dragonAssistsPerMinCounts
+	 */
 	public $dragonAssistsPerMinCounts;
 
-	/** @var ParticipantTimelineData $dragonKillsPerMinCounts */
+	/**
+	 *   Dragon kills per minute timeline counts.
+	 *
+	 * @var ParticipantTimelineData $dragonKillsPerMinCounts
+	 */
 	public $dragonKillsPerMinCounts;
 
-	/** @var ParticipantTimelineData $elderLizardAssistsPerMinCounts */
+	/**
+	 *   Elder lizard assists per minute timeline counts.
+	 *
+	 * @var ParticipantTimelineData $elderLizardAssistsPerMinCounts
+	 */
 	public $elderLizardAssistsPerMinCounts;
 
-	/** @var ParticipantTimelineData $elderLizardKillsPerMinCounts */
+	/**
+	 *   Elder lizard kills per minute timeline counts.
+	 *
+	 * @var ParticipantTimelineData $elderLizardKillsPerMinCounts
+	 */
 	public $elderLizardKillsPerMinCounts;
 
-	/** @var ParticipantTimelineData $goldPerMinDeltas */
+	/**
+	 *   Gold per minute timeline data.
+	 *
+	 * @var ParticipantTimelineData $goldPerMinDeltas
+	 */
 	public $goldPerMinDeltas;
 
-	/** @var ParticipantTimelineData $inhibitorAssistsPerMinCounts */
+	/**
+	 *   Inhibitor assists per minute timeline counts.
+	 *
+	 * @var ParticipantTimelineData $inhibitorAssistsPerMinCounts
+	 */
 	public $inhibitorAssistsPerMinCounts;
 
-	/** @var ParticipantTimelineData $inhibitorKillsPerMinCounts */
+	/**
+	 *   Inhibitor kills per minute timeline counts.
+	 *
+	 * @var ParticipantTimelineData $inhibitorKillsPerMinCounts
+	 */
 	public $inhibitorKillsPerMinCounts;
 
-	/** @var string $lane */
+	/**
+	 *   Participant's lane (Legal values: MID, MIDDLE, TOP, JUNGLE, BOT, BOTTOM).
+	 *
+	 * @var string $lane
+	 */
 	public $lane;
 
-	/** @var string $role */
+	/**
+	 *   Participant's role (Legal values: DUO, NONE, SOLO, DUO_CARRY, 
+	 * DUO_SUPPORT).
+	 *
+	 * @var string $role
+	 */
 	public $role;
 
-	/** @var ParticipantTimelineData $towerAssistsPerMinCounts */
+	/**
+	 *   Tower assists per minute timeline counts.
+	 *
+	 * @var ParticipantTimelineData $towerAssistsPerMinCounts
+	 */
 	public $towerAssistsPerMinCounts;
 
-	/** @var ParticipantTimelineData $towerKillsPerMinCounts */
+	/**
+	 *   Tower kills per minute timeline counts.
+	 *
+	 * @var ParticipantTimelineData $towerKillsPerMinCounts
+	 */
 	public $towerKillsPerMinCounts;
 
-	/** @var ParticipantTimelineData $towerKillsPerMinDeltas */
+	/**
+	 *   Tower kills per minute timeline data.
+	 *
+	 * @var ParticipantTimelineData $towerKillsPerMinDeltas
+	 */
 	public $towerKillsPerMinDeltas;
 
-	/** @var ParticipantTimelineData $vilemawAssistsPerMinCounts */
+	/**
+	 *   Vilemaw assists per minute timeline counts.
+	 *
+	 * @var ParticipantTimelineData $vilemawAssistsPerMinCounts
+	 */
 	public $vilemawAssistsPerMinCounts;
 
-	/** @var ParticipantTimelineData $vilemawKillsPerMinCounts */
+	/**
+	 *   Vilemaw kills per minute timeline counts.
+	 *
+	 * @var ParticipantTimelineData $vilemawKillsPerMinCounts
+	 */
 	public $vilemawKillsPerMinCounts;
 
-	/** @var ParticipantTimelineData $wardsPerMinDeltas */
+	/**
+	 *   Wards placed per minute timeline data.
+	 *
+	 * @var ParticipantTimelineData $wardsPerMinDeltas
+	 */
 	public $wardsPerMinDeltas;
 
-	/** @var ParticipantTimelineData $xpDiffPerMinDeltas */
+	/**
+	 *   Experience difference per minute timeline data.
+	 *
+	 * @var ParticipantTimelineData $xpDiffPerMinDeltas
+	 */
 	public $xpDiffPerMinDeltas;
 
-	/** @var ParticipantTimelineData $xpPerMinDeltas */
+	/**
+	 *   Experience per minute timeline data.
+	 *
+	 * @var ParticipantTimelineData $xpPerMinDeltas
+	 */
 	public $xpPerMinDeltas;
 }

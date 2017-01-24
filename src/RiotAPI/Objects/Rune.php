@@ -22,18 +22,35 @@ namespace RiotAPI\Objects;
 
 /**
  *   Class Rune
- * This object contains rune information
+ *
+ * Used in:
+ *   current-game (v1.0)
+ *     @link https://developer.riotgames.com/api/methods#!/976/3336
+ *   match (v2.2)
+ *     @link https://developer.riotgames.com/api/methods#!/1224/4756
  *
  * @package RiotAPI\Objects
  */
 class Rune extends ApiObject
 {
-	/** @var int $count */
+	/**
+	 *   The count of this rune used by the participant.
+	 *
+	 * @var int $count
+	 */
 	public $count;
 
-	/** @var int $runeId */
+	/**
+	 *   The ID of the rune.
+	 *
+	 * @var int $runeId
+	 */
 	public $runeId;
 
-	/** @var int $rank */
+	/**
+	 *   Rune rank.
+	 *
+	 * @var int $rank
+	 */
 	public $rank;
 }

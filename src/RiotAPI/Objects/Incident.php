@@ -23,6 +23,10 @@ namespace RiotAPI\Objects;
 /**
  *   Class Incident
  *
+ * Used in:
+ *   lol-status (v1.0)
+ *     @link https://developer.riotgames.com/api/methods#!/1085/3739
+ *
  * @package RiotAPI\Objects
  */
 class Incident extends ApiObject
@@ -30,7 +34,7 @@ class Incident extends ApiObject
 	/** @var bool $active */
 	public $active;
 
-	/** @var int $created_at */
+	/** @var string $created_at */
 	public $created_at;
 
 	/** @var int $id */
