@@ -458,7 +458,7 @@ class RiotAPI
 		$raw_data = curl_exec($ch);
 		$header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
 
-		$headers = http_parse_headers(substr($raw_data, 0, $header_size));
+		$headers = $this->parseHeaders(substr($raw_data, 0, $header_size));
 		$response = substr($raw_data, $header_size);
 		$response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
@@ -500,6 +500,25 @@ class RiotAPI
 		$this->used_key     = self::SET_KEY;
 
 		curl_close($ch);
+	}
+
+	protected function parseHeaders( $requestHeaders )
+	{
+		if (function_exists('http_parse_headers'))
+			return http_parse_headers($requestHeaders);
+
+		$r = array();
+		foreach (explode("\r\n", $requestHeaders) as $line)
+		{
+			if (strpos($line, ':'))
+			{
+				$e = explode(": ", $line);
+				$r[$e[0]] = @$e[1];
+			}
+			elseif (strlen($line))
+				$r[] = $line;
+		}
+		return $r;
 	}
 
 	/**
