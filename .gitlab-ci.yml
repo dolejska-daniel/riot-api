@@ -19,7 +19,7 @@ before_script:
     - php composer.phar install
 
     # Install and enable xdebug PHP extenstion
-    pecl install xdebug && docker-php-ext-enable xdebug
+    - pecl install xdebug && docker-php-ext-enable xdebug
 
 # PHP7.0 tests
 test:7.0:
