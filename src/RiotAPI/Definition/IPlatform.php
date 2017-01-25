@@ -17,13 +17,13 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace RiotAPI\Definitions;
+namespace RiotAPI\Definition;
 
 
 /**
  *   Interface IPlatform
  *
- * @package RiotAPI\Definitions
+ * @package RiotAPI\Definition
  */
 interface IPlatform
 {

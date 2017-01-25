@@ -17,12 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace RiotAPI\Exceptions;
+namespace DataDragonAPI\Exception;
 
 
 /**
- *   Class ServerException
+ *   Class SettingsException
  *
- * @package RiotAPI\Exceptions
+ * @package DataDragonAPI\Exception
  */
-class ServerException extends \Exception {}
+class SettingsException extends \Exception {}

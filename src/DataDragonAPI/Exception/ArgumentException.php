@@ -17,16 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace DataDragonAPI\Definitions;
+namespace DataDragonAPI\Exception;
 
 
-class Map
-{
-	const ORIGINAL_SUMMONERS_RIFT = 1;
-
-	const SUMMONERS_RIFT = 11;
-
-	const TWISTED_TREELINE = 10;
-
-	const HOWLING_ABYSS = 12;
-}
+/**
+ *   Class ArgumentException
+ *
+ * @package DataDragonAPI\Exception
+ */
+class ArgumentException extends \Exception {}

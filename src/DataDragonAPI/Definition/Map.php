@@ -17,12 +17,16 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace RiotAPI\Exceptions;
+namespace DataDragonAPI\Definition;
 
 
-/**
- *   Class SettingsException
- *
- * @package RiotAPI\Exceptions
- */
-class SettingsException extends \Exception {}
+class Map
+{
+	const ORIGINAL_SUMMONERS_RIFT = 1;
+
+	const SUMMONERS_RIFT = 11;
+
+	const TWISTED_TREELINE = 10;
+
+	const HOWLING_ABYSS = 12;
+}

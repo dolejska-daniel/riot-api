@@ -17,12 +17,30 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace DataDragonAPI\Exceptions;
+namespace RiotAPI\Definition;
 
 
 /**
- *   Class RequestException
+ *   Class FileCacheStorage
  *
- * @package DataDragonAPI\Exceptions
+ * @package RiotAPI\Definition
  */
-class RequestException extends \Exception {}
+class FileCacheStorage
+{
+	/** @var int $created_at */
+	public $created_at;
+
+	/** @var int $expires_at */
+	public $expires_at;
+
+	/** @var mixed $data */
+	public $data;
+
+
+	public function __construct( $data, int $time )
+	{
+		$this->created_at = time();
+		$this->expires_at = time() + $time;
+		$this->data = $data;
+	}
+}

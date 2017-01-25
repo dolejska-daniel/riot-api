@@ -17,12 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace DataDragonAPI\Exceptions;
+namespace DataDragonAPI\Exception;
 
 
 /**
- *   Class GeneralException
+ *   Class RequestException
  *
- * @package DataDragonAPI\Exceptions
+ * @package DataDragonAPI\Exception
  */
-class GeneralException extends \Exception {}
+class RequestException extends \Exception {}

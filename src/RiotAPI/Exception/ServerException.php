@@ -17,12 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace RiotAPI\Exceptions;
+namespace RiotAPI\Exception;
 
 
 /**
- *   Class RequestException
+ *   Class ServerException
  *
- * @package RiotAPI\Exceptions
+ * @package RiotAPI\Exception
  */
-class RequestException extends \Exception {}
+class ServerException extends \Exception {}

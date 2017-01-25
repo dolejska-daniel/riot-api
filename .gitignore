@@ -1,3 +1,4 @@
 .idea/
-tests/
+vendor/
 src/RiotAPI/cache/
+composer.lock

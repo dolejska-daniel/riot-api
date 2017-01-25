@@ -19,7 +19,7 @@
 
 namespace RiotAPI\Objects;
 
-use RiotAPI\Exceptions\RequestParameterException;
+use RiotAPI\Exception\RequestParameterException;
 
 
 /**

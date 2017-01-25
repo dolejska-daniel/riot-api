@@ -17,17 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace RiotAPI\Definitions;
+namespace RiotAPI\Definition;
 
-use RiotAPI\Exceptions\SettingsException;
+use RiotAPI\Exception\SettingsException;
 
 
 /**
  *   Class MemcachedCacheProvider
  *
- * @package RiotAPI\Definitions
+ * @package RiotAPI\Definition
  */
-class MemcachedCacheProvider
+class MemcachedCacheProvider implements ICacheProvider
 {
 	const MEMCACHED_ID = 'RiotAPI\CacheProvider';
 
@@ -43,12 +43,34 @@ class MemcachedCacheProvider
 	 */
 	public function __construct( array $servers = array() )
 	{
-		$this->memcached = new \Memcached(self::MEMCACHED_ID);
+		if (!class_exists('Memcached'))
+			throw new SettingsException('Class Memcached not found, is your Memcached ');
 
-		if (!empty($servers))
-			$this->memcached->addServers($servers);
-		else
-			$this->memcached->addServer('127.0.0.1', 11211);
+		$this->memcached = $m =  new \Memcached(self::MEMCACHED_ID);
+
+		$m->setOption(\Memcached::OPT_CONNECT_TIMEOUT, 10);
+		$m->setOption(\Memcached::OPT_DISTRIBUTION, \Memcached::DISTRIBUTION_CONSISTENT);
+		$m->setOption(\Memcached::OPT_SERVER_FAILURE_LIMIT, 2);
+		$m->setOption(\Memcached::OPT_REMOVE_FAILED_SERVERS, true);
+		$m->setOption(\Memcached::OPT_RETRY_TIMEOUT, 1);
+
+		if (empty($servers))
+			$servers = array(
+				[ '127.0.0.1', 11211 ],
+			);
+
+		if (!$m->addServers($servers))
+			throw new SettingsException('Memcached servers failed to be added.');
+
+		$fails = 0;
+		$statuses = $m->getStats();
+		foreach ($servers as $s)
+			if (!isset($statuses[$s[0] . ":" . $s[1]]) || $statuses[$s[0] . ":" . $s[1]]['pid'] <= 0)
+				$fails++;
+
+		if ($fails == count($servers))
+			throw new SettingsException('Could not connect to any of specified Memcached servers.');
+		elseif ($fails > 0); // TODO: Warning to be issued?
 	}
 
 

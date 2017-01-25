@@ -17,12 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace RiotAPI\Exceptions;
+namespace DataDragonAPI\Exception;
 
 
 /**
- *   Class RequestParameterException
+ *   Class GeneralException
  *
- * @package RiotAPI\Exceptions
+ * @package DataDragonAPI\Exception
  */
-class RequestParameterException extends \Exception {}
+class GeneralException extends \Exception {}

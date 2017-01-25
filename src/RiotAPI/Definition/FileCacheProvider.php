@@ -17,17 +17,17 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace RiotAPI\Definitions;
+namespace RiotAPI\Definition;
 
-use RiotAPI\Exceptions\SettingsException;
+use RiotAPI\Exception\SettingsException;
 
 
 /**
  *   Class FileCacheProvider
  *
- * @package RiotAPI\Definitions
+ * @package RiotAPI\Definition
  */
-class FileCacheProvider
+class FileCacheProvider implements ICacheProvider
 {
 	/** @var string */
 	protected $cacheDir;
@@ -41,8 +41,10 @@ class FileCacheProvider
 	 */
 	public function __construct( string $cacheDir )
 	{
-		if (!$this->cacheDir = realpath($cacheDir))
-			throw new SettingsException("Provided cache directory path '$cacheDir' is invalid.");
+		if (!$this->cacheDir = realpath($cacheDir) && !@mkdir($cacheDir, 0777, true))
+			throw new SettingsException("Provided cache directory path '$cacheDir' is invalid/failed to be created.");
+		elseif (!@is_writable($this->cacheDir))
+			throw new SettingsException("Provided cache directory path '$cacheDir' is not writable.");
 	}
 
 
@@ -61,7 +63,7 @@ class FileCacheProvider
 		$res  = @fopen($path, 'a+');
 
 		if ($res == false)
-			throw new SettingsException("Saving - Cache file ($path) failed to be opened/created.");
+			throw new SettingsException("Loading - Cache file ($path) failed to be opened/created.");
 
 		/** @var FileCacheStorage $storage */
 		$storage = @unserialize(fread($res, filesize($path)));
@@ -83,13 +85,16 @@ class FileCacheProvider
 	 * @return bool
 	 * @throws SettingsException
 	 */
-	public function save( string $name, $data, int $length): bool
+	public function save( string $name, $data, int $length ): bool
 	{
+		if ($length <= 0)
+			throw new SettingsException("Expiration time has to be greater than 0.");
+
 		$path = $this->cacheDir . DIRECTORY_SEPARATOR . $name;
 		$res  = @fopen($path, 'w+');
 
 		if ($res == false)
-			throw new SettingsException("Loading - Cache file ($path) failed to be opened/created.");
+			throw new SettingsException("Saving - Cache file ($path) failed to be opened/created.");
 
 		$storage = new FileCacheStorage($data, $length);
 		$written = fwrite($res, serialize($storage));

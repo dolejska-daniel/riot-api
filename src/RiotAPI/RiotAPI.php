@@ -19,16 +19,16 @@
 
 namespace RiotAPI;
 
-use RiotAPI\Definitions\FileCacheProvider;
-use RiotAPI\Definitions\FileCacheStorage;
-use RiotAPI\Definitions\ICacheProvider;
-use RiotAPI\Definitions\IPlatform;
-use RiotAPI\Definitions\MemcachedCacheProvider;
-use RiotAPI\Definitions\Platform;
-use RiotAPI\Definitions\IRegion;
-use RiotAPI\Definitions\Region;
-use RiotAPI\Definitions\IRateLimitControl;
-use RiotAPI\Definitions\RateLimitControl;
+use RiotAPI\Definition\FileCacheProvider;
+use RiotAPI\Definition\FileCacheStorage;
+use RiotAPI\Definition\ICacheProvider;
+use RiotAPI\Definition\IPlatform;
+use RiotAPI\Definition\MemcachedCacheProvider;
+use RiotAPI\Definition\Platform;
+use RiotAPI\Definition\IRegion;
+use RiotAPI\Definition\Region;
+use RiotAPI\Definition\IRateLimitControl;
+use RiotAPI\Definition\RateLimitControl;
 
 use RiotAPI\Objects;
 use RiotAPI\Objects\ProviderRegistrationParameters;
@@ -36,12 +36,12 @@ use RiotAPI\Objects\TournamentCodeParameters;
 use RiotAPI\Objects\TournamentRegistrationParameters;
 use RiotAPI\Objects\StaticData;
 
-use RiotAPI\Exceptions\GeneralException;
-use RiotAPI\Exceptions\RequestException;
-use RiotAPI\Exceptions\RequestParameterException;
-use RiotAPI\Exceptions\ServerException;
-use RiotAPI\Exceptions\ServerLimitException;
-use RiotAPI\Exceptions\SettingsException;
+use RiotAPI\Exception\GeneralException;
+use RiotAPI\Exception\RequestException;
+use RiotAPI\Exception\RequestParameterException;
+use RiotAPI\Exception\ServerException;
+use RiotAPI\Exception\ServerLimitException;
+use RiotAPI\Exception\SettingsException;
 
 
 /**
@@ -60,21 +60,23 @@ class RiotAPI
 
 	/** Settings constants. */
 	const
-		SET_REGION                = 20,
-		SET_PLATFORM              = 21, // Set internally by setting region
-		SET_KEY                   = 30, // API key used by default
-		SET_TOURNAMENT_KEY        = 31, // API key used when working with tournaments
-		SET_TOURNAMENT_INTERIM    = 40, // Used to set whether your application is in Interim mode (Tournament STUB endpoints) or not,
-		SET_CACHE_PROVIDER        = 50, // Specifies CacheProvider class name
-		SET_CACHE_PROVIDER_PARAMS = 51, // Specifies parameters passed to CacheProvider class when initializing
-		SET_CACHE_RATELIMIT       = 52, // Used to set whether or not to save and check API key's rate limit
-		SET_CACHE_CALLS           = 53, // Used to set whether or not to temporary save API call's results
-		SET_CACHE_CALLS_LENGTH    = 54, // Specifies for how long are call results saved
-		SET_API_BASEURL           = 60;
+		SET_REGION                = 'SET_REGION',
+		SET_PLATFORM              = 'SET_PLATFORM',              // Set internally by setting region
+		SET_KEY                   = 'SET_KEY',                   // API key used by default
+		SET_TOURNAMENT_KEY        = 'SET_TOURNAMENT_KEY',        // API key used when working with tournaments
+		SET_TOURNAMENT_INTERIM    = 'SET_TOURNAMENT_INTERIM',    // Used to set whether your application is in Interim mode (Tournament STUB endpoints) or not,
+		SET_CACHE_PROVIDER        = 'SET_CACHE_PROVIDER',        // Specifies CacheProvider class name
+		SET_CACHE_PROVIDER_PARAMS = 'SET_CACHE_PROVIDER_PARAMS', // Specifies parameters passed to CacheProvider class when initializing
+		SET_CACHE_RATELIMIT       = 'SET_CACHE_RATELIMIT',       // Used to set whether or not to save and check API key's rate limit
+		SET_RATELIMITS            = 'SET_RATELIMITS',            // Specifies limits for provided API keys
+		SET_CACHE_CALLS           = 'SET_CACHE_CALLS',           // Used to set whether or not to temporary save API call's results
+		SET_CACHE_CALLS_LENGTH    = 'SET_CACHE_CALLS_LENGTH',    // Specifies for how long are call results saved
+		SET_API_BASEURL           = 'SET_API_BASEURL',
+		SET_USE_DUMMY_DATA        = 'SET_USE_DUMMY_DATA';
 
 	const
-		CACHE_PROVIDER_FILE     = FileCacheStorage::class,
-		CACHE_PROVIDER_MEMCACHE = MemcachedCacheProvider::class;
+		CACHE_PROVIDER_FILE      = FileCacheProvider::class,
+		CACHE_PROVIDER_MEMCACHED = MemcachedCacheProvider::class;
 
 	const
 		CACHE_KEY_RLC = 'rate-limit.cache';
@@ -90,8 +92,6 @@ class RiotAPI
 	 */
 	protected $settings = array(
 		self::SET_API_BASEURL     => '.api.pvp.net',
-		self::SET_CACHE_RATELIMIT => false,
-		self::SET_CACHE_CALLS     => false,
 	);
 
 	/** @var IRegion $regions */
@@ -102,7 +102,6 @@ class RiotAPI
 
 	/** @var ICacheProvider $cache */
 	protected $cache;
-
 
 	/** @var IRateLimitControl $rate_limit_control */
 	protected $rate_limit_control;
@@ -154,6 +153,8 @@ class RiotAPI
 			self::SET_CACHE_PROVIDER,
 			self::SET_CACHE_PROVIDER_PARAMS,
 			self::SET_CACHE_RATELIMIT,
+			self::SET_RATELIMITS,
+			self::SET_USE_DUMMY_DATA,
 		], $required_settings);
 
 		//  Assigns allowed settings
@@ -169,14 +170,14 @@ class RiotAPI
 			? $custom_platformDataProvider
 			: new Platform();
 
-		if ($this->settings[self::SET_CACHE_CALLS]
-			|| $this->settings[self::SET_CACHE_RATELIMIT])
+		if ($this->getSetting(self::SET_CACHE_CALLS)
+			|| $this->getSetting(self::SET_CACHE_RATELIMIT))
 		{
 			if ($this->isSettingSet(self::SET_CACHE_PROVIDER) == false)
 			{
 				//  Set default cache provider if not already set
 				$this->setSettings([
-					self::SET_CACHE_PROVIDER        => FileCacheProvider::class,
+					self::SET_CACHE_PROVIDER        => self::CACHE_PROVIDER_FILE,
 					self::SET_CACHE_PROVIDER_PARAMS => [
 						__DIR__ . DIRECTORY_SEPARATOR . "cache" . DIRECTORY_SEPARATOR,
 					]
@@ -186,22 +187,46 @@ class RiotAPI
 			try
 			{
 				$cacheProvider = new \ReflectionClass($this->getSetting(self::SET_CACHE_PROVIDER));
+				if ($cacheProvider->implementsInterface(ICacheProvider::class) == false)
+					throw new SettingsException("Provided CacheProvider does not implement ICacheProvider interface.");
+
 				$this->cache = $cacheProvider->newInstanceArgs($this->getSetting(self::SET_CACHE_PROVIDER_PARAMS, null));
 			}
 			catch (\ReflectionException $ex)
 			{
-				throw new SettingsException("Failed to initialize CacheProvider class: " . $ex->getMessage(), 0, $ex);
+				throw new SettingsException("Failed to initialize CacheProvider class: " . $ex->getMessage() . ".", 0, $ex);
 			}
 			catch (SettingsException $ex)
 			{
 				throw new SettingsException("CacheProvider class failed to be initialized: " . $ex->getMessage(), 0, $ex);
 			}
+
+			//  Caching API's rate limit headers
+			$this->loadCache();
+
+			$rateLimits = $this->getSetting(self::SET_RATELIMITS, [
+				$this->getSetting(self::SET_KEY) => [
+					IRateLimitControl::INTERVAL_10S => 10,
+					IRateLimitControl::INTERVAL_10M => 500,
+				],
+			]);
+			if (!$this->isSettingSet(self::SET_RATELIMITS) && $this->isSettingSet(self::SET_TOURNAMENT_KEY))
+			{
+				$rateLimits[$this->getSetting(self::SET_TOURNAMENT_KEY)] = [
+					IRateLimitControl::INTERVAL_10S => 10,
+					IRateLimitControl::INTERVAL_10M => 500,
+				];
+			}
+			foreach ($rateLimits as $api_key => $limits)
+			{
+				if (!is_array($limits))
+					throw new SettingsException("Rate limit settings are not in valid format.");
+
+				$this->rate_limit_control->setLimits($api_key, $limits);
+			}
 		}
 
-		$this->settings[self::SET_PLATFORM] = $this->platforms->getPlatformName($settings[self::SET_REGION]);
-
-		//  Caching API's rate limit headers
-		$this->loadCache();
+		$this->setSetting(self::SET_PLATFORM, $this->platforms->getPlatformName($settings[self::SET_REGION]));
 	}
 
 	/**
@@ -229,11 +254,11 @@ class RiotAPI
 	 */
 	protected function loadCache()
 	{
-		if ($this->settings[self::SET_CACHE_RATELIMIT])
+		if ($this->getSetting(self::SET_CACHE_RATELIMIT, false))
 		{
 			$rlc = $this->cache->load(self::CACHE_KEY_RLC);
 			if (!$rlc)
-				$rlc = new RateLimitControl();
+				$rlc = new RateLimitControl($this->regions);
 
 			$this->rate_limit_control = $rlc;
 		}
@@ -246,7 +271,7 @@ class RiotAPI
 	 */
 	protected function saveCache()
 	{
-		if ($this->settings[self::SET_CACHE_RATELIMIT])
+		if ($this->getSetting(self::SET_CACHE_RATELIMIT, false))
 		{
 			$this->cache->save(self::CACHE_KEY_RLC, $this->rate_limit_control, 600);
 		}
@@ -401,11 +426,11 @@ class RiotAPI
 	 */
 	final protected function makeCall( string $override_region = null, string $method = self::METHOD_GET )
 	{
-		if ($this->settings[self::SET_CACHE_RATELIMIT] && $this->rate_limit_control != false)
-			if (!$this->rate_limit_control->canCall($this->settings[$this->used_key]))
+		if ($this->getSetting(self::SET_CACHE_RATELIMIT) && $this->rate_limit_control != false)
+			if (!$this->rate_limit_control->canCall($this->getSetting($this->used_key)))
 				throw new ServerLimitException('API call rate limit would be exceeded by this call.');
 
-		$url_regionPart = $this->regions->getRegionName($override_region ? $override_region : $this->settings[self::SET_REGION]);
+		$url_regionPart = $this->regions->getRegionName($override_region ? $override_region : $this->getSetting(self::SET_REGION));
 
 		if (strpos($url_regionPart, 'http') !== false)
 		{
@@ -414,10 +439,10 @@ class RiotAPI
 		}
 		else
 		{
-			$url = "https://" . $url_regionPart . $this->settings[self::SET_API_BASEURL];
+			$url = "https://" . $url_regionPart . $this->getSetting(self::SET_API_BASEURL);
 		}
 
-		$url.= $this->endpoint . "?api_key=" . $this->settings[$this->used_key]
+		$url.= $this->endpoint . "?api_key=" . $this->getSetting($this->used_key)
 			. ( !empty($this->query_data) ? '&' . http_build_query($this->query_data) : '' );
 
 		$ch = curl_init();
@@ -455,46 +480,76 @@ class RiotAPI
 		else
 			throw new RequestException('Invalid method selected.');
 
-		$raw_data = curl_exec($ch);
-		$header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+		if ($this->getSetting(self::SET_USE_DUMMY_DATA, false))
+		{
+			$endp = str_replace(['/', '.'], ['-', ''], substr($this->endpoint, 1));
+			$quer = str_replace(['&', '='], ['_', '-'], http_build_query($this->query_data));
+			if (strlen($quer))
+				$quer = "_" . $quer;
 
-		$headers = $this->parseHeaders(substr($raw_data, 0, $header_size));
-		$response = substr($raw_data, $header_size);
-		$response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+			$dummyDataFilename = __DIR__ . "/../../tests/DummyData/$endp$quer.json";
+			$response = file_get_contents($dummyDataFilename);
+			$response_code = 200;
+		}
+		else
+		{
+			$raw_data = curl_exec($ch);
+			$header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+
+			$headers = $this->parseHeaders(substr($raw_data, 0, $header_size));
+			$response = substr($raw_data, $header_size);
+			$response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+		}
 
 		if ($response_code == 500)
 		{
-			throw new ServerException('Internal server error');
+			throw new ServerException('RiotAPI: Internal server error occured.');
 		}
 		elseif ($response_code == 503)
 		{
-			throw new ServerException('Service unavailable');
+			throw new ServerException('RiotAPI: Service is unavailable.');
 		}
 		elseif ($response_code == 429)
 		{
-			throw new ServerLimitException('Rate limit exceeded');
+			throw new ServerLimitException('RiotAPI: Rate limit for this API key was exceeded.');
 		}
 		elseif ($response_code == 404)
 		{
-			throw new RequestException('Not found');
+			throw new RequestException('Request: Not found.');
 		}
 		elseif ($response_code == 403)
 		{
-			throw new RequestException('Forbidden');
+			throw new RequestException('Request: Forbidden.');
 		}
 		elseif ($response_code == 401)
 		{
-			throw new RequestException('Unauthorized');
+			throw new RequestException('Request: Unauthorized.');
 		}
 		elseif ($response_code == 400)
 		{
-			throw new RequestException('Bad request');
+			throw new RequestException('Request: Bad request - probably invalid argument format.');
+		}
+		elseif ($response_code > 400)
+		{
+			throw new ServerException('RiotAPI: Unknown error occured.');
 		}
 
-		if ($this->settings[self::SET_CACHE_RATELIMIT] && $this->rate_limit_control != false && isset($headers[self::API_RATELIMIT_HEADER]))
-			$this->rate_limit_control->registerCall($this->settings[$this->used_key], $headers[self::API_RATELIMIT_HEADER]);
+		if ($this->getSetting(self::SET_CACHE_RATELIMIT) && $this->rate_limit_control != false && isset($headers[self::API_RATELIMIT_HEADER]))
+			$this->rate_limit_control->registerCall($this->getSetting($this->used_key), $headers[self::API_RATELIMIT_HEADER]);
 
 		$this->result_data  = json_decode($response, true);
+
+		/*
+		$endp = str_replace(['/', '.'], ['-', ''], substr($this->endpoint, 1));
+		$quer = str_replace(['&', '='], ['_', '-'], http_build_query($this->query_data));
+		if (strlen($quer))
+			$quer = "_" . $quer;
+
+		$dummyDataFilename = __DIR__ . "/../../tests/DummyData/$endp$quer.json";
+		if (!is_file($dummyDataFilename))
+			file_put_contents($dummyDataFilename, json_encode($this->result_data, JSON_PRETTY_PRINT));
+		*/
+
 		$this->query_data   = array();
 		$this->post_data    = array();
 		$this->used_key     = self::SET_KEY;
@@ -522,11 +577,11 @@ class RiotAPI
 	}
 
 	/**
-	 *   Returns result data from the last call.
+	 *   Returns raw getResult data from the last call.
 	 *
 	 * @return mixed
 	 */
-	protected function result()
+	public function getResult()
 	{
 		return $this->result_data;
 	}
@@ -561,7 +616,7 @@ class RiotAPI
 			->addQuery("freeToPlay", $only_free_to_play)
 			->makeCall();
 
-		return new Objects\ChampionListDto($this->result());
+		return new Objects\ChampionListDto($this->getResult());
 	}
 
 	/**
@@ -577,7 +632,7 @@ class RiotAPI
 		$this->setEndpoint("/api/lol/{$this->settings[self::SET_REGION]}/" . self::ENDPOINT_VERSION_CHAMPION . "/champion/{$champion_id}")
 			->makeCall();
 
-		return new Objects\ChampionDto($this->result());
+		return new Objects\ChampionDto($this->getResult());
 	}
 
 	/**
@@ -602,7 +657,7 @@ class RiotAPI
 		$this->setEndpoint("/championmastery/location/{$this->settings[self::SET_PLATFORM]}/player/{$summoner_id}/champion/{$champion_id}")
 			->makeCall();
 
-		return new Objects\ChampionMasteryDto($this->result());
+		return new Objects\ChampionMasteryDto($this->getResult());
 	}
 
 	/**
@@ -620,7 +675,7 @@ class RiotAPI
 			->makeCall();
 
 		$r = array();
-		foreach ($this->result() as $ident => $data)
+		foreach ($this->getResult() as $ident => $data)
 			$r[$ident] = new Objects\ChampionMasteryDto($data);
 
 		return $r;
@@ -640,7 +695,7 @@ class RiotAPI
 		$this->setEndpoint("/championmastery/location/{$this->settings[self::SET_PLATFORM]}/player/{$summoner_id}/score")
 			->makeCall();
 
-		return $this->result();
+		return $this->getResult();
 	}
 
 	/**
@@ -658,7 +713,7 @@ class RiotAPI
 			->makeCall();
 
 		$r = array();
-		foreach ($this->result() as $ident => $data)
+		foreach ($this->getResult() as $ident => $data)
 			$r[$ident] = new Objects\ChampionMasteryDto($data);
 
 		return $r;
@@ -677,6 +732,8 @@ class RiotAPI
 	 * @param int $summoner_id
 	 *
 	 * @return Objects\CurrentGameInfo
+	 * @throws RequestException
+	 *
 	 * @link https://developer.riotgames.com/api/methods#!/976/3336
 	 */
 	public function getCurrentGame( int $summoner_id ): Objects\CurrentGameInfo
@@ -684,7 +741,7 @@ class RiotAPI
 		$this->setEndpoint("/observer-mode/rest/consumer/getSpectatorGameInfo/{$this->platforms->getPlatformName($this->settings[self::SET_REGION])}/{$summoner_id}")
 			->makeCall();
 
-		return new Objects\CurrentGameInfo($this->result());
+		return new Objects\CurrentGameInfo($this->getResult());
 	}
 
 	/**
@@ -705,7 +762,7 @@ class RiotAPI
 		$this->setEndpoint("/observer-mode/rest/featured")
 			->makeCall();
 
-		return new Objects\FeaturedGames($this->result());
+		return new Objects\FeaturedGames($this->getResult());
 	}
 
 	/**
@@ -731,7 +788,7 @@ class RiotAPI
 		$this->setEndpoint("/api/lol/{$this->settings[self::SET_REGION]}/" . self::ENDPOINT_VERSION_GAME . "/game/by-summoner/{$summoner_id}/recent")
 			->makeCall();
 
-		return new Objects\RecentGamesDto($this->result());
+		return new Objects\RecentGamesDto($this->getResult());
 	}
 
 	/**
@@ -744,28 +801,24 @@ class RiotAPI
 	/**
 	 *   Get leagues mapped by summoner ID for a given list of summoner IDs.
 	 *
-	 * @param int|array $summoner_ids
+	 * @param array $summoner_ids
 	 *
-	 * @return Objects\LeagueDto[]
+	 * @return array
 	 * @throws RequestParameterException
 	 *
 	 * @link https://developer.riotgames.com/api/methods#!/1215/4701
 	 */
-	public function getLeagueMappingBySummoner( $summoner_ids ): array
+	public function getLeagueMappingBySummoners( array $summoner_ids ): array
 	{
-		if (is_array($summoner_ids))
-		{
-			if (count($summoner_ids) > 10)
-				throw new RequestParameterException("Maximum allowed summoner id count is 10.");
-
-			$summoner_ids = implode(',', $summoner_ids);
-		}
+		if (count($summoner_ids) > 10)
+			throw new RequestParameterException("Maximum allowed summoner id count is 10.");
+		$summoner_ids = implode(',', $summoner_ids);
 
 		$this->setEndpoint("/api/lol/{$this->settings[self::SET_REGION]}/" . self::ENDPOINT_VERSION_LEAGUE . "/league/by-summoner/{$summoner_ids}")
 			->makeCall();
 
 		$r = array();
-		foreach ($this->result() as $summoner_id => $leaguesData)
+		foreach ($this->getResult() as $summoner_id => $leaguesData)
 		{
 			$leagues = array();
 			foreach ($leaguesData as $ident => $data)
@@ -778,30 +831,45 @@ class RiotAPI
 	}
 
 	/**
-	 *   Get league entries mapped by summoner ID for a given list of summoner IDs.
+	 *   Get leagues for a given summoner ID.
 	 *
-	 * @param int|array $summoner_ids
+	 * @param int $summoner_id
 	 *
 	 * @return Objects\LeagueDto[]
 	 * @throws RequestParameterException
 	 *
+	 * @link https://developer.riotgames.com/api/methods#!/1215/4701
+	 */
+	public function getLeagueMappingBySummoner( int $summoner_id ): array
+	{
+		if (strpos($summoner_id, ',') !== false)
+			throw new RequestParameterException("Summoner ID list is not allowed by this function, please use 'getLeagueMappingBySummoners' function.");
+
+		$list = $this->getLeagueMappingBySummoners([$summoner_id]);
+		return reset($list);
+	}
+
+	/**
+	 *   Get league entries mapped by summoner ID for a given list of summoner IDs.
+	 *
+	 * @param array $summoner_ids
+	 *
+	 * @return array
+	 * @throws RequestParameterException
+	 *
 	 * @link https://developer.riotgames.com/api/methods#!/1215/4705
 	 */
-	public function getLeagueEntryBySummoner( $summoner_ids ): array
+	public function getLeagueEntryBySummoners( array $summoner_ids ): array
 	{
-		if (is_array($summoner_ids))
-		{
-			if (count($summoner_ids) > 10)
-				throw new RequestParameterException("Maximum allowed summoner id count is 10.");
-
-			$summoner_ids = implode(',', $summoner_ids);
-		}
+		if (count($summoner_ids) > 10)
+			throw new RequestParameterException("Maximum allowed summoner id count is 10.");
+		$summoner_ids = implode(',', $summoner_ids);
 
 		$this->setEndpoint("/api/lol/{$this->settings[self::SET_REGION]}/" . self::ENDPOINT_VERSION_LEAGUE . "/league/by-summoner/{$summoner_ids}/entry")
 			->makeCall();
 
 		$r = array();
-		foreach ($this->result() as $summoner_id => $leaguesData)
+		foreach ($this->getResult() as $summoner_id => $leaguesData)
 		{
 			$leagues = array();
 			foreach ($leaguesData as $ident => $data)
@@ -811,6 +879,23 @@ class RiotAPI
 		}
 
 		return $r;
+	}
+
+	/**
+	 *   Get league entries for a given summoner ID.
+	 *
+	 * @param int $summoner_id
+	 *
+	 * @return Objects\LeagueDto[]
+	 * @throws RequestParameterException
+	 */
+	public function getLeagueEntryBySummoner( int $summoner_id ): array
+	{
+		if (strpos($summoner_id, ',') !== false)
+			throw new RequestParameterException("Summoner ID list is not allowed by this function, please use 'getLeagueEntryBySummoners' function.");
+
+		$list = $this->getLeagueEntryBySummoners([$summoner_id]);
+		return reset($list);
 	}
 
 	/**
@@ -827,7 +912,7 @@ class RiotAPI
 			->addQuery("type", $game_queue_type)
 			->makeCall();
 
-		return new Objects\LeagueDto($this->result());
+		return new Objects\LeagueDto($this->getResult());
 	}
 
 	/**
@@ -844,7 +929,7 @@ class RiotAPI
 			->addQuery("type", $game_queue_type)
 			->makeCall();
 
-		return new Objects\LeagueDto($this->result());
+		return new Objects\LeagueDto($this->getResult());
 	}
 
 	/**
@@ -877,7 +962,7 @@ class RiotAPI
 			->addQuery("champData", $champ_data)
 			->makeCall(Region::GLOBAL);
 
-		return new StaticData\SChampionListDto($this->result());
+		return new StaticData\SChampionListDto($this->getResult());
 	}
 
 	/**
@@ -902,7 +987,7 @@ class RiotAPI
 			->addQuery("champData", $champ_data)
 			->makeCall(Region::GLOBAL);
 
-		return new StaticData\SChampionDto($this->result());
+		return new StaticData\SChampionDto($this->getResult());
 	}
 
 	/**
@@ -926,7 +1011,7 @@ class RiotAPI
 			->addQuery("itemListData", $item_list_data)
 			->makeCall(Region::GLOBAL);
 
-		return new StaticData\SItemListDto($this->result());
+		return new StaticData\SItemListDto($this->getResult());
 	}
 
 	/**
@@ -951,7 +1036,7 @@ class RiotAPI
 			->addQuery("itemListData", $item_list_data)
 			->makeCall(Region::GLOBAL);
 
-		return new StaticData\SItemDto($this->result());
+		return new StaticData\SItemDto($this->getResult());
 	}
 
 	/**
@@ -970,7 +1055,7 @@ class RiotAPI
 			->addQuery("version", $version)
 			->makeCall(Region::GLOBAL);
 
-		return new StaticData\SLanguageStringsDto($this->result());
+		return new StaticData\SLanguageStringsDto($this->getResult());
 	}
 
 	/**
@@ -984,7 +1069,7 @@ class RiotAPI
 		$this->setEndpoint("/api/lol/static-data/{$this->settings[self::SET_REGION]}/" . self::ENDPOINT_VERSION_STATICDATA . "/languages")
 			->makeCall(Region::GLOBAL);
 
-		return $this->result();
+		return $this->getResult();
 	}
 
 	/**
@@ -1003,7 +1088,7 @@ class RiotAPI
 			->addQuery("version", $version)
 			->makeCall(Region::GLOBAL);
 
-		return new StaticData\SMapDataDto($this->result());
+		return new StaticData\SMapDataDto($this->getResult());
 	}
 
 	/**
@@ -1027,7 +1112,7 @@ class RiotAPI
 			->addQuery("masteryListData", $mastery_list_data)
 			->makeCall(Region::GLOBAL);
 
-		return new StaticData\SMasteryListDto($this->result());
+		return new StaticData\SMasteryListDto($this->getResult());
 	}
 
 	/**
@@ -1052,7 +1137,7 @@ class RiotAPI
 			->addQuery("masteryListData", $mastery_list_data)
 			->makeCall(Region::GLOBAL);
 
-		return new StaticData\SMasteryDto($this->result());
+		return new StaticData\SMasteryDto($this->getResult());
 	}
 
 	/**
@@ -1066,7 +1151,7 @@ class RiotAPI
 		$this->setEndpoint("/api/lol/static-data/{$this->settings[self::SET_REGION]}/" . self::ENDPOINT_VERSION_STATICDATA . "/realm")
 			->makeCall(Region::GLOBAL);
 
-		return new StaticData\SRealmDto($this->result());
+		return new StaticData\SRealmDto($this->getResult());
 	}
 
 	/**
@@ -1090,7 +1175,7 @@ class RiotAPI
 			->addQuery("runeListData", $rune_list_data)
 			->makeCall(Region::GLOBAL);
 
-		return new StaticData\SRuneListDto($this->result());
+		return new StaticData\SRuneListDto($this->getResult());
 	}
 
 	/**
@@ -1115,7 +1200,7 @@ class RiotAPI
 			->addQuery("runeListData", $rune_list_data)
 			->makeCall(Region::GLOBAL);
 
-		return new StaticData\SRuneDto($this->result());
+		return new StaticData\SRuneDto($this->getResult());
 	}
 
 	/**
@@ -1141,7 +1226,7 @@ class RiotAPI
 			->addQuery("spellData", $spell_data)
 			->makeCall(Region::GLOBAL);
 
-		return new StaticData\SSummonerSpellListDto($this->result());
+		return new StaticData\SSummonerSpellListDto($this->getResult());
 	}
 
 	/**
@@ -1166,7 +1251,7 @@ class RiotAPI
 			->addQuery("spellData", $spell_data)
 			->makeCall(Region::GLOBAL);
 
-		return new StaticData\SSummonerSpellDto($this->result());
+		return new StaticData\SSummonerSpellDto($this->getResult());
 	}
 
 	/**
@@ -1180,7 +1265,7 @@ class RiotAPI
 		$this->setEndpoint("/api/lol/static-data/{$this->settings[self::SET_REGION]}/" . self::ENDPOINT_VERSION_STATICDATA . "/versions")
 			->makeCall(Region::GLOBAL);
 
-		return $this->result();
+		return $this->getResult();
 	}
 
 	/**
@@ -1202,7 +1287,7 @@ class RiotAPI
 			->makeCall();
 
 		$r = array();
-		foreach ($this->result() as $ident => $data)
+		foreach ($this->getResult() as $ident => $data)
 			$r[$ident] = new Objects\Shard($data);
 
 		return $r;
@@ -1216,12 +1301,12 @@ class RiotAPI
 	 * @return Objects\ShardStatus
 	 * @link https://developer.riotgames.com/api/methods#!/1085/3739
 	 */
-	public function getShardInfo( string $region ): Objects\ShardStatus
+	public function getShardStatus( string $region ): Objects\ShardStatus
 	{
 		$this->setEndpoint("/lol/status/" . self::ENDPOINT_VERSION_STATUS . "/shard")
 			->makeCall($region);
 
-		return new Objects\ShardStatus($this->result());
+		return new Objects\ShardStatus($this->getResult());
 	}
 
 	/**
@@ -1246,7 +1331,7 @@ class RiotAPI
 			->addQuery('includeTimeline', $include_timeline)
 			->makeCall();
 
-		return new Objects\MatchDetail($this->result());
+		return new Objects\MatchDetail($this->getResult());
 	}
 
 	public function getTournamentMatch( int $match_id, string $tournament_code, bool $include_timeline = false )
@@ -1259,7 +1344,7 @@ class RiotAPI
 			->useKey(self::SET_TOURNAMENT_KEY)
 			->makeCall();
 
-		return $this->result();
+		return $this->getResult();
 	}
 
 	public function getTournamentMatchIds( string $tournament_code )
@@ -1270,7 +1355,7 @@ class RiotAPI
 			->useKey(self::SET_TOURNAMENT_KEY)
 			->makeCall();
 
-		return $this->result();
+		return $this->getResult();
 	}
 
 	/**
@@ -1316,7 +1401,7 @@ class RiotAPI
 			->addQuery('endIndex', $end_index)
 			->makeCall();
 
-		return new Objects\MatchList($this->result());
+		return new Objects\MatchList($this->getResult());
 	}
 
 	/**
@@ -1341,7 +1426,7 @@ class RiotAPI
 			->addQuery('season', $season)
 			->makeCall();
 
-		return new Objects\RankedStatsDto($this->result());
+		return new Objects\RankedStatsDto($this->getResult());
 	}
 
 	/**
@@ -1359,7 +1444,7 @@ class RiotAPI
 			->addQuery('season', $season)
 			->makeCall();
 
-		return new Objects\PlayerStatsSummaryListDto($this->result());
+		return new Objects\PlayerStatsSummaryListDto($this->getResult());
 	}
 
 	/**
@@ -1379,15 +1464,11 @@ class RiotAPI
 	 *
 	 * @link https://developer.riotgames.com/api/methods#!/1221/4746
 	 */
-	public function getSummonerByName( $summoner_names ): array
+	public function getSummonersByName( array $summoner_names ): array
 	{
-		if (is_array($summoner_names))
-		{
-			if (count($summoner_names) > 40)
-				throw new RequestParameterException("Maximum allowed summoner name count is 40.");
-
-			$summoner_names = implode(',', $summoner_names);
-		}
+		if (count($summoner_names) > 40)
+			throw new RequestParameterException("Maximum allowed summoner name count is 40.");
+		$summoner_names = implode(',', $summoner_names);
 
 		//  Remove all spaces
 		$summoner_names = preg_replace('/[\s-]+/', '', strtolower($summoner_names));
@@ -1396,126 +1477,207 @@ class RiotAPI
 			->makeCall();
 
 		$r = array();
-		foreach ($this->result() as $summoner_name => $data)
+		foreach ($this->getResult() as $summoner_name => $data)
 			$r[$summoner_name] = new Objects\SummonerDto($data);
 
 		return $r;
 	}
 
 	/**
+	 *   Get signle summoner object for a given summoner name.
+	 *
+	 * @param string $summoner_name
+	 *
+	 * @return Objects\SummonerDto
+	 * @throws RequestParameterException
+	 *
+	 * @link https://developer.riotgames.com/api/methods#!/1221/4746
+	 */
+	public function getSummonerByName( string $summoner_name ): Objects\SummonerDto
+	{
+		if (strpos($summoner_name, ',') !== false)
+			throw new RequestParameterException("Summoner name list is not allowed by this function, please use 'getSummonersByName' function.");
+
+		$list = $this->getSummonersByName([$summoner_name]);
+		return reset($list);
+	}
+
+	/**
 	 *   Get summoner objects mapped by summoner ID for a given list of summoner IDs.
 	 *
-	 * @param int|array $summoner_ids
+	 * @param array $summoner_ids
 	 *
 	 * @return Objects\SummonerDto[]
 	 * @throws RequestParameterException
 	 *
 	 * @link https://developer.riotgames.com/api/methods#!/1221/4745
 	 */
-	public function getSummoner( $summoner_ids ): array
+	public function getSummoners( array $summoner_ids ): array
 	{
-		if (is_array($summoner_ids))
-		{
-			if (count($summoner_ids) > 40)
-				throw new RequestParameterException("Maximum allowed summoner id count is 40.");
-
-			$summoner_ids = implode(',', $summoner_ids);
-		}
+		if (count($summoner_ids) > 40)
+			throw new RequestParameterException("Maximum allowed summoner id count is 40.");
+		$summoner_ids = implode(',', $summoner_ids);
 
 		$this->setEndpoint("/api/lol/{$this->settings[self::SET_REGION]}/" . self::ENDPOINT_VERSION_SUMMONER . "/summoner/{$summoner_ids}")
 			->makeCall();
 
 		$r = array();
-		foreach ($this->result() as $summoner_id => $data)
+		foreach ($this->getResult() as $summoner_id => $data)
 			$r[$summoner_id] = new Objects\SummonerDto($data);
 
 		return $r;
 	}
 
 	/**
+	 *   Get single summoner object for a given summoner ID.
+	 *
+	 * @param int $summoner_id
+	 *
+	 * @return Objects\SummonerDto
+	 * @throws RequestParameterException
+	 *
+	 * @link https://developer.riotgames.com/api/methods#!/1221/4745
+	 */
+	public function getSummoner( int $summoner_id ): Objects\SummonerDto
+	{
+		if (strpos($summoner_id, ',') !== false)
+			throw new RequestParameterException("Summoner ID list is not allowed by this function, please use 'getSummoners' function.");
+
+		$list = $this->getSummoners([$summoner_id]);
+		return reset($list);
+	}
+
+	/**
 	 *   Get mastery pages mapped by summoner ID for a given list of summoner IDs.
 	 *
-	 * @param int|array $summoner_ids
+	 * @param array $summoner_ids
 	 *
 	 * @return Objects\MasteryPagesDto[]
 	 * @throws RequestParameterException
 	 *
 	 * @link https://developer.riotgames.com/api/methods#!/1208/4683
 	 */
-	public function getSummonerMasteries( $summoner_ids ): array
+	public function getSummonersMasteries( array $summoner_ids ): array
 	{
-		if (is_array($summoner_ids))
-		{
-			if (count($summoner_ids) > 40)
-				throw new RequestParameterException("Maximum allowed summoner id count is 40.");
-
-			$summoner_ids = implode(',', $summoner_ids);
-		}
+		if (count($summoner_ids) > 40)
+			throw new RequestParameterException("Maximum allowed summoner id count is 40.");
+		$summoner_ids = implode(',', $summoner_ids);
 
 		$this->setEndpoint("/api/lol/{$this->settings[self::SET_REGION]}/" . self::ENDPOINT_VERSION_SUMMONER . "/summoner/{$summoner_ids}/masteries")
 			->makeCall();
 
 		$r = array();
-		foreach ($this->result() as $summoner_id => $data)
+		foreach ($this->getResult() as $summoner_id => $data)
 			$r[$summoner_id] = new Objects\MasteryPagesDto($data);
 
 		return $r;
 	}
 
 	/**
+	 *   Get mastery pages for a given summoner ID.
+	 *
+	 * @param int $summoner_id
+	 *
+	 * @return Objects\MasteryPagesDto
+	 * @throws RequestParameterException
+	 *
+	 * @link https://developer.riotgames.com/api/methods#!/1208/4683
+	 */
+	public function getSummonerMasteries( int $summoner_id ): Objects\MasteryPagesDto
+	{
+		if (strpos($summoner_id, ',') !== false)
+			throw new RequestParameterException("Summoner ID list is not allowed by this function, please use 'getSummonersMasteries' function.");
+
+		$list = $this->getSummonersMasteries([$summoner_id]);
+		return reset($list);
+	}
+
+	/**
 	 *   Get summoner names mapped by summoner ID for a given list of summoner IDs.
 	 *
-	 * @param int|array $summoner_ids
+	 * @param array $summoner_ids
 	 *
 	 * @return array
 	 * @throws RequestParameterException
 	 *
 	 * @link https://developer.riotgames.com/api/methods#!/1208/4685
 	 */
-	public function getSummonerName( $summoner_ids ): array
+	public function getSummonersNames( array $summoner_ids ): array
 	{
-		if (is_array($summoner_ids))
-		{
-			if (count($summoner_ids) > 40)
-				throw new RequestParameterException("Maximum allowed summoner id count is 40.");
-
-			$summoner_ids = implode(',', $summoner_ids);
-		}
+		if (count($summoner_ids) > 40)
+			throw new RequestParameterException("Maximum allowed summoner id count is 40.");
+		$summoner_ids = implode(',', $summoner_ids);
 
 		$this->setEndpoint("/api/lol/{$this->settings[self::SET_REGION]}/" . self::ENDPOINT_VERSION_SUMMONER . "/summoner/{$summoner_ids}/name")
 			->makeCall();
 
-		return $this->result();
+		$r = array();
+		foreach ($this->getResult() as $summoner_id => $data)
+			$r[$summoner_id] = $data['name'];
+
+		return $r;
+	}
+
+	/**
+	 *   Get summoner name for a given summoner ID.
+	 *
+	 * @param int $summoner_id
+	 *
+	 * @return string
+	 * @throws RequestParameterException
+	 */
+	public function getSummonerName( int $summoner_id ): string
+	{
+		if (strpos($summoner_id, ',') !== false)
+			throw new RequestParameterException("Summoner name list is not allowed by this function, please use 'getSummonersNames' function.");
+
+		$list = $this->getSummonersNames([$summoner_id]);
+		return reset($list);
 	}
 
 	/**
 	 *   Get rune pages mapped by summoner ID for a given list of summoner IDs.
 	 *
-	 * @param int|array $summoner_ids
+	 * @param array $summoner_ids
 	 *
 	 * @return Objects\RunePagesDto[]
 	 * @throws RequestParameterException
 	 *
 	 * @link https://developer.riotgames.com/api/methods#!/1208/4682
 	 */
-	public function getSummonerRunes( $summoner_ids ): array
+	public function getSummonersRunes( array $summoner_ids ): array
 	{
-		if (is_array($summoner_ids))
-		{
-			if (count($summoner_ids) > 40)
-				throw new RequestParameterException("Maximum allowed summoner id count is 40.");
-
-			$summoner_ids = implode(',', $summoner_ids);
-		}
+		if (count($summoner_ids) > 40)
+			throw new RequestParameterException("Maximum allowed summoner id count is 40.");
+		$summoner_ids = implode(',', $summoner_ids);
 
 		$this->setEndpoint("/api/lol/{$this->settings[self::SET_REGION]}/" . self::ENDPOINT_VERSION_SUMMONER . "/summoner/{$summoner_ids}/runes")
 			->makeCall();
 
 		$r = array();
-		foreach ($this->result() as $summoner_id => $data)
+		foreach ($this->getResult() as $summoner_id => $data)
 			$r[$summoner_id] = new Objects\RunePagesDto($data);
 
 		return $r;
+	}
+
+	/**
+	 *   Get rune pages for a given summoner ID.
+	 *
+	 * @param int $summoner_id
+	 *
+	 * @return Objects\RunePagesDto
+	 * @throws RequestParameterException
+	 *
+	 * @link https://developer.riotgames.com/api/methods#!/1208/4682
+	 */
+	public function getSummonerRunes( int $summoner_id ): Objects\RunePagesDto
+	{
+		if (strpos($summoner_id, ',') !== false)
+			throw new RequestParameterException("Summoner ID list is not allowed by this function, please use 'getSummonersRunes' function.");
+
+		$list = $this->getSummonersRunes([$summoner_id]);
+		return reset($list);
 	}
 
 
@@ -1611,7 +1773,7 @@ class RiotAPI
 			->useKey(self::SET_TOURNAMENT_KEY)
 			->makeCall( Region::GLOBAL, self::METHOD_POST );
 
-		return $this->result();
+		return $this->getResult();
 	}
 
 	/**
@@ -1629,7 +1791,7 @@ class RiotAPI
 			->useKey(self::SET_TOURNAMENT_KEY)
 			->makeCall( Region::GLOBAL, self::METHOD_POST );
 
-		return $this->result();
+		return $this->getResult();
 	}
 
 	/**
@@ -1647,7 +1809,7 @@ class RiotAPI
 			->useKey(self::SET_TOURNAMENT_KEY)
 			->makeCall( Region::GLOBAL, self::METHOD_POST );
 
-		return $this->result();
+		return $this->getResult();
 	}
 
 	/**
@@ -1664,6 +1826,6 @@ class RiotAPI
 			->useKey(self::SET_TOURNAMENT_KEY)
 			->makeCall( Region::GLOBAL );
 
-		return new Objects\LobbyEventDTOWrapper($this->result());
+		return new Objects\LobbyEventDTOWrapper($this->getResult());
 	}
 }

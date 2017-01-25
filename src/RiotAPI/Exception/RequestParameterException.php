@@ -17,20 +17,12 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace DataDragonAPI\Definitions;
+namespace RiotAPI\Exception;
 
 
-class UI
-{
-	const CHAMPION = "champion";
-
-	const GOLD = "gold";
-
-	const ITEMS = "items";
-
-	const MINION = "minion";
-
-	const SCORE = "score";
-
-	const SPELLS = "spells";
-}
+/**
+ *   Class RequestParameterException
+ *
+ * @package RiotAPI\Exception
+ */
+class RequestParameterException extends \Exception {}

@@ -32,8 +32,8 @@ use RiotAPI\Objects\StaticData\SMasteryDto;
 use RiotAPI\Objects\StaticData\SRuneDto;
 use RiotAPI\Objects\StaticData\SSummonerSpellDto;
 
-use DataDragonAPI\Exceptions\RequestException;
-use DataDragonAPI\Exceptions\SettingsException;
+use DataDragonAPI\Exception\RequestException;
+use DataDragonAPI\Exception\SettingsException;
 
 
 class DataDragonAPI

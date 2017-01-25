@@ -17,12 +17,32 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace RiotAPI\Exceptions;
+namespace RiotAPI\Definition;
 
 
 /**
- *   Class ServerLimitException
+ *   Interface IRegion
  *
- * @package RiotAPI\Exceptions
+ * @package RiotAPI\Definition
  */
-class ServerLimitException extends \Exception {}
+interface IRegion
+{
+	const GLOBAL = 'global';
+	const STATUS = 'status';
+
+	/**
+	 *   Returns region list.
+	 *
+	 * @return array
+	 */
+	public function getList(): array;
+
+	/**
+	 *   Returns region name based on region identifier (can either be string or internal numeric ID).
+	 *
+	 * @param string $region
+	 *
+	 * @return string
+	 */
+	public function getRegionName( string $region ): string;
+}

@@ -17,58 +17,60 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace RiotAPI\Definitions;
+namespace RiotAPI\Definition;
 
-use RiotAPI\Exceptions\GeneralException;
+use RiotAPI\Exception\GeneralException;
 
 
 /**
- *   Class Platform
+ *   Class Region
  *
- * @package RiotAPI\Definitions
+ * @package RiotAPI\Definition
  */
-class Platform implements IPlatform
+class Region implements IRegion
 {
 	/****************************************d*d*
 	 *
-	 * Standard region platforms
+	 * Standard game regions
 	 *
 	 ********************************************/
 
-	const NORTH_AMERICA = 'na1';
+	const NORTH_AMERICA = 'na';
 
-	const EUROPE_WEST = 'euw1';
+	const EUROPE_WEST = 'euw';
 
-	const EUROPE_EAST = 'eun1';
+	const EUROPE_EAST = 'eune';
 
-	const LAMERICA_SOUTH = 'la2';
+	const LAMERICA_SOUTH = 'las';
 
-	const LAMERICA_NORTH = 'la1';
+	const LAMERICA_NORTH = 'lan';
 
-	const BRASIL = 'br1';
+	const BRASIL = 'br';
 
 	const RUSSIA = 'ru';
 
-	const TURKEY = 'tr1';
+	const TURKEY = 'tr';
 
-	const OCEANIA = 'oc1';
+	const OCEANIA = 'oce';
 
 	const KOREA = 'kr';
 
-	const JAPAN = 'jp1';
+	const JAPAN = 'jp';
 
 	public static $list = array(
-		Region::NORTH_AMERICA   => self::NORTH_AMERICA,
-		Region::EUROPE_WEST     => self::EUROPE_WEST,
-		Region::EUROPE_EAST     => self::EUROPE_EAST,
-		Region::LAMERICA_SOUTH  => self::LAMERICA_SOUTH,
-		Region::LAMERICA_NORTH  => self::LAMERICA_NORTH,
-		Region::BRASIL          => self::BRASIL,
-		Region::RUSSIA          => self::RUSSIA,
-		Region::TURKEY          => self::TURKEY,
-		Region::OCEANIA         => self::OCEANIA,
-		Region::KOREA           => self::KOREA,
-		Region::JAPAN           => self::JAPAN,
+		self::NORTH_AMERICA   => self::NORTH_AMERICA,
+		self::EUROPE_WEST     => self::EUROPE_WEST,
+		self::EUROPE_EAST     => self::EUROPE_EAST,
+		self::LAMERICA_SOUTH  => self::LAMERICA_SOUTH,
+		self::LAMERICA_NORTH  => self::LAMERICA_NORTH,
+		self::BRASIL          => self::BRASIL,
+		self::RUSSIA          => self::RUSSIA,
+		self::TURKEY          => self::TURKEY,
+		self::OCEANIA         => self::OCEANIA,
+		self::KOREA           => self::KOREA,
+		self::JAPAN           => self::JAPAN,
+		self::GLOBAL          => self::GLOBAL,
+		self::STATUS          => "http://status.leagueoflegends.com",
 	);
 
 
@@ -83,10 +85,10 @@ class Platform implements IPlatform
 		return self::$list;
 	}
 
-	public function getPlatformName( string $region ): string
+	public function getRegionName( string $region ): string
 	{
 		if (!isset(self::$list[$region]))
-			throw new GeneralException('Invalid region selected. Can not find requested platform.');
+			throw new GeneralException('Invalid region selected. Can not find requested region.');
 
 		return self::$list[$region];
 	}

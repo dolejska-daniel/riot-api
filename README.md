@@ -19,7 +19,7 @@ This is fully object oriented API wrapper for League of Legends. Here are some f
 How to begin?
 
 ```php
-use RiotAPI\Definitions;
+use RiotAPI\Definition;
 use RiotAPI\RiotAPI;
 
 //  Include all required files
@@ -30,7 +30,7 @@ $api = new RiotAPI([
 	//  Your API key, you can get one at https://developer.riotgames.com/
 	RiotAPI::SET_KEY             => 'YOUR_RIOT_API_KEY',
 	//  Target region (you can change it during lifetime of the library)
-	RiotAPI::SET_REGION          => Definitions\Region::EUROPE_EAST,
+	RiotAPI::SET_REGION          => Definition\Region::EUROPE_EAST,
 	//  Whether or not to cache keys' rate limits and prevent exceeding the rate limit
 	RiotAPI::SET_CACHE_RATELIMIT => true,
 ]);
@@ -41,11 +41,11 @@ $api = new RiotAPI([
 And there is a lot more, you can set when initializing the library, here is a complete list:
 
 - `RiotAPI::SET_REGION` -- this specifies on which region endpoints we are working
-  - `Definitions\Region::EUROPE_EAST`
-  - `Definitions\Region::EUROPE_WEST`
-  - `Definitions\Region::NORTH_AMERICA`
-  - `Definitions\Region::BRASIL`
-  - `Definitions\Region::RUSSIA`
+  - `Definition\Region::EUROPE_EAST`
+  - `Definition\Region::EUROPE_WEST`
+  - `Definition\Region::NORTH_AMERICA`
+  - `Definition\Region::BRASIL`
+  - `Definition\Region::RUSSIA`
   - …
 - `RiotAPI::SET_KEY` -- this will set the default API key for all the calls
 - `RiotAPI::SET_TOURNAMENT_KEY` -- with this, you can specify your tournament-endpoints-only API key
@@ -55,7 +55,7 @@ And there is a lot more, you can set when initializing the library, here is a co
 - `RiotAPI::SET_CACHE_CALLS_LENGTH` -- _not yet implemented_
 - `RiotAPI::SET_CACHE_PROVIDER` -- this option will allow you to either select from provided CacheProviders or to select your own
   - `RiotAPI::CACHE_PROVIDER_FILE`
-  - `RiotAPI::CACHE_PROVIDER_MEMCACHE`
+  - `RiotAPI::CACHE_PROVIDER_MEMCACHED`
 - `RiotAPI::SET_CACHE_PROVIDER_PARAMS` -- these are parameters, that will be passed to the CacheProvider on initialization
 
 Working with RiotAPI can not be easier, just watch:
@@ -121,7 +121,9 @@ Available methods:
 #### League
 
 Available methods:
+- getLeagueMappingBySummoners
 - getLeagueMappingBySummoner
+- getLeagueEntryBySummoners
 - getLeagueEntryBySummoner
 - getLeagueMappingChallenger
 - getLeagueMappingMaster
@@ -149,7 +151,7 @@ Available methods:
 
 Available methods:
 - getShards
-- getShardInfo
+- getShardStatus
 
 #### Match
 
@@ -172,10 +174,15 @@ Available methods:
 #### Summoner
 
 Available methods:
+- getSummonersByName
 - getSummonerByName
+- getSummoners
 - getSummoner
+- getSummonersMasteries
 - getSummonerMasteries
+- getSummonersNames
 - getSummonerName
+- getSummonersRunes
 - getSummonerRunes
 
 #### TournamentProvider

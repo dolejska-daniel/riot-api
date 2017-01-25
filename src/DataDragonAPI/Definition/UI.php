@@ -17,12 +17,20 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace DataDragonAPI\Exceptions;
+namespace DataDragonAPI\Definition;
 
 
-/**
- *   Class ArgumentException
- *
- * @package DataDragonAPI\Exceptions
- */
-class ArgumentException extends \Exception {}
+class UI
+{
+	const CHAMPION = "champion";
+
+	const GOLD = "gold";
+
+	const ITEMS = "items";
+
+	const MINION = "minion";
+
+	const SCORE = "score";
+
+	const SPELLS = "spells";
+}

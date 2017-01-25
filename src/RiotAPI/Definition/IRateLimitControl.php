@@ -17,30 +17,59 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace RiotAPI\Definitions;
+namespace RiotAPI\Definition;
 
 
 /**
  *   Interface IRateLimitControl
  *
- * @package RiotAPI\Definitions
+ * @package RiotAPI\Definition
  */
 interface IRateLimitControl
 {
+	const INTERVAL_1S = 1;
+
+	const INTERVAL_10S = 10;
+
+	const INTERVAL_10M = 600;
+
+	const INTERVAL_1H = 3600;
+
 	/**
-	 *   Determines whether or not API call can be made
+	 *   IRateLimitControl constructor.
+	 *
+	 * @param IRegion $region
+	 */
+	public function __construct( IRegion $region );
+
+	/**
+	 *   Sets time interval limits for provided API key.
 	 *
 	 * @param string $api_key
+	 * @param array  $limits
+	 *
+	 * @return mixed
+	 */
+	public function setLimits( string $api_key, array $limits );
+
+	/**
+	 *   Determines whether or not API call can be made.
+	 *
+	 * @param string $api_key
+	 * @param string $region
 	 *
 	 * @return bool
 	 */
-	public function canCall( string $api_key ): bool;
+	public function canCall( string $api_key, string $region ): bool;
 
 	/**
-	 *   Registers that new API call has been made
+	 *   Registers that new API call has been made.
 	 *
 	 * @param string $api_key
+	 * @param string $region
 	 * @param string $header
+	 *
+	 * @return
 	 */
-	public function registerCall( string $api_key, string $header );
+	public function registerCall( string $api_key, string $region, string $header );
 }
