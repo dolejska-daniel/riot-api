@@ -22,10 +22,10 @@ before_script:
 test:7.0:
     image: php:7.0
     script:
-        - phpunit -v --bootstrap phpunit.php --configuration phpunit.xml --coverage-text
+        - vendor/bin/phpunit -v --bootstrap phpunit.php --configuration phpunit.xml --coverage-text
 
 # PHP7.1 tests
 test:7.1:
     image: php:7.1
     script:
-        - phpunit -v --bootstrap phpunit.php --configuration phpunit.xml --coverage-text
+        - vendor/bin/phpunit -v --bootstrap phpunit.php --configuration phpunit.xml --coverage-text
