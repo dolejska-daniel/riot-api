@@ -1,6 +1,7 @@
 # Cache paths - not commited files
 cache:
-    untracked: true
+    paths:
+     - vendor/
 
 # Run memcached
 services:
