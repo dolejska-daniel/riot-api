@@ -18,6 +18,9 @@ before_script:
     # Install all project dependencies
     - php composer.phar install
 
+    # Install and enable xdebug PHP extenstion
+    pecl install xdebug && docker-php-ext-enable xdebug
+
 # PHP7.0 tests
 test:7.0:
     image: php:7.0
