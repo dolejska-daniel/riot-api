@@ -1,0 +1,31 @@
+# Cache paths - not commited files
+cache:
+    untracked: true
+
+# Run memcached
+services:
+    - memcached
+
+# Install dependencies
+before_script:
+    # Install git (the php image doesn't have it) which is required by composer
+    - apt-get update -yqq
+    - apt-get install git -yqq
+
+    # Install composer
+    - curl --silent --show-error https://getcomposer.org/installer | php
+
+    # Install all project dependencies
+    - php composer.phar install
+
+# PHP7.0 tests
+test:7.0:
+    image: php:7.0
+    script:
+        - phpunit -v --bootstrap phpunit.php --configuration phpunit.xml --coverage-text
+
+# PHP7.1 tests
+test:7.1:
+    image: php:7.1
+    script:
+        - phpunit -v --bootstrap phpunit.php --configuration phpunit.xml --coverage-text
