@@ -33,6 +33,14 @@ $api = new RiotAPI([
 	RiotAPI::SET_REGION          => Definition\Region::EUROPE_EAST,
 	//  Whether or not to cache keys' rate limits and prevent exceeding the rate limit
 	RiotAPI::SET_CACHE_RATELIMIT => true,
+	//  Per-key specified limits, always in format $timeInterval => $callLimit
+	RiotAPI::SET_RATELIMITS      => [
+		'YOUR_RIOT_API_KEY' => [
+			IRateLimitControl::INTERVAL_10S => 10,   // 10 calls per 10 seconds maximum
+			IRateLimitControl::INTERVAL_10M => 500,  // 500 calls per 10 minutes maximum
+			IRateLimitControl::INTERVAL_1H  => 3000, // 3000 calls per 1 hour maximum
+		],
+	],
 ]);
 
 //  And now you are ready to go!
