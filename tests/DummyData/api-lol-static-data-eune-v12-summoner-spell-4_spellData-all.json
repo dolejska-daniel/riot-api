@@ -1,0 +1,52 @@
+{
+    "name": "Flash",
+    "description": "Teleports your champion a short distance toward your cursor's location.",
+    "sanitizedDescription": "Teleports your champion a short distance toward your cursor's location.",
+    "tooltip": "Teleports your champion a short distance toward your cursor's location.",
+    "sanitizedTooltip": "Teleports your champion a short distance toward your cursor's location.",
+    "image": {
+        "full": "SummonerFlash.png",
+        "sprite": "spell0.png",
+        "group": "spell",
+        "x": 240,
+        "y": 0,
+        "w": 48,
+        "h": 48
+    },
+    "resource": "No Cost",
+    "maxrank": 1,
+    "cost": [
+        0
+    ],
+    "costType": "NoCost",
+    "costBurn": "0",
+    "cooldown": [
+        300
+    ],
+    "cooldownBurn": "300",
+    "effect": [
+        null,
+        [
+            400
+        ]
+    ],
+    "effectBurn": [
+        "",
+        "400"
+    ],
+    "range": [
+        425
+    ],
+    "rangeBurn": "425",
+    "summonerLevel": 8,
+    "id": 4,
+    "key": "SummonerFlash",
+    "modes": [
+        "CLASSIC",
+        "ODIN",
+        "TUTORIAL",
+        "ARAM",
+        "ASCENSION",
+        "FIRSTBLOOD"
+    ]
+}

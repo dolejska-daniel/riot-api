@@ -1,0 +1,10 @@
+{
+    "id": 5357,
+    "name": "Greater Quintessence of Ability Power",
+    "description": "+4.95 ability power",
+    "rune": {
+        "isRune": true,
+        "tier": "3",
+        "type": "black"
+    }
+}

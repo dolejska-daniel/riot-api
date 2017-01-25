@@ -1,0 +1,132 @@
+{
+    "name": "EU Nordic & East",
+    "slug": "eune",
+    "locales": [
+        "en_PL",
+        "hu_HU",
+        "pl_PL",
+        "ro_RO",
+        "cs_CZ",
+        "el_GR"
+    ],
+    "hostname": "prod.eun1.lol.riotgames.com",
+    "region_tag": "eun1",
+    "services": [
+        {
+            "name": "Game",
+            "slug": "game",
+            "status": "online",
+            "incidents": [
+                {
+                    "id": 2958,
+                    "active": true,
+                    "created_at": "2017-01-25T03:10:05.302Z",
+                    "updates": [
+                        {
+                            "id": "5888170dabc95201004368b7",
+                            "author": "",
+                            "content": "We are aware of issues with spectator, and are working on a fix.",
+                            "severity": "info",
+                            "created_at": "2017-01-25T03:10:05.302Z",
+                            "updated_at": "2017-01-25T03:10:05.302Z",
+                            "translations": [
+                                {
+                                    "locale": "cs_CZ",
+                                    "heading": "Spectator blank screen",
+                                    "content": "We are aware of issues with spectator, and are working on a fix."
+                                },
+                                {
+                                    "locale": "el_GR",
+                                    "heading": "Spectator blank screen",
+                                    "content": "We are aware of issues with spectator, and are working on a fix."
+                                },
+                                {
+                                    "locale": "hu_HU",
+                                    "heading": "Spectator blank screen",
+                                    "content": "We are aware of issues with spectator, and are working on a fix."
+                                },
+                                {
+                                    "locale": "pl_PL",
+                                    "heading": "Spectator blank screen",
+                                    "content": "We are aware of issues with spectator, and are working on a fix."
+                                },
+                                {
+                                    "locale": "ro_RO",
+                                    "heading": "Spectator blank screen",
+                                    "content": "We are aware of issues with spectator, and are working on a fix."
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Store",
+            "slug": "store",
+            "status": "online",
+            "incidents": []
+        },
+        {
+            "name": "Website",
+            "slug": "website",
+            "status": "online",
+            "incidents": []
+        },
+        {
+            "name": "Client",
+            "slug": "client",
+            "status": "online",
+            "incidents": []
+        },
+        {
+            "name": "League client update",
+            "slug": "league client update",
+            "status": "online",
+            "incidents": [
+                {
+                    "id": 2905,
+                    "active": true,
+                    "created_at": "2017-01-20T22:36:18.418Z",
+                    "updates": [
+                        {
+                            "id": "588290e2abc95201003d138e",
+                            "author": "",
+                            "content": "We have disabled gifting notifications temporarily due to a bug.",
+                            "severity": "info",
+                            "created_at": "2017-01-20T22:36:18.418Z",
+                            "updated_at": "2017-01-20T22:36:18.418Z",
+                            "translations": [
+                                {
+                                    "locale": "cs_CZ",
+                                    "heading": null,
+                                    "content": "Kv\u016fli chyb\u011b jsme do\u010dasn\u011b vypnuli ozn\u00e1men\u00ed o pos\u00edl\u00e1n\u00ed d\u00e1rk\u016f."
+                                },
+                                {
+                                    "locale": "el_GR",
+                                    "heading": null,
+                                    "content": "\u039f\u03b9 \u03b5\u03b9\u03b4\u03bf\u03c0\u03bf\u03b9\u03ae\u03c3\u03b5\u03b9\u03c2 \u03b4\u03ce\u03c1\u03c9\u03bd \u03b5\u03af\u03bd\u03b1\u03b9 \u03c0\u03c1\u03bf\u03c3\u03c9\u03c1\u03b9\u03bd\u03ac \u03b1\u03c0\u03b5\u03bd\u03b5\u03c1\u03b3\u03bf\u03c0\u03bf\u03b9\u03b7\u03bc\u03ad\u03bd\u03b5\u03c2 \u03bb\u03cc\u03b3\u03c9 \u03c3\u03c6\u03ac\u03bb\u03bc\u03b1\u03c4\u03bf\u03c2."
+                                },
+                                {
+                                    "locale": "hu_HU",
+                                    "heading": null,
+                                    "content": "Egy hiba miatt \u00e1tmenetileg letiltottuk az aj\u00e1nd\u00e9koz\u00e1si \u00e9rtes\u00edt\u00e9seket."
+                                },
+                                {
+                                    "locale": "pl_PL",
+                                    "heading": null,
+                                    "content": "Z powodu b\u0142\u0119du tymczasowo wy\u0142\u0105czyli\u015bmy powiadomienia o prezentach."
+                                },
+                                {
+                                    "locale": "ro_RO",
+                                    "heading": null,
+                                    "content": "Am dezactivat temporar notific\u0103rile pentru cadouri din cauza unui bug."
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+    ]
+}

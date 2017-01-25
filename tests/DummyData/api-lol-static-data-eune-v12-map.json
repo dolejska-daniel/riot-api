@@ -1,0 +1,84 @@
+{
+    "type": "map",
+    "version": "7.1.1",
+    "data": {
+        "11": {
+            "mapName": "SummonersRiftNew",
+            "mapId": 11,
+            "image": {
+                "full": "map11.png",
+                "sprite": "map0.png",
+                "group": "map",
+                "x": 192,
+                "y": 0,
+                "w": 48,
+                "h": 48
+            }
+        },
+        "12": {
+            "mapName": "ProvingGroundsNew",
+            "mapId": 12,
+            "image": {
+                "full": "map12.png",
+                "sprite": "map0.png",
+                "group": "map",
+                "x": 96,
+                "y": 0,
+                "w": 48,
+                "h": 48
+            }
+        },
+        "1": {
+            "mapName": "SummonersRift",
+            "mapId": 1,
+            "image": {
+                "full": "map1.png",
+                "sprite": "map0.png",
+                "group": "map",
+                "x": 144,
+                "y": 0,
+                "w": 48,
+                "h": 48
+            }
+        },
+        "8": {
+            "mapName": "CrystalScar",
+            "mapId": 8,
+            "image": {
+                "full": "map8.png",
+                "sprite": "map0.png",
+                "group": "map",
+                "x": 0,
+                "y": 0,
+                "w": 48,
+                "h": 48
+            }
+        },
+        "9": {
+            "mapName": "WIPUpdate",
+            "mapId": 9,
+            "image": {
+                "full": "map9.png",
+                "sprite": "map0.png",
+                "group": "map",
+                "x": 240,
+                "y": 0,
+                "w": 48,
+                "h": 48
+            }
+        },
+        "10": {
+            "mapName": "NewTwistedTreeline",
+            "mapId": 10,
+            "image": {
+                "full": "map10.png",
+                "sprite": "map0.png",
+                "group": "map",
+                "x": 48,
+                "y": 0,
+                "w": 48,
+                "h": 48
+            }
+        }
+    }
+}

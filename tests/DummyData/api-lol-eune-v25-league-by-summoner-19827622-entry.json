@@ -1,0 +1,42 @@
+{
+    "19827622": [
+        {
+            "name": "Kassadin's Dervish",
+            "tier": "PLATINUM",
+            "queue": "RANKED_SOLO_5x5",
+            "entries": [
+                {
+                    "playerOrTeamId": "19827622",
+                    "playerOrTeamName": "IMQ",
+                    "division": "III",
+                    "leaguePoints": 63,
+                    "wins": 8,
+                    "losses": 9,
+                    "isHotStreak": false,
+                    "isVeteran": false,
+                    "isFreshBlood": false,
+                    "isInactive": false
+                }
+            ]
+        },
+        {
+            "name": "Heimerdinger's Wizards",
+            "tier": "PLATINUM",
+            "queue": "RANKED_FLEX_SR",
+            "entries": [
+                {
+                    "playerOrTeamId": "19827622",
+                    "playerOrTeamName": "IMQ",
+                    "division": "II",
+                    "leaguePoints": 40,
+                    "wins": 7,
+                    "losses": 3,
+                    "isHotStreak": false,
+                    "isVeteran": false,
+                    "isFreshBlood": false,
+                    "isInactive": false
+                }
+            ]
+        }
+    ]
+}
