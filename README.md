@@ -1,5 +1,10 @@
 # RiotAPI PHP7 wrapper
 
+> Version 0.1
+
+[![build status](https://gitlab.dolejska.me/dolejskad/riot-api/badges/master/build.svg)](https://gitlab.dolejska.me/dolejskad/riot-api/commits/master)
+[![coverage report](https://gitlab.dolejska.me/dolejskad/riot-api/badges/master/coverage.svg)](https://gitlab.dolejska.me/dolejskad/riot-api/commits/master)
+
 Welcome to the RiotAPI PHP7 library repo! The goal of this library is to create easy-to-use
 library for anyone who might need one.
 
@@ -11,6 +16,7 @@ Please, read on :)
 _MORE TBA_
 
 ## League of Legends API
+
 This is fully object oriented API wrapper for League of Legends. Here are some features:
 
 - Rate limit caching and exceeding prevention
