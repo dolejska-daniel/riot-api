@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,77 +21,75 @@ namespace RiotAPI\Objects\StaticData;
 
 use RiotAPI\Objects\ApiObject;
 
-
 /**
  *   Class SStatsDto
  * This object contains champion stats data.
  *
  * Used in:
  *   lol-static-data (v1.2)
+ *
  *     @link https://developer.riotgames.com/api/methods#!/1055/3633
  *     @link https://developer.riotgames.com/api/methods#!/1055/3622
- *
- * @package RiotAPI\Objects\StaticData
  */
 class SStatsDto extends ApiObject
 {
-	/** @var double $armor */
-	public $armor;
+    /** @var float $armor */
+    public $armor;
 
-	/** @var double $armorperlevel */
-	public $armorperlevel;
+    /** @var float $armorperlevel */
+    public $armorperlevel;
 
-	/** @var double $attackdamage */
-	public $attackdamage;
+    /** @var float $attackdamage */
+    public $attackdamage;
 
-	/** @var double $attackdamageperlevel */
-	public $attackdamageperlevel;
+    /** @var float $attackdamageperlevel */
+    public $attackdamageperlevel;
 
-	/** @var double $attackrange */
-	public $attackrange;
+    /** @var float $attackrange */
+    public $attackrange;
 
-	/** @var double $attackspeedoffset */
-	public $attackspeedoffset;
+    /** @var float $attackspeedoffset */
+    public $attackspeedoffset;
 
-	/** @var double $attackspeedperlevel */
-	public $attackspeedperlevel;
+    /** @var float $attackspeedperlevel */
+    public $attackspeedperlevel;
 
-	/** @var double $crit */
-	public $crit;
+    /** @var float $crit */
+    public $crit;
 
-	/** @var double $critperlevel */
-	public $critperlevel;
+    /** @var float $critperlevel */
+    public $critperlevel;
 
-	/** @var double $hp */
-	public $hp;
+    /** @var float $hp */
+    public $hp;
 
-	/** @var double $hpperlevel */
-	public $hpperlevel;
+    /** @var float $hpperlevel */
+    public $hpperlevel;
 
-	/** @var double $hpregen */
-	public $hpregen;
+    /** @var float $hpregen */
+    public $hpregen;
 
-	/** @var double $hpregenperlevel */
-	public $hpregenperlevel;
+    /** @var float $hpregenperlevel */
+    public $hpregenperlevel;
 
-	/** @var double $movespeed */
-	public $movespeed;
+    /** @var float $movespeed */
+    public $movespeed;
 
-	/** @var double $mp */
-	public $mp;
+    /** @var float $mp */
+    public $mp;
 
-	/** @var double $mpperlevel */
-	public $mpperlevel;
+    /** @var float $mpperlevel */
+    public $mpperlevel;
 
-	/** @var double $mpregen */
-	public $mpregen;
+    /** @var float $mpregen */
+    public $mpregen;
 
-	/** @var double $mpregenperlevel */
-	public $mpregenperlevel;
+    /** @var float $mpregenperlevel */
+    public $mpregenperlevel;
 
-	/** @var double $spellblock */
-	public $spellblock;
+    /** @var float $spellblock */
+    public $spellblock;
 
-	/** @var double $spellblockperlevel */
-	public $spellblockperlevel;
+    /** @var float $spellblockperlevel */
+    public $spellblockperlevel;
 }

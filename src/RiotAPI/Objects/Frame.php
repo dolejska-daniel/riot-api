@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,39 +19,37 @@
 
 namespace RiotAPI\Objects;
 
-
 /**
  *   Class Frame
- * This object contains game frame information
+ * This object contains game frame information.
  *
  * Used in:
  *   match (v2.2)
+ *
  *     @link https://developer.riotgames.com/api/methods#!/1224/4756
  *
  * @iterable $events
- *
- * @package RiotAPI\Objects
  */
 class Frame extends ApiObjectIterable
 {
-	/**
-	 *   List of events for this frame.
-	 *
-	 * @var Event[] $events
-	 */
-	public $events;
+    /**
+     *   List of events for this frame.
+     *
+     * @var Event[]
+     */
+    public $events;
 
-	/**
-	 *   Map of each participant ID to the participant's information for the frame.
-	 *
-	 * @var ParticipantFrame[] $participantFrames
-	 */
-	public $participantFrames;
+    /**
+     *   Map of each participant ID to the participant's information for the frame.
+     *
+     * @var ParticipantFrame[]
+     */
+    public $participantFrames;
 
-	/**
-	 *   Represents how many milliseconds into the game the frame occurred.
-	 *
-	 * @var int $timestamp
-	 */
-	public $timestamp;
+    /**
+     *   Represents how many milliseconds into the game the frame occurred.
+     *
+     * @var int
+     */
+    public $timestamp;
 }

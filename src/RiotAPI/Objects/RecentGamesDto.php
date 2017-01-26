@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,32 +19,30 @@
 
 namespace RiotAPI\Objects;
 
-
 /**
  *   Class RecentGamesDto
  * This object contains recent games information.
  *
  * Used in:
  *   game (v1.3)
+ *
  *     @link https://developer.riotgames.com/api/methods#!/1207/4679
  *
  * @iterable $games
- *
- * @package RiotAPI\Objects
  */
 class RecentGamesDto extends ApiObjectIterable
 {
-	/**
-	 *   Collection of recent games played (max 10).
-	 *
-	 * @var GameDto[] $games
-	 */
-	public $games;
+    /**
+     *   Collection of recent games played (max 10).
+     *
+     * @var GameDto[]
+     */
+    public $games;
 
-	/**
-	 *   Summoner ID.
-	 *
-	 * @var int $summonerId
-	 */
-	public $summonerId;
+    /**
+     *   Summoner ID.
+     *
+     * @var int
+     */
+    public $summonerId;
 }

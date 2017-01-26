@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,31 +19,29 @@
 
 namespace RiotAPI\Objects;
 
-
 /**
- *   Class Mastery
+ *   Class Mastery.
  *
  * Used in:
  *   current-game (v1.0)
+ *
  *     @link https://developer.riotgames.com/api/methods#!/976/3336
  *   match (v2.2)
  *     @link https://developer.riotgames.com/api/methods#!/1224/4756
- *
- * @package RiotAPI\Objects
  */
 class Mastery extends ApiObject
 {
-	/**
-	 *   The ID of the mastery.
-	 *
-	 * @var int $masteryId
-	 */
-	public $masteryId;
+    /**
+     *   The ID of the mastery.
+     *
+     * @var int
+     */
+    public $masteryId;
 
-	/**
-	 *   The number of points put into this mastery by the user.
-	 *
-	 * @var int $rank
-	 */
-	public $rank;
+    /**
+     *   The number of points put into this mastery by the user.
+     *
+     * @var int
+     */
+    public $rank;
 }

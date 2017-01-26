@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,39 +19,37 @@
 
 namespace RiotAPI\Objects;
 
-
 /**
  *   Class RankedStatsDto
  * This object contains ranked stats information.
  *
  * Used in:
  *   stats (v1.3)
+ *
  *     @link https://developer.riotgames.com/api/methods#!/1209/4686
  *
  * @iterable $champions
- *
- * @package RiotAPI\Objects
  */
 class RankedStatsDto extends ApiObjectIterable
 {
-	/**
-	 *   Collection of aggregated stats summarized by champion.
-	 *
-	 * @var ChampionStatsDto[] $champions
-	 */
-	public $champions;
+    /**
+     *   Collection of aggregated stats summarized by champion.
+     *
+     * @var ChampionStatsDto[]
+     */
+    public $champions;
 
-	/**
-	 *   Date stats were last modified specified as epoch milliseconds.
-	 *
-	 * @var int $modifyDate
-	 */
-	public $modifyDate;
+    /**
+     *   Date stats were last modified specified as epoch milliseconds.
+     *
+     * @var int
+     */
+    public $modifyDate;
 
-	/**
-	 *   Summoner ID.
-	 *
-	 * @var int $summonerId
-	 */
-	public $summonerId;
+    /**
+     *   Summoner ID.
+     *
+     * @var int
+     */
+    public $summonerId;
 }

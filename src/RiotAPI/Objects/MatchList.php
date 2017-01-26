@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,30 +19,28 @@
 
 namespace RiotAPI\Objects;
 
-
 /**
  *   Class MatchList
- * This object contains match list information
+ * This object contains match list information.
  *
  * Used in:
  *   matchlist (v2.2)
+ *
  *     @link https://developer.riotgames.com/api/methods#!/1223/4754
  *
  * @iterable $matches
- *
- * @package RiotAPI\Objects
  */
 class MatchList extends ApiObjectIterable
 {
-	/** @var int $endIndex */
-	public $endIndex;
+    /** @var int $endIndex */
+    public $endIndex;
 
-	/** @var MatchReference[] $matches */
-	public $matches;
+    /** @var MatchReference[] $matches */
+    public $matches;
 
-	/** @var int $startIndex */
-	public $startIndex;
+    /** @var int $startIndex */
+    public $startIndex;
 
-	/** @var int $totalGames */
-	public $totalGames;
+    /** @var int $totalGames */
+    public $totalGames;
 }

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,129 +19,127 @@
 
 namespace RiotAPI\Objects;
 
-
 /**
  *   Class Team
- * This object contains team information
+ * This object contains team information.
  *
  * Used in:
  *   match (v2.2)
- *     @link https://developer.riotgames.com/api/methods#!/1224/4756
  *
- * @package RiotAPI\Objects
+ *     @link https://developer.riotgames.com/api/methods#!/1224/4756
  */
 class Team extends ApiObject
 {
-	/**
-	 *   If game was draft mode, contains banned champion data, otherwise null.
-	 *
-	 * @var BannedChampion[] $bans
-	 */
-	public $bans;
+    /**
+     *   If game was draft mode, contains banned champion data, otherwise null.
+     *
+     * @var BannedChampion[]
+     */
+    public $bans;
 
-	/**
-	 *   Number of times the team killed baron.
-	 *
-	 * @var int $baronKills
-	 */
-	public $baronKills;
+    /**
+     *   Number of times the team killed baron.
+     *
+     * @var int
+     */
+    public $baronKills;
 
-	/**
-	 *   If game was a dominion game, specifies the points the team had at game 
-	 * end, otherwise null.
-	 *
-	 * @var int $dominionVictoryScore
-	 */
-	public $dominionVictoryScore;
+    /**
+     *   If game was a dominion game, specifies the points the team had at game
+     * end, otherwise null.
+     *
+     * @var int
+     */
+    public $dominionVictoryScore;
 
-	/**
-	 *   Number of times the team killed dragon.
-	 *
-	 * @var int $dragonKills
-	 */
-	public $dragonKills;
+    /**
+     *   Number of times the team killed dragon.
+     *
+     * @var int
+     */
+    public $dragonKills;
 
-	/**
-	 *   Flag indicating whether or not the team got the first baron kill.
-	 *
-	 * @var bool $firstBaron
-	 */
-	public $firstBaron;
+    /**
+     *   Flag indicating whether or not the team got the first baron kill.
+     *
+     * @var bool
+     */
+    public $firstBaron;
 
-	/**
-	 *   Flag indicating whether or not the team got first blood.
-	 *
-	 * @var bool $firstBlood
-	 */
-	public $firstBlood;
+    /**
+     *   Flag indicating whether or not the team got first blood.
+     *
+     * @var bool
+     */
+    public $firstBlood;
 
-	/**
-	 *   Flag indicating whether or not the team got the first dragon kill.
-	 *
-	 * @var bool $firstDragon
-	 */
-	public $firstDragon;
+    /**
+     *   Flag indicating whether or not the team got the first dragon kill.
+     *
+     * @var bool
+     */
+    public $firstDragon;
 
-	/**
-	 *   Flag indicating whether or not the team destroyed the first inhibitor.
-	 *
-	 * @var bool $firstInhibitor
-	 */
-	public $firstInhibitor;
+    /**
+     *   Flag indicating whether or not the team destroyed the first inhibitor.
+     *
+     * @var bool
+     */
+    public $firstInhibitor;
 
-	/**
-	 *   Flag indicating whether or not the team got the first rift herald kill.
-	 *
-	 * @var bool $firstRiftHerald
-	 */
-	public $firstRiftHerald;
+    /**
+     *   Flag indicating whether or not the team got the first rift herald kill.
+     *
+     * @var bool
+     */
+    public $firstRiftHerald;
 
-	/**
-	 *   Flag indicating whether or not the team destroyed the first tower.
-	 *
-	 * @var bool $firstTower
-	 */
-	public $firstTower;
+    /**
+     *   Flag indicating whether or not the team destroyed the first tower.
+     *
+     * @var bool
+     */
+    public $firstTower;
 
-	/**
-	 *   Number of inhibitors the team destroyed.
-	 *
-	 * @var int $inhibitorKills
-	 */
-	public $inhibitorKills;
+    /**
+     *   Number of inhibitors the team destroyed.
+     *
+     * @var int
+     */
+    public $inhibitorKills;
 
-	/**
-	 *   Number of times the team killed rift herald.
-	 *
-	 * @var int $riftHeraldKills
-	 */
-	public $riftHeraldKills;
+    /**
+     *   Number of times the team killed rift herald.
+     *
+     * @var int
+     */
+    public $riftHeraldKills;
 
-	/**
-	 *   Team ID.
-	 *
-	 * @var int $teamId
-	 */
-	public $teamId;
+    /**
+     *   Team ID.
+     *
+     * @var int
+     */
+    public $teamId;
 
-	/**
-	 *   Number of towers the team destroyed.
-	 *
-	 * @var int $towerKills
-	 */
-	public $towerKills;
+    /**
+     *   Number of towers the team destroyed.
+     *
+     * @var int
+     */
+    public $towerKills;
 
-	/**
-	 *   Number of times the team killed vilemaw.
-	 *
-	 * @var int $vilemawKills
-	 */
-	public $vilemawKills;
+    /**
+     *   Number of times the team killed vilemaw.
+     *
+     * @var int
+     */
+    public $vilemawKills;
 
-	/**
-	 *   Flag indicating whether or not the team won.
-	 *
-	 * @var bool $winner
-	 */
-	public $winner;
+    /**
+     *   Flag indicating whether or not the team won.
+     *
+     * @var bool
+     */
+    public $winner;
 }

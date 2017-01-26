@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,68 +21,66 @@ namespace RiotAPI\Objects\StaticData;
 
 use RiotAPI\Objects\ApiObject;
 
-
 /**
  *   Class SChampionDto
  * This object contains champion data.
  *
  * Used in:
  *   lol-static-data (v1.2)
+ *
  *     @link https://developer.riotgames.com/api/methods#!/1055/3633
  *     @link https://developer.riotgames.com/api/methods#!/1055/3622
- *
- * @package RiotAPI\Objects\StaticData
  */
 class SChampionDto extends ApiObject
 {
-	/** @var string[] $allytips */
-	public $allytips;
+    /** @var string[] $allytips */
+    public $allytips;
 
-	/** @var string $blurb */
-	public $blurb;
+    /** @var string $blurb */
+    public $blurb;
 
-	/** @var string[] $enemytips */
-	public $enemytips;
+    /** @var string[] $enemytips */
+    public $enemytips;
 
-	/** @var int $id */
-	public $id;
+    /** @var int $id */
+    public $id;
 
-	/** @var SImageDto $image */
-	public $image;
+    /** @var SImageDto $image */
+    public $image;
 
-	/** @var SInfoDto $info */
-	public $info;
+    /** @var SInfoDto $info */
+    public $info;
 
-	/** @var string $key */
-	public $key;
+    /** @var string $key */
+    public $key;
 
-	/** @var string $lore */
-	public $lore;
+    /** @var string $lore */
+    public $lore;
 
-	/** @var string $name */
-	public $name;
+    /** @var string $name */
+    public $name;
 
-	/** @var string $partype */
-	public $partype;
+    /** @var string $partype */
+    public $partype;
 
-	/** @var SPassiveDto $passive */
-	public $passive;
+    /** @var SPassiveDto $passive */
+    public $passive;
 
-	/** @var SRecommendedDto[] $recommended */
-	public $recommended;
+    /** @var SRecommendedDto[] $recommended */
+    public $recommended;
 
-	/** @var SSkinDto[] $skins */
-	public $skins;
+    /** @var SSkinDto[] $skins */
+    public $skins;
 
-	/** @var SChampionSpellDto[] $spells */
-	public $spells;
+    /** @var SChampionSpellDto[] $spells */
+    public $spells;
 
-	/** @var SStatsDto $stats */
-	public $stats;
+    /** @var SStatsDto $stats */
+    public $stats;
 
-	/** @var string[] $tags */
-	public $tags;
+    /** @var string[] $tags */
+    public $tags;
 
-	/** @var string $title */
-	public $title;
+    /** @var string $title */
+    public $title;
 }

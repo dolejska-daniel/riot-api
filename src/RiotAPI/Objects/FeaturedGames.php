@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,31 +19,29 @@
 
 namespace RiotAPI\Objects;
 
-
 /**
- *   Class FeaturedGames
+ *   Class FeaturedGames.
  *
  * Used in:
  *   featured-games (v1.0)
+ *
  *     @link https://developer.riotgames.com/api/methods#!/977/3337
  *
  * @iterable $gameList
- *
- * @package RiotAPI\Objects
  */
 class FeaturedGames extends ApiObjectIterable
 {
-	/**
-	 *   The suggested interval to wait before requesting FeaturedGames again.
-	 *
-	 * @var int $clientRefreshInterval
-	 */
-	public $clientRefreshInterval;
+    /**
+     *   The suggested interval to wait before requesting FeaturedGames again.
+     *
+     * @var int
+     */
+    public $clientRefreshInterval;
 
-	/**
-	 *   The list of featured games.
-	 *
-	 * @var FeaturedGameInfo[] $gameList
-	 */
-	public $gameList;
+    /**
+     *   The list of featured games.
+     *
+     * @var FeaturedGameInfo[]
+     */
+    public $gameList;
 }

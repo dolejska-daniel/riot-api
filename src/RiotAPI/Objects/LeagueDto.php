@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,63 +19,61 @@
 
 namespace RiotAPI\Objects;
 
-
 /**
  *   Class LeagueDto
  * This object contains league information.
  *
  * Used in:
  *   league (v2.5)
+ *
  *     @link https://developer.riotgames.com/api/methods#!/1215/4701
  *     @link https://developer.riotgames.com/api/methods#!/1215/4705
  *     @link https://developer.riotgames.com/api/methods#!/1215/4704
  *     @link https://developer.riotgames.com/api/methods#!/1215/4706
  *
  * @iterable $entries
- *
- * @package RiotAPI\Objects
  */
 class LeagueDto extends ApiObjectIterable
 {
-	/**
-	 *   The requested league entries.
-	 *
-	 * @var LeagueEntryDto[] $entries
-	 */
-	public $entries;
+    /**
+     *   The requested league entries.
+     *
+     * @var LeagueEntryDto[]
+     */
+    public $entries;
 
-	/**
-	 *   This name is an internal place-holder name only. Display and localization 
-	 * of names in the game client are handled client-side.
-	 *
-	 * @var string $name
-	 */
-	public $name;
+    /**
+     *   This name is an internal place-holder name only. Display and localization
+     * of names in the game client are handled client-side.
+     *
+     * @var string
+     */
+    public $name;
 
-	/**
-	 *   Specifies the relevant participant that is a member of this league (i.e., 
-	 * a requested summoner ID, a requested team ID, or the ID of a team to which 
-	 * one of the requested summoners belongs). Only present when full league is 
-	 * requested so that participant's entry can be identified. Not present when individual 
-	 * entry is requested.
-	 *
-	 * @var string $participantId
-	 */
-	public $participantId;
+    /**
+     *   Specifies the relevant participant that is a member of this league (i.e.,
+     * a requested summoner ID, a requested team ID, or the ID of a team to which
+     * one of the requested summoners belongs). Only present when full league is
+     * requested so that participant's entry can be identified. Not present when individual
+     * entry is requested.
+     *
+     * @var string
+     */
+    public $participantId;
 
-	/**
-	 *   The league's queue type. (Legal values: RANKED_FLEX_SR, RANKED_FLEX_TT, 
-	 * RANKED_SOLO_5x5, RANKED_TEAM_3x3, RANKED_TEAM_5x5).
-	 *
-	 * @var string $queue
-	 */
-	public $queue;
+    /**
+     *   The league's queue type. (Legal values: RANKED_FLEX_SR, RANKED_FLEX_TT,
+     * RANKED_SOLO_5x5, RANKED_TEAM_3x3, RANKED_TEAM_5x5).
+     *
+     * @var string
+     */
+    public $queue;
 
-	/**
-	 *   The league's tier. (Legal values: CHALLENGER, MASTER, DIAMOND, PLATINUM, 
-	 * GOLD, SILVER, BRONZE).
-	 *
-	 * @var string $tier
-	 */
-	public $tier;
+    /**
+     *   The league's tier. (Legal values: CHALLENGER, MASTER, DIAMOND, PLATINUM,
+     * GOLD, SILVER, BRONZE).
+     *
+     * @var string
+     */
+    public $tier;
 }

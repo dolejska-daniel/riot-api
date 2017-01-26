@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,18 +19,17 @@
 
 namespace DataDragonAPI\Definition;
 
-
 class UI
 {
-	const CHAMPION = "champion";
+    const CHAMPION = 'champion';
 
-	const GOLD = "gold";
+    const GOLD = 'gold';
 
-	const ITEMS = "items";
+    const ITEMS = 'items';
 
-	const MINION = "minion";
+    const MINION = 'minion';
 
-	const SCORE = "score";
+    const SCORE = 'score';
 
-	const SPELLS = "spells";
+    const SPELLS = 'spells';
 }

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,25 +19,23 @@
 
 namespace RiotAPI\Objects;
 
-
 /**
  *   Class ChampionListDto
  * This object contains a collection of champion information.
  *
  * Used in:
  *   champion (v1.2)
+ *
  *     @link https://developer.riotgames.com/api/methods#!/1206/4678
  *
  * @iterable $champions
- *
- * @package RiotAPI\Objects
  */
 class ChampionListDto extends ApiObjectIterable
 {
-	/**
-	 *   The collection of champion information.
-	 *
-	 * @var ChampionDto[] $champions
-	 */
-	public $champions;
+    /**
+     *   The collection of champion information.
+     *
+     * @var ChampionDto[]
+     */
+    public $champions;
 }

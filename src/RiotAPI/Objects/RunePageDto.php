@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,46 +19,44 @@
 
 namespace RiotAPI\Objects;
 
-
 /**
  *   Class RunePageDto
  * This object contains rune page information.
  *
  * Used in:
  *   summoner (v1.4)
+ *
  *     @link https://developer.riotgames.com/api/methods#!/1208/4682
  *
  * @iterable $slots
- *
- * @package RiotAPI\Objects
  */
 class RunePageDto extends ApiObjectIterable
 {
-	/**
-	 *   Indicates if the page is the current page.
-	 *
-	 * @var bool $current
-	 */
-	public $current;
+    /**
+     *   Indicates if the page is the current page.
+     *
+     * @var bool
+     */
+    public $current;
 
-	/**
-	 *   Rune page ID.
-	 *
-	 * @var int $id
-	 */
-	public $id;
+    /**
+     *   Rune page ID.
+     *
+     * @var int
+     */
+    public $id;
 
-	/**
-	 *   Rune page name.
-	 *
-	 * @var string $name
-	 */
-	public $name;
+    /**
+     *   Rune page name.
+     *
+     * @var string
+     */
+    public $name;
 
-	/**
-	 *   Collection of rune slots associated with the rune page.
-	 *
-	 * @var RuneSlotDto[] $slots
-	 */
-	public $slots;
+    /**
+     *   Collection of rune slots associated with the rune page.
+     *
+     * @var RuneSlotDto[]
+     */
+    public $slots;
 }

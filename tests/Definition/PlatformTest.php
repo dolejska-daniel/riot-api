@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,57 +16,55 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 use RiotAPI\Definition\Platform;
 use RiotAPI\Definition\Region;
-
 use RiotAPI\Exception\GeneralException;
-
 
 class PlatformTest extends RiotAPITestCase
 {
-	public function testInit()
-	{
-		$obj = new Platform();
-		return $obj;
-	}
+    public function testInit()
+    {
+        $obj = new Platform();
 
-	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
-	 *
-	 * @param Platform $region
-	 */
-	public function testGetList( Platform $region )
-	{
-		$regionList = $region->getList();
-		$this->assertSame(Platform::$list, $regionList);
-	}
+        return $obj;
+    }
 
-	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
-	 *
-	 * @param Platform $region
-	 */
-	public function testGetPlatform( Platform $region )
-	{
-		$regionName = $region->getPlatformName(Region::EUROPE_EAST);
-		$this->assertSame(Platform::$list[Region::EUROPE_EAST], $regionName);
-	}
+    /**
+     * @depends      testInit
+     * @dataProvider testInit
+     *
+     * @param Platform $region
+     */
+    public function testGetList(Platform $region)
+    {
+        $regionList = $region->getList();
+        $this->assertSame(Platform::$list, $regionList);
+    }
 
-	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
-	 *
-	 * @param Platform $region
-	 */
-	public function testGetPlatform_Exception( Platform $region )
-	{
-		$this->expectException(GeneralException::class);
+    /**
+     * @depends      testInit
+     * @dataProvider testInit
+     *
+     * @param Platform $region
+     */
+    public function testGetPlatform(Platform $region)
+    {
+        $regionName = $region->getPlatformName(Region::EUROPE_EAST);
+        $this->assertSame(Platform::$list[Region::EUROPE_EAST], $regionName);
+    }
 
-		$region->getPlatformName('MORDOR');
-	}
+    /**
+     * @depends      testInit
+     * @dataProvider testInit
+     *
+     * @param Platform $region
+     */
+    public function testGetPlatform_Exception(Platform $region)
+    {
+        $this->expectException(GeneralException::class);
+
+        $region->getPlatformName('MORDOR');
+    }
 }

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,46 +19,44 @@
 
 namespace RiotAPI\Objects;
 
-
 /**
  *   Class MasteryPageDto
  * This object contains mastery page information.
  *
  * Used in:
  *   summoner (v1.4)
+ *
  *     @link https://developer.riotgames.com/api/methods#!/1208/4683
  *
  * @iterable $masteries
- *
- * @package RiotAPI\Objects
  */
 class MasteryPageDto extends ApiObjectIterable
 {
-	/**
-	 *   Indicates if the mastery page is the current mastery page.
-	 *
-	 * @var bool $current
-	 */
-	public $current;
+    /**
+     *   Indicates if the mastery page is the current mastery page.
+     *
+     * @var bool
+     */
+    public $current;
 
-	/**
-	 *   Mastery page ID.
-	 *
-	 * @var int $id
-	 */
-	public $id;
+    /**
+     *   Mastery page ID.
+     *
+     * @var int
+     */
+    public $id;
 
-	/**
-	 *   Collection of masteries associated with the mastery page.
-	 *
-	 * @var MasteryDto[] $masteries
-	 */
-	public $masteries;
+    /**
+     *   Collection of masteries associated with the mastery page.
+     *
+     * @var MasteryDto[]
+     */
+    public $masteries;
 
-	/**
-	 *   Mastery page name.
-	 *
-	 * @var string $name
-	 */
-	public $name;
+    /**
+     *   Mastery page name.
+     *
+     * @var string
+     */
+    public $name;
 }

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,31 +19,29 @@
 
 namespace RiotAPI\Objects;
 
-
 /**
  *   Class RuneSlotDto
  * This object contains rune slot information.
  *
  * Used in:
  *   summoner (v1.4)
- *     @link https://developer.riotgames.com/api/methods#!/1208/4682
  *
- * @package RiotAPI\Objects
+ *     @link https://developer.riotgames.com/api/methods#!/1208/4682
  */
 class RuneSlotDto extends ApiObject
 {
-	/**
-	 *   Rune ID associated with the rune slot. For static information correlating 
-	 * to rune IDs, please refer to the LoL Static Data API.
-	 *
-	 * @var int $runeId
-	 */
-	public $runeId;
+    /**
+     *   Rune ID associated with the rune slot. For static information correlating
+     * to rune IDs, please refer to the LoL Static Data API.
+     *
+     * @var int
+     */
+    public $runeId;
 
-	/**
-	 *   Rune slot ID.
-	 *
-	 * @var int $runeSlotId
-	 */
-	public $runeSlotId;
+    /**
+     *   Rune slot ID.
+     *
+     * @var int
+     */
+    public $runeSlotId;
 }

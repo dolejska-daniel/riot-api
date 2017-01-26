@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,101 +19,103 @@
 
 namespace RiotAPI\Definition;
 
-
 /**
- *   Class RateLimitStorage
- *
- * @package RiotAPI\Definition
+ *   Class RateLimitStorage.
  */
 class RateLimitStorage
 {
-	protected $limits = array();
+    protected $limits = [];
 
-	/**
-	 *   RateLimitStorage constructor.
-	 *
-	 * @param IRegion $region
-	 */
-	public function __construct( IRegion $region )
-	{
-		foreach ($region->getList() as $regionId => $regionName)
-			$this->limits[$regionId] = [];
-	}
+    /**
+     *   RateLimitStorage constructor.
+     *
+     * @param IRegion $region
+     */
+    public function __construct(IRegion $region)
+    {
+        foreach ($region->getList() as $regionId => $regionName) {
+            $this->limits[$regionId] = [];
+        }
+    }
 
-	public function __wakeup()
-	{
+    public function __wakeup()
+    {
+    }
 
-	}
+    /**
+     *   Initializes limits for providede API key on all regions.
+     *
+     * @param string $api_key
+     * @param array  $limits
+     */
+    public function init(string $api_key, array $limits)
+    {
+        foreach ($this->limits as $region) {
+            $this->limits[$region][$api_key] = $limits;
+        }
+    }
 
-	/**
-	 *   Initializes limits for providede API key on all regions.
-	 *
-	 * @param string $api_key
-	 * @param array  $limits
-	 */
-	public function init( string $api_key, array $limits )
-	{
-		foreach ($this->limits as $region)
-			$this->limits[$region][$api_key] = $limits;
-	}
+    /**
+     *   Returns interval limits for provided API key on provided region.
+     *
+     * @param string $api_key
+     * @param string $region
+     *
+     * @return mixed
+     */
+    protected function getIntervals(string $api_key, string $region)
+    {
+        return $this->limits[$region][$api_key];
+    }
 
-	/**
-	 *   Returns interval limits for provided API key on provided region.
-	 *
-	 * @param string $api_key
-	 * @param string $region
-	 *
-	 * @return mixed
-	 */
-	protected function getIntervals( string $api_key, string $region )
-	{
-		return $this->limits[$region][$api_key];
-	}
+    /**
+     *   Sets new value for used API calls for provided API key on provided region.
+     *
+     * @param string $api_key
+     * @param string $region
+     * @param int    $timeInterval
+     * @param int    $value
+     */
+    protected function setUsed(string $api_key, string $region, int $timeInterval, int $value)
+    {
+        $this->limits[$region][$api_key][$timeInterval]['used'] = $value;
+        if ($value == 1) {
+            $this->limits[$region][$api_key][$timeInterval]['expires'] = time() + $timeInterval;
+        }
+    }
 
-	/**
-	 *   Sets new value for used API calls for provided API key on provided region.
-	 *
-	 * @param string $api_key
-	 * @param string $region
-	 * @param int    $timeInterval
-	 * @param int    $value
-	 */
-	protected function setUsed( string $api_key, string $region, int $timeInterval, int $value )
-	{
-		$this->limits[$region][$api_key][$timeInterval]['used'] = $value;
-		if ($value == 1)
-			$this->limits[$region][$api_key][$timeInterval]['expires'] = time() + $timeInterval;
-	}
+    /**
+     *   Determines whether or not API call can be made.
+     *
+     * @param string $api_key
+     * @param string $region
+     *
+     * @return bool
+     */
+    public function canCall(string $api_key, string $region): bool
+    {
+        foreach ($this->getIntervals($api_key, $region) as $timeLimit => $limits) {
+            if ($limits['used'] >= $limits['limit'] && $limits['expires'] > time()) {
+                return false;
+            }
+        }
 
-	/**
-	 *   Determines whether or not API call can be made.
-	 *
-	 * @param string $api_key
-	 * @param string $region
-	 *
-	 * @return bool
-	 */
-	public function canCall( string $api_key, string $region ): bool
-	{
-		foreach ($this->getIntervals($api_key, $region) as $timeLimit => $limits)
-			if ($limits['used'] >= $limits['limit'] && $limits['expires'] > time())
-				return false;
+        return true;
+    }
 
-		return true;
-	}
+    /**
+     *   Registers that new API call has been made.
+     *
+     * @param string $api_key
+     * @param string $region
+     * @param string $header
+     */
+    public function registerCall(string $api_key, string $region, string $header)
+    {
+        foreach (explode(',', $header) as $used => $timeInterval) {
+            $this->setUsed($api_key, $region, $timeInterval, $used);
+        }
 
-	/**
-	 *   Registers that new API call has been made.
-	 *
-	 * @param string $api_key
-	 * @param string $region
-	 * @param string $header
-	 */
-	public function registerCall( string $api_key, string $region, string $header )
-	{
-		foreach (explode(',', $header) as $used => $timeInterval)
-			$this->setUsed($api_key, $region, $timeInterval, $used);
-
-		sort($this->limits[$region][$api_key], SORT_DESC);
-	}
+        sort($this->limits[$region][$api_key], SORT_DESC);
+    }
 }

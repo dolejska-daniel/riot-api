@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,36 +19,34 @@
 
 namespace RiotAPI\Objects;
 
-
 /**
- *   Class LobbyEventDto
+ *   Class LobbyEventDto.
  *
  * Used in:
  *   tournament-stub (v1)
- *     @link https://developer.riotgames.com/api/methods#!/1090/3761
  *
- * @package RiotAPI\Objects
+ *     @link https://developer.riotgames.com/api/methods#!/1090/3761
  */
-class LobbyEventDto extends ApiObject
+class LobbyEventDTO extends ApiObject
 {
-	/**
-	 *   The type of event that was triggered.
-	 *
-	 * @var string $eventType
-	 */
-	public $eventType;
+    /**
+     *   The type of event that was triggered.
+     *
+     * @var string
+     */
+    public $eventType;
 
-	/**
-	 *   The summoner that triggered the event.
-	 *
-	 * @var string $summonerId
-	 */
-	public $summonerId;
+    /**
+     *   The summoner that triggered the event.
+     *
+     * @var string
+     */
+    public $summonerId;
 
-	/**
-	 *   Timestamp from the event.
-	 *
-	 * @var string $timestamp
-	 */
-	public $timestamp;
+    /**
+     *   Timestamp from the event.
+     *
+     * @var string
+     */
+    public $timestamp;
 }

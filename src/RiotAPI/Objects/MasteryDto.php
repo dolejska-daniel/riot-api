@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,31 +19,29 @@
 
 namespace RiotAPI\Objects;
 
-
 /**
  *   Class MasteryDto
  * This object contains mastery information.
  *
  * Used in:
  *   summoner (v1.4)
- *     @link https://developer.riotgames.com/api/methods#!/1208/4683
  *
- * @package RiotAPI\Objects
+ *     @link https://developer.riotgames.com/api/methods#!/1208/4683
  */
 class MasteryDto extends ApiObject
 {
-	/**
-	 *   Mastery ID. For static information correlating to masteries, please refer 
-	 * to the LoL Static Data API.
-	 *
-	 * @var int $id
-	 */
-	public $id;
+    /**
+     *   Mastery ID. For static information correlating to masteries, please refer
+     * to the LoL Static Data API.
+     *
+     * @var int
+     */
+    public $id;
 
-	/**
-	 *   Mastery rank (i.e., the number of points put into this mastery).
-	 *
-	 * @var int $rank
-	 */
-	public $rank;
+    /**
+     *   Mastery rank (i.e., the number of points put into this mastery).
+     *
+     * @var int
+     */
+    public $rank;
 }

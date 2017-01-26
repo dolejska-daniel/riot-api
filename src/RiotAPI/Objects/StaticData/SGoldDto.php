@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,30 +21,28 @@ namespace RiotAPI\Objects\StaticData;
 
 use RiotAPI\Objects\ApiObject;
 
-
 /**
  *   Class SGoldDto
  * This object contains item gold data.
  *
  * Used in:
  *   lol-static-data (v1.2)
+ *
  *     @link https://developer.riotgames.com/api/methods#!/1055/3621
  *     @link https://developer.riotgames.com/api/methods#!/1055/3627
  *     @link https://developer.riotgames.com/api/methods#!/1055/3623
- *
- * @package RiotAPI\Objects\StaticData
  */
 class SGoldDto extends ApiObject
 {
-	/** @var int $base */
-	public $base;
+    /** @var int $base */
+    public $base;
 
-	/** @var bool $purchasable */
-	public $purchasable;
+    /** @var bool $purchasable */
+    public $purchasable;
 
-	/** @var int $sell */
-	public $sell;
+    /** @var int $sell */
+    public $sell;
 
-	/** @var int $total */
-	public $total;
+    /** @var int $total */
+    public $total;
 }

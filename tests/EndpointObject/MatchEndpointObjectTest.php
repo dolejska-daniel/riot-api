@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,83 +16,80 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
-use RiotAPI\RiotAPI;
-use RiotAPI\Objects;
 use RiotAPI\Definition\Region;
-
 use RiotAPI\Exception\GeneralException;
-
+use RiotAPI\Objects;
+use RiotAPI\RiotAPI;
 
 class MatchEndpointObjectTest extends RiotAPITestCase
 {
-	public function testInit()
-	{
-		$api = new RiotAPI([
-			RiotAPI::SET_KEY            => getenv('API_KEY'),
-			RiotAPI::SET_REGION         => Region::EUROPE_EAST,
-			RiotAPI::SET_USE_DUMMY_DATA => true,
-		]);
+    public function testInit()
+    {
+        $api = new RiotAPI([
+            RiotAPI::SET_KEY            => getenv('API_KEY'),
+            RiotAPI::SET_REGION         => Region::EUROPE_EAST,
+            RiotAPI::SET_USE_DUMMY_DATA => true,
+        ]);
 
-		$this->assertInstanceOf(RiotAPI::class, $api);
+        $this->assertInstanceOf(RiotAPI::class, $api);
 
-		return $api;
-	}
+        return $api;
+    }
 
-	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
-	 *
-	 * @param RiotAPI $api
-	 */
-	public function testGetMatch( RiotAPI $api )
-	{
-		//  Get library processed results
-		/** @var Objects\MatchDetail $result */
-		$result = $api->getMatch(1594938572, true);
-		//  Get raw result
-		$rawResult = $api->getResult();
+    /**
+     * @depends      testInit
+     * @dataProvider testInit
+     *
+     * @param RiotAPI $api
+     */
+    public function testGetMatch(RiotAPI $api)
+    {
+        //  Get library processed results
+        /** @var Objects\MatchDetail $result */
+        $result = $api->getMatch(1594938572, true);
+        //  Get raw result
+        $rawResult = $api->getResult();
 
-		$this->checkObjectPropertiesAndDataValidity($result, $rawResult, Objects\MatchDetail::class);
-	}
+        $this->checkObjectPropertiesAndDataValidity($result, $rawResult, Objects\MatchDetail::class);
+    }
 
-	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
-	 *
-	 * @param RiotAPI $api
-	 */
-	public function testGetTournamentMatch( RiotAPI $api )
-	{
-		//  TODO
-		$this->expectException(GeneralException::class);
-		$this->expectExceptionMessage('Not yet implemented.');
+    /**
+     * @depends      testInit
+     * @dataProvider testInit
+     *
+     * @param RiotAPI $api
+     */
+    public function testGetTournamentMatch(RiotAPI $api)
+    {
+        //  TODO
+        $this->expectException(GeneralException::class);
+        $this->expectExceptionMessage('Not yet implemented.');
 
-		//  Get library processed results
-		/** @var Objects\MatchDetail $result */
-		$result = $api->getTournamentMatch(2641970449, '239d180f-fb8a-439e-85d9-95142e10b4f5', true);
-		//  Get raw result
-		$rawResult = $api->getResult();
-	}
+        //  Get library processed results
+        /** @var Objects\MatchDetail $result */
+        $result = $api->getTournamentMatch(2641970449, '239d180f-fb8a-439e-85d9-95142e10b4f5', true);
+        //  Get raw result
+        $rawResult = $api->getResult();
+    }
 
-	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
-	 *
-	 * @param RiotAPI $api
-	 */
-	public function testGetTournamentMatchIds( RiotAPI $api )
-	{
-		//  TODO
-		$this->expectException(GeneralException::class);
-		$this->expectExceptionMessage('Not yet implemented.');
+    /**
+     * @depends      testInit
+     * @dataProvider testInit
+     *
+     * @param RiotAPI $api
+     */
+    public function testGetTournamentMatchIds(RiotAPI $api)
+    {
+        //  TODO
+        $this->expectException(GeneralException::class);
+        $this->expectExceptionMessage('Not yet implemented.');
 
-		//  Get library processed results
-		/** @var Objects\MatchDetail $result */
-		$result = $api->getTournamentMatchIds('239d180f-fb8a-439e-85d9-95142e10b4f5');
-		//  Get raw result
-		$rawResult = $api->getResult();
-	}
+        //  Get library processed results
+        /** @var Objects\MatchDetail $result */
+        $result = $api->getTournamentMatchIds('239d180f-fb8a-439e-85d9-95142e10b4f5');
+        //  Get raw result
+        $rawResult = $api->getResult();
+    }
 }

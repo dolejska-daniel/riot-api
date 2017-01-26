@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,81 +21,77 @@ namespace RiotAPI\Definition;
 
 use RiotAPI\Exception\SettingsException;
 
-
 /**
- *   Class RateLimitControl
- *
- * @package RiotAPI\Definition
+ *   Class RateLimitControl.
  */
 class RateLimitControl implements IRateLimitControl
 {
-	/** @var RateLimitStorage $storage */
-	protected $storage;
+    /** @var RateLimitStorage $storage */
+    protected $storage;
 
-	/**
-	 *   RateLimitControl constructor.
-	 *
-	 * @param IRegion $region
-	 */
-	public function __construct( IRegion $region )
-	{
-		$this->storage = new RateLimitStorage($region);
-	}
+    /**
+     *   RateLimitControl constructor.
+     *
+     * @param IRegion $region
+     */
+    public function __construct(IRegion $region)
+    {
+        $this->storage = new RateLimitStorage($region);
+    }
 
-	/**
-	 *   Sets limits for provided API key.
-	 *
-	 * @param string $api_key
-	 * @param array  $limits
-	 *
-	 * @throws SettingsException
-	 */
-	public function setLimits( string $api_key, array $limits )
-	{
-		$intervals = [
-			IRateLimitControl::INTERVAL_1S,
-			IRateLimitControl::INTERVAL_10S,
-			IRateLimitControl::INTERVAL_10M,
-			IRateLimitControl::INTERVAL_1H,
-		];
+    /**
+     *   Sets limits for provided API key.
+     *
+     * @param string $api_key
+     * @param array  $limits
+     *
+     * @throws SettingsException
+     */
+    public function setLimits(string $api_key, array $limits)
+    {
+        $intervals = [
+            IRateLimitControl::INTERVAL_1S,
+            IRateLimitControl::INTERVAL_10S,
+            IRateLimitControl::INTERVAL_10M,
+            IRateLimitControl::INTERVAL_1H,
+        ];
 
-		foreach ($limits as $interval => $limit)
-		{
-			if (!in_array($interval, $intervals, true) || !is_int($limit))
-				throw new SettingsException('Invalid rate limit interval settings provided.');
+        foreach ($limits as $interval => $limit) {
+            if (!in_array($interval, $intervals, true) || !is_int($limit)) {
+                throw new SettingsException('Invalid rate limit interval settings provided.');
+            }
+            $limits[$interval] = [
+                'used'    => 0,
+                'limit'   => $limit,
+                'expires' => 0,
+            ];
+        }
 
-			$limits[$interval] = [
-				'used'    => 0,
-				'limit'   => $limit,
-				'expires' => 0,
-			];
-		}
+        $this->storage->init($api_key, $limits);
+    }
 
-		$this->storage->init($api_key, $limits);
-	}
+    /**
+     *   Determines whether or not API call can be made.
+     *
+     * @param string $api_key
+     * @param string $region
+     *
+     * @return bool
+     */
+    public function canCall(string $api_key, string $region): bool
+    {
+        return $this->storage->canCall($api_key, $region);
+    }
 
-	/**
-	 *   Determines whether or not API call can be made
-	 *
-	 * @param string $api_key
-	 * @param string $region
-	 *
-	 * @return bool
-	 */
-	public function canCall( string $api_key, string $region ): bool
-	{
-		return $this->storage->canCall($api_key, $region);
-	}
-
-	/**
-	 *   Registers that new API call has been made
-	 *
-	 * @param string $api_key
-	 * @param string $region
-	 * @param string $header
-	 */
-	public function registerCall( string $api_key, string $region, string $header )
-	{
-		$this->storage->registerCall($api_key, $region, $header);
-	}
+    /**
+     *   Registers that new API call has been made.
+     *
+     * @param string $api_key
+     * @param string $region
+     * @param string $header
+     */
+    public function registerCall(string $api_key, string $region, string $header)
+    {
+        $this->storage->registerCall($api_key, $region, $header);
+    }
 }

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,24 +19,22 @@
 
 namespace RiotAPI\Objects;
 
-
 /**
- *   Class Translation
+ *   Class Translation.
  *
  * Used in:
  *   lol-status (v1.0)
- *     @link https://developer.riotgames.com/api/methods#!/1085/3739
  *
- * @package RiotAPI\Objects
+ *     @link https://developer.riotgames.com/api/methods#!/1085/3739
  */
 class Translation extends ApiObject
 {
-	/** @var string $content */
-	public $content;
+    /** @var string $content */
+    public $content;
 
-	/** @var string $locale */
-	public $locale;
+    /** @var string $locale */
+    public $locale;
 
-	/** @var string $updated_at */
-	public $updated_at;
+    /** @var string $updated_at */
+    public $updated_at;
 }

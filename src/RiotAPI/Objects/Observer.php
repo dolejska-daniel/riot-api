@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,24 +19,22 @@
 
 namespace RiotAPI\Objects;
 
-
 /**
- *   Class Observer
+ *   Class Observer.
  *
  * Used in:
  *   current-game (v1.0)
+ *
  *     @link https://developer.riotgames.com/api/methods#!/976/3336
  *   featured-games (v1.0)
  *     @link https://developer.riotgames.com/api/methods#!/977/3337
- *
- * @package RiotAPI\Objects
  */
 class Observer extends ApiObject
 {
-	/**
-	 *   Key used to decrypt the spectator grid game data for playback.
-	 *
-	 * @var string $encryptionKey
-	 */
-	public $encryptionKey;
+    /**
+     *   Key used to decrypt the spectator grid game data for playback.
+     *
+     * @var string
+     */
+    public $encryptionKey;
 }

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,30 +19,27 @@
 
 namespace RiotAPI\Definition;
 
-
 /**
- *   Interface IRegion
- *
- * @package RiotAPI\Definition
+ *   Interface IRegion.
  */
 interface IRegion
 {
-	const GLOBAL = 'global';
-	const STATUS = 'status';
+    const GLOBAL = 'global';
+    const STATUS = 'status';
 
-	/**
-	 *   Returns region list.
-	 *
-	 * @return array
-	 */
-	public function getList(): array;
+    /**
+     *   Returns region list.
+     *
+     * @return array
+     */
+    public function getList(): array;
 
-	/**
-	 *   Returns region name based on region identifier (can either be string or internal numeric ID).
-	 *
-	 * @param string $region
-	 *
-	 * @return string
-	 */
-	public function getRegionName( string $region ): string;
+    /**
+     *   Returns region name based on region identifier (can either be string or internal numeric ID).
+     *
+     * @param string $region
+     *
+     * @return string
+     */
+    public function getRegionName(string $region): string;
 }

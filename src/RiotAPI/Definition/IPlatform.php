@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,27 +19,24 @@
 
 namespace RiotAPI\Definition;
 
-
 /**
- *   Interface IPlatform
- *
- * @package RiotAPI\Definition
+ *   Interface IPlatform.
  */
 interface IPlatform
 {
-	/**
-	 *   Returns platform list by region.
-	 *
-	 * @return array
-	 */
-	public function getList(): array;
+    /**
+     *   Returns platform list by region.
+     *
+     * @return array
+     */
+    public function getList(): array;
 
-	/**
-	 *   Returns platform name based on region identifier (can either be string or internal numeric ID).
-	 *
-	 * @param string $region
-	 *
-	 * @return string
-	 */
-	public function getPlatformName( string $region ): string;
+    /**
+     *   Returns platform name based on region identifier (can either be string or internal numeric ID).
+     *
+     * @param string $region
+     *
+     * @return string
+     */
+    public function getPlatformName(string $region): string;
 }

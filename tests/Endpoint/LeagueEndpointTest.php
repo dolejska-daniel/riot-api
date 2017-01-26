@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,101 +16,98 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
-use RiotAPI\RiotAPI;
 use RiotAPI\Definition\Region;
-
 use RiotAPI\Exception\RequestParameterException;
-
+use RiotAPI\RiotAPI;
 
 class LeagueEndpointTest extends RiotAPITestCase
 {
-	public function testInit()
-	{
-		$api = new RiotAPI([
-			RiotAPI::SET_KEY            => getenv('API_KEY'),
-			RiotAPI::SET_REGION         => Region::EUROPE_EAST,
-			RiotAPI::SET_USE_DUMMY_DATA => true,
-		]);
+    public function testInit()
+    {
+        $api = new RiotAPI([
+            RiotAPI::SET_KEY            => getenv('API_KEY'),
+            RiotAPI::SET_REGION         => Region::EUROPE_EAST,
+            RiotAPI::SET_USE_DUMMY_DATA => true,
+        ]);
 
-		$this->assertInstanceOf(RiotAPI::class, $api);
+        $this->assertInstanceOf(RiotAPI::class, $api);
 
-		return $api;
-	}
+        return $api;
+    }
 
-	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
-	 *
-	 * @param RiotAPI $api
-	 */
-	public function testGetLeagueMappingBySummoners_Exception( RiotAPI $api )
-	{
-		$this->expectException(RequestParameterException::class);
-		$this->expectExceptionMessage("Maximum allowed summoner ID count is 10.");
+    /**
+     * @depends      testInit
+     * @dataProvider testInit
+     *
+     * @param RiotAPI $api
+     */
+    public function testGetLeagueMappingBySummoners_Exception(RiotAPI $api)
+    {
+        $this->expectException(RequestParameterException::class);
+        $this->expectExceptionMessage('Maximum allowed summoner ID count is 10.');
 
-		$summonerIds = range(30904166, 30904266);
-		$api->getLeagueMappingBySummoners($summonerIds);
-	}
+        $summonerIds = range(30904166, 30904266);
+        $api->getLeagueMappingBySummoners($summonerIds);
+    }
 
-	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
-	 *
-	 * @param RiotAPI $api
-	 */
-	public function testGetLeagueMappingBySummoner( RiotAPI $api )
-	{
-		$this->assertTrue(true);
-	}
+    /**
+     * @depends      testInit
+     * @dataProvider testInit
+     *
+     * @param RiotAPI $api
+     */
+    public function testGetLeagueMappingBySummoner(RiotAPI $api)
+    {
+        $this->assertTrue(true);
+    }
 
-	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
-	 *
-	 * @param RiotAPI $api
-	 */
-	public function testGetLeagueEntryBySummoners_Exception( RiotAPI $api )
-	{
-		$this->expectException(RequestParameterException::class);
-		$this->expectExceptionMessage("Maximum allowed summoner ID count is 10.");
+    /**
+     * @depends      testInit
+     * @dataProvider testInit
+     *
+     * @param RiotAPI $api
+     */
+    public function testGetLeagueEntryBySummoners_Exception(RiotAPI $api)
+    {
+        $this->expectException(RequestParameterException::class);
+        $this->expectExceptionMessage('Maximum allowed summoner ID count is 10.');
 
-		$summonerIds = range(30904166, 30904266);
-		$api->getLeagueEntryBySummoners($summonerIds);
-	}
+        $summonerIds = range(30904166, 30904266);
+        $api->getLeagueEntryBySummoners($summonerIds);
+    }
 
-	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
-	 *
-	 * @param RiotAPI $api
-	 */
-	public function testGetLeagueEntryBySummoner( RiotAPI $api )
-	{
-		$this->assertTrue(true);
-	}
+    /**
+     * @depends      testInit
+     * @dataProvider testInit
+     *
+     * @param RiotAPI $api
+     */
+    public function testGetLeagueEntryBySummoner(RiotAPI $api)
+    {
+        $this->assertTrue(true);
+    }
 
-	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
-	 *
-	 * @param RiotAPI $api
-	 */
-	public function testGetLeagueMappingChallenger( RiotAPI $api )
-	{
-		$this->assertTrue(true);
-	}
+    /**
+     * @depends      testInit
+     * @dataProvider testInit
+     *
+     * @param RiotAPI $api
+     */
+    public function testGetLeagueMappingChallenger(RiotAPI $api)
+    {
+        $this->assertTrue(true);
+    }
 
-	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
-	 *
-	 * @param RiotAPI $api
-	 */
-	public function testGetLeagueMappingMaster( RiotAPI $api )
-	{
-		$this->assertTrue(true);
-	}
+    /**
+     * @depends      testInit
+     * @dataProvider testInit
+     *
+     * @param RiotAPI $api
+     */
+    public function testGetLeagueMappingMaster(RiotAPI $api)
+    {
+        $this->assertTrue(true);
+    }
 }

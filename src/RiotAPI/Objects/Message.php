@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,36 +19,34 @@
 
 namespace RiotAPI\Objects;
 
-
 /**
- *   Class Message
+ *   Class Message.
  *
  * Used in:
  *   lol-status (v1.0)
- *     @link https://developer.riotgames.com/api/methods#!/1085/3739
  *
- * @package RiotAPI\Objects
+ *     @link https://developer.riotgames.com/api/methods#!/1085/3739
  */
 class Message extends ApiObject
 {
-	/** @var string $author */
-	public $author;
+    /** @var string $author */
+    public $author;
 
-	/** @var string $content */
-	public $content;
+    /** @var string $content */
+    public $content;
 
-	/** @var string $created_at */
-	public $created_at;
+    /** @var string $created_at */
+    public $created_at;
 
-	/** @var string $id */
-	public $id;
+    /** @var string $id */
+    public $id;
 
-	/** @var string $severity */
-	public $severity;
+    /** @var string $severity */
+    public $severity;
 
-	/** @var Translation[] $translations */
-	public $translations;
+    /** @var Translation[] $translations */
+    public $translations;
 
-	/** @var string $updated_at */
-	public $updated_at;
+    /** @var string $updated_at */
+    public $updated_at;
 }

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,27 +19,25 @@
 
 namespace RiotAPI\Objects;
 
-
 /**
- *   Class SummonerIdParams
+ *   Class SummonerIdParams.
  *
  * Used in:
  *   tournament-stub (v1)
- *     @link https://developer.riotgames.com/api/methods#!/1090/3760
  *
- * @package RiotAPI\Objects
+ *     @link https://developer.riotgames.com/api/methods#!/1090/3760
  */
 class SummonerIdParams extends ApiObject
 {
-	/**
-	 *   the tournament participants.
-	 *
-	 * @var int[] $participants
-	 */
-	public $participants = array();
+    /**
+     *   the tournament participants.
+     *
+     * @var int[]
+     */
+    public $participants = [];
 
-	public function __toString()
-	{
-		return json_encode($this);
-	}
+    public function __toString()
+    {
+        return json_encode($this);
+    }
 }

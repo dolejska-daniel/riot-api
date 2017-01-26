@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,27 +19,25 @@
 
 namespace RiotAPI\Objects;
 
-
 /**
- *   Class Incident
+ *   Class Incident.
  *
  * Used in:
  *   lol-status (v1.0)
- *     @link https://developer.riotgames.com/api/methods#!/1085/3739
  *
- * @package RiotAPI\Objects
+ *     @link https://developer.riotgames.com/api/methods#!/1085/3739
  */
 class Incident extends ApiObject
 {
-	/** @var bool $active */
-	public $active;
+    /** @var bool $active */
+    public $active;
 
-	/** @var string $created_at */
-	public $created_at;
+    /** @var string $created_at */
+    public $created_at;
 
-	/** @var int $id */
-	public $id;
+    /** @var int $id */
+    public $id;
 
-	/** @var Message[] $updates */
-	public $updates;
+    /** @var Message[] $updates */
+    public $updates;
 }

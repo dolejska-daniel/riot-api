@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,26 +21,24 @@ namespace RiotAPI\Objects\StaticData;
 
 use RiotAPI\Objects\ApiObject;
 
-
 /**
  *   Class SSkinDto
  * This object contains champion skin data.
  *
  * Used in:
  *   lol-static-data (v1.2)
+ *
  *     @link https://developer.riotgames.com/api/methods#!/1055/3633
  *     @link https://developer.riotgames.com/api/methods#!/1055/3622
- *
- * @package RiotAPI\Objects\StaticData
  */
 class SSkinDto extends ApiObject
 {
-	/** @var int $id */
-	public $id;
+    /** @var int $id */
+    public $id;
 
-	/** @var string $name */
-	public $name;
+    /** @var string $name */
+    public $name;
 
-	/** @var int $num */
-	public $num;
+    /** @var int $num */
+    public $num;
 }

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,32 +19,30 @@
 
 namespace RiotAPI\Objects;
 
-
 /**
  *   Class Timeline
- * This object contains game timeline information
+ * This object contains game timeline information.
  *
  * Used in:
  *   match (v2.2)
+ *
  *     @link https://developer.riotgames.com/api/methods#!/1224/4756
  *
  * @iterable $frames
- *
- * @package RiotAPI\Objects
  */
 class Timeline extends ApiObjectIterable
 {
-	/**
-	 *   Time between each returned frame in milliseconds.
-	 *
-	 * @var int $frameInterval
-	 */
-	public $frameInterval;
+    /**
+     *   Time between each returned frame in milliseconds.
+     *
+     * @var int
+     */
+    public $frameInterval;
 
-	/**
-	 *   List of timeline frames for the game.
-	 *
-	 * @var Frame[] $frames
-	 */
-	public $frames;
+    /**
+     *   List of timeline frames for the game.
+     *
+     * @var Frame[]
+     */
+    public $frames;
 }

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,10 +19,9 @@
 
 namespace RiotAPI\Exception;
 
-
 /**
- *   Class RequestParameterException
- *
- * @package RiotAPI\Exception
+ *   Class RequestParameterException.
  */
-class RequestParameterException extends \Exception {}
+class RequestParameterException extends \Exception
+{
+}

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,93 +19,91 @@
 
 namespace RiotAPI\Objects;
 
-
 /**
- *   Class CurrentGameInfo
+ *   Class CurrentGameInfo.
  *
  * Used in:
  *   current-game (v1.0)
- *     @link https://developer.riotgames.com/api/methods#!/976/3336
  *
- * @package RiotAPI\Objects
+ *     @link https://developer.riotgames.com/api/methods#!/976/3336
  */
 class CurrentGameInfo extends ApiObject
 {
-	/**
-	 *   Banned champion information.
-	 *
-	 * @var BannedChampion[] $bannedChampions
-	 */
-	public $bannedChampions;
+    /**
+     *   Banned champion information.
+     *
+     * @var BannedChampion[]
+     */
+    public $bannedChampions;
 
-	/**
-	 *   The ID of the game.
-	 *
-	 * @var int $gameId
-	 */
-	public $gameId;
+    /**
+     *   The ID of the game.
+     *
+     * @var int
+     */
+    public $gameId;
 
-	/**
-	 *   The amount of time in seconds that has passed since the game started.
-	 *
-	 * @var int $gameLength
-	 */
-	public $gameLength;
+    /**
+     *   The amount of time in seconds that has passed since the game started.
+     *
+     * @var int
+     */
+    public $gameLength;
 
-	/**
-	 *   The game mode (Legal values: CLASSIC, ODIN, ARAM, TUTORIAL, ONEFORALL, 
-	 * ASCENSION, FIRSTBLOOD, KINGPORO).
-	 *
-	 * @var string $gameMode
-	 */
-	public $gameMode;
+    /**
+     *   The game mode (Legal values: CLASSIC, ODIN, ARAM, TUTORIAL, ONEFORALL,
+     * ASCENSION, FIRSTBLOOD, KINGPORO).
+     *
+     * @var string
+     */
+    public $gameMode;
 
-	/**
-	 *   The queue type (queue types are documented on the Game Constants page).
-	 *
-	 * @var int $gameQueueConfigId
-	 */
-	public $gameQueueConfigId;
+    /**
+     *   The queue type (queue types are documented on the Game Constants page).
+     *
+     * @var int
+     */
+    public $gameQueueConfigId;
 
-	/**
-	 *   The game start time represented in epoch milliseconds.
-	 *
-	 * @var int $gameStartTime
-	 */
-	public $gameStartTime;
+    /**
+     *   The game start time represented in epoch milliseconds.
+     *
+     * @var int
+     */
+    public $gameStartTime;
 
-	/**
-	 *   The game type (Legal values: CUSTOM_GAME, MATCHED_GAME, TUTORIAL_GAME).
-	 *
-	 * @var string $gameType
-	 */
-	public $gameType;
+    /**
+     *   The game type (Legal values: CUSTOM_GAME, MATCHED_GAME, TUTORIAL_GAME).
+     *
+     * @var string
+     */
+    public $gameType;
 
-	/**
-	 *   The ID of the map.
-	 *
-	 * @var int $mapId
-	 */
-	public $mapId;
+    /**
+     *   The ID of the map.
+     *
+     * @var int
+     */
+    public $mapId;
 
-	/**
-	 *   The observer information.
-	 *
-	 * @var Observer $observers
-	 */
-	public $observers;
+    /**
+     *   The observer information.
+     *
+     * @var Observer
+     */
+    public $observers;
 
-	/**
-	 *   The participant information.
-	 *
-	 * @var CurrentGameParticipant[] $participants
-	 */
-	public $participants;
+    /**
+     *   The participant information.
+     *
+     * @var CurrentGameParticipant[]
+     */
+    public $participants;
 
-	/**
-	 *   The ID of the platform on which the game is being played.
-	 *
-	 * @var string $platformId
-	 */
-	public $platformId;
+    /**
+     *   The ID of the platform on which the game is being played.
+     *
+     * @var string
+     */
+    public $platformId;
 }

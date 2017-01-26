@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,34 +21,32 @@ namespace RiotAPI\Objects\StaticData;
 
 use RiotAPI\Objects\ApiObject;
 
-
 /**
  *   Class SSpellVarsDto
  * This object contains spell vars data.
  *
  * Used in:
  *   lol-static-data (v1.2)
+ *
  *     @link https://developer.riotgames.com/api/methods#!/1055/3633
  *     @link https://developer.riotgames.com/api/methods#!/1055/3622
  *     @link https://developer.riotgames.com/api/methods#!/1055/3634
  *     @link https://developer.riotgames.com/api/methods#!/1055/3628
- *
- * @package RiotAPI\Objects\StaticData
  */
 class SSpellVarsDto extends ApiObject
 {
-	/** @var double[] $coeff */
-	public $coeff;
+    /** @var float[] $coeff */
+    public $coeff;
 
-	/** @var string $dyn */
-	public $dyn;
+    /** @var string $dyn */
+    public $dyn;
 
-	/** @var string $key */
-	public $key;
+    /** @var string $key */
+    public $key;
 
-	/** @var string $link */
-	public $link;
+    /** @var string $link */
+    public $link;
 
-	/** @var string $ranksWith */
-	public $ranksWith;
+    /** @var string $ranksWith */
+    public $ranksWith;
 }

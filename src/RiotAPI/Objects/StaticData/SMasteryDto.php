@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,45 +21,43 @@ namespace RiotAPI\Objects\StaticData;
 
 use RiotAPI\Objects\ApiObject;
 
-
 /**
  *   Class SMasteryDto
  * This object contains mastery data.
  *
  * Used in:
  *   lol-static-data (v1.2)
+ *
  *     @link https://developer.riotgames.com/api/methods#!/1055/3625
  *     @link https://developer.riotgames.com/api/methods#!/1055/3626
- *
- * @package RiotAPI\Objects\StaticData
  */
 class SMasteryDto extends ApiObject
 {
-	/** @var string[] $description */
-	public $description;
+    /** @var string[] $description */
+    public $description;
 
-	/** @var int $id */
-	public $id;
+    /** @var int $id */
+    public $id;
 
-	/** @var SImageDto $image */
-	public $image;
+    /** @var SImageDto $image */
+    public $image;
 
-	/**
-	 *   Legal values: Cunning, Ferocity, Resolve.
-	 *
-	 * @var string $masteryTree
-	 */
-	public $masteryTree;
+    /**
+     *   Legal values: Cunning, Ferocity, Resolve.
+     *
+     * @var string
+     */
+    public $masteryTree;
 
-	/** @var string $name */
-	public $name;
+    /** @var string $name */
+    public $name;
 
-	/** @var string $prereq */
-	public $prereq;
+    /** @var string $prereq */
+    public $prereq;
 
-	/** @var int $ranks */
-	public $ranks;
+    /** @var int $ranks */
+    public $ranks;
 
-	/** @var string[] $sanitizedDescription */
-	public $sanitizedDescription;
+    /** @var string[] $sanitizedDescription */
+    public $sanitizedDescription;
 }

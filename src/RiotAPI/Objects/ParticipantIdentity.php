@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,30 +19,28 @@
 
 namespace RiotAPI\Objects;
 
-
 /**
  *   Class ParticipantIdentity
- * This object contains participant identity information
+ * This object contains participant identity information.
  *
  * Used in:
  *   match (v2.2)
- *     @link https://developer.riotgames.com/api/methods#!/1224/4756
  *
- * @package RiotAPI\Objects
+ *     @link https://developer.riotgames.com/api/methods#!/1224/4756
  */
 class ParticipantIdentity extends ApiObject
 {
-	/**
-	 *   Participant ID.
-	 *
-	 * @var int $participantId
-	 */
-	public $participantId;
+    /**
+     *   Participant ID.
+     *
+     * @var int
+     */
+    public $participantId;
 
-	/**
-	 *   Player information.
-	 *
-	 * @var Player $player
-	 */
-	public $player;
+    /**
+     *   Player information.
+     *
+     * @var Player
+     */
+    public $player;
 }

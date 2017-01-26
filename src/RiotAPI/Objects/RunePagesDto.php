@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,32 +19,30 @@
 
 namespace RiotAPI\Objects;
 
-
 /**
  *   Class RunePagesDto
  * This object contains rune pages information.
  *
  * Used in:
  *   summoner (v1.4)
+ *
  *     @link https://developer.riotgames.com/api/methods#!/1208/4682
  *
  * @iterable $pages
- *
- * @package RiotAPI\Objects
  */
 class RunePagesDto extends ApiObjectIterable
 {
-	/**
-	 *   Collection of rune pages associated with the summoner.
-	 *
-	 * @var RunePageDto[] $pages
-	 */
-	public $pages;
+    /**
+     *   Collection of rune pages associated with the summoner.
+     *
+     * @var RunePageDto[]
+     */
+    public $pages;
 
-	/**
-	 *   Summoner ID.
-	 *
-	 * @var int $summonerId
-	 */
-	public $summonerId;
+    /**
+     *   Summoner ID.
+     *
+     * @var int
+     */
+    public $summonerId;
 }

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,37 +19,35 @@
 
 namespace RiotAPI\Objects;
 
-
 /**
  *   Class PlayerDto
  * This object contains player information.
  *
  * Used in:
  *   game (v1.3)
- *     @link https://developer.riotgames.com/api/methods#!/1207/4679
  *
- * @package RiotAPI\Objects
+ *     @link https://developer.riotgames.com/api/methods#!/1207/4679
  */
 class PlayerDto extends ApiObject
 {
-	/**
-	 *   Champion id associated with player.
-	 *
-	 * @var int $championId
-	 */
-	public $championId;
+    /**
+     *   Champion id associated with player.
+     *
+     * @var int
+     */
+    public $championId;
 
-	/**
-	 *   Summoner id associated with player.
-	 *
-	 * @var int $summonerId
-	 */
-	public $summonerId;
+    /**
+     *   Summoner id associated with player.
+     *
+     * @var int
+     */
+    public $summonerId;
 
-	/**
-	 *   Team id associated with player.
-	 *
-	 * @var int $teamId
-	 */
-	public $teamId;
+    /**
+     *   Team id associated with player.
+     *
+     * @var int
+     */
+    public $teamId;
 }

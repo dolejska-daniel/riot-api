@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,52 +16,52 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 use RiotAPI\Objects;
 
-class BaseObject extends Objects\ApiObject {}
-
+class BaseObject extends Objects\ApiObject
+{
+}
 
 class ApiObjectTest extends RiotAPITestCase
 {
-	public function testGetIterablePropertyName()
-	{
-		$propName = Objects\ApiObject::getIterablePropertyName('/** @iterable $property */');
-		$this->assertSame('property', $propName);
-	}
+    public function testGetIterablePropertyName()
+    {
+        $propName = Objects\ApiObject::getIterablePropertyName('/** @iterable $property */');
+        $this->assertSame('property', $propName);
+    }
 
-	public function testGetIterablePropertyName_False()
-	{
-		$propName = Objects\ApiObject::getIterablePropertyName('/** @no-iterable-here */');
-		$this->assertFalse($propName);
-	}
+    public function testGetIterablePropertyName_False()
+    {
+        $propName = Objects\ApiObject::getIterablePropertyName('/** @no-iterable-here */');
+        $this->assertFalse($propName);
+    }
 
-	public function testGetPropertyDataType()
-	{
-		$dataType = Objects\ApiObject::getPropertyDataType('/** @var SpecialClass $property */');
-		$this->assertAttributeSame('SpecialClass', 'class', $dataType);
-		$this->assertAttributeSame(false, 'isArray', $dataType);
-	}
+    public function testGetPropertyDataType()
+    {
+        $dataType = Objects\ApiObject::getPropertyDataType('/** @var SpecialClass $property */');
+        $this->assertAttributeSame('SpecialClass', 'class', $dataType);
+        $this->assertAttributeSame(false, 'isArray', $dataType);
+    }
 
-	public function testGetPropertyDataType_Array()
-	{
-		$dataType = Objects\ApiObject::getPropertyDataType('/** @var SpecialClass[] $property */');
-		$this->assertAttributeSame('SpecialClass', 'class', $dataType);
-		$this->assertAttributeSame(true, 'isArray', $dataType);
-	}
+    public function testGetPropertyDataType_Array()
+    {
+        $dataType = Objects\ApiObject::getPropertyDataType('/** @var SpecialClass[] $property */');
+        $this->assertAttributeSame('SpecialClass', 'class', $dataType);
+        $this->assertAttributeSame(true, 'isArray', $dataType);
+    }
 
-	public function testGetPropertyDataType_False()
-	{
-		$dataType = Objects\ApiObject::getPropertyDataType('/** @var int $property */');
-		$this->assertFalse($dataType);
-	}
+    public function testGetPropertyDataType_False()
+    {
+        $dataType = Objects\ApiObject::getPropertyDataType('/** @var int $property */');
+        $this->assertFalse($dataType);
+    }
 
-	public function testGetData()
-	{
-		$array = [ 'd', 'u', 'm', 'm', 'y', '_', 'd', 'a', 't', 'a' ];
-		$obj = new BaseObject($array);
-		$this->assertSame($array, $obj->getData());
-	}
+    public function testGetData()
+    {
+        $array = ['d', 'u', 'm', 'm', 'y', '_', 'd', 'a', 't', 'a'];
+        $obj = new BaseObject($array);
+        $this->assertSame($array, $obj->getData());
+    }
 }

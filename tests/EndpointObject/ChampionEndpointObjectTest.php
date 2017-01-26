@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,60 +16,58 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
-use RiotAPI\RiotAPI;
-use RiotAPI\Objects;
 use RiotAPI\Definition\Region;
-
+use RiotAPI\Objects;
+use RiotAPI\RiotAPI;
 
 class ChampionEndpointObjectTest extends RiotAPITestCase
 {
-	public function testInit()
-	{
-		$api = new RiotAPI([
-			RiotAPI::SET_KEY            => getenv('API_KEY'),
-			RiotAPI::SET_REGION         => Region::EUROPE_EAST,
-			RiotAPI::SET_USE_DUMMY_DATA => true,
-		]);
+    public function testInit()
+    {
+        $api = new RiotAPI([
+            RiotAPI::SET_KEY            => getenv('API_KEY'),
+            RiotAPI::SET_REGION         => Region::EUROPE_EAST,
+            RiotAPI::SET_USE_DUMMY_DATA => true,
+        ]);
 
-		$this->assertInstanceOf(RiotAPI::class, $api);
+        $this->assertInstanceOf(RiotAPI::class, $api);
 
-		return $api;
-	}
+        return $api;
+    }
 
-	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
-	 *
-	 * @param RiotAPI $api
-	 */
-	public function testGetChampions( RiotAPI $api )
-	{
-		//  Get library processed results
-		/** @var Objects\ChampionListDto $result */
-		$result = $api->getChampions();
-		//  Get raw result
-		$rawResult = $api->getResult();
+    /**
+     * @depends      testInit
+     * @dataProvider testInit
+     *
+     * @param RiotAPI $api
+     */
+    public function testGetChampions(RiotAPI $api)
+    {
+        //  Get library processed results
+        /** @var Objects\ChampionListDto $result */
+        $result = $api->getChampions();
+        //  Get raw result
+        $rawResult = $api->getResult();
 
-		$this->checkObjectPropertiesAndDataValidity($result, $rawResult, Objects\ChampionListDto::class);
-	}
+        $this->checkObjectPropertiesAndDataValidity($result, $rawResult, Objects\ChampionListDto::class);
+    }
 
-	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
-	 *
-	 * @param RiotAPI $api
-	 */
-	public function testGetChampion( RiotAPI $api )
-	{
-		//  Get library processed results
-		/** @var Objects\ChampionDto $result */
-		$result = $api->getChampion(61); //  Orianna <3
-		//  Get raw result
-		$rawResult = $api->getResult();
+    /**
+     * @depends      testInit
+     * @dataProvider testInit
+     *
+     * @param RiotAPI $api
+     */
+    public function testGetChampion(RiotAPI $api)
+    {
+        //  Get library processed results
+        /** @var Objects\ChampionDto $result */
+        $result = $api->getChampion(61); //  Orianna <3
+        //  Get raw result
+        $rawResult = $api->getResult();
 
-		$this->checkObjectPropertiesAndDataValidity($result, $rawResult, Objects\ChampionDto::class);
-	}
+        $this->checkObjectPropertiesAndDataValidity($result, $rawResult, Objects\ChampionDto::class);
+    }
 }

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,33 +21,31 @@ namespace RiotAPI\Objects\StaticData;
 
 use RiotAPI\Objects\ApiObjectIterable;
 
-
 /**
  *   Class SChampionListDto
  * This object contains champion list data.
  *
  * Used in:
  *   lol-static-data (v1.2)
+ *
  *     @link https://developer.riotgames.com/api/methods#!/1055/3633
  *
  * @iterable $data
- *
- * @package RiotAPI\Objects\StaticData
  */
 class SChampionListDto extends ApiObjectIterable
 {
-	/** @var SChampionDto[] $data */
-	public $data;
+    /** @var SChampionDto[] $data */
+    public $data;
 
-	/** @var string $format */
-	public $format;
+    /** @var string $format */
+    public $format;
 
-	/** @var string[] $keys */
-	public $keys;
+    /** @var string[] $keys */
+    public $keys;
 
-	/** @var string $type */
-	public $type;
+    /** @var string $type */
+    public $type;
 
-	/** @var string $version */
-	public $version;
+    /** @var string $version */
+    public $version;
 }

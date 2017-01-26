@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,26 +21,24 @@ namespace RiotAPI\Objects\StaticData;
 
 use RiotAPI\Objects\ApiObject;
 
-
 /**
  *   Class SBlockDto
  * This object contains champion recommended block data.
  *
  * Used in:
  *   lol-static-data (v1.2)
+ *
  *     @link https://developer.riotgames.com/api/methods#!/1055/3633
  *     @link https://developer.riotgames.com/api/methods#!/1055/3622
- *
- * @package RiotAPI\Objects\StaticData
  */
 class SBlockDto extends ApiObject
 {
-	/** @var SBlockItemDto[] $items */
-	public $items;
+    /** @var SBlockItemDto[] $items */
+    public $items;
 
-	/** @var bool $recMath */
-	public $recMath;
+    /** @var bool $recMath */
+    public $recMath;
 
-	/** @var string $type */
-	public $type;
+    /** @var string $type */
+    public $type;
 }

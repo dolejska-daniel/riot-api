@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,105 +21,107 @@ namespace RiotAPI\Definition;
 
 use RiotAPI\Exception\SettingsException;
 
-
 /**
- *   Class FileCacheProvider
- *
- * @package RiotAPI\Definition
+ *   Class FileCacheProvider.
  */
 class FileCacheProvider implements ICacheProvider
 {
-	/** @var string */
-	protected $cacheDir;
+    /** @var string */
+    protected $cacheDir;
 
-	/**
-	 *   FileCacheProvider constructor.
-	 *
-	 * @param string $cacheDir
-	 *
-	 * @throws SettingsException
-	 */
-	public function __construct( string $cacheDir )
-	{
-		if (!is_dir($cacheDir) && !@mkdir($cacheDir, 0777, true))
-			throw new SettingsException("Provided cache directory path '$cacheDir' is invalid/failed to be created.");
-		elseif (!@is_writable($cacheDir))
-			throw new SettingsException("Provided cache directory path '$cacheDir' is not writable.");
+    /**
+     *   FileCacheProvider constructor.
+     *
+     * @param string $cacheDir
+     *
+     * @throws SettingsException
+     */
+    public function __construct(string $cacheDir)
+    {
+        if (!is_dir($cacheDir) && !@mkdir($cacheDir, 0777, true)) {
+            throw new SettingsException("Provided cache directory path '$cacheDir' is invalid/failed to be created.");
+        } elseif (!@is_writable($cacheDir)) {
+            throw new SettingsException("Provided cache directory path '$cacheDir' is not writable.");
+        }
+        $this->cacheDir = realpath($cacheDir);
+    }
 
-		$this->cacheDir = realpath($cacheDir);
-	}
+    /**
+     *   Loads data stored in cache memory.
+     *
+     * @param string $name
+     * @param bool   $returnStorage
+     *
+     * @throws SettingsException
+     *
+     * @return mixed
+     */
+    public function load(string $name, bool $returnStorage = false)
+    {
+        $path = $this->cacheDir.DIRECTORY_SEPARATOR.$name;
+        $res = @fopen($path, 'r');
 
+        if ($res == false) {
+            throw new SettingsException("Loading - Cache file ($path) failed to be opened/created.");
+        }
+        /** @var FileCacheStorage $storage */
+        $storage = @unserialize(fread($res, filesize($path)));
 
-	/**
-	 *   Loads data stored in cache memory.
-	 *
-	 * @param string $name
-	 * @param bool   $returnStorage
-	 *
-	 * @return mixed
-	 * @throws SettingsException
-	 */
-	public function load( string $name, bool $returnStorage = false )
-	{
-		$path = $this->cacheDir . DIRECTORY_SEPARATOR . $name;
-		$res  = @fopen($path, 'r');
+        fclose($res);
+        if ($returnStorage) {
+            return $storage;
+        }
 
-		if ($res == false)
-			throw new SettingsException("Loading - Cache file ($path) failed to be opened/created.");
+        return $storage->data;
+    }
 
-		/** @var FileCacheStorage $storage */
-		$storage = @unserialize(fread($res, filesize($path)));
+    /**
+     *   Saves data to cache memory.
+     *
+     * @param string $name
+     * @param        $data
+     * @param int    $length
+     *
+     * @throws SettingsException
+     *
+     * @return bool
+     */
+    public function save(string $name, $data, int $length): bool
+    {
+        if ($length <= 0) {
+            throw new SettingsException('Expiration time has to be greater than 0.');
+        }
+        $path = $this->cacheDir.DIRECTORY_SEPARATOR.$name;
+        $res = @fopen($path, 'w+');
 
-		fclose($res);
-		if ($returnStorage)
-			return $storage;
+        if ($res == false) {
+            throw new SettingsException("Saving - Cache file ($path) failed to be opened/created.");
+        }
+        $storage = new FileCacheStorage($data, $length);
+        $written = fwrite($res, serialize($storage));
+        fclose($res);
 
-		return $storage->data;
-	}
+        return boolval($written);
+    }
 
-	/**
-	 *   Saves data to cache memory.
-	 *
-	 * @param string $name
-	 * @param        $data
-	 * @param int    $length
-	 *
-	 * @return bool
-	 * @throws SettingsException
-	 */
-	public function save( string $name, $data, int $length ): bool
-	{
-		if ($length <= 0)
-			throw new SettingsException("Expiration time has to be greater than 0.");
+    /**
+     *   Checks whether or not is saved in cache.
+     *
+     * @param string $name
+     *
+     * @throws SettingsException
+     *
+     * @return bool
+     */
+    public function isSaved(string $name): bool
+    {
+        if (realpath($this->cacheDir.DIRECTORY_SEPARATOR.$name) == false) {
+            return false;
+        }
 
-		$path = $this->cacheDir . DIRECTORY_SEPARATOR . $name;
-		$res  = @fopen($path, 'w+');
+        /** @var FileCacheStorage $storage */
+        $storage = $this->load($name, true);
 
-		if ($res == false)
-			throw new SettingsException("Saving - Cache file ($path) failed to be opened/created.");
-
-		$storage = new FileCacheStorage($data, $length);
-		$written = fwrite($res, serialize($storage));
-		fclose($res);
-
-		return boolval($written);
-	}
-
-	/**
-	 *   Checks whether or not is saved in cache.
-	 *
-	 * @param string $name
-	 *
-	 * @return bool
-	 * @throws SettingsException
-	 */
-	public function isSaved( string $name ): bool
-	{
-		if (realpath($this->cacheDir . DIRECTORY_SEPARATOR . $name) == false)
-			return false;
-
-		/** @var FileCacheStorage $storage */
-		$storage = $this->load($name, true);
-		return $storage->expires_at > time();
-	}
+        return $storage->expires_at > time();
+    }
 }

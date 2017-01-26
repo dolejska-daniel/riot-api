@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,40 +19,38 @@
 
 namespace RiotAPI\Objects;
 
-
 /**
- *   Class BannedChampion
+ *   Class BannedChampion.
  *
  * Used in:
  *   current-game (v1.0)
+ *
  *     @link https://developer.riotgames.com/api/methods#!/976/3336
  *   featured-games (v1.0)
  *     @link https://developer.riotgames.com/api/methods#!/977/3337
  *   match (v2.2)
  *     @link https://developer.riotgames.com/api/methods#!/1224/4756
- *
- * @package RiotAPI\Objects
  */
 class BannedChampion extends ApiObject
 {
-	/**
-	 *   The ID of the banned champion.
-	 *
-	 * @var int $championId
-	 */
-	public $championId;
+    /**
+     *   The ID of the banned champion.
+     *
+     * @var int
+     */
+    public $championId;
 
-	/**
-	 *   The turn during which the champion was banned.
-	 *
-	 * @var int $pickTurn
-	 */
-	public $pickTurn;
+    /**
+     *   The turn during which the champion was banned.
+     *
+     * @var int
+     */
+    public $pickTurn;
 
-	/**
-	 *   The ID of the team that banned the champion.
-	 *
-	 * @var int $teamId
-	 */
-	public $teamId;
+    /**
+     *   The ID of the team that banned the champion.
+     *
+     * @var int
+     */
+    public $teamId;
 }

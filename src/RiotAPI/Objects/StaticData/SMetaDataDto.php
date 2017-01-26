@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,28 +21,26 @@ namespace RiotAPI\Objects\StaticData;
 
 use RiotAPI\Objects\ApiObject;
 
-
 /**
  *   Class SMetaDataDto
  * This object contains meta data.
  *
  * Used in:
  *   lol-static-data (v1.2)
+ *
  *     @link https://developer.riotgames.com/api/methods#!/1055/3621
  *     @link https://developer.riotgames.com/api/methods#!/1055/3627
  *     @link https://developer.riotgames.com/api/methods#!/1055/3623
  *     @link https://developer.riotgames.com/api/methods#!/1055/3629
- *
- * @package RiotAPI\Objects\StaticData
  */
 class SMetaDataDto extends ApiObject
 {
-	/** @var bool $isRune */
-	public $isRune;
+    /** @var bool $isRune */
+    public $isRune;
 
-	/** @var string $tier */
-	public $tier;
+    /** @var string $tier */
+    public $tier;
 
-	/** @var string $type */
-	public $type;
+    /** @var string $type */
+    public $type;
 }

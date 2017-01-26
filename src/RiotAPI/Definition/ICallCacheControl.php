@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,13 +19,10 @@
 
 namespace RiotAPI\Definition;
 
-
 /**
- *   Interface ICallCacheControl
- *
- * @package RiotAPI\Definition
+ *   Interface ICallCacheControl.
  */
 interface ICallCacheControl
 {
-	public function isCached( string $hash ): bool;
+    public function isCached(string $hash): bool;
 }

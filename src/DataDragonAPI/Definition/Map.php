@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,14 +19,13 @@
 
 namespace DataDragonAPI\Definition;
 
-
 class Map
 {
-	const ORIGINAL_SUMMONERS_RIFT = 1;
+    const ORIGINAL_SUMMONERS_RIFT = 1;
 
-	const SUMMONERS_RIFT = 11;
+    const SUMMONERS_RIFT = 11;
 
-	const TWISTED_TREELINE = 10;
+    const TWISTED_TREELINE = 10;
 
-	const HOWLING_ABYSS = 12;
+    const HOWLING_ABYSS = 12;
 }

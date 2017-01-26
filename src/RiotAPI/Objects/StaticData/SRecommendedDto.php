@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,38 +21,36 @@ namespace RiotAPI\Objects\StaticData;
 
 use RiotAPI\Objects\ApiObject;
 
-
 /**
  *   Class SRecommendedDto
  * This object contains champion recommended data.
  *
  * Used in:
  *   lol-static-data (v1.2)
+ *
  *     @link https://developer.riotgames.com/api/methods#!/1055/3633
  *     @link https://developer.riotgames.com/api/methods#!/1055/3622
- *
- * @package RiotAPI\Objects\StaticData
  */
 class SRecommendedDto extends ApiObject
 {
-	/** @var SBlockDto[] $blocks */
-	public $blocks;
+    /** @var SBlockDto[] $blocks */
+    public $blocks;
 
-	/** @var string $champion */
-	public $champion;
+    /** @var string $champion */
+    public $champion;
 
-	/** @var string $map */
-	public $map;
+    /** @var string $map */
+    public $map;
 
-	/** @var string $mode */
-	public $mode;
+    /** @var string $mode */
+    public $mode;
 
-	/** @var bool $priority */
-	public $priority;
+    /** @var bool $priority */
+    public $priority;
 
-	/** @var string $title */
-	public $title;
+    /** @var string $title */
+    public $title;
 
-	/** @var string $type */
-	public $type;
+    /** @var string $type */
+    public $type;
 }

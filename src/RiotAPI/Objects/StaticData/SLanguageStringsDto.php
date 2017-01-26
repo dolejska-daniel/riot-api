@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,25 +21,23 @@ namespace RiotAPI\Objects\StaticData;
 
 use RiotAPI\Objects\ApiObject;
 
-
 /**
  *   Class SLanguageStringsDto
  * This object contains language strings data.
  *
  * Used in:
  *   lol-static-data (v1.2)
- *     @link https://developer.riotgames.com/api/methods#!/1055/3624
  *
- * @package RiotAPI\Objects\StaticData
+ *     @link https://developer.riotgames.com/api/methods#!/1055/3624
  */
 class SLanguageStringsDto extends ApiObject
 {
-	/** @var string[] $data */
-	public $data;
+    /** @var string[] $data */
+    public $data;
 
-	/** @var string $type */
-	public $type;
+    /** @var string $type */
+    public $type;
 
-	/** @var string $version */
-	public $version;
+    /** @var string $version */
+    public $version;
 }

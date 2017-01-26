@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,61 +19,59 @@
 
 namespace RiotAPI\Objects;
 
-
 /**
  *   Class ChampionDto
  * This object contains champion information.
  *
  * Used in:
  *   champion (v1.2)
+ *
  *     @link https://developer.riotgames.com/api/methods#!/1206/4678
  *     @link https://developer.riotgames.com/api/methods#!/1206/4677
- *
- * @package RiotAPI\Objects
  */
 class ChampionDto extends ApiObject
 {
-	/**
-	 *   Indicates if the champion is active.
-	 *
-	 * @var bool $active
-	 */
-	public $active;
+    /**
+     *   Indicates if the champion is active.
+     *
+     * @var bool
+     */
+    public $active;
 
-	/**
-	 *   Bot enabled flag (for custom games).
-	 *
-	 * @var bool $botEnabled
-	 */
-	public $botEnabled;
+    /**
+     *   Bot enabled flag (for custom games).
+     *
+     * @var bool
+     */
+    public $botEnabled;
 
-	/**
-	 *   Bot Match Made enabled flag (for Co-op vs. AI games).
-	 *
-	 * @var bool $botMmEnabled
-	 */
-	public $botMmEnabled;
+    /**
+     *   Bot Match Made enabled flag (for Co-op vs. AI games).
+     *
+     * @var bool
+     */
+    public $botMmEnabled;
 
-	/**
-	 *   Indicates if the champion is free to play. Free to play champions are 
-	 * rotated periodically.
-	 *
-	 * @var bool $freeToPlay
-	 */
-	public $freeToPlay;
+    /**
+     *   Indicates if the champion is free to play. Free to play champions are
+     * rotated periodically.
+     *
+     * @var bool
+     */
+    public $freeToPlay;
 
-	/**
-	 *   Champion ID. For static information correlating to champion IDs, please 
-	 * refer to the LoL Static Data API.
-	 *
-	 * @var int $id
-	 */
-	public $id;
+    /**
+     *   Champion ID. For static information correlating to champion IDs, please
+     * refer to the LoL Static Data API.
+     *
+     * @var int
+     */
+    public $id;
 
-	/**
-	 *   Ranked play enabled flag.
-	 *
-	 * @var bool $rankedPlayEnabled
-	 */
-	public $rankedPlayEnabled;
+    /**
+     *   Ranked play enabled flag.
+     *
+     * @var bool
+     */
+    public $rankedPlayEnabled;
 }

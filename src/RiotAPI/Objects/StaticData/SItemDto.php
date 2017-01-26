@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,96 +21,94 @@ namespace RiotAPI\Objects\StaticData;
 
 use RiotAPI\Objects\ApiObject;
 
-
 /**
  *   Class SItemDto
  * This object contains item data.
  *
  * Used in:
  *   lol-static-data (v1.2)
+ *
  *     @link https://developer.riotgames.com/api/methods#!/1055/3621
  *     @link https://developer.riotgames.com/api/methods#!/1055/3627
- *
- * @package RiotAPI\Objects\StaticData
  */
 class SItemDto extends ApiObject
 {
-	/** @var string $colloq */
-	public $colloq;
+    /** @var string $colloq */
+    public $colloq;
 
-	/** @var bool $consumeOnFull */
-	public $consumeOnFull;
+    /** @var bool $consumeOnFull */
+    public $consumeOnFull;
 
-	/** @var bool $consumed */
-	public $consumed;
+    /** @var bool $consumed */
+    public $consumed;
 
-	/** @var int $depth */
-	public $depth;
+    /** @var int $depth */
+    public $depth;
 
-	/** @var string $description */
-	public $description;
+    /** @var string $description */
+    public $description;
 
-	/** @var string[] $effect */
-	public $effect;
+    /** @var string[] $effect */
+    public $effect;
 
-	/** @var string[] $from */
-	public $from;
+    /** @var string[] $from */
+    public $from;
 
-	/**
-	 *   Data Dragon includes the gold field for basic data, which is shared by 
-	 * both rune and item. However, only items have a gold field on them, representing 
-	 * their gold cost in the store. Since runes are not sold in the store, they have 
-	 * no gold cost.
-	 *
-	 * @var SGoldDto $gold
-	 */
-	public $gold;
+    /**
+     *   Data Dragon includes the gold field for basic data, which is shared by
+     * both rune and item. However, only items have a gold field on them, representing
+     * their gold cost in the store. Since runes are not sold in the store, they have
+     * no gold cost.
+     *
+     * @var SGoldDto
+     */
+    public $gold;
 
-	/** @var string $group */
-	public $group;
+    /** @var string $group */
+    public $group;
 
-	/** @var bool $hideFromAll */
-	public $hideFromAll;
+    /** @var bool $hideFromAll */
+    public $hideFromAll;
 
-	/** @var int $id */
-	public $id;
+    /** @var int $id */
+    public $id;
 
-	/** @var SImageDto $image */
-	public $image;
+    /** @var SImageDto $image */
+    public $image;
 
-	/** @var bool $inStore */
-	public $inStore;
+    /** @var bool $inStore */
+    public $inStore;
 
-	/** @var string[] $into */
-	public $into;
+    /** @var string[] $into */
+    public $into;
 
-	/** @var bool[] $maps */
-	public $maps;
+    /** @var bool[] $maps */
+    public $maps;
 
-	/** @var string $name */
-	public $name;
+    /** @var string $name */
+    public $name;
 
-	/** @var string $plaintext */
-	public $plaintext;
+    /** @var string $plaintext */
+    public $plaintext;
 
-	/** @var string $requiredChampion */
-	public $requiredChampion;
+    /** @var string $requiredChampion */
+    public $requiredChampion;
 
-	/** @var SMetaDataDto $rune */
-	public $rune;
+    /** @var SMetaDataDto $rune */
+    public $rune;
 
-	/** @var string $sanitizedDescription */
-	public $sanitizedDescription;
+    /** @var string $sanitizedDescription */
+    public $sanitizedDescription;
 
-	/** @var int $specialRecipe */
-	public $specialRecipe;
+    /** @var int $specialRecipe */
+    public $specialRecipe;
 
-	/** @var int $stacks */
-	public $stacks;
+    /** @var int $stacks */
+    public $stacks;
 
-	/** @var SBasicDataStatsDto $stats */
-	public $stats;
+    /** @var SBasicDataStatsDto $stats */
+    public $stats;
 
-	/** @var string[] $tags */
-	public $tags;
+    /** @var string[] $tags */
+    public $tags;
 }

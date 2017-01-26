@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,23 +20,21 @@
 namespace RiotAPI\Objects;
 
 /**
- *   Interface IApiObject
- *
- * @package RiotAPI\Objects
+ *   Interface IApiObject.
  */
 interface IApiObject
 {
-	/**
-	 *   IApiObject constructor. Initializes  the object.
-	 *
-	 * @param array $data
-	 */
-	public function __construct( array $data );
+    /**
+     *   IApiObject constructor. Initializes  the object.
+     *
+     * @param array $data
+     */
+    public function __construct(array $data);
 
-	/**
-	 *   Gets all the original data fetched from RiotAPI.
-	 *
-	 * @return array
-	 */
-	public function getData(): array;
+    /**
+     *   Gets all the original data fetched from RiotAPI.
+     *
+     * @return array
+     */
+    public function getData(): array;
 }

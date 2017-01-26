@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,86 +19,84 @@
 
 namespace RiotAPI\Objects;
 
-
 /**
  *   Class ParticipantFrame
- * This object contains participant frame information
+ * This object contains participant frame information.
  *
  * Used in:
  *   match (v2.2)
- *     @link https://developer.riotgames.com/api/methods#!/1224/4756
  *
- * @package RiotAPI\Objects
+ *     @link https://developer.riotgames.com/api/methods#!/1224/4756
  */
 class ParticipantFrame extends ApiObject
 {
-	/**
-	 *   Participant's current gold.
-	 *
-	 * @var int $currentGold
-	 */
-	public $currentGold;
+    /**
+     *   Participant's current gold.
+     *
+     * @var int
+     */
+    public $currentGold;
 
-	/**
-	 *   Dominion score of the participant.
-	 *
-	 * @var int $dominionScore
-	 */
-	public $dominionScore;
+    /**
+     *   Dominion score of the participant.
+     *
+     * @var int
+     */
+    public $dominionScore;
 
-	/**
-	 *   Number of jungle minions killed by participant.
-	 *
-	 * @var int $jungleMinionsKilled
-	 */
-	public $jungleMinionsKilled;
+    /**
+     *   Number of jungle minions killed by participant.
+     *
+     * @var int
+     */
+    public $jungleMinionsKilled;
 
-	/**
-	 *   Participant's current level.
-	 *
-	 * @var int $level
-	 */
-	public $level;
+    /**
+     *   Participant's current level.
+     *
+     * @var int
+     */
+    public $level;
 
-	/**
-	 *   Number of minions killed by participant.
-	 *
-	 * @var int $minionsKilled
-	 */
-	public $minionsKilled;
+    /**
+     *   Number of minions killed by participant.
+     *
+     * @var int
+     */
+    public $minionsKilled;
 
-	/**
-	 *   Participant ID.
-	 *
-	 * @var int $participantId
-	 */
-	public $participantId;
+    /**
+     *   Participant ID.
+     *
+     * @var int
+     */
+    public $participantId;
 
-	/**
-	 *   Participant's position.
-	 *
-	 * @var Position $position
-	 */
-	public $position;
+    /**
+     *   Participant's position.
+     *
+     * @var Position
+     */
+    public $position;
 
-	/**
-	 *   Team score of the participant.
-	 *
-	 * @var int $teamScore
-	 */
-	public $teamScore;
+    /**
+     *   Team score of the participant.
+     *
+     * @var int
+     */
+    public $teamScore;
 
-	/**
-	 *   Participant's total gold.
-	 *
-	 * @var int $totalGold
-	 */
-	public $totalGold;
+    /**
+     *   Participant's total gold.
+     *
+     * @var int
+     */
+    public $totalGold;
 
-	/**
-	 *   Experience earned by participant.
-	 *
-	 * @var int $xp
-	 */
-	public $xp;
+    /**
+     *   Experience earned by participant.
+     *
+     * @var int
+     */
+    public $xp;
 }

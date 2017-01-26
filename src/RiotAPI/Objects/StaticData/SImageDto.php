@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,13 +21,13 @@ namespace RiotAPI\Objects\StaticData;
 
 use RiotAPI\Objects\ApiObject;
 
-
 /**
  *   Class SImageDto
  * This object contains image data.
  *
  * Used in:
  *   lol-static-data (v1.2)
+ *
  *     @link https://developer.riotgames.com/api/methods#!/1055/3633
  *     @link https://developer.riotgames.com/api/methods#!/1055/3622
  *     @link https://developer.riotgames.com/api/methods#!/1055/3621
@@ -39,29 +39,27 @@ use RiotAPI\Objects\ApiObject;
  *     @link https://developer.riotgames.com/api/methods#!/1055/3629
  *     @link https://developer.riotgames.com/api/methods#!/1055/3634
  *     @link https://developer.riotgames.com/api/methods#!/1055/3628
- *
- * @package RiotAPI\Objects\StaticData
  */
 class SImageDto extends ApiObject
 {
-	/** @var string $full */
-	public $full;
+    /** @var string $full */
+    public $full;
 
-	/** @var string $group */
-	public $group;
+    /** @var string $group */
+    public $group;
 
-	/** @var int $h */
-	public $h;
+    /** @var int $h */
+    public $h;
 
-	/** @var string $sprite */
-	public $sprite;
+    /** @var string $sprite */
+    public $sprite;
 
-	/** @var int $w */
-	public $w;
+    /** @var int $w */
+    public $w;
 
-	/** @var int $x */
-	public $x;
+    /** @var int $x */
+    public $x;
 
-	/** @var int $y */
-	public $y;
+    /** @var int $y */
+    public $y;
 }

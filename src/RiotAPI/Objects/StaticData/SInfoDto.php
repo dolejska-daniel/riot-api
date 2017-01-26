@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,29 +21,27 @@ namespace RiotAPI\Objects\StaticData;
 
 use RiotAPI\Objects\ApiObject;
 
-
 /**
  *   Class SInfoDto
  * This object contains champion information.
  *
  * Used in:
  *   lol-static-data (v1.2)
+ *
  *     @link https://developer.riotgames.com/api/methods#!/1055/3633
  *     @link https://developer.riotgames.com/api/methods#!/1055/3622
- *
- * @package RiotAPI\Objects\StaticData
  */
 class SInfoDto extends ApiObject
 {
-	/** @var int $attack */
-	public $attack;
+    /** @var int $attack */
+    public $attack;
 
-	/** @var int $defense */
-	public $defense;
+    /** @var int $defense */
+    public $defense;
 
-	/** @var int $difficulty */
-	public $difficulty;
+    /** @var int $difficulty */
+    public $difficulty;
 
-	/** @var int $magic */
-	public $magic;
+    /** @var int $magic */
+    public $magic;
 }

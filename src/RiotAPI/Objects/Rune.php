@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,38 +19,36 @@
 
 namespace RiotAPI\Objects;
 
-
 /**
- *   Class Rune
+ *   Class Rune.
  *
  * Used in:
  *   current-game (v1.0)
+ *
  *     @link https://developer.riotgames.com/api/methods#!/976/3336
  *   match (v2.2)
  *     @link https://developer.riotgames.com/api/methods#!/1224/4756
- *
- * @package RiotAPI\Objects
  */
 class Rune extends ApiObject
 {
-	/**
-	 *   The count of this rune used by the participant.
-	 *
-	 * @var int $count
-	 */
-	public $count;
+    /**
+     *   The count of this rune used by the participant.
+     *
+     * @var int
+     */
+    public $count;
 
-	/**
-	 *   The ID of the rune.
-	 *
-	 * @var int $runeId
-	 */
-	public $runeId;
+    /**
+     *   The ID of the rune.
+     *
+     * @var int
+     */
+    public $runeId;
 
-	/**
-	 *   Rune rank.
-	 *
-	 * @var int $rank
-	 */
-	public $rank;
+    /**
+     *   Rune rank.
+     *
+     * @var int
+     */
+    public $rank;
 }

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,21 +21,19 @@ namespace RiotAPI\Objects\StaticData;
 
 use RiotAPI\Objects\ApiObjectIterable;
 
-
 /**
  *   Class SMasteryTreeListDto
  * This object contains mastery tree list data.
  *
  * Used in:
  *   lol-static-data (v1.2)
+ *
  *     @link https://developer.riotgames.com/api/methods#!/1055/3625
  *
  * @iterable $masteryTreeItems
- *
- * @package RiotAPI\Objects\StaticData
  */
 class SMasteryTreeListDto extends ApiObjectIterable
 {
-	/** @var SMasteryTreeItemDto[] $masteryTreeItems */
-	public $masteryTreeItems;
+    /** @var SMasteryTreeItemDto[] $masteryTreeItems */
+    public $masteryTreeItems;
 }

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,36 +21,34 @@ namespace RiotAPI\Objects\StaticData;
 
 use RiotAPI\Objects\ApiObjectIterable;
 
-
 /**
  *   Class SItemListDto
  * This object contains item list data.
  *
  * Used in:
  *   lol-static-data (v1.2)
+ *
  *     @link https://developer.riotgames.com/api/methods#!/1055/3621
  *
  * @iterable $data
- *
- * @package RiotAPI\Objects\StaticData
  */
 class SItemListDto extends ApiObjectIterable
 {
-	/** @var SBasicDataDto $basic */
-	public $basic;
+    /** @var SBasicDataDto $basic */
+    public $basic;
 
-	/** @var SItemDto[] $data */
-	public $data;
+    /** @var SItemDto[] $data */
+    public $data;
 
-	/** @var SGroupDto[] $groups */
-	public $groups;
+    /** @var SGroupDto[] $groups */
+    public $groups;
 
-	/** @var SItemTreeDto[] $tree */
-	public $tree;
+    /** @var SItemTreeDto[] $tree */
+    public $tree;
 
-	/** @var string $type */
-	public $type;
+    /** @var string $type */
+    public $type;
 
-	/** @var string $version */
-	public $version;
+    /** @var string $version */
+    public $version;
 }

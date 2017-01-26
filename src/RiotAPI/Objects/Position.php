@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,22 +19,20 @@
 
 namespace RiotAPI\Objects;
 
-
 /**
  *   Class Position
- * This object contains participant frame position information
+ * This object contains participant frame position information.
  *
  * Used in:
  *   match (v2.2)
- *     @link https://developer.riotgames.com/api/methods#!/1224/4756
  *
- * @package RiotAPI\Objects
+ *     @link https://developer.riotgames.com/api/methods#!/1224/4756
  */
 class Position extends ApiObject
 {
-	/** @var int $x */
-	public $x;
+    /** @var int $x */
+    public $x;
 
-	/** @var int $y */
-	public $y;
+    /** @var int $y */
+    public $y;
 }

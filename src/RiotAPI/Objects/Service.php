@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,29 +19,27 @@
 
 namespace RiotAPI\Objects;
 
-
 /**
- *   Class Service
+ *   Class Service.
  *
  * Used in:
  *   lol-status (v1.0)
+ *
  *     @link https://developer.riotgames.com/api/methods#!/1085/3739
  *
  * @iterable $incidents
- *
- * @package RiotAPI\Objects
  */
 class Service extends ApiObjectIterable
 {
-	/** @var Incident[] $incidents */
-	public $incidents;
+    /** @var Incident[] $incidents */
+    public $incidents;
 
-	/** @var string $name */
-	public $name;
+    /** @var string $name */
+    public $name;
 
-	/** @var string $slug */
-	public $slug;
+    /** @var string $slug */
+    public $slug;
 
-	/** @var string $status */
-	public $status;
+    /** @var string $status */
+    public $status;
 }

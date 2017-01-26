@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -20,118 +20,111 @@
 namespace RiotAPI\Objects;
 
 /**
- *   Class ApiObject
- *
- * @package RiotAPI\Objects
+ *   Class ApiObject.
  */
 abstract class ApiObject implements IApiObject
 {
-	/**
-	 *   ApiObject constructor.
-	 *
-	 * @param array $data
-	 */
-	public function __construct( array $data )
-	{
-		// Tries to assigns data to class properties
-		$selfRef = new \ReflectionClass($this);
-		$namespace = $selfRef->getNamespaceName();
-		$iterableProp = $selfRef->hasProperty('_iterable')
-			? self::getIterablePropertyName($selfRef->getDocComment())
-			: false;
+    /**
+     *   ApiObject constructor.
+     *
+     * @param array $data
+     */
+    public function __construct(array $data)
+    {
+        // Tries to assigns data to class properties
+        $selfRef = new \ReflectionClass($this);
+        $namespace = $selfRef->getNamespaceName();
+        $iterableProp = $selfRef->hasProperty('_iterable')
+            ? self::getIterablePropertyName($selfRef->getDocComment())
+            : false;
 
-		foreach ($data as $property => $value)
-		{
-			try
-			{
-				if ($propRef = $selfRef->getProperty($property))
-				{
-					//  Object has required property, time to discover if it's
-					$dataType = self::getPropertyDataType($propRef->getDocComment());
-					if ($dataType !== false && is_array($value))
-					{
-						//  Property is special DataType
-						$newRef = new \ReflectionClass("$namespace\\$dataType->class");
-						if ($dataType->isArray)
-						{
-							//  Property is array of special DataType
-							foreach ($value as $identifier => $d)
-								$this->$property[$identifier] = $newRef->newInstance($d);
-						}
-						else
-						{
-							$this->$property = $newRef->newInstance($value);
-						}
-					}
-					else
-					{
-						$this->$property = $value;
-					}
-				}
+        foreach ($data as $property => $value) {
+            try {
+                if ($propRef = $selfRef->getProperty($property)) {
+                    //  Object has required property, time to discover if it's
+                    $dataType = self::getPropertyDataType($propRef->getDocComment());
+                    if ($dataType !== false && is_array($value)) {
+                        //  Property is special DataType
+                        $newRef = new \ReflectionClass("$namespace\\$dataType->class");
+                        if ($dataType->isArray) {
+                            //  Property is array of special DataType
+                            foreach ($value as $identifier => $d) {
+                                $this->$property[$identifier] = $newRef->newInstance($d);
+                            }
+                        } else {
+                            $this->$property = $newRef->newInstance($value);
+                        }
+                    } else {
+                        $this->$property = $value;
+                    }
+                }
 
-				if ($iterableProp == $property)
-					$this->_iterable = $this->$property;
-			}
-			//  If property does not exist
-			catch (\ReflectionException $ex) {}
-		}
+                if ($iterableProp == $property) {
+                    $this->_iterable = $this->$property;
+                }
+            }
+            //  If property does not exist
+            catch (\ReflectionException $ex) {
+            }
+        }
 
-		$this->_data = $data;
-	}
+        $this->_data = $data;
+    }
 
-	/**
-	 *   Returns DataType specified in PHPDoc comment.
-	 *
-	 * @param string $phpDocComment
-	 *
-	 * @return bool|string
-	 */
-	public static function getIterablePropertyName( string $phpDocComment )
-	{
-		preg_match('/@iterable\s([\w\$]+)/', $phpDocComment, $matches);
-		if (isset($matches[1]))
-			return substr($matches[1], 1);
+    /**
+     *   Returns DataType specified in PHPDoc comment.
+     *
+     * @param string $phpDocComment
+     *
+     * @return bool|string
+     */
+    public static function getIterablePropertyName(string $phpDocComment)
+    {
+        preg_match('/@iterable\s([\w\$]+)/', $phpDocComment, $matches);
+        if (isset($matches[1])) {
+            return substr($matches[1], 1);
+        }
 
-		return false;
-	}
+        return false;
+    }
 
-	/**
-	 *   Returns DataType specified in PHPDoc comment.
-	 *
-	 * @param string $phpDocComment
-	 *
-	 * @return bool|\stdClass
-	 */
-	public static function getPropertyDataType( string $phpDocComment )
-	{
-		$o = new \stdClass();
+    /**
+     *   Returns DataType specified in PHPDoc comment.
+     *
+     * @param string $phpDocComment
+     *
+     * @return bool|\stdClass
+     */
+    public static function getPropertyDataType(string $phpDocComment)
+    {
+        $o = new \stdClass();
 
-		preg_match('/@var\s(\w+)(\[\])?/', $phpDocComment, $matches);
+        preg_match('/@var\s(\w+)(\[\])?/', $phpDocComment, $matches);
 
-		$o->class = $matches[1];
-		$o->isArray = isset($matches[2]);
+        $o->class = $matches[1];
+        $o->isArray = isset($matches[2]);
 
-		if (in_array($o->class, [ 'integer', 'int', 'string', 'bool', 'boolean', 'double', 'float', 'array' ]))
-			return false;
+        if (in_array($o->class, ['integer', 'int', 'string', 'bool', 'boolean', 'double', 'float', 'array'])) {
+            return false;
+        }
 
-		return $o;
-	}
+        return $o;
+    }
 
+    /**
+     *   This variable contains all the data in an array.
+     *
+     * @var array
+     */
+    protected $_data = [];
 
-	/**
-	 *   This variable contains all the data in an array.
-	 *
-	 * @var array
-	 */
-	protected $_data = array();
-
-	/**
-	 *   Gets all the original data fetched from RiotAPI.
-	 *
-	 * @return array
-	 */
-	public function getData(): array
-	{
-		return $this->_data;
-	}
+    /**
+     *   Gets all the original data fetched from RiotAPI.
+     *
+     * @return array
+     */
+    public function getData(): array
+    {
+        return $this->_data;
+    }
 }

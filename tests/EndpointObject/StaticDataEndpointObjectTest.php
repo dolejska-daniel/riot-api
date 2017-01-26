@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,281 +16,279 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
-use RiotAPI\RiotAPI;
-use RiotAPI\Objects\StaticData;
 use RiotAPI\Definition\Region;
-
+use RiotAPI\Objects\StaticData;
+use RiotAPI\RiotAPI;
 
 class StaticDataEndpointObjectTest extends RiotAPITestCase
 {
-	public function testInit()
-	{
-		$api = new RiotAPI([
-			RiotAPI::SET_KEY            => getenv('API_KEY'),
-			RiotAPI::SET_REGION         => Region::EUROPE_EAST,
-			RiotAPI::SET_USE_DUMMY_DATA => true,
-		]);
+    public function testInit()
+    {
+        $api = new RiotAPI([
+            RiotAPI::SET_KEY            => getenv('API_KEY'),
+            RiotAPI::SET_REGION         => Region::EUROPE_EAST,
+            RiotAPI::SET_USE_DUMMY_DATA => true,
+        ]);
 
-		$this->assertInstanceOf(RiotAPI::class, $api);
+        $this->assertInstanceOf(RiotAPI::class, $api);
 
-		return $api;
-	}
+        return $api;
+    }
 
-	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
-	 *
-	 * @param RiotAPI $api
-	 */
-	public function testGetStaticChampions( RiotAPI $api )
-	{
-		//  Get library processed results
-		/** @var StaticData\SChampionListDto $result */
-		$result = $api->getStaticChampions(null, null, null, 'all');
-		//  Get raw result
-		$rawResult = $api->getResult();
+    /**
+     * @depends      testInit
+     * @dataProvider testInit
+     *
+     * @param RiotAPI $api
+     */
+    public function testGetStaticChampions(RiotAPI $api)
+    {
+        //  Get library processed results
+        /** @var StaticData\SChampionListDto $result */
+        $result = $api->getStaticChampions(null, null, null, 'all');
+        //  Get raw result
+        $rawResult = $api->getResult();
 
-		$this->checkObjectPropertiesAndDataValidity($result, $rawResult, StaticData\SChampionListDto::class);
-	}
+        $this->checkObjectPropertiesAndDataValidity($result, $rawResult, StaticData\SChampionListDto::class);
+    }
 
-	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
-	 *
-	 * @param RiotAPI $api
-	 */
-	public function testGetStaticChampion( RiotAPI $api )
-	{
-		//  Get library processed results
-		/** @var StaticData\SChampionDto $result */
-		$result = $api->getStaticChampion(61, null, null, 'all');
-		//  Get raw result
-		$rawResult = $api->getResult();
+    /**
+     * @depends      testInit
+     * @dataProvider testInit
+     *
+     * @param RiotAPI $api
+     */
+    public function testGetStaticChampion(RiotAPI $api)
+    {
+        //  Get library processed results
+        /** @var StaticData\SChampionDto $result */
+        $result = $api->getStaticChampion(61, null, null, 'all');
+        //  Get raw result
+        $rawResult = $api->getResult();
 
-		$this->checkObjectPropertiesAndDataValidity($result, $rawResult, StaticData\SChampionDto::class);
-	}
+        $this->checkObjectPropertiesAndDataValidity($result, $rawResult, StaticData\SChampionDto::class);
+    }
 
-	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
-	 *
-	 * @param RiotAPI $api
-	 */
-	public function testGetStaticItems( RiotAPI $api )
-	{
-		//  Get library processed results
-		/** @var StaticData\SItemListDto $result */
-		$result = $api->getStaticItems(null, null, 'all');
-		//  Get raw result
-		$rawResult = $api->getResult();
+    /**
+     * @depends      testInit
+     * @dataProvider testInit
+     *
+     * @param RiotAPI $api
+     */
+    public function testGetStaticItems(RiotAPI $api)
+    {
+        //  Get library processed results
+        /** @var StaticData\SItemListDto $result */
+        $result = $api->getStaticItems(null, null, 'all');
+        //  Get raw result
+        $rawResult = $api->getResult();
 
-		$this->checkObjectPropertiesAndDataValidity($result, $rawResult, StaticData\SItemListDto::class);
-	}
+        $this->checkObjectPropertiesAndDataValidity($result, $rawResult, StaticData\SItemListDto::class);
+    }
 
-	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
-	 *
-	 * @param RiotAPI $api
-	 */
-	public function testGetStaticItem( RiotAPI $api )
-	{
-		//  Get library processed results
-		/** @var StaticData\SItemDto $result */
-		$result = $api->getStaticItem(3089, null, null, 'all'); //  RABADON YAY
-		//  Get raw result
-		$rawResult = $api->getResult();
+    /**
+     * @depends      testInit
+     * @dataProvider testInit
+     *
+     * @param RiotAPI $api
+     */
+    public function testGetStaticItem(RiotAPI $api)
+    {
+        //  Get library processed results
+        /** @var StaticData\SItemDto $result */
+        $result = $api->getStaticItem(3089, null, null, 'all'); //  RABADON YAY
+        //  Get raw result
+        $rawResult = $api->getResult();
 
-		$this->checkObjectPropertiesAndDataValidity($result, $rawResult, StaticData\SItemDto::class);
-	}
+        $this->checkObjectPropertiesAndDataValidity($result, $rawResult, StaticData\SItemDto::class);
+    }
 
-	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
-	 *
-	 * @param RiotAPI $api
-	 */
-	public function testGetStaticLanguageStrings( RiotAPI $api )
-	{
-		//  Get library processed results
-		/** @var StaticData\SLanguageStringsDto $result */
-		$result = $api->getStaticLanguageStrings();
-		//  Get raw result
-		$rawResult = $api->getResult();
+    /**
+     * @depends      testInit
+     * @dataProvider testInit
+     *
+     * @param RiotAPI $api
+     */
+    public function testGetStaticLanguageStrings(RiotAPI $api)
+    {
+        //  Get library processed results
+        /** @var StaticData\SLanguageStringsDto $result */
+        $result = $api->getStaticLanguageStrings();
+        //  Get raw result
+        $rawResult = $api->getResult();
 
-		$this->checkObjectPropertiesAndDataValidity($result, $rawResult, StaticData\SLanguageStringsDto::class);
-	}
+        $this->checkObjectPropertiesAndDataValidity($result, $rawResult, StaticData\SLanguageStringsDto::class);
+    }
 
-	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
-	 *
-	 * @param RiotAPI $api
-	 */
-	public function testGetStaticLanguages( RiotAPI $api )
-	{
-		//  Get library processed results
-		/** @var array $result */
-		$result = $api->getStaticLanguages();
-		//  Get raw result
-		$rawResult = $api->getResult();
+    /**
+     * @depends      testInit
+     * @dataProvider testInit
+     *
+     * @param RiotAPI $api
+     */
+    public function testGetStaticLanguages(RiotAPI $api)
+    {
+        //  Get library processed results
+        /** @var array $result */
+        $result = $api->getStaticLanguages();
+        //  Get raw result
+        $rawResult = $api->getResult();
 
-		$this->assertSame($rawResult, $result, "List does not match original request result data!");
-	}
+        $this->assertSame($rawResult, $result, 'List does not match original request result data!');
+    }
 
-	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
-	 *
-	 * @param RiotAPI $api
-	 */
-	public function testGetStaticMaps( RiotAPI $api )
-	{
-		//  Get library processed results
-		/** @var StaticData\SMapDataDto $result */
-		$result = $api->getStaticMaps();
-		//  Get raw result
-		$rawResult = $api->getResult();
+    /**
+     * @depends      testInit
+     * @dataProvider testInit
+     *
+     * @param RiotAPI $api
+     */
+    public function testGetStaticMaps(RiotAPI $api)
+    {
+        //  Get library processed results
+        /** @var StaticData\SMapDataDto $result */
+        $result = $api->getStaticMaps();
+        //  Get raw result
+        $rawResult = $api->getResult();
 
-		$this->checkObjectPropertiesAndDataValidity($result, $rawResult, StaticData\SMapDataDto::class);
-	}
+        $this->checkObjectPropertiesAndDataValidity($result, $rawResult, StaticData\SMapDataDto::class);
+    }
 
-	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
-	 *
-	 * @param RiotAPI $api
-	 */
-	public function testGetStaticMasteries( RiotAPI $api )
-	{
-		//  Get library processed results
-		/** @var StaticData\SMasteryListDto $result */
-		$result = $api->getStaticMasteries(null, null, 'all');
-		//  Get raw result
-		$rawResult = $api->getResult();
+    /**
+     * @depends      testInit
+     * @dataProvider testInit
+     *
+     * @param RiotAPI $api
+     */
+    public function testGetStaticMasteries(RiotAPI $api)
+    {
+        //  Get library processed results
+        /** @var StaticData\SMasteryListDto $result */
+        $result = $api->getStaticMasteries(null, null, 'all');
+        //  Get raw result
+        $rawResult = $api->getResult();
 
-		$this->checkObjectPropertiesAndDataValidity($result, $rawResult, StaticData\SMasteryListDto::class);
-	}
+        $this->checkObjectPropertiesAndDataValidity($result, $rawResult, StaticData\SMasteryListDto::class);
+    }
 
-	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
-	 *
-	 * @param RiotAPI $api
-	 */
-	public function testGetStaticMastery( RiotAPI $api )
-	{
-		//  Get library processed results
-		/** @var StaticData\SMasteryDto $result */
-		$result = $api->getStaticMastery(6362, null, null, 'all'); //  THE LORD OF THUNDER
-		//  Get raw result
-		$rawResult = $api->getResult();
+    /**
+     * @depends      testInit
+     * @dataProvider testInit
+     *
+     * @param RiotAPI $api
+     */
+    public function testGetStaticMastery(RiotAPI $api)
+    {
+        //  Get library processed results
+        /** @var StaticData\SMasteryDto $result */
+        $result = $api->getStaticMastery(6362, null, null, 'all'); //  THE LORD OF THUNDER
+        //  Get raw result
+        $rawResult = $api->getResult();
 
-		$this->checkObjectPropertiesAndDataValidity($result, $rawResult, StaticData\SMasteryDto::class);
-	}
+        $this->checkObjectPropertiesAndDataValidity($result, $rawResult, StaticData\SMasteryDto::class);
+    }
 
-	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
-	 *
-	 * @param RiotAPI $api
-	 */
-	public function testGetStaticRealm( RiotAPI $api )
-	{
-		//  Get library processed results
-		/** @var StaticData\SRealmDto $result */
-		$result = $api->getStaticRealm();
-		//  Get raw result
-		$rawResult = $api->getResult();
+    /**
+     * @depends      testInit
+     * @dataProvider testInit
+     *
+     * @param RiotAPI $api
+     */
+    public function testGetStaticRealm(RiotAPI $api)
+    {
+        //  Get library processed results
+        /** @var StaticData\SRealmDto $result */
+        $result = $api->getStaticRealm();
+        //  Get raw result
+        $rawResult = $api->getResult();
 
-		$this->checkObjectPropertiesAndDataValidity($result, $rawResult, StaticData\SRealmDto::class);
-	}
+        $this->checkObjectPropertiesAndDataValidity($result, $rawResult, StaticData\SRealmDto::class);
+    }
 
-	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
-	 *
-	 * @param RiotAPI $api
-	 */
-	public function testGetStaticRunes( RiotAPI $api )
-	{
-		//  Get library processed results
-		/** @var StaticData\SRuneListDto $result */
-		$result = $api->getStaticRunes(null, null, 'all');
-		//  Get raw result
-		$rawResult = $api->getResult();
+    /**
+     * @depends      testInit
+     * @dataProvider testInit
+     *
+     * @param RiotAPI $api
+     */
+    public function testGetStaticRunes(RiotAPI $api)
+    {
+        //  Get library processed results
+        /** @var StaticData\SRuneListDto $result */
+        $result = $api->getStaticRunes(null, null, 'all');
+        //  Get raw result
+        $rawResult = $api->getResult();
 
-		$this->checkObjectPropertiesAndDataValidity($result, $rawResult, StaticData\SRuneListDto::class);
-	}
+        $this->checkObjectPropertiesAndDataValidity($result, $rawResult, StaticData\SRuneListDto::class);
+    }
 
-	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
-	 *
-	 * @param RiotAPI $api
-	 */
-	public function testGetStaticRune( RiotAPI $api )
-	{
-		//  Get library processed results
-		/** @var StaticData\SRuneDto $result */
-		$result = $api->getStaticRune(5357, null, null, 'all'); //  GIMME MOAR AP
-		//  Get raw result
-		$rawResult = $api->getResult();
+    /**
+     * @depends      testInit
+     * @dataProvider testInit
+     *
+     * @param RiotAPI $api
+     */
+    public function testGetStaticRune(RiotAPI $api)
+    {
+        //  Get library processed results
+        /** @var StaticData\SRuneDto $result */
+        $result = $api->getStaticRune(5357, null, null, 'all'); //  GIMME MOAR AP
+        //  Get raw result
+        $rawResult = $api->getResult();
 
-		$this->checkObjectPropertiesAndDataValidity($result, $rawResult, StaticData\SRuneDto::class);
-	}
+        $this->checkObjectPropertiesAndDataValidity($result, $rawResult, StaticData\SRuneDto::class);
+    }
 
-	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
-	 *
-	 * @param RiotAPI $api
-	 */
-	public function testGetStaticSummonerSpells( RiotAPI $api )
-	{
-		//  Get library processed results
-		/** @var StaticData\SSummonerSpellListDto $result */
-		$result = $api->getStaticSummonerSpells(null, null, false, 'all');
-		//  Get raw result
-		$rawResult = $api->getResult();
+    /**
+     * @depends      testInit
+     * @dataProvider testInit
+     *
+     * @param RiotAPI $api
+     */
+    public function testGetStaticSummonerSpells(RiotAPI $api)
+    {
+        //  Get library processed results
+        /** @var StaticData\SSummonerSpellListDto $result */
+        $result = $api->getStaticSummonerSpells(null, null, false, 'all');
+        //  Get raw result
+        $rawResult = $api->getResult();
 
-		$this->checkObjectPropertiesAndDataValidity($result, $rawResult, StaticData\SSummonerSpellListDto::class);
-	}
+        $this->checkObjectPropertiesAndDataValidity($result, $rawResult, StaticData\SSummonerSpellListDto::class);
+    }
 
-	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
-	 *
-	 * @param RiotAPI $api
-	 */
-	public function testGetStaticSummonerSpell( RiotAPI $api )
-	{
-		//  Get library processed results
-		/** @var StaticData\SSummonerSpellDto $result */
-		$result = $api->getStaticSummonerSpell(4, null, null, 'all'); //  JUST IN CASE?
-		//  Get raw result
-		$rawResult = $api->getResult();
+    /**
+     * @depends      testInit
+     * @dataProvider testInit
+     *
+     * @param RiotAPI $api
+     */
+    public function testGetStaticSummonerSpell(RiotAPI $api)
+    {
+        //  Get library processed results
+        /** @var StaticData\SSummonerSpellDto $result */
+        $result = $api->getStaticSummonerSpell(4, null, null, 'all'); //  JUST IN CASE?
+        //  Get raw result
+        $rawResult = $api->getResult();
 
-		$this->checkObjectPropertiesAndDataValidity($result, $rawResult, StaticData\SSummonerSpellDto::class);
-	}
+        $this->checkObjectPropertiesAndDataValidity($result, $rawResult, StaticData\SSummonerSpellDto::class);
+    }
 
-	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
-	 *
-	 * @param RiotAPI $api
-	 */
-	public function testGetStaticVersions( RiotAPI $api )
-	{
-		//  Get library processed results
-		/** @var array $result */
-		$result = $api->getStaticVersions();
-		//  Get raw result
-		$rawResult = $api->getResult();
+    /**
+     * @depends      testInit
+     * @dataProvider testInit
+     *
+     * @param RiotAPI $api
+     */
+    public function testGetStaticVersions(RiotAPI $api)
+    {
+        //  Get library processed results
+        /** @var array $result */
+        $result = $api->getStaticVersions();
+        //  Get raw result
+        $rawResult = $api->getResult();
 
-		$this->assertSame($rawResult, $result, "List does not match original request result data!");
-	}
+        $this->assertSame($rawResult, $result, 'List does not match original request result data!');
+    }
 }

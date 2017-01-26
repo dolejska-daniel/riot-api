@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,56 +16,54 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 use RiotAPI\Definition\Region;
-
 use RiotAPI\Exception\GeneralException;
-
 
 class RegionTest extends RiotAPITestCase
 {
-	public function testInit()
-	{
-		$obj = new Region();
-		return $obj;
-	}
+    public function testInit()
+    {
+        $obj = new Region();
 
-	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
-	 *
-	 * @param Region $region
-	 */
-	public function testGetList( Region $region )
-	{
-		$regionList = $region->getList();
-		$this->assertSame(Region::$list, $regionList);
-	}
+        return $obj;
+    }
 
-	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
-	 *
-	 * @param Region $region
-	 */
-	public function testGetRegion( Region $region )
-	{
-		$regionName = $region->getRegionName(Region::EUROPE_EAST);
-		$this->assertSame(Region::$list[Region::EUROPE_EAST], $regionName);
-	}
+    /**
+     * @depends      testInit
+     * @dataProvider testInit
+     *
+     * @param Region $region
+     */
+    public function testGetList(Region $region)
+    {
+        $regionList = $region->getList();
+        $this->assertSame(Region::$list, $regionList);
+    }
 
-	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
-	 *
-	 * @param Region $region
-	 */
-	public function testGetRegion_Exception( Region $region )
-	{
-		$this->expectException(GeneralException::class);
+    /**
+     * @depends      testInit
+     * @dataProvider testInit
+     *
+     * @param Region $region
+     */
+    public function testGetRegion(Region $region)
+    {
+        $regionName = $region->getRegionName(Region::EUROPE_EAST);
+        $this->assertSame(Region::$list[Region::EUROPE_EAST], $regionName);
+    }
 
-		$region->getRegionName('MORDOR');
-	}
+    /**
+     * @depends      testInit
+     * @dataProvider testInit
+     *
+     * @param Region $region
+     */
+    public function testGetRegion_Exception(Region $region)
+    {
+        $this->expectException(GeneralException::class);
+
+        $region->getRegionName('MORDOR');
+    }
 }

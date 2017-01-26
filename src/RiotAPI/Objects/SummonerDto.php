@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,54 +19,52 @@
 
 namespace RiotAPI\Objects;
 
-
 /**
  *   Class SummonerDto
  * This object contains summoner information.
  *
  * Used in:
  *   summoner (v1.4)
+ *
  *     @link https://developer.riotgames.com/api/methods#!/1208/4684
  *     @link https://developer.riotgames.com/api/methods#!/1208/4681
- *
- * @package RiotAPI\Objects
  */
 class SummonerDto extends ApiObject
 {
-	/**
-	 *   Summoner ID.
-	 *
-	 * @var int $id
-	 */
-	public $id;
+    /**
+     *   Summoner ID.
+     *
+     * @var int
+     */
+    public $id;
 
-	/**
-	 *   Summoner name.
-	 *
-	 * @var string $name
-	 */
-	public $name;
+    /**
+     *   Summoner name.
+     *
+     * @var string
+     */
+    public $name;
 
-	/**
-	 *   ID of the summoner icon associated with the summoner.
-	 *
-	 * @var int $profileIconId
-	 */
-	public $profileIconId;
+    /**
+     *   ID of the summoner icon associated with the summoner.
+     *
+     * @var int
+     */
+    public $profileIconId;
 
-	/**
-	 *   Date summoner was last modified specified as epoch milliseconds. The 
-	 * following events will update this timestamp: profile icon change, playing the 
-	 * tutorial or advanced tutorial, finishing a game, summoner name change.
-	 *
-	 * @var int $revisionDate
-	 */
-	public $revisionDate;
+    /**
+     *   Date summoner was last modified specified as epoch milliseconds. The
+     * following events will update this timestamp: profile icon change, playing the
+     * tutorial or advanced tutorial, finishing a game, summoner name change.
+     *
+     * @var int
+     */
+    public $revisionDate;
 
-	/**
-	 *   Summoner level associated with the summoner.
-	 *
-	 * @var int $summonerLevel
-	 */
-	public $summonerLevel;
+    /**
+     *   Summoner level associated with the summoner.
+     *
+     * @var int
+     */
+    public $summonerLevel;
 }

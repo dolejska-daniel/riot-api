@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,49 +19,47 @@
 
 namespace RiotAPI\Objects;
 
-
 /**
  *   Class MiniSeriesDto
  * This object contains mini series information.
  *
  * Used in:
  *   league (v2.5)
+ *
  *     @link https://developer.riotgames.com/api/methods#!/1215/4701
  *     @link https://developer.riotgames.com/api/methods#!/1215/4705
  *     @link https://developer.riotgames.com/api/methods#!/1215/4704
  *     @link https://developer.riotgames.com/api/methods#!/1215/4706
- *
- * @package RiotAPI\Objects
  */
 class MiniSeriesDto extends ApiObject
 {
-	/**
-	 *   Number of current losses in the mini series.
-	 *
-	 * @var int $losses
-	 */
-	public $losses;
+    /**
+     *   Number of current losses in the mini series.
+     *
+     * @var int
+     */
+    public $losses;
 
-	/**
-	 *   String showing the current, sequential mini series progress where 'W' 
-	 * represents a win, 'L' represents a loss, and 'N' represents a game that hasn't been 
-	 * played yet.
-	 *
-	 * @var string $progress
-	 */
-	public $progress;
+    /**
+     *   String showing the current, sequential mini series progress where 'W'
+     * represents a win, 'L' represents a loss, and 'N' represents a game that hasn't been
+     * played yet.
+     *
+     * @var string
+     */
+    public $progress;
 
-	/**
-	 *   Number of wins required for promotion.
-	 *
-	 * @var int $target
-	 */
-	public $target;
+    /**
+     *   Number of wins required for promotion.
+     *
+     * @var int
+     */
+    public $target;
 
-	/**
-	 *   Number of current wins in the mini series.
-	 *
-	 * @var int $wins
-	 */
-	public $wins;
+    /**
+     *   Number of current wins in the mini series.
+     *
+     * @var int
+     */
+    public $wins;
 }

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,44 +19,42 @@
 
 namespace RiotAPI\Objects;
 
-
 /**
  *   Class Player
- * This object contains match player information
+ * This object contains match player information.
  *
  * Used in:
  *   match (v2.2)
- *     @link https://developer.riotgames.com/api/methods#!/1224/4756
  *
- * @package RiotAPI\Objects
+ *     @link https://developer.riotgames.com/api/methods#!/1224/4756
  */
 class Player extends ApiObject
 {
-	/**
-	 *   Match history URI.
-	 *
-	 * @var string $matchHistoryUri
-	 */
-	public $matchHistoryUri;
+    /**
+     *   Match history URI.
+     *
+     * @var string
+     */
+    public $matchHistoryUri;
 
-	/**
-	 *   Profile icon ID.
-	 *
-	 * @var int $profileIcon
-	 */
-	public $profileIcon;
+    /**
+     *   Profile icon ID.
+     *
+     * @var int
+     */
+    public $profileIcon;
 
-	/**
-	 *   Summoner ID.
-	 *
-	 * @var int $summonerId
-	 */
-	public $summonerId;
+    /**
+     *   Summoner ID.
+     *
+     * @var int
+     */
+    public $summonerId;
 
-	/**
-	 *   Summoner name.
-	 *
-	 * @var string $summonerName
-	 */
-	public $summonerName;
+    /**
+     *   Summoner name.
+     *
+     * @var string
+     */
+    public $summonerName;
 }

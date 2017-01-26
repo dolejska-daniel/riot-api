@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,32 +19,30 @@
 
 namespace RiotAPI\Objects;
 
-
 /**
  *   Class ChampionStatsDto
  * This object contains a collection of champion stats information.
  *
  * Used in:
  *   stats (v1.3)
- *     @link https://developer.riotgames.com/api/methods#!/1209/4686
  *
- * @package RiotAPI\Objects
+ *     @link https://developer.riotgames.com/api/methods#!/1209/4686
  */
 class ChampionStatsDto extends ApiObject
 {
-	/**
-	 *   Champion ID. Note that champion ID 0 represents the combined stats for all 
-	 * champions. For static information correlating to champion IDs, please refer to the 
-	 * LoL Static Data API.
-	 *
-	 * @var int $id
-	 */
-	public $id;
+    /**
+     *   Champion ID. Note that champion ID 0 represents the combined stats for all
+     * champions. For static information correlating to champion IDs, please refer to the
+     * LoL Static Data API.
+     *
+     * @var int
+     */
+    public $id;
 
-	/**
-	 *   Aggregated stats associated with the champion.
-	 *
-	 * @var AggregatedStatsDto $stats
-	 */
-	public $stats;
+    /**
+     *   Aggregated stats associated with the champion.
+     *
+     * @var AggregatedStatsDto
+     */
+    public $stats;
 }

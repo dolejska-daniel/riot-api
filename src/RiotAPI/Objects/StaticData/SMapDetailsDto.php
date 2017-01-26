@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,28 +21,26 @@ namespace RiotAPI\Objects\StaticData;
 
 use RiotAPI\Objects\ApiObject;
 
-
 /**
  *   Class SMapDetailsDto
  * This object contains map details data.
  *
  * Used in:
  *   lol-static-data (v1.2)
- *     @link https://developer.riotgames.com/api/methods#!/1055/3635
  *
- * @package RiotAPI\Objects\StaticData
+ *     @link https://developer.riotgames.com/api/methods#!/1055/3635
  */
 class SMapDetailsDto extends ApiObject
 {
-	/** @var SImageDto $image */
-	public $image;
+    /** @var SImageDto $image */
+    public $image;
 
-	/** @var int $mapId */
-	public $mapId;
+    /** @var int $mapId */
+    public $mapId;
 
-	/** @var string $mapName */
-	public $mapName;
+    /** @var string $mapName */
+    public $mapName;
 
-	/** @var int[] $unpurchasableItemList */
-	public $unpurchasableItemList;
+    /** @var int[] $unpurchasableItemList */
+    public $unpurchasableItemList;
 }

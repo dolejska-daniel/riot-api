@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,84 +21,82 @@ namespace RiotAPI\Objects;
 
 use RiotAPI\Exception\RequestParameterException;
 
-
 /**
- *   Class TournamentCodeParameters
+ *   Class TournamentCodeParameters.
  *
  * Used in:
  *   tournament-stub (v1)
- *     @link https://developer.riotgames.com/api/methods#!/1090/3760
  *
- * @package RiotAPI\Objects
+ *     @link https://developer.riotgames.com/api/methods#!/1090/3760
  */
 class TournamentCodeParameters extends ApiObject
 {
-	/**
-	 *   Optional list of participants in order to validate the players eligible to 
-	 * join the lobby. NOTE: We currently do not enforce participants at the team 
-	 * level, but rather the aggregate of teamOne and teamTwo. We may add the ability to 
-	 * enforce at the team level in the future.
-	 *
-	 * @var SummonerIdParams $allowedSummonerIds
-	 */
-	public $allowedSummonerIds;
+    /**
+     *   Optional list of participants in order to validate the players eligible to
+     * join the lobby. NOTE: We currently do not enforce participants at the team
+     * level, but rather the aggregate of teamOne and teamTwo. We may add the ability to
+     * enforce at the team level in the future.
+     *
+     * @var SummonerIdParams
+     */
+    public $allowedSummonerIds;
 
-	/**
-	 *   The map type of the game. Valid values are SUMMONERS_RIFT, 
-	 * TWISTED_TREELINE, CRYSTAL_SCAR, and HOWLING_ABYSS.
-	 *
-	 * @var string $mapType
-	 */
-	public $mapType;
+    /**
+     *   The map type of the game. Valid values are SUMMONERS_RIFT,
+     * TWISTED_TREELINE, CRYSTAL_SCAR, and HOWLING_ABYSS.
+     *
+     * @var string
+     */
+    public $mapType;
 
-	/**
-	 *   Optional string that may contain any data in any format, if specified at 
-	 * all. Used to denote any custom information about the game.
-	 *
-	 * @var string $metadata
-	 */
-	public $metadata = "";
+    /**
+     *   Optional string that may contain any data in any format, if specified at
+     * all. Used to denote any custom information about the game.
+     *
+     * @var string
+     */
+    public $metadata = '';
 
-	/**
-	 *   The pick type of the game. Valid values are BLIND_PICK, DRAFT_MODE, 
-	 * ALL_RANDOM, TOURNAMENT_DRAFT.
-	 *
-	 * @var string $pickType
-	 */
-	public $pickType;
+    /**
+     *   The pick type of the game. Valid values are BLIND_PICK, DRAFT_MODE,
+     * ALL_RANDOM, TOURNAMENT_DRAFT.
+     *
+     * @var string
+     */
+    public $pickType;
 
-	/**
-	 *   The spectator type of the game. Valid values are NONE, LOBBYONLY, ALL.
-	 *
-	 * @var string $spectatorType
-	 */
-	public $spectatorType;
+    /**
+     *   The spectator type of the game. Valid values are NONE, LOBBYONLY, ALL.
+     *
+     * @var string
+     */
+    public $spectatorType;
 
-	/**
-	 *   The team size of the game. Valid values are 1-5.
-	 *
-	 * @var int $teamSize
-	 */
-	public $teamSize;
+    /**
+     *   The team size of the game. Valid values are 1-5.
+     *
+     * @var int
+     */
+    public $teamSize;
 
+    public function __construct(array $data)
+    {
+        foreach ([
+             'allowedSummonerIds',
+             'mapType',
+             'pickType',
+             'spectatorType',
+             'teamSize',
+                 ] as $requiredParam) {
+            if (!isset($data[$requiredParam])) {
+                throw new RequestParameterException("Property '$requiredParam' is required to be set by RiotAPI.");
+            }
+        }
+        parent::__construct($data);
+    }
 
-	public function __construct( array $data )
-	{
-		foreach ([
-	         'allowedSummonerIds',
-	         'mapType',
-	         'pickType',
-	         'spectatorType',
-	         'teamSize',
-		         ] as $requiredParam)
-			if (!isset($data[$requiredParam]))
-				throw new RequestParameterException("Property '$requiredParam' is required to be set by RiotAPI.");
-
-		parent::__construct( $data );
-	}
-
-	public function __toString()
-	{
-		return json_encode($this, JSON_PRETTY_PRINT);
-	}
+    public function __toString()
+    {
+        return json_encode($this, JSON_PRETTY_PRINT);
+    }
 }

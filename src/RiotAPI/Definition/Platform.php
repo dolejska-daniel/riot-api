@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,73 +21,69 @@ namespace RiotAPI\Definition;
 
 use RiotAPI\Exception\GeneralException;
 
-
 /**
- *   Class Platform
- *
- * @package RiotAPI\Definition
+ *   Class Platform.
  */
 class Platform implements IPlatform
 {
-	/****************************************d*d*
-	 *
-	 * Standard region platforms
-	 *
-	 ********************************************/
+    /****************************************d*d*
+     *
+     * Standard region platforms
+     *
+     ********************************************/
 
-	const NORTH_AMERICA = 'na1';
+    const NORTH_AMERICA = 'na1';
 
-	const EUROPE_WEST = 'euw1';
+    const EUROPE_WEST = 'euw1';
 
-	const EUROPE_EAST = 'eun1';
+    const EUROPE_EAST = 'eun1';
 
-	const LAMERICA_SOUTH = 'la2';
+    const LAMERICA_SOUTH = 'la2';
 
-	const LAMERICA_NORTH = 'la1';
+    const LAMERICA_NORTH = 'la1';
 
-	const BRASIL = 'br1';
+    const BRASIL = 'br1';
 
-	const RUSSIA = 'ru';
+    const RUSSIA = 'ru';
 
-	const TURKEY = 'tr1';
+    const TURKEY = 'tr1';
 
-	const OCEANIA = 'oc1';
+    const OCEANIA = 'oc1';
 
-	const KOREA = 'kr';
+    const KOREA = 'kr';
 
-	const JAPAN = 'jp1';
+    const JAPAN = 'jp1';
 
-	public static $list = array(
-		Region::NORTH_AMERICA   => self::NORTH_AMERICA,
-		Region::EUROPE_WEST     => self::EUROPE_WEST,
-		Region::EUROPE_EAST     => self::EUROPE_EAST,
-		Region::LAMERICA_SOUTH  => self::LAMERICA_SOUTH,
-		Region::LAMERICA_NORTH  => self::LAMERICA_NORTH,
-		Region::BRASIL          => self::BRASIL,
-		Region::RUSSIA          => self::RUSSIA,
-		Region::TURKEY          => self::TURKEY,
-		Region::OCEANIA         => self::OCEANIA,
-		Region::KOREA           => self::KOREA,
-		Region::JAPAN           => self::JAPAN,
-	);
+    public static $list = [
+        Region::NORTH_AMERICA   => self::NORTH_AMERICA,
+        Region::EUROPE_WEST     => self::EUROPE_WEST,
+        Region::EUROPE_EAST     => self::EUROPE_EAST,
+        Region::LAMERICA_SOUTH  => self::LAMERICA_SOUTH,
+        Region::LAMERICA_NORTH  => self::LAMERICA_NORTH,
+        Region::BRASIL          => self::BRASIL,
+        Region::RUSSIA          => self::RUSSIA,
+        Region::TURKEY          => self::TURKEY,
+        Region::OCEANIA         => self::OCEANIA,
+        Region::KOREA           => self::KOREA,
+        Region::JAPAN           => self::JAPAN,
+    ];
 
+    /****************************************d*d*
+     *
+     * Control functions
+     *
+     ********************************************/
 
-	/****************************************d*d*
-	 *
-	 * Control functions
-	 *
-	 ********************************************/
+    public function getList(): array
+    {
+        return self::$list;
+    }
 
-	public function getList(): array
-	{
-		return self::$list;
-	}
-
-	public function getPlatformName( string $region ): string
-	{
-		if (!isset(self::$list[$region]))
-			throw new GeneralException('Invalid region selected. Can not find requested platform.');
-
-		return self::$list[$region];
-	}
+    public function getPlatformName(string $region): string
+    {
+        if (!isset(self::$list[$region])) {
+            throw new GeneralException('Invalid region selected. Can not find requested platform.');
+        }
+        return self::$list[$region];
+    }
 }

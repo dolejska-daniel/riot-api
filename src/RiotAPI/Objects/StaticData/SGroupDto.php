@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -21,22 +21,20 @@ namespace RiotAPI\Objects\StaticData;
 
 use RiotAPI\Objects\ApiObject;
 
-
 /**
  *   Class SGroupDto
  * This object contains item group data.
  *
  * Used in:
  *   lol-static-data (v1.2)
- *     @link https://developer.riotgames.com/api/methods#!/1055/3621
  *
- * @package RiotAPI\Objects\StaticData
+ *     @link https://developer.riotgames.com/api/methods#!/1055/3621
  */
 class SGroupDto extends ApiObject
 {
-	/** @var string $MaxGroupOwnable */
-	public $MaxGroupOwnable;
+    /** @var string $MaxGroupOwnable */
+    public $MaxGroupOwnable;
 
-	/** @var string $key */
-	public $key;
+    /** @var string $key */
+    public $key;
 }

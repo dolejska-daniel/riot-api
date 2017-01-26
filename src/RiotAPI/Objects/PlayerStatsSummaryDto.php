@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,56 +19,54 @@
 
 namespace RiotAPI\Objects;
 
-
 /**
  *   Class PlayerStatsSummaryDto
  * This object contains player stats summary information.
  *
  * Used in:
  *   stats (v1.3)
- *     @link https://developer.riotgames.com/api/methods#!/1209/4687
  *
- * @package RiotAPI\Objects
+ *     @link https://developer.riotgames.com/api/methods#!/1209/4687
  */
 class PlayerStatsSummaryDto extends ApiObject
 {
-	/**
-	 *   Aggregated stats.
-	 *
-	 * @var AggregatedStatsDto $aggregatedStats
-	 */
-	public $aggregatedStats;
+    /**
+     *   Aggregated stats.
+     *
+     * @var AggregatedStatsDto
+     */
+    public $aggregatedStats;
 
-	/**
-	 *   Number of losses for this queue type. Returned for ranked queue types 
-	 * only.
-	 *
-	 * @var int $losses
-	 */
-	public $losses;
+    /**
+     *   Number of losses for this queue type. Returned for ranked queue types
+     * only.
+     *
+     * @var int
+     */
+    public $losses;
 
-	/**
-	 *   Date stats were last modified specified as epoch milliseconds.
-	 *
-	 * @var int $modifyDate
-	 */
-	public $modifyDate;
+    /**
+     *   Date stats were last modified specified as epoch milliseconds.
+     *
+     * @var int
+     */
+    public $modifyDate;
 
-	/**
-	 *   Player stats summary type. (Legal values: AramUnranked5x5, Ascension, 
-	 * Bilgewater, CAP5x5, CoopVsAI, CoopVsAI3x3, CounterPick, FirstBlood1x1, FirstBlood2x2, 
-	 * Hexakill, KingPoro, NightmareBot, OdinUnranked, OneForAll5x5, RankedPremade3x3, 
-	 * RankedPremade5x5, RankedSolo5x5, RankedTeam3x3, RankedTeam5x5, SummonersRift6x6, Unranked, 
-	 * Unranked3x3, URF, URFBots, Siege, RankedFlexSR, RankedFlexTT).
-	 *
-	 * @var string $playerStatSummaryType
-	 */
-	public $playerStatSummaryType;
+    /**
+     *   Player stats summary type. (Legal values: AramUnranked5x5, Ascension,
+     * Bilgewater, CAP5x5, CoopVsAI, CoopVsAI3x3, CounterPick, FirstBlood1x1, FirstBlood2x2,
+     * Hexakill, KingPoro, NightmareBot, OdinUnranked, OneForAll5x5, RankedPremade3x3,
+     * RankedPremade5x5, RankedSolo5x5, RankedTeam3x3, RankedTeam5x5, SummonersRift6x6, Unranked,
+     * Unranked3x3, URF, URFBots, Siege, RankedFlexSR, RankedFlexTT).
+     *
+     * @var string
+     */
+    public $playerStatSummaryType;
 
-	/**
-	 *   Number of wins for this queue type.
-	 *
-	 * @var int $wins
-	 */
-	public $wins;
+    /**
+     *   Number of wins for this queue type.
+     *
+     * @var int
+     */
+    public $wins;
 }

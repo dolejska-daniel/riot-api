@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -16,72 +16,70 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 declare(strict_types=1);
 
 use RiotAPI\Objects;
 
-
 /**
- *   Class BaseObjectIterable
+ *   Class BaseObjectIterable.
+ *
  * @iterable $data
  */
 class BaseObjectIterable extends Objects\ApiObjectIterable
 {
-	/** @var array $data */
-	public $data;
+    /** @var array $data */
+    public $data;
 }
-
 
 class ApiObjectIterableTest extends RiotAPITestCase
 {
-	public static $data = [
-		'data' => [
-			'd', 'u', 'm', 'm', 'y', '_', 'd', 'a', 't', 'a'
-		],
-	];
+    public static $data = [
+        'data' => [
+            'd', 'u', 'm', 'm', 'y', '_', 'd', 'a', 't', 'a',
+        ],
+    ];
 
-	public function testRewind()
-	{
-		$obj = new BaseObjectIterable(self::$data);
+    public function testRewind()
+    {
+        $obj = new BaseObjectIterable(self::$data);
 
-		$this->assertSame('u', $obj->next());
-		$obj->rewind();
-		$this->assertSame('u', $obj->next());
-	}
+        $this->assertSame('u', $obj->next());
+        $obj->rewind();
+        $this->assertSame('u', $obj->next());
+    }
 
-	public function testCurrent()
-	{
-		$obj = new BaseObjectIterable(self::$data);
+    public function testCurrent()
+    {
+        $obj = new BaseObjectIterable(self::$data);
 
-		$this->assertSame('d', $obj->current());
-		$obj->next();
-		$this->assertSame('u', $obj->current());
-	}
+        $this->assertSame('d', $obj->current());
+        $obj->next();
+        $this->assertSame('u', $obj->current());
+    }
 
-	public function testKey()
-	{
-		$obj = new BaseObjectIterable(self::$data);
+    public function testKey()
+    {
+        $obj = new BaseObjectIterable(self::$data);
 
-		$this->assertSame(0, $obj->key());
-		$obj->next();
-		$this->assertSame(1, $obj->key());
-	}
+        $this->assertSame(0, $obj->key());
+        $obj->next();
+        $this->assertSame(1, $obj->key());
+    }
 
-	public function testNext()
-	{
-		$obj = new BaseObjectIterable(self::$data);
+    public function testNext()
+    {
+        $obj = new BaseObjectIterable(self::$data);
 
-		$this->assertSame('u', $obj->next());
-		$this->assertSame('m', $obj->next());
-	}
+        $this->assertSame('u', $obj->next());
+        $this->assertSame('m', $obj->next());
+    }
 
-	public function testValid()
-	{
-		$obj = new BaseObjectIterable(self::$data);
+    public function testValid()
+    {
+        $obj = new BaseObjectIterable(self::$data);
 
-		$this->assertTrue($obj->valid());
-		while ($obj->next() !== false);
-		$this->assertFalse($obj->valid());
-	}
+        $this->assertTrue($obj->valid());
+        while ($obj->next() !== false);
+        $this->assertFalse($obj->valid());
+    }
 }

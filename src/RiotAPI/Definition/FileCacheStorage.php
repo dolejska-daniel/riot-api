@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016  Daniel Dolejška
+ * Copyright (C) 2016  Daniel Dolejška.
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -19,28 +19,24 @@
 
 namespace RiotAPI\Definition;
 
-
 /**
- *   Class FileCacheStorage
- *
- * @package RiotAPI\Definition
+ *   Class FileCacheStorage.
  */
 class FileCacheStorage
 {
-	/** @var int $created_at */
-	public $created_at;
+    /** @var int $created_at */
+    public $created_at;
 
-	/** @var int $expires_at */
-	public $expires_at;
+    /** @var int $expires_at */
+    public $expires_at;
 
-	/** @var mixed $data */
-	public $data;
+    /** @var mixed $data */
+    public $data;
 
-
-	public function __construct( $data, int $time )
-	{
-		$this->created_at = time();
-		$this->expires_at = time() + $time;
-		$this->data = $data;
-	}
+    public function __construct($data, int $time)
+    {
+        $this->created_at = time();
+        $this->expires_at = time() + $time;
+        $this->data = $data;
+    }
 }
