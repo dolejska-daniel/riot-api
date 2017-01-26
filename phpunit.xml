@@ -21,7 +21,7 @@
 			<directory>./tests/EndpointObject/</directory>
 		</testsuite>
 		<testsuite name="RiotAPI lib: Endpoint Tests">
-			<directory>./tests/EndpointObject/</directory>
+			<directory>./tests/Endpoint/</directory>
 		</testsuite>
 	</testsuites>
 
