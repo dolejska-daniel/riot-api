@@ -1,3 +1,8 @@
+# Save cache of dependencies
+cache:
+    paths:
+    - vendor/
+
 # Run memcached
 services:
     - memcached
