@@ -20,6 +20,9 @@
 		<testsuite name="RiotAPI lib: Endpoint Object Tests">
 			<directory>./tests/EndpointObject/</directory>
 		</testsuite>
+		<testsuite name="RiotAPI lib: Endpoint Tests">
+			<directory>./tests/EndpointObject/</directory>
+		</testsuite>
 	</testsuites>
 
 	<filter>

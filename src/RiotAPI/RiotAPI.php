@@ -133,7 +133,7 @@ class RiotAPI
 	 *
 	 * @throws SettingsException
 	 */
-	final public function __construct( array $settings, IRegion $custom_regionDataProvider = null, IPlatform $custom_platformDataProvider = null )
+	public function __construct( array $settings, IRegion $custom_regionDataProvider = null, IPlatform $custom_platformDataProvider = null )
 	{
 		//  List of required setting keys
 		$required_settings = [
@@ -414,10 +414,10 @@ class RiotAPI
 	 * @throws ServerException
 	 * @throws ServerLimitException
 	 */
-	final protected function makeCall( string $override_region = null, string $method = self::METHOD_GET )
+	protected function makeCall( string $override_region = null, string $method = self::METHOD_GET )
 	{
 		if ($this->getSetting(self::SET_CACHE_RATELIMIT) && $this->rate_limit_control != false)
-			if (!$this->rate_limit_control->canCall($this->getSetting($this->used_key)))
+			if (!$this->rate_limit_control->canCall($this->getSetting($this->used_key), $override_region ? $override_region : $this->getSetting(self::SET_REGION)))
 				throw new ServerLimitException('API call rate limit would be exceeded by this call.');
 
 		$url_regionPart = $this->regions->getRegionName($override_region ? $override_region : $this->getSetting(self::SET_REGION));
@@ -478,8 +478,11 @@ class RiotAPI
 				$quer = "_" . $quer;
 
 			$dummyDataFilename = __DIR__ . "/../../tests/DummyData/$endp$quer.json";
-			$response = file_get_contents($dummyDataFilename);
-			$response_code = 200;
+			$data = unserialize(file_get_contents($dummyDataFilename));
+
+			$headers = $data['headers'];
+			$response = $data['response'];
+			$response_code = $data['code'];
 		}
 		else
 		{
@@ -525,11 +528,12 @@ class RiotAPI
 		}
 
 		if ($this->getSetting(self::SET_CACHE_RATELIMIT) && $this->rate_limit_control != false && isset($headers[self::API_RATELIMIT_HEADER]))
-			$this->rate_limit_control->registerCall($this->getSetting($this->used_key), $headers[self::API_RATELIMIT_HEADER]);
+			$this->rate_limit_control->registerCall($this->getSetting($this->used_key), $url_regionPart, $headers[self::API_RATELIMIT_HEADER]);
 
 		$this->result_data  = json_decode($response, true);
 
 		/*
+		*/
 		$endp = str_replace(['/', '.'], ['-', ''], substr($this->endpoint, 1));
 		$quer = str_replace(['&', '='], ['_', '-'], http_build_query($this->query_data));
 		if (strlen($quer))
@@ -537,8 +541,11 @@ class RiotAPI
 
 		$dummyDataFilename = __DIR__ . "/../../tests/DummyData/$endp$quer.json";
 		if (!is_file($dummyDataFilename))
-			file_put_contents($dummyDataFilename, json_encode($this->result_data, JSON_PRETTY_PRINT));
-		*/
+			file_put_contents($dummyDataFilename, serialize([
+				'response' => $response,
+				'headers'  => $headers,
+				'code'     => 200,
+			]));
 
 		$this->query_data   = array();
 		$this->post_data    = array();
@@ -549,9 +556,6 @@ class RiotAPI
 
 	protected function parseHeaders( $requestHeaders )
 	{
-		if (function_exists('http_parse_headers'))
-			return http_parse_headers($requestHeaders);
-
 		$r = array();
 		foreach (explode("\r\n", $requestHeaders) as $line)
 		{
@@ -801,7 +805,7 @@ class RiotAPI
 	public function getLeagueMappingBySummoners( array $summoner_ids ): array
 	{
 		if (count($summoner_ids) > 10)
-			throw new RequestParameterException("Maximum allowed summoner id count is 10.");
+			throw new RequestParameterException("Maximum allowed summoner ID count is 10.");
 		$summoner_ids = implode(',', $summoner_ids);
 
 		$this->setEndpoint("/api/lol/{$this->settings[self::SET_REGION]}/" . self::ENDPOINT_VERSION_LEAGUE . "/league/by-summoner/{$summoner_ids}")
@@ -826,15 +830,11 @@ class RiotAPI
 	 * @param int $summoner_id
 	 *
 	 * @return Objects\LeagueDto[]
-	 * @throws RequestParameterException
 	 *
 	 * @link https://developer.riotgames.com/api/methods#!/1215/4701
 	 */
 	public function getLeagueMappingBySummoner( int $summoner_id ): array
 	{
-		if (strpos($summoner_id, ',') !== false)
-			throw new RequestParameterException("Summoner ID list is not allowed by this function, please use 'getLeagueMappingBySummoners' function.");
-
 		$list = $this->getLeagueMappingBySummoners([$summoner_id]);
 		return reset($list);
 	}
@@ -852,7 +852,7 @@ class RiotAPI
 	public function getLeagueEntryBySummoners( array $summoner_ids ): array
 	{
 		if (count($summoner_ids) > 10)
-			throw new RequestParameterException("Maximum allowed summoner id count is 10.");
+			throw new RequestParameterException("Maximum allowed summoner ID count is 10.");
 		$summoner_ids = implode(',', $summoner_ids);
 
 		$this->setEndpoint("/api/lol/{$this->settings[self::SET_REGION]}/" . self::ENDPOINT_VERSION_LEAGUE . "/league/by-summoner/{$summoner_ids}/entry")
@@ -877,13 +877,9 @@ class RiotAPI
 	 * @param int $summoner_id
 	 *
 	 * @return Objects\LeagueDto[]
-	 * @throws RequestParameterException
 	 */
 	public function getLeagueEntryBySummoner( int $summoner_id ): array
 	{
-		if (strpos($summoner_id, ',') !== false)
-			throw new RequestParameterException("Summoner ID list is not allowed by this function, please use 'getLeagueEntryBySummoners' function.");
-
 		$list = $this->getLeagueEntryBySummoners([$summoner_id]);
 		return reset($list);
 	}
@@ -1505,7 +1501,7 @@ class RiotAPI
 	public function getSummoners( array $summoner_ids ): array
 	{
 		if (count($summoner_ids) > 40)
-			throw new RequestParameterException("Maximum allowed summoner id count is 40.");
+			throw new RequestParameterException("Maximum allowed summoner ID count is 40.");
 		$summoner_ids = implode(',', $summoner_ids);
 
 		$this->setEndpoint("/api/lol/{$this->settings[self::SET_REGION]}/" . self::ENDPOINT_VERSION_SUMMONER . "/summoner/{$summoner_ids}")
@@ -1524,15 +1520,11 @@ class RiotAPI
 	 * @param int $summoner_id
 	 *
 	 * @return Objects\SummonerDto
-	 * @throws RequestParameterException
 	 *
 	 * @link https://developer.riotgames.com/api/methods#!/1221/4745
 	 */
 	public function getSummoner( int $summoner_id ): Objects\SummonerDto
 	{
-		if (strpos($summoner_id, ',') !== false)
-			throw new RequestParameterException("Summoner ID list is not allowed by this function, please use 'getSummoners' function.");
-
 		$list = $this->getSummoners([$summoner_id]);
 		return reset($list);
 	}
@@ -1550,7 +1542,7 @@ class RiotAPI
 	public function getSummonersMasteries( array $summoner_ids ): array
 	{
 		if (count($summoner_ids) > 40)
-			throw new RequestParameterException("Maximum allowed summoner id count is 40.");
+			throw new RequestParameterException("Maximum allowed summoner ID count is 40.");
 		$summoner_ids = implode(',', $summoner_ids);
 
 		$this->setEndpoint("/api/lol/{$this->settings[self::SET_REGION]}/" . self::ENDPOINT_VERSION_SUMMONER . "/summoner/{$summoner_ids}/masteries")
@@ -1569,15 +1561,11 @@ class RiotAPI
 	 * @param int $summoner_id
 	 *
 	 * @return Objects\MasteryPagesDto
-	 * @throws RequestParameterException
 	 *
 	 * @link https://developer.riotgames.com/api/methods#!/1208/4683
 	 */
 	public function getSummonerMasteries( int $summoner_id ): Objects\MasteryPagesDto
 	{
-		if (strpos($summoner_id, ',') !== false)
-			throw new RequestParameterException("Summoner ID list is not allowed by this function, please use 'getSummonersMasteries' function.");
-
 		$list = $this->getSummonersMasteries([$summoner_id]);
 		return reset($list);
 	}
@@ -1595,17 +1583,13 @@ class RiotAPI
 	public function getSummonersNames( array $summoner_ids ): array
 	{
 		if (count($summoner_ids) > 40)
-			throw new RequestParameterException("Maximum allowed summoner id count is 40.");
+			throw new RequestParameterException("Maximum allowed summoner ID count is 40.");
 		$summoner_ids = implode(',', $summoner_ids);
 
 		$this->setEndpoint("/api/lol/{$this->settings[self::SET_REGION]}/" . self::ENDPOINT_VERSION_SUMMONER . "/summoner/{$summoner_ids}/name")
 			->makeCall();
 
-		$r = array();
-		foreach ($this->getResult() as $summoner_id => $data)
-			$r[$summoner_id] = $data['name'];
-
-		return $r;
+		return $this->getResult();
 	}
 
 	/**
@@ -1614,13 +1598,9 @@ class RiotAPI
 	 * @param int $summoner_id
 	 *
 	 * @return string
-	 * @throws RequestParameterException
 	 */
 	public function getSummonerName( int $summoner_id ): string
 	{
-		if (strpos($summoner_id, ',') !== false)
-			throw new RequestParameterException("Summoner name list is not allowed by this function, please use 'getSummonersNames' function.");
-
 		$list = $this->getSummonersNames([$summoner_id]);
 		return reset($list);
 	}
@@ -1638,7 +1618,7 @@ class RiotAPI
 	public function getSummonersRunes( array $summoner_ids ): array
 	{
 		if (count($summoner_ids) > 40)
-			throw new RequestParameterException("Maximum allowed summoner id count is 40.");
+			throw new RequestParameterException("Maximum allowed summoner ID count is 40.");
 		$summoner_ids = implode(',', $summoner_ids);
 
 		$this->setEndpoint("/api/lol/{$this->settings[self::SET_REGION]}/" . self::ENDPOINT_VERSION_SUMMONER . "/summoner/{$summoner_ids}/runes")
@@ -1657,15 +1637,11 @@ class RiotAPI
 	 * @param int $summoner_id
 	 *
 	 * @return Objects\RunePagesDto
-	 * @throws RequestParameterException
 	 *
 	 * @link https://developer.riotgames.com/api/methods#!/1208/4682
 	 */
 	public function getSummonerRunes( int $summoner_id ): Objects\RunePagesDto
 	{
-		if (strpos($summoner_id, ',') !== false)
-			throw new RequestParameterException("Summoner ID list is not allowed by this function, please use 'getSummonersRunes' function.");
-
 		$list = $this->getSummonersRunes([$summoner_id]);
 		return reset($list);
 	}

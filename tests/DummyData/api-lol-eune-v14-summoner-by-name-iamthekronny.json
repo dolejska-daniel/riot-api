@@ -1,9 +1,1 @@
-{
-    "iamthekronny": {
-        "id": 30904166,
-        "name": "I am TheKronnY",
-        "profileIconId": 540,
-        "revisionDate": 1485118921000,
-        "summonerLevel": 30
-    }
-}
+a:3:{s:8:"response";s:124:"{"iamthekronny":{"id":30904166,"name":"I am TheKronnY","profileIconId":540,"revisionDate":1485118921000,"summonerLevel":30}}";s:7:"headers";a:6:{i:0;s:15:"HTTP/1.1 200 OK";s:12:"Content-Type";s:30:"application/json;charset=utf-8";s:4:"Vary";s:15:"Accept-Encoding";s:18:"X-Rate-Limit-Count";s:11:"6:10,20:600";s:14:"Content-Length";s:3:"124";s:10:"Connection";s:10:"keep-alive";}s:4:"code";i:200;}

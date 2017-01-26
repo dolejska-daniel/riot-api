@@ -47,10 +47,11 @@ class LeagueEndpointObjectTest extends RiotAPITestCase
 	 */
 	public function testGetLeagueMappingBySummoners( RiotAPI $api )
 	{
-		$summonerIds = $summonerIds = [
+		$summonerIds = [
 			19827622,
 			32473526,
 			34937794,
+			36615528,
 		];
 
 		//  Get library processed results
@@ -104,6 +105,7 @@ class LeagueEndpointObjectTest extends RiotAPITestCase
 			19827622,
 			32473526,
 			34937794,
+			36615528,
 		];
 
 		//  Get library processed results

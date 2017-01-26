@@ -49,7 +49,7 @@ class CurrentGameEndpointObjectTest extends RiotAPITestCase
 	{
 		//  Get library processed results
 		/** @var Objects\CurrentGameInfo $result */
-		$result = $api->getCurrentGame(34937794);
+		$result = $api->getCurrentGame(21031676);
 		//  Get raw result
 		$rawResult = $api->getResult();
 

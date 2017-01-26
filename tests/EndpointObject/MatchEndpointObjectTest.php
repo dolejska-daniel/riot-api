@@ -55,4 +55,28 @@ class MatchEndpointObjectTest extends RiotAPITestCase
 
 		$this->checkObjectPropertiesAndDataValidity($result, $rawResult, Objects\MatchDetail::class);
 	}
+
+	/**
+	 * @depends      testInit
+	 * @dataProvider testInit
+	 *
+	 * @param RiotAPI $api
+	 */
+	public function testGetTournamentMatch( RiotAPI $api )
+	{
+		//  TODO
+		$this->markTestIncomplete('This test has not been implemented yet.');
+	}
+
+	/**
+	 * @depends      testInit
+	 * @dataProvider testInit
+	 *
+	 * @param RiotAPI $api
+	 */
+	public function testGetTournamentMatchIds( RiotAPI $api )
+	{
+		//  TODO
+		$this->markTestIncomplete('This test has not been implemented yet.');
+	}
 }

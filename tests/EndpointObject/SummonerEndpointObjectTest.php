@@ -51,6 +51,7 @@ class SummonerEndpointObjectTest extends RiotAPITestCase
 			'IMQ',
 			'KuliS',
 			'PeterThePunisher',
+			'crewbeat',
 		];
 		foreach ($summonerNames as $key => $name)
 			$summonerNames[$key] = str_replace(' ', '', strtolower($name));
@@ -102,6 +103,7 @@ class SummonerEndpointObjectTest extends RiotAPITestCase
 			19827622,
 			32473526,
 			34937794,
+			36615528,
 		];
 
 		//  Get library processed results
@@ -150,6 +152,7 @@ class SummonerEndpointObjectTest extends RiotAPITestCase
 			19827622,
 			32473526,
 			34937794,
+			36615528,
 		];
 
 		//  Get library processed results
@@ -198,6 +201,7 @@ class SummonerEndpointObjectTest extends RiotAPITestCase
 			19827622,
 			32473526,
 			34937794,
+			36615528,
 		];
 
 		//  Get library processed results
@@ -207,13 +211,7 @@ class SummonerEndpointObjectTest extends RiotAPITestCase
 		$rawResult = $api->getResult();
 
 		//  Check if all the data were successfully processed
-		$this->assertSameSize($rawResult, $result);
-
-		foreach ($summonerIds as $n => $summonerId)
-		{
-			//  Check data validity
-			$this->assertSame($rawResult[$summonerId]['name'], $result[$summonerId]);
-		}
+		$this->assertSame($rawResult, $result);
 	}
 
 	/**
@@ -236,7 +234,7 @@ class SummonerEndpointObjectTest extends RiotAPITestCase
 		$this->assertArrayHasKey($summonerId, $rawResult);
 
 		//  Check data validity
-		$this->assertSame($rawResult[$summonerId]['name'], $result);
+		$this->assertSame($rawResult[$summonerId], $result);
 	}
 
 	/**
@@ -251,6 +249,7 @@ class SummonerEndpointObjectTest extends RiotAPITestCase
 			19827622,
 			32473526,
 			34937794,
+			36615528,
 		];
 
 		//  Get library processed results
