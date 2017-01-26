@@ -27,7 +27,7 @@ use RiotAPI\Definition\Region;
 use RiotAPI\Exception\SettingsException;
 
 
-class LibraryInitTests extends TestCase
+class LibraryTest extends TestCase
 {
 	public function testInit()
 	{
@@ -37,13 +37,35 @@ class LibraryInitTests extends TestCase
 		]);
 
 		$this->assertInstanceOf(RiotAPI::class, $api);
+
+		return $api;
 	}
 
 	public function testRequiredSettings()
 	{
 		$this->expectException(SettingsException::class);
+		$this->expectExceptionMessage("Required settings parameter");
 
 		new RiotAPI([]);
+	}
+
+	public function testParseHeaders()
+	{
+		$headers = "HTTP/1.1 200 OK
+Accept: text/plain
+X-Powered-By: PHP/5.4.0
+";
+		$array = RiotAPI::parseHeaders($headers);
+
+		//  We want no empty key/values here
+		$this->assertNotSameSize(explode("\r\n", $headers), $array);
+		$this->assertSameSize(explode("\r\n", trim($headers)), $array);
+
+		$this->assertArrayHasKey(0, $array);
+		$this->assertSame('HTTP/1.1 200 OK', $array[0]);
+
+		$this->assertArrayHasKey('Accept', $array);
+		$this->assertSame('text/plain', $array['Accept']);
 	}
 
 	public function testCustomRegionDataProvider()
@@ -80,7 +102,7 @@ class LibraryInitTests extends TestCase
 	public function testFileCacheProviderInvalidSettings()
 	{
 		$this->expectException(SettingsException::class);
-		$this->expectExceptionMessage("Provided cache directory path '' is not writable.");
+		$this->expectExceptionMessage("is invalid/failed to be created.");
 
 		new RiotAPI([
 			RiotAPI::SET_KEY                   => getenv('API_KEY'),
@@ -96,9 +118,6 @@ class LibraryInitTests extends TestCase
 	 */
 	public function testMemcachedCacheProviderSettings()
 	{
-		if (!extension_loaded('memcached'))
-			$this->markTestSkipped('The Memcached PHP extension is not available.');
-
 		//  TODO
 		$this->markTestIncomplete('This test has not been implemented yet.');
 	}
@@ -118,5 +137,65 @@ class LibraryInitTests extends TestCase
 			RiotAPI::SET_CACHE_PROVIDER        => RiotAPI::CACHE_PROVIDER_MEMCACHED,
 			RiotAPI::SET_CACHE_PROVIDER_PARAMS => [[ '',0 ]],
 		]);
+	}
+
+	public function testMakeCall_InvalidMethod()
+	{
+		//  TODO
+		$this->markTestIncomplete('This test has not been implemented yet.');
+	}
+
+	public function testMakeCall_503()
+	{
+		//  TODO
+		$this->markTestIncomplete('This test has not been implemented yet.');
+	}
+
+	public function testMakeCall_500()
+	{
+		//  TODO
+		$this->markTestIncomplete('This test has not been implemented yet.');
+	}
+
+	public function testMakeCall_429()
+	{
+		//  TODO
+		$this->markTestIncomplete('This test has not been implemented yet.');
+	}
+
+	public function testMakeCall_415()
+	{
+		//  TODO
+		$this->markTestIncomplete('This test has not been implemented yet.');
+	}
+
+	public function testMakeCall_404()
+	{
+		//  TODO
+		$this->markTestIncomplete('This test has not been implemented yet.');
+	}
+
+	public function testMakeCall_403()
+	{
+		//  TODO
+		$this->markTestIncomplete('This test has not been implemented yet.');
+	}
+
+	public function testMakeCall_401()
+	{
+		//  TODO
+		$this->markTestIncomplete('This test has not been implemented yet.');
+	}
+
+	public function testMakeCall_400()
+	{
+		//  TODO
+		$this->markTestIncomplete('This test has not been implemented yet.');
+	}
+
+	public function testMakeCall_4xx()
+	{
+		//  TODO
+		$this->markTestIncomplete('This test has not been implemented yet.');
 	}
 }

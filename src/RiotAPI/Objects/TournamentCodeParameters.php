@@ -57,7 +57,7 @@ class TournamentCodeParameters extends ApiObject
 	 *
 	 * @var string $metadata
 	 */
-	public $metadata;
+	public $metadata = "";
 
 	/**
 	 *   The pick type of the game. Valid values are BLIND_PICK, DRAFT_MODE, 
@@ -95,5 +95,10 @@ class TournamentCodeParameters extends ApiObject
 				throw new RequestParameterException("Property '$requiredParam' is required to be set by RiotAPI.");
 
 		parent::__construct( $data );
+	}
+
+	public function __toString()
+	{
+		return json_encode($this, JSON_PRETTY_PRINT);
 	}
 }

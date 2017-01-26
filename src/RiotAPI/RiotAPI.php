@@ -20,7 +20,6 @@
 namespace RiotAPI;
 
 use RiotAPI\Definition\FileCacheProvider;
-use RiotAPI\Definition\FileCacheStorage;
 use RiotAPI\Definition\ICacheProvider;
 use RiotAPI\Definition\IPlatform;
 use RiotAPI\Definition\MemcachedCacheProvider;
@@ -118,7 +117,7 @@ class RiotAPI
 	protected $query_data = array();
 
 	/** @var array $post_data */
-	protected $post_data = array();
+	protected $post_data;
 
 	/** @var array $result_data */
 	protected $result_data;
@@ -241,6 +240,8 @@ class RiotAPI
 
 	/**
 	 *   Loads required cache objects
+	 *
+	 * @internal
 	 */
 	protected function loadCache()
 	{
@@ -258,6 +259,8 @@ class RiotAPI
 	 *   Saves required cache objects.
 	 *
 	 * @throws GeneralException
+	 *
+	 * @internal
 	 */
 	protected function saveCache()
 	{
@@ -320,7 +323,7 @@ class RiotAPI
 	 */
 	public function isSettingSet( string $name ): bool
 	{
-		return isset($this->settings[$name]) && !empty($this->settings[$name]);
+		return isset($this->settings[$name]) && !is_null($this->settings[$name]);
 	}
 
 	/**
@@ -380,27 +383,13 @@ class RiotAPI
 	/**
 	 *   Sets POST/PUT data.
 	 *
-	 * @param array $data
+	 * @param string $data
 	 *
 	 * @return RiotAPI
 	 */
-	protected function setData( array $data ): self
+	protected function setData( string $data ): self
 	{
 		$this->post_data = $data;
-		return $this;
-	}
-
-	/**
-	 *   Adds POST/PUT data to array.
-	 *
-	 * @param string      $name
-	 * @param string|null $value
-	 *
-	 * @return RiotAPI
-	 */
-	protected function addData( string $name, $value ): self
-	{
-		$this->post_data[$name] = $value;
 		return $this;
 	}
 
@@ -410,9 +399,12 @@ class RiotAPI
 	 * @param string $override_region
 	 * @param string $method
 	 *
+	 * @throws GeneralException
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
+	 *
+	 * @internal
 	 */
 	protected function makeCall( string $override_region = null, string $method = self::METHOD_GET )
 	{
@@ -452,20 +444,12 @@ class RiotAPI
 		{
 			curl_setopt($ch, CURLOPT_URL, $url);
 			curl_setopt($ch, CURLOPT_POST, true);
+			curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+				'Content-Type: application/json',
+				'Connection: Keep-Alive'
+			));
 			curl_setopt($ch, CURLOPT_POSTFIELDS,
-				http_build_query($this->post_data));
-		}
-		elseif($method == self::METHOD_PUT)
-		{
-			curl_setopt($ch, CURLOPT_URL, $url);
-			curl_setopt($ch, CURLOPT_PUT, true);
-			curl_setopt($ch, CURLOPT_POSTFIELDS,
-				http_build_query($this->post_data));
-		}
-		elseif($method == self::METHOD_DELETE)
-		{
-			curl_setopt($ch, CURLOPT_URL, $url);
-			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'DELETE');
+				$this->post_data);
 		}
 		else
 			throw new RequestException('Invalid method selected.');
@@ -478,8 +462,11 @@ class RiotAPI
 				$quer = "_" . $quer;
 
 			$dummyDataFilename = __DIR__ . "/../../tests/DummyData/$endp$quer.json";
-			$data = unserialize(file_get_contents($dummyDataFilename));
+			$data = @file_get_contents($dummyDataFilename);
+			if (!$data)
+				throw new GeneralException("No DummyData available for call. ($endp$quer)");
 
+			$data = unserialize($data);
 			$headers = $data['headers'];
 			$response = $data['response'];
 			$response_code = $data['code'];
@@ -494,17 +481,21 @@ class RiotAPI
 			$response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 		}
 
-		if ($response_code == 500)
-		{
-			throw new ServerException('RiotAPI: Internal server error occured.');
-		}
-		elseif ($response_code == 503)
+		if ($response_code == 503)
 		{
 			throw new ServerException('RiotAPI: Service is unavailable.');
+		}
+		elseif ($response_code == 500)
+		{
+			throw new ServerException('RiotAPI: Internal server error occured.');
 		}
 		elseif ($response_code == 429)
 		{
 			throw new ServerLimitException('RiotAPI: Rate limit for this API key was exceeded.');
+		}
+		elseif ($response_code == 415)
+		{
+			throw new RequestException('Request: Unsupported media type.');
 		}
 		elseif ($response_code == 404)
 		{
@@ -524,7 +515,8 @@ class RiotAPI
 		}
 		elseif ($response_code > 400)
 		{
-			throw new ServerException('RiotAPI: Unknown error occured.');
+			print_r($response);
+			throw new ServerException("RiotAPI: Unknown error occured. ($response_code)");
 		}
 
 		if ($this->getSetting(self::SET_CACHE_RATELIMIT) && $this->rate_limit_control != false && isset($headers[self::API_RATELIMIT_HEADER]))
@@ -533,7 +525,6 @@ class RiotAPI
 		$this->result_data  = json_decode($response, true);
 
 		/*
-		*/
 		$endp = str_replace(['/', '.'], ['-', ''], substr($this->endpoint, 1));
 		$quer = str_replace(['&', '='], ['_', '-'], http_build_query($this->query_data));
 		if (strlen($quer))
@@ -546,15 +537,16 @@ class RiotAPI
 				'headers'  => $headers,
 				'code'     => 200,
 			]));
+		*/
 
 		$this->query_data   = array();
-		$this->post_data    = array();
+		$this->post_data    = null;
 		$this->used_key     = self::SET_KEY;
 
 		curl_close($ch);
 	}
 
-	protected function parseHeaders( $requestHeaders )
+	public static function parseHeaders( $requestHeaders )
 	{
 		$r = array();
 		foreach (explode("\r\n", $requestHeaders) as $line)
@@ -1520,7 +1512,6 @@ class RiotAPI
 	 * @param int $summoner_id
 	 *
 	 * @return Objects\SummonerDto
-	 *
 	 * @link https://developer.riotgames.com/api/methods#!/1221/4745
 	 */
 	public function getSummoner( int $summoner_id ): Objects\SummonerDto
@@ -1561,7 +1552,6 @@ class RiotAPI
 	 * @param int $summoner_id
 	 *
 	 * @return Objects\MasteryPagesDto
-	 *
 	 * @link https://developer.riotgames.com/api/methods#!/1208/4683
 	 */
 	public function getSummonerMasteries( int $summoner_id ): Objects\MasteryPagesDto
@@ -1598,6 +1588,7 @@ class RiotAPI
 	 * @param int $summoner_id
 	 *
 	 * @return string
+	 * @link https://developer.riotgames.com/api/methods#!/1208/4685
 	 */
 	public function getSummonerName( int $summoner_id ): string
 	{
@@ -1637,7 +1628,6 @@ class RiotAPI
 	 * @param int $summoner_id
 	 *
 	 * @return Objects\RunePagesDto
-	 *
 	 * @link https://developer.riotgames.com/api/methods#!/1208/4682
 	 */
 	public function getSummonerRunes( int $summoner_id ): Objects\RunePagesDto
@@ -1659,12 +1649,12 @@ class RiotAPI
 	 * @param int                      $count
 	 * @param TournamentCodeParameters $parameters
 	 *
-	 * @return array|\string[]
+	 * @return array
 	 * @throws GeneralException
 	 */
 	public function createTournamentCodes( int $tournament_id, int $count, TournamentCodeParameters $parameters ): array
 	{
-		if ($this->settings[self::SET_TOURNAMENT_INTERIM])
+		if ($this->getSetting(self::SET_TOURNAMENT_INTERIM, true))
 			return $this->createTournamentCodes_STUB($tournament_id, $count, $parameters);
 
 		throw new GeneralException('Not yet implemented.');
@@ -1678,7 +1668,7 @@ class RiotAPI
 	 */
 	public function createTournamentProvider( ProviderRegistrationParameters $parameters ): int
 	{
-		if ($this->settings[self::SET_TOURNAMENT_INTERIM])
+		if ($this->getSetting(self::SET_TOURNAMENT_INTERIM, true))
 			return $this->createTournamentProvider_STUB($parameters);
 
 		throw new GeneralException('Not yet implemented.');
@@ -1692,7 +1682,7 @@ class RiotAPI
 	 */
 	public function createTournament( TournamentRegistrationParameters $parameters ): int
 	{
-		if ($this->settings[self::SET_TOURNAMENT_INTERIM])
+		if ($this->getSetting(self::SET_TOURNAMENT_INTERIM, true))
 			return $this->createTournament_STUB($parameters);
 
 		throw new GeneralException('Not yet implemented.');
@@ -1706,7 +1696,7 @@ class RiotAPI
 	 */
 	public function getTournamentLobbyEvents( string $tournament_code ): Objects\LobbyEventDTOWrapper
 	{
-		if ($this->settings[self::SET_TOURNAMENT_INTERIM])
+		if ($this->getSetting(self::SET_TOURNAMENT_INTERIM, true))
 			return $this->getTournamentLobbyEvents_STUB($tournament_code);
 
 		throw new GeneralException('Not yet implemented.');
@@ -1729,13 +1719,15 @@ class RiotAPI
 	 *
 	 * @return string[]
 	 * @link https://developer.riotgames.com/api/methods#!/1090/3760
+	 *
+	 * @internal
 	 */
 	public function createTournamentCodes_STUB( int $tournament_id, int $count, TournamentCodeParameters $parameters ): array
 	{
 		$this->setEndpoint("/tournament/stub/" . self::ENDPOINT_VERSION_TOURNAMENTPROVIDER_STUB . "/code")
 			->addQuery('tournamentId', $tournament_id)
 			->addQuery('count', $count)
-			->setData($parameters->getData())
+			->setData($parameters)
 			->useKey(self::SET_TOURNAMENT_KEY)
 			->makeCall( Region::GLOBAL, self::METHOD_POST );
 
@@ -1749,11 +1741,13 @@ class RiotAPI
 	 *
 	 * @return int
 	 * @link https://developer.riotgames.com/api/methods#!/1090/3762
+	 *
+	 * @internal
 	 */
 	public function createTournamentProvider_STUB( ProviderRegistrationParameters $parameters ): int
 	{
 		$this->setEndpoint("/tournament/stub/" . self::ENDPOINT_VERSION_TOURNAMENTPROVIDER_STUB . "/provider")
-			->setData($parameters->getData())
+			->setData($parameters)
 			->useKey(self::SET_TOURNAMENT_KEY)
 			->makeCall( Region::GLOBAL, self::METHOD_POST );
 
@@ -1767,11 +1761,13 @@ class RiotAPI
 	 *
 	 * @return int
 	 * @link https://developer.riotgames.com/api/methods#!/1090/3763
+	 *
+	 * @internal
 	 */
 	public function createTournament_STUB( TournamentRegistrationParameters $parameters ): int
 	{
 		$this->setEndpoint("/tournament/stub/" . self::ENDPOINT_VERSION_TOURNAMENTPROVIDER_STUB . "/tournament")
-			->setData($parameters->getData())
+			->setData($parameters)
 			->useKey(self::SET_TOURNAMENT_KEY)
 			->makeCall( Region::GLOBAL, self::METHOD_POST );
 
@@ -1785,6 +1781,8 @@ class RiotAPI
 	 *
 	 * @return Objects\LobbyEventDTOWrapper
 	 * @link https://developer.riotgames.com/api/methods#!/1090/3761
+	 *
+	 * @internal
 	 */
 	public function getTournamentLobbyEvents_STUB( string $tournament_code ): Objects\LobbyEventDTOWrapper
 	{

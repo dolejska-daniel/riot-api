@@ -37,4 +37,9 @@ class SummonerIdParams extends ApiObject
 	 * @var int[] $participants
 	 */
 	public $participants = array();
+
+	public function __toString()
+	{
+		return json_encode($this);
+	}
 }

@@ -41,10 +41,12 @@ class FileCacheProvider implements ICacheProvider
 	 */
 	public function __construct( string $cacheDir )
 	{
-		if (!$this->cacheDir = realpath($cacheDir) && !@mkdir($cacheDir, 0777, true))
+		if (!is_dir($cacheDir) && !@mkdir($cacheDir, 0777, true))
 			throw new SettingsException("Provided cache directory path '$cacheDir' is invalid/failed to be created.");
-		elseif (!@is_writable($this->cacheDir))
+		elseif (!@is_writable($cacheDir))
 			throw new SettingsException("Provided cache directory path '$cacheDir' is not writable.");
+
+		$this->cacheDir = realpath($cacheDir);
 	}
 
 
@@ -60,7 +62,7 @@ class FileCacheProvider implements ICacheProvider
 	public function load( string $name, bool $returnStorage = false )
 	{
 		$path = $this->cacheDir . DIRECTORY_SEPARATOR . $name;
-		$res  = @fopen($path, 'a+');
+		$res  = @fopen($path, 'r');
 
 		if ($res == false)
 			throw new SettingsException("Loading - Cache file ($path) failed to be opened/created.");
@@ -113,7 +115,7 @@ class FileCacheProvider implements ICacheProvider
 	 */
 	public function isSaved( string $name ): bool
 	{
-		if (boolval(realpath($this->cacheDir . DIRECTORY_SEPARATOR . $name)) == false)
+		if (realpath($this->cacheDir . DIRECTORY_SEPARATOR . $name) == false)
 			return false;
 
 		/** @var FileCacheStorage $storage */

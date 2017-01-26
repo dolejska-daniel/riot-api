@@ -62,4 +62,9 @@ class ProviderRegistrationParameters extends ApiObject
 
 		parent::__construct( $data );
 	}
+
+	public function __toString()
+	{
+		return json_encode($this, JSON_PRETTY_PRINT);
+	}
 }

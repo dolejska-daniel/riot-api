@@ -23,6 +23,8 @@ use RiotAPI\RiotAPI;
 use RiotAPI\Objects;
 use RiotAPI\Definition\Region;
 
+use RiotAPI\Exception\GeneralException;
+
 
 class MatchEndpointObjectTest extends RiotAPITestCase
 {
@@ -65,7 +67,14 @@ class MatchEndpointObjectTest extends RiotAPITestCase
 	public function testGetTournamentMatch( RiotAPI $api )
 	{
 		//  TODO
-		$this->markTestIncomplete('This test has not been implemented yet.');
+		$this->expectException(GeneralException::class);
+		$this->expectExceptionMessage('Not yet implemented.');
+
+		//  Get library processed results
+		/** @var Objects\MatchDetail $result */
+		$result = $api->getTournamentMatch(2641970449, '239d180f-fb8a-439e-85d9-95142e10b4f5', true);
+		//  Get raw result
+		$rawResult = $api->getResult();
 	}
 
 	/**
@@ -77,6 +86,13 @@ class MatchEndpointObjectTest extends RiotAPITestCase
 	public function testGetTournamentMatchIds( RiotAPI $api )
 	{
 		//  TODO
-		$this->markTestIncomplete('This test has not been implemented yet.');
+		$this->expectException(GeneralException::class);
+		$this->expectExceptionMessage('Not yet implemented.');
+
+		//  Get library processed results
+		/** @var Objects\MatchDetail $result */
+		$result = $api->getTournamentMatchIds('239d180f-fb8a-439e-85d9-95142e10b4f5');
+		//  Get raw result
+		$rawResult = $api->getResult();
 	}
 }
