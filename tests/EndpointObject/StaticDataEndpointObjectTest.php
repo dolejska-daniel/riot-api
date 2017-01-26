@@ -40,12 +40,12 @@ class StaticDataEndpointObjectTest extends RiotAPITestCase
 	}
 
 	/**
-	 * @depends testInit
+	 * @depends      testInit
 	 * @dataProvider testInit
 	 *
 	 * @param RiotAPI $api
 	 */
-	public function testgetStaticChampions( RiotAPI $api )
+	public function testGetStaticChampions( RiotAPI $api )
 	{
 		//  Get library processed results
 		/** @var StaticData\SChampionListDto $result */
@@ -57,12 +57,12 @@ class StaticDataEndpointObjectTest extends RiotAPITestCase
 	}
 
 	/**
-	 * @depends testInit
+	 * @depends      testInit
 	 * @dataProvider testInit
 	 *
 	 * @param RiotAPI $api
 	 */
-	public function testgetStaticChampion( RiotAPI $api )
+	public function testGetStaticChampion( RiotAPI $api )
 	{
 		//  Get library processed results
 		/** @var StaticData\SChampionDto $result */
@@ -74,12 +74,12 @@ class StaticDataEndpointObjectTest extends RiotAPITestCase
 	}
 
 	/**
-	 * @depends testInit
+	 * @depends      testInit
 	 * @dataProvider testInit
 	 *
 	 * @param RiotAPI $api
 	 */
-	public function testgetStaticItems( RiotAPI $api )
+	public function testGetStaticItems( RiotAPI $api )
 	{
 		//  Get library processed results
 		/** @var StaticData\SItemListDto $result */
@@ -91,12 +91,12 @@ class StaticDataEndpointObjectTest extends RiotAPITestCase
 	}
 
 	/**
-	 * @depends testInit
+	 * @depends      testInit
 	 * @dataProvider testInit
 	 *
 	 * @param RiotAPI $api
 	 */
-	public function testgetStaticItem( RiotAPI $api )
+	public function testGetStaticItem( RiotAPI $api )
 	{
 		//  Get library processed results
 		/** @var StaticData\SItemDto $result */
@@ -108,12 +108,12 @@ class StaticDataEndpointObjectTest extends RiotAPITestCase
 	}
 
 	/**
-	 * @depends testInit
+	 * @depends      testInit
 	 * @dataProvider testInit
 	 *
 	 * @param RiotAPI $api
 	 */
-	public function testgetStaticLanguageStrings( RiotAPI $api )
+	public function testGetStaticLanguageStrings( RiotAPI $api )
 	{
 		//  Get library processed results
 		/** @var StaticData\SLanguageStringsDto $result */
@@ -125,12 +125,12 @@ class StaticDataEndpointObjectTest extends RiotAPITestCase
 	}
 
 	/**
-	 * @depends testInit
+	 * @depends      testInit
 	 * @dataProvider testInit
 	 *
 	 * @param RiotAPI $api
 	 */
-	public function testgetStaticLanguages( RiotAPI $api )
+	public function testGetStaticLanguages( RiotAPI $api )
 	{
 		//  Get library processed results
 		/** @var array $result */
@@ -142,12 +142,12 @@ class StaticDataEndpointObjectTest extends RiotAPITestCase
 	}
 
 	/**
-	 * @depends testInit
+	 * @depends      testInit
 	 * @dataProvider testInit
 	 *
 	 * @param RiotAPI $api
 	 */
-	public function testgetStaticMaps( RiotAPI $api )
+	public function testGetStaticMaps( RiotAPI $api )
 	{
 		//  Get library processed results
 		/** @var StaticData\SMapDataDto $result */
@@ -159,12 +159,12 @@ class StaticDataEndpointObjectTest extends RiotAPITestCase
 	}
 
 	/**
-	 * @depends testInit
+	 * @depends      testInit
 	 * @dataProvider testInit
 	 *
 	 * @param RiotAPI $api
 	 */
-	public function testgetStaticMasteries( RiotAPI $api )
+	public function testGetStaticMasteries( RiotAPI $api )
 	{
 		//  Get library processed results
 		/** @var StaticData\SMasteryListDto $result */
@@ -176,12 +176,12 @@ class StaticDataEndpointObjectTest extends RiotAPITestCase
 	}
 
 	/**
-	 * @depends testInit
+	 * @depends      testInit
 	 * @dataProvider testInit
 	 *
 	 * @param RiotAPI $api
 	 */
-	public function testgetStaticMastery( RiotAPI $api )
+	public function testGetStaticMastery( RiotAPI $api )
 	{
 		//  Get library processed results
 		/** @var StaticData\SMasteryDto $result */
@@ -193,12 +193,12 @@ class StaticDataEndpointObjectTest extends RiotAPITestCase
 	}
 
 	/**
-	 * @depends testInit
+	 * @depends      testInit
 	 * @dataProvider testInit
 	 *
 	 * @param RiotAPI $api
 	 */
-	public function testgetStaticRealm( RiotAPI $api )
+	public function testGetStaticRealm( RiotAPI $api )
 	{
 		//  Get library processed results
 		/** @var StaticData\SRealmDto $result */
@@ -210,12 +210,12 @@ class StaticDataEndpointObjectTest extends RiotAPITestCase
 	}
 
 	/**
-	 * @depends testInit
+	 * @depends      testInit
 	 * @dataProvider testInit
 	 *
 	 * @param RiotAPI $api
 	 */
-	public function testgetStaticRunes( RiotAPI $api )
+	public function testGetStaticRunes( RiotAPI $api )
 	{
 		//  Get library processed results
 		/** @var StaticData\SRuneListDto $result */
@@ -227,12 +227,12 @@ class StaticDataEndpointObjectTest extends RiotAPITestCase
 	}
 
 	/**
-	 * @depends testInit
+	 * @depends      testInit
 	 * @dataProvider testInit
 	 *
 	 * @param RiotAPI $api
 	 */
-	public function testgetStaticRune( RiotAPI $api )
+	public function testGetStaticRune( RiotAPI $api )
 	{
 		//  Get library processed results
 		/** @var StaticData\SRuneDto $result */
@@ -244,12 +244,12 @@ class StaticDataEndpointObjectTest extends RiotAPITestCase
 	}
 
 	/**
-	 * @depends testInit
+	 * @depends      testInit
 	 * @dataProvider testInit
 	 *
 	 * @param RiotAPI $api
 	 */
-	public function testgetStaticSummonerSpells( RiotAPI $api )
+	public function testGetStaticSummonerSpells( RiotAPI $api )
 	{
 		//  Get library processed results
 		/** @var StaticData\SSummonerSpellListDto $result */
@@ -261,12 +261,12 @@ class StaticDataEndpointObjectTest extends RiotAPITestCase
 	}
 
 	/**
-	 * @depends testInit
+	 * @depends      testInit
 	 * @dataProvider testInit
 	 *
 	 * @param RiotAPI $api
 	 */
-	public function testgetStaticSummonerSpell( RiotAPI $api )
+	public function testGetStaticSummonerSpell( RiotAPI $api )
 	{
 		//  Get library processed results
 		/** @var StaticData\SSummonerSpellDto $result */
@@ -278,12 +278,12 @@ class StaticDataEndpointObjectTest extends RiotAPITestCase
 	}
 
 	/**
-	 * @depends testInit
+	 * @depends      testInit
 	 * @dataProvider testInit
 	 *
 	 * @param RiotAPI $api
 	 */
-	public function testgetStaticVersions( RiotAPI $api )
+	public function testGetStaticVersions( RiotAPI $api )
 	{
 		//  Get library processed results
 		/** @var array $result */

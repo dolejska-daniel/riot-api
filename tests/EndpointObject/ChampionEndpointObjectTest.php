@@ -40,7 +40,7 @@ class ChampionEndpointObjectTest extends RiotAPITestCase
 	}
 
 	/**
-	 * @depends testInit
+	 * @depends      testInit
 	 * @dataProvider testInit
 	 *
 	 * @param RiotAPI $api
@@ -57,7 +57,7 @@ class ChampionEndpointObjectTest extends RiotAPITestCase
 	}
 
 	/**
-	 * @depends testInit
+	 * @depends      testInit
 	 * @dataProvider testInit
 	 *
 	 * @param RiotAPI $api

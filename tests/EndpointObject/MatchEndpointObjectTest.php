@@ -40,7 +40,7 @@ class MatchEndpointObjectTest extends RiotAPITestCase
 	}
 
 	/**
-	 * @depends testInit
+	 * @depends      testInit
 	 * @dataProvider testInit
 	 *
 	 * @param RiotAPI $api

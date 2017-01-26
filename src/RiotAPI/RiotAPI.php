@@ -239,16 +239,6 @@ class RiotAPI
 		$this->saveCache();
 	}
 
-	public function __wakeup()
-	{
-		$this->loadCache();
-	}
-
-	public function __sleep()
-	{
-		$this->saveCache();
-	}
-
 	/**
 	 *   Loads required cache objects
 	 */

@@ -40,7 +40,7 @@ class SummonerEndpointObjectTest extends RiotAPITestCase
 	}
 
 	/**
-	 * @depends testInit
+	 * @depends      testInit
 	 * @dataProvider testInit
 	 *
 	 * @param RiotAPI $api
@@ -66,7 +66,7 @@ class SummonerEndpointObjectTest extends RiotAPITestCase
 	}
 
 	/**
-	 * @depends testInit
+	 * @depends      testInit
 	 * @dataProvider testInit
 	 *
 	 * @param RiotAPI $api
@@ -91,7 +91,7 @@ class SummonerEndpointObjectTest extends RiotAPITestCase
 	}
 
 	/**
-	 * @depends testInit
+	 * @depends      testInit
 	 * @dataProvider testInit
 	 *
 	 * @param RiotAPI $api
@@ -115,7 +115,7 @@ class SummonerEndpointObjectTest extends RiotAPITestCase
 	}
 
 	/**
-	 * @depends testInit
+	 * @depends      testInit
 	 * @dataProvider testInit
 	 *
 	 * @param RiotAPI $api
@@ -139,7 +139,7 @@ class SummonerEndpointObjectTest extends RiotAPITestCase
 	}
 
 	/**
-	 * @depends testInit
+	 * @depends      testInit
 	 * @dataProvider testInit
 	 *
 	 * @param RiotAPI $api
@@ -163,7 +163,7 @@ class SummonerEndpointObjectTest extends RiotAPITestCase
 	}
 
 	/**
-	 * @depends testInit
+	 * @depends      testInit
 	 * @dataProvider testInit
 	 *
 	 * @param RiotAPI $api
@@ -187,7 +187,7 @@ class SummonerEndpointObjectTest extends RiotAPITestCase
 	}
 
 	/**
-	 * @depends testInit
+	 * @depends      testInit
 	 * @dataProvider testInit
 	 *
 	 * @param RiotAPI $api
@@ -217,7 +217,7 @@ class SummonerEndpointObjectTest extends RiotAPITestCase
 	}
 
 	/**
-	 * @depends testInit
+	 * @depends      testInit
 	 * @dataProvider testInit
 	 *
 	 * @param RiotAPI $api
@@ -240,7 +240,7 @@ class SummonerEndpointObjectTest extends RiotAPITestCase
 	}
 
 	/**
-	 * @depends testInit
+	 * @depends      testInit
 	 * @dataProvider testInit
 	 *
 	 * @param RiotAPI $api
@@ -264,7 +264,7 @@ class SummonerEndpointObjectTest extends RiotAPITestCase
 	}
 
 	/**
-	 * @depends testInit
+	 * @depends      testInit
 	 * @dataProvider testInit
 	 *
 	 * @param RiotAPI $api

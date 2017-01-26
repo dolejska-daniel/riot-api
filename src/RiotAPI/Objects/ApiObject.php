@@ -33,11 +33,6 @@ abstract class ApiObject implements IApiObject
 	 */
 	public function __construct( array $data )
 	{
-		if ($data instanceof \Traversable)
-			$data = iterator_to_array($data);
-
-		$this->_data = $data;
-
 		// Tries to assigns data to class properties
 		$selfRef = new \ReflectionClass($this);
 		$namespace = $selfRef->getNamespaceName();
@@ -61,23 +56,27 @@ abstract class ApiObject implements IApiObject
 						{
 							//  Property is array of special DataType
 							foreach ($value as $identifier => $d)
-							{
 								$this->$property[$identifier] = $newRef->newInstance($d);
-							}
-
-							if ($iterableProp == $property)
-								$this->_iterable = $this->$property;
 						}
 						else
+						{
 							$this->$property = $newRef->newInstance($value);
+						}
 					}
 					else
+					{
 						$this->$property = $value;
+					}
 				}
+
+				if ($iterableProp == $property)
+					$this->_iterable = $this->$property;
 			}
 			//  If property does not exist
 			catch (\ReflectionException $ex) {}
 		}
+
+		$this->_data = $data;
 	}
 
 	/**
@@ -87,7 +86,7 @@ abstract class ApiObject implements IApiObject
 	 *
 	 * @return bool|string
 	 */
-	protected static function getIterablePropertyName( string $phpDocComment )
+	public static function getIterablePropertyName( string $phpDocComment )
 	{
 		preg_match('/@iterable\s([\w\$]+)/', $phpDocComment, $matches);
 		if (isset($matches[1]))
@@ -103,7 +102,7 @@ abstract class ApiObject implements IApiObject
 	 *
 	 * @return bool|\stdClass
 	 */
-	protected static function getPropertyDataType( string $phpDocComment )
+	public static function getPropertyDataType( string $phpDocComment )
 	{
 		$o = new \stdClass();
 
