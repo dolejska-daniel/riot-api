@@ -1,6 +1,6 @@
 # RiotAPI PHP7 wrapper
 
-> Version 0.1
+> Version 0.2
 
 [![build status](https://gitlab.dolejska.me/dolejskad/riot-api/badges/master/build.svg)](https://gitlab.dolejska.me/dolejskad/riot-api/commits/master)
 [![coverage report](https://gitlab.dolejska.me/dolejskad/riot-api/badges/master/coverage.svg)](https://gitlab.dolejska.me/dolejskad/riot-api/commits/master)
@@ -34,13 +34,17 @@ require_once "./vendor/autoload.php";
 //  Initialize the library
 $api = new RiotAPI([
 	//  Your API key, you can get one at https://developer.riotgames.com/
-	RiotAPI::SET_KEY             => 'YOUR_RIOT_API_KEY',
+	RiotAPI::SET_KEY                => 'YOUR_RIOT_API_KEY',
+	//  Your API key, you can get one at https://developer.riotgames.com/ by submitting your application
+	RiotAPI::SET_TOURNAMENT_KEY     => 'YOUR_RIOT_API_KEY',
+	//  This will come in handy while building the app in the interim mode
+	RiotAPI::SET_TOURNAMENT_INTERIM => true,
 	//  Target region (you can change it during lifetime of the library)
-	RiotAPI::SET_REGION          => Definition\Region::EUROPE_EAST,
+	RiotAPI::SET_REGION             => Definition\Region::EUROPE_EAST,
 	//  Whether or not to cache keys' rate limits and prevent exceeding the rate limit
-	RiotAPI::SET_CACHE_RATELIMIT => true,
+	RiotAPI::SET_CACHE_RATELIMIT    => true,
 	//  Per-key specified limits, always in format $timeInterval => $callLimit
-	RiotAPI::SET_RATELIMITS      => [
+	RiotAPI::SET_RATELIMITS         => [
 		'YOUR_RIOT_API_KEY' => [
 			IRateLimitControl::INTERVAL_10S => 10,   // 10 calls per 10 seconds maximum
 			IRateLimitControl::INTERVAL_10M => 500,  // 500 calls per 10 minutes maximum
