@@ -549,7 +549,7 @@ class RiotAPI
 	public static function parseHeaders( $requestHeaders )
 	{
 		$r = array();
-		foreach (explode("\r\n", $requestHeaders) as $line)
+		foreach (explode(PHP_EOL, $requestHeaders) as $line)
 		{
 			if (strpos($line, ':'))
 			{

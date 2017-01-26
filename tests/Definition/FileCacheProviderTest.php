@@ -78,9 +78,6 @@ class FileCacheProviderTest extends RiotAPITestCase
 		new FileCacheProvider("");
 	}
 
-	/**
-	 * @requires OS Linux
-	 */
 	public function testInit_Exception()
 	{
 		$this->markTestIncomplete('This test has not been implemented yet.');

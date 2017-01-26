@@ -58,8 +58,8 @@ X-Powered-By: PHP/5.4.0
 		$array = RiotAPI::parseHeaders($headers);
 
 		//  We want no empty key/values here
-		$this->assertNotSameSize(explode("\r\n", $headers), $array);
-		$this->assertSameSize(explode("\r\n", trim($headers)), $array);
+		$this->assertNotSameSize(explode(PHP_EOL, $headers), $array);
+		$this->assertSameSize(explode(PHP_EOL, trim($headers)), $array);
 
 		$this->assertArrayHasKey(0, $array);
 		$this->assertSame('HTTP/1.1 200 OK', $array[0]);
