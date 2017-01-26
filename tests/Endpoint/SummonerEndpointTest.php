@@ -47,7 +47,7 @@ class SummonerEndpointTest extends RiotAPITestCase
 
 		$s = '';
 		for ($i = 0; $i < 8; $i++)
-			$s+= $chars[rand(0, $charsLength-1)];
+			$s.= $chars[rand(0, $charsLength-1)];
 		return $s;
 	}
 
@@ -64,7 +64,7 @@ class SummonerEndpointTest extends RiotAPITestCase
 
 		$summonerNames = [];
 		for ($i = 1; $i <= 100; $i++)
-			$summonerNames = self::randomString();
+			$summonerNames[] = self::randomString();
 		$api->getSummonersByName($summonerNames);
 	}
 
