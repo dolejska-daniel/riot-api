@@ -20,9 +20,10 @@
 declare(strict_types=1);
 
 use RiotAPI\RiotAPI;
-use RiotAPI\Definition\Region;
+use RiotAPI\Objects;
+use RiotAPI\Definitions\Region;
 
-use RiotAPI\Exception\RequestParameterException;
+use RiotAPI\Exceptions\RequestParameterException;
 
 
 class LeagueEndpointTest extends RiotAPITestCase
@@ -37,7 +38,9 @@ class LeagueEndpointTest extends RiotAPITestCase
 
 		$this->assertInstanceOf(RiotAPI::class, $api);
 
-		return $api;
+		return [
+			[ $api ],
+		];
 	}
 
 	/**
@@ -46,23 +49,12 @@ class LeagueEndpointTest extends RiotAPITestCase
 	 *
 	 * @param RiotAPI $api
 	 */
-	public function testGetLeagueMappingBySummoners_Exception( RiotAPI $api )
+	public function testGetLeaguesForSummoner( RiotAPI $api )
 	{
-		$this->expectException(RequestParameterException::class);
-		$this->expectExceptionMessage("Maximum allowed summoner ID count is 10.");
+		//  Get library processed results
+		/** @var Objects\LeagueListDto[] $result */
+		$result = $api->getLeaguesForSummoner(30904166);
 
-		$summonerIds = range(30904166, 30904266);
-		$api->getLeagueMappingBySummoners($summonerIds);
-	}
-
-	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
-	 *
-	 * @param RiotAPI $api
-	 */
-	public function testGetLeagueMappingBySummoner( RiotAPI $api )
-	{
 		$this->assertTrue(true);
 	}
 
@@ -72,23 +64,12 @@ class LeagueEndpointTest extends RiotAPITestCase
 	 *
 	 * @param RiotAPI $api
 	 */
-	public function testGetLeagueEntryBySummoners_Exception( RiotAPI $api )
+	public function testGetLeaguePositionsForSummoner( RiotAPI $api )
 	{
-		$this->expectException(RequestParameterException::class);
-		$this->expectExceptionMessage("Maximum allowed summoner ID count is 10.");
+		//  Get library processed results
+		/** @var Objects\LeaguePositionDto[] $result */
+		$result = $api->getLeaguePositionsForSummoner(30904166);
 
-		$summonerIds = range(30904166, 30904266);
-		$api->getLeagueEntryBySummoners($summonerIds);
-	}
-
-	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
-	 *
-	 * @param RiotAPI $api
-	 */
-	public function testGetLeagueEntryBySummoner( RiotAPI $api )
-	{
 		$this->assertTrue(true);
 	}
 
@@ -98,8 +79,12 @@ class LeagueEndpointTest extends RiotAPITestCase
 	 *
 	 * @param RiotAPI $api
 	 */
-	public function testGetLeagueMappingChallenger( RiotAPI $api )
+	public function testGetLeagueChallenger( RiotAPI $api )
 	{
+		//  Get library processed results
+		/** @var Objects\LeagueListDto $result */
+		$result = $api->getLeagueChallenger('RANKED_SOLO_5x5');
+
 		$this->assertTrue(true);
 	}
 
@@ -109,8 +94,12 @@ class LeagueEndpointTest extends RiotAPITestCase
 	 *
 	 * @param RiotAPI $api
 	 */
-	public function testGetLeagueMappingMaster( RiotAPI $api )
+	public function testGetLeagueMaster( RiotAPI $api )
 	{
+		//  Get library processed results
+		/** @var Objects\LeagueListDto $result */
+		$result = $api->getLeagueMaster('RANKED_SOLO_5x5');
+
 		$this->assertTrue(true);
 	}
 }

@@ -24,18 +24,18 @@ namespace RiotAPI\Objects;
  *   Class Translation
  *
  * Used in:
- *   lol-status (v1.0)
- *     @link https://developer.riotgames.com/api/methods#!/1085/3739
+ *   lol-status (v3)
+ *     @link https://developer.riotgames.com/api-methods/#lol-status-v3/GET_getShardData
  *
  * @package RiotAPI\Objects
  */
 class Translation extends ApiObject
 {
-	/** @var string $content */
-	public $content;
-
 	/** @var string $locale */
 	public $locale;
+
+	/** @var string $content */
+	public $content;
 
 	/** @var string $updated_at */
 	public $updated_at;

@@ -1,4 +1,5 @@
 .idea/
+vendor/
 tests/Coverage/
 src/RiotAPI/cache/
 composer.lock

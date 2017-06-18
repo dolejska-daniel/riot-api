@@ -19,10 +19,10 @@
 
 declare(strict_types=1);
 
-use RiotAPI\Definition\FileCacheProvider;
-use RiotAPI\Definition\FileCacheStorage;
+use RiotAPI\Definitions\FileCacheProvider;
+use RiotAPI\Definitions\FileCacheStorage;
 
-use RiotAPI\Exception\SettingsException;
+use RiotAPI\Exceptions\SettingsException;
 
 
 class FileCacheProviderTest extends RiotAPITestCase
@@ -33,18 +33,10 @@ class FileCacheProviderTest extends RiotAPITestCase
 
 	public static $nonWritableCacheDir;
 
-	public static function setUpBeforeClass()
+	public function testInit()
 	{
-		self::$cacheDir = $cacheDir = __DIR__ . DIRECTORY_SEPARATOR . "cache" . DIRECTORY_SEPARATOR;
+		self::$cacheDir            = $cacheDir            = __DIR__ . DIRECTORY_SEPARATOR . "cache" . DIRECTORY_SEPARATOR;
 		self::$nonWritableCacheDir = $nonWritableCacheDir = __DIR__ . DIRECTORY_SEPARATOR . "nonwritable-dir" . DIRECTORY_SEPARATOR;
-
-		parent::setUpBeforeClass();
-	}
-
-	public function setUp()
-	{
-		parent::setUp();
-
 		self::$data = [
 			[
 				'key1' => "SECRET_API_KEY",
@@ -61,13 +53,17 @@ class FileCacheProviderTest extends RiotAPITestCase
 				),
 			],
 		];
-	}
 
+		self::deleteDir($cacheDir);
+		self::deleteDir($nonWritableCacheDir);
 
-	public function testInit()
-	{
-		$obj = new FileCacheProvider(__DIR__ . DIRECTORY_SEPARATOR . "cache" . DIRECTORY_SEPARATOR);
-		return $obj;
+		$obj = new FileCacheProvider(self::$cacheDir);
+
+		$this->assertInstanceOf(FileCacheProvider::class, $obj);
+
+		return [
+			[ $obj ],
+		];
 	}
 
 	public function testInit_InvalidPath()
@@ -78,10 +74,11 @@ class FileCacheProviderTest extends RiotAPITestCase
 		new FileCacheProvider("");
 	}
 
+	/**
+	 * @requires OS Linux
+	 */
 	public function testInit_Exception()
 	{
-		$this->markTestIncomplete('This test has not been implemented yet.');
-
 		$this->expectException(SettingsException::class);
 		$this->expectExceptionMessage("is not writable.");
 
@@ -216,9 +213,6 @@ class FileCacheProviderTest extends RiotAPITestCase
 	 */
 	public function testLoad_InvalidKey( FileCacheProvider $provider )
 	{
-		$this->expectException(SettingsException::class);
-		$this->expectExceptionMessage("failed to be opened/created.");
-
-		$provider->load('key99');
+		$this->assertFalse($provider->load('key99'));
 	}
 }

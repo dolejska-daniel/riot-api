@@ -19,9 +19,9 @@
 
 declare(strict_types=1);
 
-use RiotAPI\Definition\Region;
+use RiotAPI\Definitions\Region;
 
-use RiotAPI\Exception\GeneralException;
+use RiotAPI\Exceptions\GeneralException;
 
 
 class RegionTest extends RiotAPITestCase
@@ -29,7 +29,12 @@ class RegionTest extends RiotAPITestCase
 	public function testInit()
 	{
 		$obj = new Region();
-		return $obj;
+
+		$this->assertInstanceOf(Region::class, $obj);
+
+		return [
+			[ $obj ],
+		];
 	}
 
 	/**

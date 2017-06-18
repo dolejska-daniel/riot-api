@@ -25,8 +25,8 @@ namespace RiotAPI\Objects;
  * This object contains mastery page information.
  *
  * Used in:
- *   summoner (v1.4)
- *     @link https://developer.riotgames.com/api/methods#!/1208/4683
+ *   masteries (v3)
+ *     @link https://developer.riotgames.com/api-methods/#masteries-v3/GET_getMasteryPagesBySummonerId
  *
  * @iterable $masteries
  *
@@ -42,13 +42,6 @@ class MasteryPageDto extends ApiObjectIterable
 	public $current;
 
 	/**
-	 *   Mastery page ID.
-	 *
-	 * @var int $id
-	 */
-	public $id;
-
-	/**
 	 *   Collection of masteries associated with the mastery page.
 	 *
 	 * @var MasteryDto[] $masteries
@@ -61,4 +54,11 @@ class MasteryPageDto extends ApiObjectIterable
 	 * @var string $name
 	 */
 	public $name;
+
+	/**
+	 *   Mastery page ID.
+	 *
+	 * @var int $id
+	 */
+	public $id;
 }

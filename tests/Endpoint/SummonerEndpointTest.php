@@ -19,10 +19,10 @@
 
 declare(strict_types=1);
 
-use RiotAPI\Exception\RequestParameterException;
+use RiotAPI\Exceptions\RequestParameterException;
 use RiotAPI\RiotAPI;
 use RiotAPI\Objects;
-use RiotAPI\Definition\Region;
+use RiotAPI\Definitions\Region;
 
 
 class SummonerEndpointTest extends RiotAPITestCase
@@ -37,7 +37,9 @@ class SummonerEndpointTest extends RiotAPITestCase
 
 		$this->assertInstanceOf(RiotAPI::class, $api);
 
-		return $api;
+		return [
+			[ $api ],
+		];
 	}
 
 	public static function randomString( $length = 8 ): string
@@ -57,15 +59,18 @@ class SummonerEndpointTest extends RiotAPITestCase
 	 *
 	 * @param RiotAPI $api
 	 */
-	public function testGetSummonersByName_Exception( RiotAPI $api )
+	public function testGetSummonerByAccount( RiotAPI $api )
 	{
-		$this->expectException(RequestParameterException::class);
-		$this->expectExceptionMessage("Maximum allowed summoner name count is 40.");
+		$accountId = 35545652;
 
-		$summonerNames = [];
-		for ($i = 1; $i <= 100; $i++)
-			$summonerNames[] = self::randomString();
-		$api->getSummonersByName($summonerNames);
+		//  Get library processed results
+		/** @var Objects\SummonerDto $result */
+		$result = $api->getSummonerByAccount($accountId);
+
+		$this->assertSame(30904166, $result->id);
+		$this->assertSame($accountId, $result->accountId);
+		$this->assertSame('I am TheKronnY', $result->name);
+		$this->assertSame(30, $result->summonerLevel);
 	}
 
 	/**
@@ -74,33 +79,18 @@ class SummonerEndpointTest extends RiotAPITestCase
 	 *
 	 * @param RiotAPI $api
 	 */
-	public function testGetSummonerByName_Exception( RiotAPI $api )
+	public function testGetSummonerByName( RiotAPI $api )
 	{
-		$this->expectException(RequestParameterException::class);
-		$this->expectExceptionMessage("Summoner name list is not allowed by this function, please use 'getSummonersByName' function.");
+		$summonerName = 'I am TheKronnY';
 
-		$summonerName = implode(',', [
-			self::randomString(),
-			self::randomString(),
-			self::randomString(),
-			self::randomString(),
-		]);
-		$api->getSummonerByName($summonerName);
-	}
+		//  Get library processed results
+		/** @var Objects\SummonerDto $result */
+		$result = $api->getSummonerByName($summonerName);
 
-	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
-	 *
-	 * @param RiotAPI $api
-	 */
-	public function testGetSummoners_Exception( RiotAPI $api )
-	{
-		$this->expectException(RequestParameterException::class);
-		$this->expectExceptionMessage("Maximum allowed summoner ID count is 40.");
-
-		$summonerIds = range(30904166, 30904266);
-		$api->getSummoners($summonerIds);
+		$this->assertSame(30904166, $result->id);
+		$this->assertSame(35545652, $result->accountId);
+		$this->assertSame($summonerName, $result->name);
+		$this->assertSame(30, $result->summonerLevel);
 	}
 
 	/**
@@ -111,84 +101,15 @@ class SummonerEndpointTest extends RiotAPITestCase
 	 */
 	public function testGetSummoner( RiotAPI $api )
 	{
-		$this->assertTrue(true);
-	}
+		$summonerId = 30904166;
 
-	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
-	 *
-	 * @param RiotAPI $api
-	 */
-	public function testGetSummonersMasteries_Exception( RiotAPI $api )
-	{
-		$this->expectException(RequestParameterException::class);
-		$this->expectExceptionMessage("Maximum allowed summoner ID count is 40.");
+		//  Get library processed results
+		/** @var Objects\SummonerDto $result */
+		$result = $api->getSummoner($summonerId);
 
-		$summonerIds = range(30904166, 30904266);
-		$api->getSummonersMasteries($summonerIds);
-	}
-
-	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
-	 *
-	 * @param RiotAPI $api
-	 */
-	public function testGetSummonerMasteries( RiotAPI $api )
-	{
-		$this->assertTrue(true);
-	}
-
-	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
-	 *
-	 * @param RiotAPI $api
-	 */
-	public function testGetSummonersNames_Exception( RiotAPI $api )
-	{
-		$this->expectException(RequestParameterException::class);
-		$this->expectExceptionMessage("Maximum allowed summoner ID count is 40.");
-
-		$summonerIds = range(30904166, 30904266);
-		$api->getSummonersNames($summonerIds);
-	}
-
-	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
-	 *
-	 * @param RiotAPI $api
-	 */
-	public function testGetSummonerName( RiotAPI $api )
-	{
-		$this->assertTrue(true);
-	}
-
-	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
-	 *
-	 * @param RiotAPI $api
-	 */
-	public function testGetSummonersRunes_Exception( RiotAPI $api )
-	{
-		$this->expectException(RequestParameterException::class);
-		$this->expectExceptionMessage("Maximum allowed summoner ID count is 40.");
-
-		$summonerIds = range(30904166, 30904266);
-		$api->getSummonersRunes($summonerIds);
-	}
-
-	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
-	 *
-	 * @param RiotAPI $api
-	 */
-	public function testGetSummonerRunes( RiotAPI $api )
-	{
-		$this->assertTrue(true);
+		$this->assertSame($summonerId, $result->id);
+		$this->assertSame(35545652, $result->accountId);
+		$this->assertSame('I am TheKronnY', $result->name);
+		$this->assertSame(30, $result->summonerLevel);
 	}
 }

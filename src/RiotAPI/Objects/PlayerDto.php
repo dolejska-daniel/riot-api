@@ -22,34 +22,37 @@ namespace RiotAPI\Objects;
 
 /**
  *   Class PlayerDto
- * This object contains player information.
  *
  * Used in:
- *   game (v1.3)
- *     @link https://developer.riotgames.com/api/methods#!/1207/4679
+ *   match (v3)
+ *     @link https://developer.riotgames.com/api-methods/#match-v3/GET_getMatch
+ *     @link https://developer.riotgames.com/api-methods/#match-v3/GET_getMatchByTournamentCode
  *
  * @package RiotAPI\Objects
  */
 class PlayerDto extends ApiObject
 {
-	/**
-	 *   Champion id associated with player.
-	 *
-	 * @var int $championId
-	 */
-	public $championId;
+	/** @var string $currentPlatformId */
+	public $currentPlatformId;
 
-	/**
-	 *   Summoner id associated with player.
-	 *
-	 * @var int $summonerId
-	 */
+	/** @var string $summonerName */
+	public $summonerName;
+
+	/** @var string $matchHistoryUri */
+	public $matchHistoryUri;
+
+	/** @var string $platformId */
+	public $platformId;
+
+	/** @var int $currentAccountId */
+	public $currentAccountId;
+
+	/** @var int $profileIcon */
+	public $profileIcon;
+
+	/** @var int $summonerId */
 	public $summonerId;
 
-	/**
-	 *   Team id associated with player.
-	 *
-	 * @var int $teamId
-	 */
-	public $teamId;
+	/** @var int $accountId */
+	public $accountId;
 }

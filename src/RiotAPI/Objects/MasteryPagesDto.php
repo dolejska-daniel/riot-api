@@ -25,8 +25,8 @@ namespace RiotAPI\Objects;
  * This object contains masteries information.
  *
  * Used in:
- *   summoner (v1.4)
- *     @link https://developer.riotgames.com/api/methods#!/1208/4683
+ *   masteries (v3)
+ *     @link https://developer.riotgames.com/api-methods/#masteries-v3/GET_getMasteryPagesBySummonerId
  *
  * @iterable $pages
  *

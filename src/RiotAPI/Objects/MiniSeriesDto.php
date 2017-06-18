@@ -22,46 +22,27 @@ namespace RiotAPI\Objects;
 
 /**
  *   Class MiniSeriesDto
- * This object contains mini series information.
  *
  * Used in:
- *   league (v2.5)
- *     @link https://developer.riotgames.com/api/methods#!/1215/4701
- *     @link https://developer.riotgames.com/api/methods#!/1215/4705
- *     @link https://developer.riotgames.com/api/methods#!/1215/4704
- *     @link https://developer.riotgames.com/api/methods#!/1215/4706
+ *   league (v3)
+ *     @link https://developer.riotgames.com/api-methods/#league-v3/GET_getChallengerLeague
+ *     @link https://developer.riotgames.com/api-methods/#league-v3/GET_getAllLeaguesForSummoner
+ *     @link https://developer.riotgames.com/api-methods/#league-v3/GET_getMasterLeague
+ *     @link https://developer.riotgames.com/api-methods/#league-v3/GET_getAllLeaguePositionsForSummoner
  *
  * @package RiotAPI\Objects
  */
 class MiniSeriesDto extends ApiObject
 {
-	/**
-	 *   Number of current losses in the mini series.
-	 *
-	 * @var int $losses
-	 */
+	/** @var int $wins */
+	public $wins;
+
+	/** @var int $losses */
 	public $losses;
 
-	/**
-	 *   String showing the current, sequential mini series progress where 'W' 
-	 * represents a win, 'L' represents a loss, and 'N' represents a game that hasn't been 
-	 * played yet.
-	 *
-	 * @var string $progress
-	 */
-	public $progress;
-
-	/**
-	 *   Number of wins required for promotion.
-	 *
-	 * @var int $target
-	 */
+	/** @var int $target */
 	public $target;
 
-	/**
-	 *   Number of current wins in the mini series.
-	 *
-	 * @var int $wins
-	 */
-	public $wins;
+	/** @var string $progress */
+	public $progress;
 }

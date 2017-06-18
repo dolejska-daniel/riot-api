@@ -25,8 +25,8 @@ namespace RiotAPI\Objects;
  * This object contains a collection of champion information.
  *
  * Used in:
- *   champion (v1.2)
- *     @link https://developer.riotgames.com/api/methods#!/1206/4678
+ *   champion (v3)
+ *     @link https://developer.riotgames.com/api-methods/#champion-v3/GET_getChampions
  *
  * @iterable $champions
  *

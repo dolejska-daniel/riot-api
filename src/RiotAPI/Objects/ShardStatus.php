@@ -24,8 +24,8 @@ namespace RiotAPI\Objects;
  *   Class ShardStatus
  *
  * Used in:
- *   lol-status (v1.0)
- *     @link https://developer.riotgames.com/api/methods#!/1085/3739
+ *   lol-status (v3)
+ *     @link https://developer.riotgames.com/api-methods/#lol-status-v3/GET_getShardData
  *
  * @iterable $services
  *
@@ -33,21 +33,21 @@ namespace RiotAPI\Objects;
  */
 class ShardStatus extends ApiObjectIterable
 {
-	/** @var string $hostname */
-	public $hostname;
-
-	/** @var string[] $locales */
-	public $locales;
-
 	/** @var string $name */
 	public $name;
 
 	/** @var string $region_tag */
 	public $region_tag;
 
+	/** @var string $hostname */
+	public $hostname;
+
 	/** @var Service[] $services */
 	public $services;
 
 	/** @var string $slug */
 	public $slug;
+
+	/** @var string[] $locales */
+	public $locales;
 }

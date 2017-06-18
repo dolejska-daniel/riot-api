@@ -25,8 +25,11 @@ namespace RiotAPI\Objects;
  * This object contains mastery information.
  *
  * Used in:
- *   summoner (v1.4)
- *     @link https://developer.riotgames.com/api/methods#!/1208/4683
+ *   masteries (v3)
+ *     @link https://developer.riotgames.com/api-methods/#masteries-v3/GET_getMasteryPagesBySummonerId
+ *   match (v3)
+ *     @link https://developer.riotgames.com/api-methods/#match-v3/GET_getMatch
+ *     @link https://developer.riotgames.com/api-methods/#match-v3/GET_getMatchByTournamentCode
  *
  * @package RiotAPI\Objects
  */
@@ -46,4 +49,7 @@ class MasteryDto extends ApiObject
 	 * @var int $rank
 	 */
 	public $rank;
+
+	/** @var int $masteryId */
+	public $masteryId;
 }

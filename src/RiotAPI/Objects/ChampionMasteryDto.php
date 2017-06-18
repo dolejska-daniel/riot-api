@@ -22,24 +22,24 @@ namespace RiotAPI\Objects;
 
 /**
  *   Class ChampionMasteryDto
- * This object contains single Champion Mastery information for player and champion combination.
+ * This object contains single Champion Mastery information for
+                                                        player and champion combination.
  *
  * Used in:
- *   championmastery (unknown)
- *     @link https://developer.riotgames.com/api/methods#!/1091/3769
- *     @link https://developer.riotgames.com/api/methods#!/1091/3768
- *     @link https://developer.riotgames.com/api/methods#!/1091/3764
+ *   champion-mastery (v3)
+ *     @link https://developer.riotgames.com/api-methods/#champion-mastery-v3/GET_getAllChampionMasteries
+ *     @link https://developer.riotgames.com/api-methods/#champion-mastery-v3/GET_getChampionMastery
  *
  * @package RiotAPI\Objects
  */
 class ChampionMasteryDto extends ApiObject
 {
 	/**
-	 *   Champion ID for this entry.
+	 *   Is chest granted for this champion or not in current season.
 	 *
-	 * @var int $championId
+	 * @var bool $chestGranted
 	 */
-	public $championId;
+	public $chestGranted;
 
 	/**
 	 *   Champion level for specified player and champion combination.
@@ -57,12 +57,18 @@ class ChampionMasteryDto extends ApiObject
 	public $championPoints;
 
 	/**
-	 *   Number of points earned since current level has been achieved. Zero if 
-	 * player reached maximum champion level for this champion.
+	 *   Champion ID for this entry.
 	 *
-	 * @var int $championPointsSinceLastLevel
+	 * @var int $championId
 	 */
-	public $championPointsSinceLastLevel;
+	public $championId;
+
+	/**
+	 *   Player ID for this entry.
+	 *
+	 * @var int $playerId
+	 */
+	public $playerId;
 
 	/**
 	 *   Number of points needed to achieve next level. Zero if player reached 
@@ -73,11 +79,12 @@ class ChampionMasteryDto extends ApiObject
 	public $championPointsUntilNextLevel;
 
 	/**
-	 *   Is chest granted for this champion or not in current season.
+	 *   Number of points earned since current level has been achieved. Zero if 
+	 * player reached maximum champion level for this champion.
 	 *
-	 * @var bool $chestGranted
+	 * @var int $championPointsSinceLastLevel
 	 */
-	public $chestGranted;
+	public $championPointsSinceLastLevel;
 
 	/**
 	 *   Last time this champion was played by this player - in Unix milliseconds 
@@ -86,11 +93,4 @@ class ChampionMasteryDto extends ApiObject
 	 * @var int $lastPlayTime
 	 */
 	public $lastPlayTime;
-
-	/**
-	 *   Player ID for this entry.
-	 *
-	 * @var int $playerId
-	 */
-	public $playerId;
 }

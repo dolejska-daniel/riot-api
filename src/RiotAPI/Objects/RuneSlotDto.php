@@ -25,13 +25,20 @@ namespace RiotAPI\Objects;
  * This object contains rune slot information.
  *
  * Used in:
- *   summoner (v1.4)
- *     @link https://developer.riotgames.com/api/methods#!/1208/4682
+ *   runes (v3)
+ *     @link https://developer.riotgames.com/api-methods/#runes-v3/GET_getRunePagesBySummonerId
  *
  * @package RiotAPI\Objects
  */
 class RuneSlotDto extends ApiObject
 {
+	/**
+	 *   Rune slot ID.
+	 *
+	 * @var int $runeSlotId
+	 */
+	public $runeSlotId;
+
 	/**
 	 *   Rune ID associated with the rune slot. For static information correlating 
 	 * to rune IDs, please refer to the LoL Static Data API.
@@ -39,11 +46,4 @@ class RuneSlotDto extends ApiObject
 	 * @var int $runeId
 	 */
 	public $runeId;
-
-	/**
-	 *   Rune slot ID.
-	 *
-	 * @var int $runeSlotId
-	 */
-	public $runeSlotId;
 }

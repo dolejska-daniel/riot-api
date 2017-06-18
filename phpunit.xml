@@ -11,16 +11,16 @@
          syntaxCheck="true"
 >
 	<testsuites>
-		<testsuite name="RiotAPI lib: Library Tests">
+		<testsuite name="Library_Tests">
 			<directory>./tests/Library/</directory>
 		</testsuite>
-		<testsuite name="RiotAPI lib: Definition Tests">
+		<testsuite name="Definition_Tests">
 			<directory>./tests/Definition/</directory>
 		</testsuite>
-		<testsuite name="RiotAPI lib: Endpoint Object Tests">
-			<directory>./tests/EndpointObject/</directory>
+		<testsuite name="Endpoint_Object_Integrity_Tests">
+			<directory>./tests/EndpointObjectIntegrity/</directory>
 		</testsuite>
-		<testsuite name="RiotAPI lib: Endpoint Tests">
+		<testsuite name="Endpoint_Tests">
 			<directory>./tests/Endpoint/</directory>
 		</testsuite>
 	</testsuites>

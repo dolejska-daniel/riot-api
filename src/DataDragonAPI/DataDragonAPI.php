@@ -23,14 +23,14 @@ use Nette\Utils\Html;
 
 use RiotAPI\RiotAPI;
 use RiotAPI\Objects\SummonerDto;
-use RiotAPI\Objects\StaticData\SImageDto;
-use RiotAPI\Objects\StaticData\SRealmDto;
-use RiotAPI\Objects\StaticData\SChampionDto;
-use RiotAPI\Objects\StaticData\SItemDto;
-use RiotAPI\Objects\StaticData\SMapDetailsDto;
-use RiotAPI\Objects\StaticData\SMasteryDto;
-use RiotAPI\Objects\StaticData\SRuneDto;
-use RiotAPI\Objects\StaticData\SSummonerSpellDto;
+use RiotAPI\Objects\StaticData\StaticImageDto;
+use RiotAPI\Objects\StaticData\StaticRealmDto;
+use RiotAPI\Objects\StaticData\StaticChampionDto;
+use RiotAPI\Objects\StaticData\StaticItemDto;
+use RiotAPI\Objects\StaticData\StaticMapDetailsDto;
+use RiotAPI\Objects\StaticData\StaticMasteryDto;
+use RiotAPI\Objects\StaticData\StaticRuneDto;
+use RiotAPI\Objects\StaticData\StaticSummonerSpellDto;
 
 use DataDragonAPI\Exception\RequestException;
 use DataDragonAPI\Exception\SettingsException;
@@ -172,10 +172,10 @@ class DataDragonAPI
 	/**
 	 *   Creates new instance from Realm object.
 	 *
-	 * @param SRealmDto $realm
+	 * @param StaticRealmDto $realm
 	 * @param array     $customSettings
 	 */
-	public static function initByRealmObject( SRealmDto $realm, array $customSettings = [] )
+	public static function initByRealmObject( StaticRealmDto $realm, array $customSettings = [] )
 	{
 		self::setSettings([
 			self::SET_ENDPOINT => $realm->cdn,
@@ -309,13 +309,13 @@ class DataDragonAPI
 	/**
 	 *   Returns champion splash from API static-data Champion object in img HTML TAG.
 	 *
-	 * @param SChampionDto $champion
+	 * @param StaticChampionDto $champion
 	 * @param int          $skin
 	 *
 	 * @return Html
 	 * @throws SettingsException
 	 */
-	public static function getChampionSplashO( SChampionDto $champion, int $skin = 0 ): Html
+	public static function getChampionSplashO( StaticChampionDto $champion, int $skin = 0 ): Html
 	{
 		return self::getChampionSplash($champion->key, $skin);
 	}
@@ -343,13 +343,13 @@ class DataDragonAPI
 	 *   Returns champion loading screen image from API static-data Champion object in
 	 * img HTML TAG.
 	 *
-	 * @param SChampionDto $champion
+	 * @param StaticChampionDto $champion
 	 * @param int          $skin
 	 *
 	 * @return Html
 	 * @throws SettingsException
 	 */
-	public static function getChampionLoadingO( SChampionDto $champion, int $skin = 0 ): Html
+	public static function getChampionLoadingO( StaticChampionDto $champion, int $skin = 0 ): Html
 	{
 		return self::getChampionLoading($champion->key, $skin);
 	}
@@ -378,12 +378,12 @@ class DataDragonAPI
 	/**
 	 *   Returns champion icon from API static-data Champion object in img HTML TAG.
 	 *
-	 * @param SChampionDto $champion
+	 * @param StaticChampionDto $champion
 	 *
 	 * @return Html
 	 * @throws SettingsException
 	 */
-	public static function getChampionIconO( SChampionDto $champion ): Html
+	public static function getChampionIconO( StaticChampionDto $champion ): Html
 	{
 		return self::getChampionIcon($champion->key);
 	}
@@ -417,12 +417,12 @@ class DataDragonAPI
 	/**
 	 *   Returns icon from API static-data ImageDto object in img HTML TAG.
 	 *
-	 * @param SImageDto $image
+	 * @param StaticImageDto $image
 	 *
 	 * @return Html
 	 * @throws SettingsException
 	 */
-	public static function getFromSpriteO( SImageDto $image ): Html
+	public static function getFromSpriteO( StaticImageDto $image ): Html
 	{
 		return self::getFromSprite($image->sprite, $image->x, $image->y, $image->w, $image->h);
 	}
@@ -452,12 +452,12 @@ class DataDragonAPI
 	 *   Returns summoner spell icon from API static-data SummonerSpell object in img
 	 * HTML TAG.
 	 *
-	 * @param SSummonerSpellDto $summonerSpell
+	 * @param StaticSummonerSpellDto $summonerSpell
 	 *
 	 * @return Html
 	 * @throws SettingsException
 	 */
-	public static function getSummonerSpellIconO( SSummonerSpellDto $summonerSpell ): Html
+	public static function getSummonerSpellIconO( StaticSummonerSpellDto $summonerSpell ): Html
 	{
 		return self::getSummonerSpellIcon($summonerSpell->key);
 	}
@@ -486,12 +486,12 @@ class DataDragonAPI
 	/**
 	 *   Returns item icon from API static-data Item object in img HTML TAG.
 	 *
-	 * @param SItemDto $item
+	 * @param StaticItemDto $item
 	 *
 	 * @return Html
 	 * @throws SettingsException
 	 */
-	public static function getItemIconO( SItemDto $item ): Html
+	public static function getItemIconO( StaticItemDto $item ): Html
 	{
 		return self::getItemIcon($item->id);
 	}
@@ -520,12 +520,12 @@ class DataDragonAPI
 	/**
 	 *   Returns mastery icon from API static-data Mastery object in img HTML TAG.
 	 *
-	 * @param SMasteryDto $mastery
+	 * @param StaticMasteryDto $mastery
 	 *
 	 * @return Html
 	 * @throws SettingsException
 	 */
-	public static function getMasteryIconO( SMasteryDto $mastery ): Html
+	public static function getMasteryIconO( StaticMasteryDto $mastery ): Html
 	{
 		return self::getMasteryIcon($mastery->id);
 	}
@@ -554,12 +554,12 @@ class DataDragonAPI
 	/**
 	 *   Returns rune icon from API static-data Rune object in img HTML TAG.
 	 *
-	 * @param SRuneDto $rune
+	 * @param StaticRuneDto $rune
 	 *
 	 * @return Html
 	 * @throws SettingsException
 	 */
-	public static function getRuneIconO( SRuneDto $rune ): Html
+	public static function getRuneIconO( StaticRuneDto $rune ): Html
 	{
 		return self::getRuneIcon($rune->id);
 	}
@@ -588,12 +588,12 @@ class DataDragonAPI
 	/**
 	 *   Returns minimap from API static-data MapDetails object in img HTML TAG.
 	 *
-	 * @param SMapDetailsDto $mapDetails
+	 * @param StaticMapDetailsDto $mapDetails
 	 *
 	 * @return Html
 	 * @throws SettingsException
 	 */
-	public static function getMinimapO( SMapDetailsDto $mapDetails ): Html
+	public static function getMinimapO( StaticMapDetailsDto $mapDetails ): Html
 	{
 		return self::getMinimap($mapDetails->mapId);
 	}

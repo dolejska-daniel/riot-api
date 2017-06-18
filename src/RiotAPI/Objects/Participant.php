@@ -24,21 +24,19 @@ namespace RiotAPI\Objects;
  *   Class Participant
  *
  * Used in:
- *   featured-games (v1.0)
- *     @link https://developer.riotgames.com/api/methods#!/977/3337
- *   match (v2.2)
- *     @link https://developer.riotgames.com/api/methods#!/1224/4756
+ *   spectator (v3)
+ *     @link https://developer.riotgames.com/api-methods/#spectator-v3/GET_getFeaturedGames
  *
  * @package RiotAPI\Objects
  */
 class Participant extends ApiObject
 {
 	/**
-	 *   Flag indicating whether or not this participant is a bot.
+	 *   The ID of the profile icon used by this participant.
 	 *
-	 * @var bool $bot
+	 * @var int $profileIconId
 	 */
-	public $bot;
+	public $profileIconId;
 
 	/**
 	 *   The ID of the champion played by this participant.
@@ -48,18 +46,18 @@ class Participant extends ApiObject
 	public $championId;
 
 	/**
-	 *   The ID of the profile icon used by this participant.
+	 *   The summoner name of this participant.
 	 *
-	 * @var int $profileIconId
+	 * @var string $summonerName
 	 */
-	public $profileIconId;
+	public $summonerName;
 
 	/**
-	 *   The ID of the first summoner spell used by this participant.
+	 *   Flag indicating whether or not this participant is a bot.
 	 *
-	 * @var int $spell1Id
+	 * @var bool $bot
 	 */
-	public $spell1Id;
+	public $bot;
 
 	/**
 	 *   The ID of the second summoner spell used by this participant.
@@ -69,13 +67,6 @@ class Participant extends ApiObject
 	public $spell2Id;
 
 	/**
-	 *   The summoner name of this participant.
-	 *
-	 * @var string $summonerName
-	 */
-	public $summonerName;
-
-	/**
 	 *   The team ID of this participant, indicating the participant's team.
 	 *
 	 * @var int $teamId
@@ -83,49 +74,9 @@ class Participant extends ApiObject
 	public $teamId;
 
 	/**
-	 *   Highest ranked tier achieved for the previous season, if any, otherwise 
-	 * null. Used to display border in game loading screen. (Legal values: CHALLENGER, 
-	 * MASTER, DIAMOND, PLATINUM, GOLD, SILVER, BRONZE, UNRANKED).
+	 *   The ID of the first summoner spell used by this participant.
 	 *
-	 * @var string $highestAchievedSeasonTier
+	 * @var int $spell1Id
 	 */
-	public $highestAchievedSeasonTier;
-
-	/**
-	 *   List of mastery information.
-	 *
-	 * @var Mastery[] $masteries
-	 */
-	public $masteries;
-
-	/**
-	 *   Participant ID.
-	 *
-	 * @var int $participantId
-	 */
-	public $participantId;
-
-	/**
-	 *   List of rune information.
-	 *
-	 * @var Rune[] $runes
-	 */
-	public $runes;
-
-	/**
-	 *   Participant statistics.
-	 *
-	 * @var ParticipantStats $stats
-	 */
-	public $stats;
-
-	/**
-	 *   Timeline data. Delta fields refer to values for the specified period 
-	 * (e.g., the gold per minute over the first 10 minutes of the game versus the 
-	 * second 20 minutes of the game. Diffs fields refer to the deltas versus the 
-	 * calculated lane opponent(s).
-	 *
-	 * @var ParticipantTimeline $timeline
-	 */
-	public $timeline;
+	public $spell1Id;
 }

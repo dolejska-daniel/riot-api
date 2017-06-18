@@ -24,30 +24,27 @@ namespace RiotAPI\Objects;
  *   Class BannedChampion
  *
  * Used in:
- *   current-game (v1.0)
- *     @link https://developer.riotgames.com/api/methods#!/976/3336
- *   featured-games (v1.0)
- *     @link https://developer.riotgames.com/api/methods#!/977/3337
- *   match (v2.2)
- *     @link https://developer.riotgames.com/api/methods#!/1224/4756
+ *   spectator (v3)
+ *     @link https://developer.riotgames.com/api-methods/#spectator-v3/GET_getCurrentGameInfoBySummoner
+ *     @link https://developer.riotgames.com/api-methods/#spectator-v3/GET_getFeaturedGames
  *
  * @package RiotAPI\Objects
  */
 class BannedChampion extends ApiObject
 {
 	/**
-	 *   The ID of the banned champion.
-	 *
-	 * @var int $championId
-	 */
-	public $championId;
-
-	/**
 	 *   The turn during which the champion was banned.
 	 *
 	 * @var int $pickTurn
 	 */
 	public $pickTurn;
+
+	/**
+	 *   The ID of the banned champion.
+	 *
+	 * @var int $championId
+	 */
+	public $championId;
 
 	/**
 	 *   The ID of the team that banned the champion.

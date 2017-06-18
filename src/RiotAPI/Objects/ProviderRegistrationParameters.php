@@ -19,27 +19,20 @@
 
 namespace RiotAPI\Objects;
 
-use RiotAPI\Exception\RequestParameterException;
-
 
 /**
  *   Class ProviderRegistrationParameters
  *
  * Used in:
- *   tournament-stub (v1)
- *     @link https://developer.riotgames.com/api/methods#!/1090/3762
+ *   tournament-stub (v3)
+ *     @link https://developer.riotgames.com/api-methods/#tournament-stub-v3/POST_registerProviderData
+ *   tournament (v3)
+ *     @link https://developer.riotgames.com/api-methods/#tournament-v3/POST_registerProviderData
  *
  * @package RiotAPI\Objects
  */
 class ProviderRegistrationParameters extends ApiObject
 {
-	/**
-	 *   The region in which the provider will be running tournaments.
-	 *
-	 * @var string $region
-	 */
-	public $region;
-
 	/**
 	 *   The provider's callback URL to which tournament game results in this 
 	 * region should be posted. The URL must be well-formed, use the http or https 
@@ -50,21 +43,11 @@ class ProviderRegistrationParameters extends ApiObject
 	 */
 	public $url;
 
-
-	public function __construct( array $data )
-	{
-		foreach ([
-			'region',
-			'url',
-		         ] as $requiredParam)
-			if (!isset($data[$requiredParam]))
-				throw new RequestParameterException("Property '$requiredParam' is required to be set by RiotAPI.");
-
-		parent::__construct( $data );
-	}
-
-	public function __toString()
-	{
-		return json_encode($this, JSON_PRETTY_PRINT);
-	}
+	/**
+	 *   The region in which the provider will be running tournaments. (Legal 
+	 * values: BR, EUNE, EUW, JP, LAN, LAS, NA, OCE, PBE, RU, TR).
+	 *
+	 * @var string $region
+	 */
+	public $region;
 }

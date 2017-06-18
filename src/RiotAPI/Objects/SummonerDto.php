@@ -22,23 +22,24 @@ namespace RiotAPI\Objects;
 
 /**
  *   Class SummonerDto
- * This object contains summoner information.
+ * represents a summoner
  *
  * Used in:
- *   summoner (v1.4)
- *     @link https://developer.riotgames.com/api/methods#!/1208/4684
- *     @link https://developer.riotgames.com/api/methods#!/1208/4681
+ *   summoner (v3)
+ *     @link https://developer.riotgames.com/api-methods/#summoner-v3/GET_getByAccountId
+ *     @link https://developer.riotgames.com/api-methods/#summoner-v3/GET_getBySummonerName
+ *     @link https://developer.riotgames.com/api-methods/#summoner-v3/GET_getBySummonerId
  *
  * @package RiotAPI\Objects
  */
 class SummonerDto extends ApiObject
 {
 	/**
-	 *   Summoner ID.
+	 *   ID of the summoner icon associated with the summoner.
 	 *
-	 * @var int $id
+	 * @var int $profileIconId
 	 */
-	public $id;
+	public $profileIconId;
 
 	/**
 	 *   Summoner name.
@@ -48,11 +49,11 @@ class SummonerDto extends ApiObject
 	public $name;
 
 	/**
-	 *   ID of the summoner icon associated with the summoner.
+	 *   Summoner level associated with the summoner.
 	 *
-	 * @var int $profileIconId
+	 * @var int $summonerLevel
 	 */
-	public $profileIconId;
+	public $summonerLevel;
 
 	/**
 	 *   Date summoner was last modified specified as epoch milliseconds. The 
@@ -64,9 +65,16 @@ class SummonerDto extends ApiObject
 	public $revisionDate;
 
 	/**
-	 *   Summoner level associated with the summoner.
+	 *   Summoner ID.
 	 *
-	 * @var int $summonerLevel
+	 * @var int $id
 	 */
-	public $summonerLevel;
+	public $id;
+
+	/**
+	 *   Account ID.
+	 *
+	 * @var int $accountId
+	 */
+	public $accountId;
 }

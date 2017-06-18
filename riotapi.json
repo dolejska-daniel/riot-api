@@ -1,0 +1,15 @@
+{
+	"owner": "dolejska-daniel",
+	"repo": "riot-api",
+	"description": "Riot League of Legends & DataDragon API wrapper for PHP7",
+	"language": "PHP",
+	"links": [
+		{
+			"name": "README",
+			"url": "https://github.com/dolejska-daniel/riot-api/blob/master/README.md"
+		}
+	],
+	"metadata": {
+		"v3-supported": true
+	}
+}

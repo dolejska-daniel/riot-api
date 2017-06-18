@@ -25,20 +25,20 @@ namespace RiotAPI\Objects;
  * This object contains champion information.
  *
  * Used in:
- *   champion (v1.2)
- *     @link https://developer.riotgames.com/api/methods#!/1206/4678
- *     @link https://developer.riotgames.com/api/methods#!/1206/4677
+ *   champion (v3)
+ *     @link https://developer.riotgames.com/api-methods/#champion-v3/GET_getChampions
+ *     @link https://developer.riotgames.com/api-methods/#champion-v3/GET_getChampionsById
  *
  * @package RiotAPI\Objects
  */
 class ChampionDto extends ApiObject
 {
 	/**
-	 *   Indicates if the champion is active.
+	 *   Ranked play enabled flag.
 	 *
-	 * @var bool $active
+	 * @var bool $rankedPlayEnabled
 	 */
-	public $active;
+	public $rankedPlayEnabled;
 
 	/**
 	 *   Bot enabled flag (for custom games).
@@ -55,6 +55,13 @@ class ChampionDto extends ApiObject
 	public $botMmEnabled;
 
 	/**
+	 *   Indicates if the champion is active.
+	 *
+	 * @var bool $active
+	 */
+	public $active;
+
+	/**
 	 *   Indicates if the champion is free to play. Free to play champions are 
 	 * rotated periodically.
 	 *
@@ -69,11 +76,4 @@ class ChampionDto extends ApiObject
 	 * @var int $id
 	 */
 	public $id;
-
-	/**
-	 *   Ranked play enabled flag.
-	 *
-	 * @var bool $rankedPlayEnabled
-	 */
-	public $rankedPlayEnabled;
 }

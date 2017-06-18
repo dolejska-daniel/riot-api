@@ -24,8 +24,8 @@ namespace RiotAPI\Objects;
  *   Class Incident
  *
  * Used in:
- *   lol-status (v1.0)
- *     @link https://developer.riotgames.com/api/methods#!/1085/3739
+ *   lol-status (v3)
+ *     @link https://developer.riotgames.com/api-methods/#lol-status-v3/GET_getShardData
  *
  * @package RiotAPI\Objects
  */

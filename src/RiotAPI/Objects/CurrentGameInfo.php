@@ -24,48 +24,19 @@ namespace RiotAPI\Objects;
  *   Class CurrentGameInfo
  *
  * Used in:
- *   current-game (v1.0)
- *     @link https://developer.riotgames.com/api/methods#!/976/3336
+ *   spectator (v3)
+ *     @link https://developer.riotgames.com/api-methods/#spectator-v3/GET_getCurrentGameInfoBySummoner
  *
  * @package RiotAPI\Objects
  */
 class CurrentGameInfo extends ApiObject
 {
 	/**
-	 *   Banned champion information.
-	 *
-	 * @var BannedChampion[] $bannedChampions
-	 */
-	public $bannedChampions;
-
-	/**
 	 *   The ID of the game.
 	 *
 	 * @var int $gameId
 	 */
 	public $gameId;
-
-	/**
-	 *   The amount of time in seconds that has passed since the game started.
-	 *
-	 * @var int $gameLength
-	 */
-	public $gameLength;
-
-	/**
-	 *   The game mode (Legal values: CLASSIC, ODIN, ARAM, TUTORIAL, ONEFORALL, 
-	 * ASCENSION, FIRSTBLOOD, KINGPORO).
-	 *
-	 * @var string $gameMode
-	 */
-	public $gameMode;
-
-	/**
-	 *   The queue type (queue types are documented on the Game Constants page).
-	 *
-	 * @var int $gameQueueConfigId
-	 */
-	public $gameQueueConfigId;
 
 	/**
 	 *   The game start time represented in epoch milliseconds.
@@ -75,11 +46,18 @@ class CurrentGameInfo extends ApiObject
 	public $gameStartTime;
 
 	/**
-	 *   The game type (Legal values: CUSTOM_GAME, MATCHED_GAME, TUTORIAL_GAME).
+	 *   The ID of the platform on which the game is being played.
 	 *
-	 * @var string $gameType
+	 * @var string $platformId
 	 */
-	public $gameType;
+	public $platformId;
+
+	/**
+	 *   The game mode.
+	 *
+	 * @var string $gameMode
+	 */
+	public $gameMode;
 
 	/**
 	 *   The ID of the map.
@@ -87,6 +65,20 @@ class CurrentGameInfo extends ApiObject
 	 * @var int $mapId
 	 */
 	public $mapId;
+
+	/**
+	 *   The game type.
+	 *
+	 * @var string $gameType
+	 */
+	public $gameType;
+
+	/**
+	 *   Banned champion information.
+	 *
+	 * @var BannedChampion[] $bannedChampions
+	 */
+	public $bannedChampions;
 
 	/**
 	 *   The observer information.
@@ -103,9 +95,16 @@ class CurrentGameInfo extends ApiObject
 	public $participants;
 
 	/**
-	 *   The ID of the platform on which the game is being played.
+	 *   The amount of time in seconds that has passed since the game started.
 	 *
-	 * @var string $platformId
+	 * @var int $gameLength
 	 */
-	public $platformId;
+	public $gameLength;
+
+	/**
+	 *   The queue type (queue types are documented on the Game Constants page).
+	 *
+	 * @var int $gameQueueConfigId
+	 */
+	public $gameQueueConfigId;
 }

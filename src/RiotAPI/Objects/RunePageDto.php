@@ -25,8 +25,8 @@ namespace RiotAPI\Objects;
  * This object contains rune page information.
  *
  * Used in:
- *   summoner (v1.4)
- *     @link https://developer.riotgames.com/api/methods#!/1208/4682
+ *   runes (v3)
+ *     @link https://developer.riotgames.com/api-methods/#runes-v3/GET_getRunePagesBySummonerId
  *
  * @iterable $slots
  *
@@ -42,11 +42,11 @@ class RunePageDto extends ApiObjectIterable
 	public $current;
 
 	/**
-	 *   Rune page ID.
+	 *   Collection of rune slots associated with the rune page.
 	 *
-	 * @var int $id
+	 * @var RuneSlotDto[] $slots
 	 */
-	public $id;
+	public $slots;
 
 	/**
 	 *   Rune page name.
@@ -56,9 +56,9 @@ class RunePageDto extends ApiObjectIterable
 	public $name;
 
 	/**
-	 *   Collection of rune slots associated with the rune page.
+	 *   Rune page ID.
 	 *
-	 * @var RuneSlotDto[] $slots
+	 * @var int $id
 	 */
-	public $slots;
+	public $id;
 }

@@ -24,19 +24,19 @@ namespace RiotAPI\Objects;
  *   Class CurrentGameParticipant
  *
  * Used in:
- *   current-game (v1.0)
- *     @link https://developer.riotgames.com/api/methods#!/976/3336
+ *   spectator (v3)
+ *     @link https://developer.riotgames.com/api-methods/#spectator-v3/GET_getCurrentGameInfoBySummoner
  *
  * @package RiotAPI\Objects
  */
 class CurrentGameParticipant extends ApiObject
 {
 	/**
-	 *   Flag indicating whether or not this participant is a bot.
+	 *   The ID of the profile icon used by this participant.
 	 *
-	 * @var bool $bot
+	 * @var int $profileIconId
 	 */
-	public $bot;
+	public $profileIconId;
 
 	/**
 	 *   The ID of the champion played by this participant.
@@ -46,18 +46,11 @@ class CurrentGameParticipant extends ApiObject
 	public $championId;
 
 	/**
-	 *   The masteries used by this participant.
+	 *   The summoner name of this participant.
 	 *
-	 * @var Mastery[] $masteries
+	 * @var string $summonerName
 	 */
-	public $masteries;
-
-	/**
-	 *   The ID of the profile icon used by this participant.
-	 *
-	 * @var int $profileIconId
-	 */
-	public $profileIconId;
+	public $summonerName;
 
 	/**
 	 *   The runes used by this participant.
@@ -67,11 +60,18 @@ class CurrentGameParticipant extends ApiObject
 	public $runes;
 
 	/**
-	 *   The ID of the first summoner spell used by this participant.
+	 *   Flag indicating whether or not this participant is a bot.
 	 *
-	 * @var int $spell1Id
+	 * @var bool $bot
 	 */
-	public $spell1Id;
+	public $bot;
+
+	/**
+	 *   The team ID of this participant, indicating the participant's team.
+	 *
+	 * @var int $teamId
+	 */
+	public $teamId;
 
 	/**
 	 *   The ID of the second summoner spell used by this participant.
@@ -81,23 +81,23 @@ class CurrentGameParticipant extends ApiObject
 	public $spell2Id;
 
 	/**
+	 *   The masteries used by this participant.
+	 *
+	 * @var Mastery[] $masteries
+	 */
+	public $masteries;
+
+	/**
+	 *   The ID of the first summoner spell used by this participant.
+	 *
+	 * @var int $spell1Id
+	 */
+	public $spell1Id;
+
+	/**
 	 *   The summoner ID of this participant.
 	 *
 	 * @var int $summonerId
 	 */
 	public $summonerId;
-
-	/**
-	 *   The summoner name of this participant.
-	 *
-	 * @var string $summonerName
-	 */
-	public $summonerName;
-
-	/**
-	 *   The team ID of this participant, indicating the participant's team.
-	 *
-	 * @var int $teamId
-	 */
-	public $teamId;
 }

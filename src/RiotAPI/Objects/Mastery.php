@@ -24,10 +24,8 @@ namespace RiotAPI\Objects;
  *   Class Mastery
  *
  * Used in:
- *   current-game (v1.0)
- *     @link https://developer.riotgames.com/api/methods#!/976/3336
- *   match (v2.2)
- *     @link https://developer.riotgames.com/api/methods#!/1224/4756
+ *   spectator (v3)
+ *     @link https://developer.riotgames.com/api-methods/#spectator-v3/GET_getCurrentGameInfoBySummoner
  *
  * @package RiotAPI\Objects
  */

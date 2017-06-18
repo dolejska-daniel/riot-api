@@ -25,8 +25,8 @@ namespace RiotAPI\Objects;
  * This object contains rune pages information.
  *
  * Used in:
- *   summoner (v1.4)
- *     @link https://developer.riotgames.com/api/methods#!/1208/4682
+ *   runes (v3)
+ *     @link https://developer.riotgames.com/api-methods/#runes-v3/GET_getRunePagesBySummonerId
  *
  * @iterable $pages
  *

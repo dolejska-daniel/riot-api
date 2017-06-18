@@ -24,31 +24,31 @@ namespace RiotAPI\Objects;
  *   Class Message
  *
  * Used in:
- *   lol-status (v1.0)
- *     @link https://developer.riotgames.com/api/methods#!/1085/3739
+ *   lol-status (v3)
+ *     @link https://developer.riotgames.com/api-methods/#lol-status-v3/GET_getShardData
  *
  * @package RiotAPI\Objects
  */
 class Message extends ApiObject
 {
+	/** @var string $severity */
+	public $severity;
+
 	/** @var string $author */
 	public $author;
 
-	/** @var string $content */
-	public $content;
-
 	/** @var string $created_at */
 	public $created_at;
-
-	/** @var string $id */
-	public $id;
-
-	/** @var string $severity */
-	public $severity;
 
 	/** @var Translation[] $translations */
 	public $translations;
 
 	/** @var string $updated_at */
 	public $updated_at;
+
+	/** @var string $content */
+	public $content;
+
+	/** @var string $id */
+	public $id;
 }

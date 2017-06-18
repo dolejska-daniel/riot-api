@@ -24,8 +24,8 @@ namespace RiotAPI\Objects;
  *   Class Service
  *
  * Used in:
- *   lol-status (v1.0)
- *     @link https://developer.riotgames.com/api/methods#!/1085/3739
+ *   lol-status (v3)
+ *     @link https://developer.riotgames.com/api-methods/#lol-status-v3/GET_getShardData
  *
  * @iterable $incidents
  *
@@ -33,6 +33,9 @@ namespace RiotAPI\Objects;
  */
 class Service extends ApiObjectIterable
 {
+	/** @var string $status */
+	public $status;
+
 	/** @var Incident[] $incidents */
 	public $incidents;
 
@@ -41,7 +44,4 @@ class Service extends ApiObjectIterable
 
 	/** @var string $slug */
 	public $slug;
-
-	/** @var string $status */
-	public $status;
 }

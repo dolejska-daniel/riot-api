@@ -19,10 +19,10 @@
 
 declare(strict_types=1);
 
-use RiotAPI\Definition\Platform;
-use RiotAPI\Definition\Region;
+use RiotAPI\Definitions\Platform;
+use RiotAPI\Definitions\Region;
 
-use RiotAPI\Exception\GeneralException;
+use RiotAPI\Exceptions\GeneralException;
 
 
 class PlatformTest extends RiotAPITestCase
@@ -30,7 +30,12 @@ class PlatformTest extends RiotAPITestCase
 	public function testInit()
 	{
 		$obj = new Platform();
-		return $obj;
+
+		$this->assertInstanceOf(Platform::class, $obj);
+
+		return [
+			[ $obj ],
+		];
 	}
 
 	/**

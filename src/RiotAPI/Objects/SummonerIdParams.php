@@ -24,8 +24,10 @@ namespace RiotAPI\Objects;
  *   Class SummonerIdParams
  *
  * Used in:
- *   tournament-stub (v1)
- *     @link https://developer.riotgames.com/api/methods#!/1090/3760
+ *   tournament-stub (v3)
+ *     @link https://developer.riotgames.com/api-methods/#tournament-stub-v3/POST_createTournamentCode
+ *   tournament (v3)
+ *     @link https://developer.riotgames.com/api-methods/#tournament-v3/POST_createTournamentCode
  *
  * @package RiotAPI\Objects
  */
@@ -36,10 +38,5 @@ class SummonerIdParams extends ApiObject
 	 *
 	 * @var int[] $participants
 	 */
-	public $participants = array();
-
-	public function __toString()
-	{
-		return json_encode($this);
-	}
+	public $participants;
 }

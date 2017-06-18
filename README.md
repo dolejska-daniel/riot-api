@@ -1,50 +1,110 @@
 # RiotAPI PHP7 wrapper
 
-> Version 0.2
+> Version v0.3
 
 [![build status](https://gitlab.dolejska.me/dolejskad/riot-api/badges/master/build.svg)](https://gitlab.dolejska.me/dolejskad/riot-api/commits/master)
 [![coverage report](https://gitlab.dolejska.me/dolejskad/riot-api/badges/master/coverage.svg)](https://gitlab.dolejska.me/dolejskad/riot-api/commits/master)
+[![GitHub release](https://img.shields.io/github/release/dolejska-daniel/riot-api.svg)](https://github.com/dolejska-daniel/riot-api)
+[![GitHub release](https://img.shields.io/github/release/dolejska-daniel/riot-api/all.svg)](https://github.com/dolejska-daniel/riot-api)
+[![Packagist](https://img.shields.io/packagist/v/dolejska-daniel/riot-api.svg)](https://packagist.org/packages/dolejska-daniel/riot-api)
+[![Packagist](https://img.shields.io/packagist/l/dolejska-daniel/riot-api.svg)](https://packagist.org/packages/dolejska-daniel/riot-api)
+
+# Table of Contents
+
+1. [Introduction](#introduction)
+2. [League of Legends API](#league-of-legends-api)
+	1. [Endpoint versions](#endpoint-versions)
+	2. [Initializing the library](#initializing-the-library)
+	3. [Usage example](#usage-example)
+3. [DataDragon API](#datadragon-api)
+
+# Introduction
 
 Welcome to the RiotAPI PHP7 library repo! The goal of this library is to create easy-to-use
-library for anyone who might need one.
+library for anyone who might need one. This is fully object oriented API wrapper for
+League of Legends' API. A small DataDragon API is included.
 
-I would be grateful for any feedback, so if you can give me any, let's do it! Feel free
+Here are some handy features:
+
+- **Rate limit caching** and limit exceeding prevention.
+- **Call caching**, enabling the library to re-use already fetched data within short timespan
+- **Objects everywhere**! API calls return data in special objects.
+- **Interim mode** support, you are going to be able to use the API the same way
+whether your key is in interim mode or not (meaning you won't need to change anything
+when you jump to production).
+
+I would be grateful for any feedback - so if you can give me any, just do it! Also feel free
 to send pull requests if you find anything that is worth improving!
 
 Please, read on :)
 
-_MORE TBA_
+# League of Legends API
 
-## League of Legends API
+## Endpoint versions
 
-This is fully object oriented API wrapper for League of Legends. Here are some features:
+Below you can find table of implemented API endpoints and the version in which they are currently implemented.
 
-- Rate limit caching and exceeding prevention
-- Objects everywhere! API calls return data in special objects
+| Endpoint         | Status |
+| ---------------- | ------ |
+| Champion         | ![Champion endpoint implemented version](https://img.shields.io/badge/implemented_version-v3-brightgreen.svg) |
+| Champion Mastery | ![Champion Mastery endpoint implemented version](https://img.shields.io/badge/implemented_version-v3-brightgreen.svg) |
+| League           | ![League endpoint implemented version](https://img.shields.io/badge/implemented_version-v3-brightgreen.svg) |
+| Masteries        | ![Masteries endpoint implemented version](https://img.shields.io/badge/implemented_version-v3-brightgreen.svg) |
+| Match            | ![Match endpoint implemented version](https://img.shields.io/badge/implemented_version-v3-brightgreen.svg) |
+| Runes            | ![Runes endpoint implemented version](https://img.shields.io/badge/implemented_version-v3-brightgreen.svg) |
+| Spectator        | ![Spectator endpoint implemented version](https://img.shields.io/badge/implemented_version-v3-brightgreen.svg) |
+| Static Data      | ![Static Data endpoint implemented version](https://img.shields.io/badge/implemented_version-v3-brightgreen.svg) |
+| Stats            | ![Stats endpoint implemented version](https://img.shields.io/badge/implemented_version-removed-red.svg) |
+| Status           | ![Status endpoint implemented version](https://img.shields.io/badge/implemented_version-v3-brightgreen.svg) |
+| Summoner         | ![Summoner endpoint implemented version](https://img.shields.io/badge/implemented_version-v3-brightgreen.svg) |
+| Tournament       | ![Tournament endpoint implemented version](https://img.shields.io/badge/implemented_version-v3-brightgreen.svg) |
+| Tournament Stub  | ![Tournament Stub endpoint implemented version](https://img.shields.io/badge/implemented_version-v3-brightgreen.svg) |
+
+## Initializing the library
 
 How to begin?
 
 ```php
-use RiotAPI\Definition;
-use RiotAPI\RiotAPI;
-
 //  Include all required files
-require_once "./vendor/autoload.php";
+require_once __DIR__  . "/vendor/autoload.php";
+
+use RiotAPI\Definition\Region;
+use RiotAPI\RiotAPI;
 
 //  Initialize the library
 $api = new RiotAPI([
 	//  Your API key, you can get one at https://developer.riotgames.com/
-	RiotAPI::SET_KEY                => 'YOUR_RIOT_API_KEY',
-	//  Your API key, you can get one at https://developer.riotgames.com/ by submitting your application
-	RiotAPI::SET_TOURNAMENT_KEY     => 'YOUR_RIOT_API_KEY',
+	RiotAPI::SET_KEY    => 'YOUR_RIOT_API_KEY',
+	//  Target region (you can change it during lifetime of the library instance)
+	RiotAPI::SET_REGION => Region::EUROPE_EAST,
+]);
+
+//  And now you are ready to rock!
+$ch = $api->getChampion(61); // Orianna <3
+```
+
+But you can do more than that - and it stays easy. 
+
+```php
+//  Initialize the library with more settings
+$api = new RiotAPI([
+	//  Your API key, you can get one at https://developer.riotgames.com/
+	RiotAPI::SET_KEY             => 'YOUR_RIOT_API_KEY',
+	
+	//  Your Tournament API key, you can get one at https://developer.riotgames.com/ by submitting your application
+	RiotAPI::SET_TOURNAMENT_KEY  => 'YOUR_RIOT_API_KEY',
+	
 	//  This will come in handy while building the app in the interim mode
-	RiotAPI::SET_TOURNAMENT_INTERIM => true,
+	RiotAPI::SET_INTERIM         => true,
+	
 	//  Target region (you can change it during lifetime of the library)
-	RiotAPI::SET_REGION             => Definition\Region::EUROPE_EAST,
+	RiotAPI::SET_REGION          => Region::EUROPE_EAST,
+	
 	//  Whether or not to cache keys' rate limits and prevent exceeding the rate limit
-	RiotAPI::SET_CACHE_RATELIMIT    => true,
+	RiotAPI::SET_CACHE_RATELIMIT => true,
+	
 	//  Per-key specified limits, always in format $timeInterval => $callLimit
-	RiotAPI::SET_RATELIMITS         => [
+	RiotAPI::SET_RATELIMITS      => [
 		'YOUR_RIOT_API_KEY' => [
 			IRateLimitControl::INTERVAL_10S => 10,   // 10 calls per 10 seconds maximum
 			IRateLimitControl::INTERVAL_10M => 500,  // 500 calls per 10 minutes maximum
@@ -52,40 +112,39 @@ $api = new RiotAPI([
 		],
 	],
 ]);
-
-//  And now you are ready to go!
 ```
 
-And there is a lot more, you can set when initializing the library, here is a complete list:
+And there is a lot more what you can set when initializing the library, here is a complete list:
 
-- `RiotAPI::SET_REGION` -- this specifies on which region endpoints we are working
-  - `Definition\Region::EUROPE_EAST`
-  - `Definition\Region::EUROPE_WEST`
-  - `Definition\Region::NORTH_AMERICA`
-  - `Definition\Region::BRASIL`
-  - `Definition\Region::RUSSIA`
-  - …
-- `RiotAPI::SET_KEY` -- this will set the default API key for all the calls
-- `RiotAPI::SET_TOURNAMENT_KEY` -- with this, you can specify your tournament-endpoints-only API key
-- `RiotAPI::SET_TOURNAMENT_INTERIM` -- by specifying this, you tell the library to use STUB endpoints (Tournament Applications in Interim state)
-- `RiotAPI::SET_CACHE_RATELIMIT` -- this tells the library to take care of not exceeding your API key's rate limit
-- `RiotAPI::SET_CACHE_CALLS` -- _not yet implemented_
-- `RiotAPI::SET_CACHE_CALLS_LENGTH` -- _not yet implemented_
-- `RiotAPI::SET_CACHE_PROVIDER` -- this option will allow you to either select from provided CacheProviders or to select your own
-  - `RiotAPI::CACHE_PROVIDER_FILE`
-  - `RiotAPI::CACHE_PROVIDER_MEMCACHED`
-- `RiotAPI::SET_CACHE_PROVIDER_PARAMS` -- these are parameters, that will be passed to the CacheProvider on initialization
+| Library settings key | Value | Description |
+| -------------------- | ----- | ----------- |
+| `RiotAPI::SET_REGION` | `Region::EUROPE_EAST`, `Region::EUROPE_WEST`, `Region::NORTH_AMERICA`, … | ***Required.*** Used to specify, to which endpoint calls are going to be made. |
+| `RiotAPI::SET_KEY` | `string` | ***Required.*** Option to specify your _API key_. |
+| `RiotAPI::SET_VERIFY_SSL` | `bool` | Use this option to disable SSL verification. Useful when testing on localhost. Shoul not be used in production. |
+| `RiotAPI::SET_TOURNAMENT_KEY` | `string` | Option to specify your _tournament API key_. |
+| `RiotAPI::SET_KEY_INCLUDE_TYPE` | `RiotAPI::KEY_AS_QUERY_PARAM`, `RiotAPI::KEY_AS_HEADER` | This option determines how is API key going to be included in the requests (by default `RiotAPI::KEY_AS_HEADER`). |
+| `RiotAPI::SET_INTERIM` | `bool` | By specifying this, you tell the library to use interim-only endpoints (eg. tournament calls will be sent to stub endpoints). |
+| `RiotAPI::SET_CACHE_RATELIMIT` | `bool` | This option tells the library to take care of not exceeding your API key's rate limit by counting the requests (you should also set desired limits using `RiotAPI::SET_RATELIMITS` or `defaults` will be used). |
+| `RiotAPI::SET_RATELIMITS` | `array` | Option to specify per-key API call rate limits. |
+| `RiotAPI::SET_CACHE_CALLS` | `bool` | This option tells the library to cache fetched data from API and to try to re-use already fetched data (you should also set option `RiotAPI::SET_CACHE_CALLS_LENGTH` to specify for how long should fetched data be stored in cache). |
+| `RiotAPI::SET_CACHE_CALLS_LENGTH` | `int` | Option to specify how log should fetched data from API be saved in cache. |
+| `RiotAPI::SET_CACHE_PROVIDER` | `RiotAPI::CACHE_PROVIDER_FILE`, `RiotAPI::CACHE_PROVIDER_MEMCACHED`, `ICacheProvider` | this option will allow you to either select from provided CacheProviders or to select your own |
+| `RiotAPI::SET_CACHE_PROVIDER_PARAMS` | `array` | These are parameters, that will be passed to the CacheProvider on it's initialization. |
 
-Working with RiotAPI can not be easier, just watch:
+## Usage example
+
+Working with RiotAPI can not be easier, just watch how to fetch summoner information
+based on summoner's name:
+
 ```php
-//  Fetches the summoner data (returns list of SummonerDto objects)
-$summoners = $api->getSummonerByName('I am TheKronnY');
-//  Let's get the first one (the only one there is)
-$summoner = reset($summoners);
+//  ...initialization...
 
-echo $summoner->id;             //  Outputs: 30904166
-echo $summoner->name;           //  Outputs: I am TheKronnY
-echo $summoner->summonerLevel;  //  Outputs: 30
+//  this fetches the summoner data and returns SummonerDto object
+$summoner = $api->getSummonerByName('I am TheKronnY');
+
+echo $summoner->id;             //  30904166
+echo $summoner->name;           //  I am TheKronnY
+echo $summoner->summonerLevel;  //  30
 
 print_r($summoner->getData());  //  Or array of all the data
 /* Array
@@ -99,125 +158,32 @@ print_r($summoner->getData());  //  Or array of all the data
  */
 ```
 
-### Known problems
-- Non-STUB TournamentProvider endpoint functions are not yet implemented
-- No request caching
+..or how to fetch a static champion data?
 
-### API Methods
+```php
+//  ...initialization...
 
-Below you can find list of methods by endpoints with usage examples.
+//  this fetches the champion data and returns StaticChampionDto object
+$champion = $api->getStaticChampion(61);
 
-#### Champion
+echo $champion->name;  //  Orianna
+echo $champion->title; //  the Lady of Clockwork
 
-Available methods:
-- getChampions
-- getChampion
-
-#### ChampionMastery
-
-Available methods:
-- getChampionMastery
-- getChampionMasteryList
-- getChampionMasteryScore
-- getChampionMasteryTopList
-
-#### CurrentGame
-
-Available methods:
-- getCurrentGame
-
-#### FeaturedGames
-
-Available methods:
-- getFeaturedGames
-
-#### Game
-
-Available methods:
-- getRecentGames
-
-#### League
-
-Available methods:
-- getLeagueMappingBySummoners
-- getLeagueMappingBySummoner
-- getLeagueEntryBySummoners
-- getLeagueEntryBySummoner
-- getLeagueMappingChallenger
-- getLeagueMappingMaster
-
-#### StaticData
-
-Available methods:
-- getStaticChampions
-- getStaticChampion
-- getStaticItems
-- getStaticItem
-- getLanguageStrings
-- getLanguages
-- getMaps
-- getMasteries
-- getMastery
-- getRealm
-- getRunes
-- getRune
-- getSummonerSpells
-- getSummonerSpell
-- getVersions
-
-#### Status
-
-Available methods:
-- getShards
-- getShardStatus
-
-#### Match
-
-Available methods:
-- getMatch
-- _getTournamentMatch_
-- _getTournamentMatchIds_
-
-#### MatchList
-
-Available methods:
-- getMatchlist
-
-#### Stats
-
-Available methods:
-- getRankedStats
-- getSummaryStats
-
-#### Summoner
-
-Available methods:
-- getSummonersByName
-- getSummonerByName
-- getSummoners
-- getSummoner
-- getSummonersMasteries
-- getSummonerMasteries
-- getSummonersNames
-- getSummonerName
-- getSummonersRunes
-- getSummonerRunes
-
-#### TournamentProvider
-
-Available methods:
-- _createTournamentCodes_
-- _createTournamentProvider_
-- _createTournament_
-- _getTournamentLobbyEvents_
-
-#### TournamentSTUB
-
-Available methods:
-- createTournamentCodes_STUB
-- createTournamentProvider_STUB
-- createTournament_STUB
-- getTournamentLobbyEvents_STUB
+print_r($champion->getData());  //  Or array of all the data
+/* Array
+ * (
+ *    [id] => 61
+ *    [name] => "Orianna"
+ *    [key] => "Orianna"
+ *    [title] => "the Lady of Clockwork"
+ * )
+ */
+```
 
 ## DataDragon API
-_TBA_
+
+How easy it is to work with images? For instance, to get splash image of Orianna?
+`DataDragonAPI::getChampionSplashO($api->getStaticChampion(61))`, that easy.
+
+Want to know more? _TBA_
+
