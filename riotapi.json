@@ -5,6 +5,10 @@
 	"language": "PHP",
 	"links": [
 		{
+			"name": "Packagist",
+			"url": "https://packagist.org/packages/dolejska-daniel/riot-api"
+		},
+		{
 			"name": "README",
 			"url": "https://github.com/dolejska-daniel/riot-api/blob/master/README.md"
 		}
