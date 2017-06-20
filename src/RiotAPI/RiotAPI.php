@@ -67,6 +67,7 @@ class RiotAPI
 	 */
 	const
 		SET_REGION                = 'SET_REGION',
+		SET_ORIG_REGION           = 'SET_ORIG_REGION',
 		SET_PLATFORM              = 'SET_PLATFORM',              // Set internally by setting region
 		SET_VERIFY_SSL            = 'SET_VERIFY_SSL',            // Specifies whether or not to verify SSL (verification often fails on localhost)
 		SET_KEY                   = 'SET_KEY',                   // API key used by default
@@ -415,7 +416,7 @@ class RiotAPI
 			$callCache = $this->cache->load(self::CACHE_KEY_CCC);
 			if ($callCache === false)
 				//  nothing loaded, creating new instance
-				$callCache = new CallCacheControl($this->regions);
+				$callCache = new CallCacheControl();
 
 			$this->ccc = $callCache;
 		}
@@ -516,6 +517,34 @@ class RiotAPI
 	}
 
 	/**
+	 *   Sets temporary region to be used on API calls. Saves current region.
+	 *
+	 * @param string $tempRegion
+	 *
+	 * @return RiotAPI
+	 */
+	public function setTemporaryRegion( string $tempRegion ): self
+	{
+		$this->setSetting(self::SET_ORIG_REGION, $this->getSetting(self::SET_REGION));
+		$this->setSetting(self::SET_REGION, $tempRegion);
+		$this->setSetting(self::SET_PLATFORM, $this->platforms->getPlatformName($tempRegion));
+		return $this;
+	}
+
+	/**
+	 *   Unets temporary region and returns original region.
+	 *
+	 * @return RiotAPI
+	 */
+	public function unsetTemporaryRegion(): self
+	{
+		$region = $this->getSetting(self::SET_ORIG_REGION);
+		$this->setSetting(self::SET_REGION, $region);
+		$this->setSetting(self::SET_PLATFORM, $this->platforms->getPlatformName($region));
+		return $this;
+	}
+
+	/**
 	 *   Sets API key type for next API call.
 	 *
 	 * @param string $keyType
@@ -581,17 +610,19 @@ class RiotAPI
 	/**
 	 *   Makes call to RiotAPI.
 	 *
-	 * @param string $method
+	 * @param string|null $overrideRegion
+	 * @param string      $method
 	 *
-	 * @throws GeneralException
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
-	 *
 	 * @internal
 	 */
-	protected function makeCall( string $method = self::METHOD_GET )
+	protected function makeCall( string $overrideRegion = null, string $method = self::METHOD_GET )
 	{
+		if ($overrideRegion)
+			$this->setTemporaryRegion($overrideRegion);
+
 		$this->_beforeCall();
 
 		$url = $this->_getCallUrl($curlHeaders);
@@ -665,9 +696,14 @@ class RiotAPI
 			}
 		}
 
+		if ($overrideRegion)
+			$this->unsetTemporaryRegion();
+
+		$this->result_data    = json_decode($response, true);
+
 		$errMessage = "";
-		if (isset($response->status) && isset($response->status->message))
-			$errMessage = " " . $response->status->message;
+		if (!is_null($this->result_data) && isset($this->result_data->status) && isset($this->result_data->status->message))
+			$errMessage = " " . $this->result_data->status->message;
 		if ($response_code == 503)
 		{
 			throw new ServerException('RiotAPI: Service is unavailable.');
@@ -702,10 +738,8 @@ class RiotAPI
 		}
 		elseif ($response_code > 400)
 		{
-			throw new ServerException("RiotAPI: Unknown error occured. ($response_code)" . $errMessage);
+			throw new RequestException("RiotAPI: Unknown error occured. ($response_code)" . $errMessage);
 		}
-
-		$this->result_data    = json_decode($response, true);
 
 		$this->_afterCall($url, $requestHash);
 
@@ -1669,7 +1703,7 @@ class RiotAPI
 	 */
 	public function createTournamentCodes( int $tournament_id, int $count, TournamentCodeParameters $parameters ): array
 	{
-		if ($this->getSetting(self::SET_INTERIM, true))
+		if ($this->getSetting(self::SET_INTERIM, false))
 			return $this->createTournamentCodes_STUB($tournament_id, $count, $parameters);
 
 		if ($parameters->teamSize <= 0)
@@ -1700,7 +1734,7 @@ class RiotAPI
 			->addQuery('count', $count)
 			->setData($data)
 			->useKey(self::SET_TOURNAMENT_KEY)
-			->makeCall(null, self::METHOD_POST);
+			->makeCall(Region::GLOBAL, self::METHOD_POST);
 
 		return $this->getResult();
 	}
@@ -1718,7 +1752,7 @@ class RiotAPI
 	 */
 	public function editTournamentCode( string $tournament_code, Objects\TournamentCodeUpdateParameters $parameters )
 	{
-		if ($this->getSetting(self::SET_INTERIM, true))
+		if ($this->getSetting(self::SET_INTERIM, false))
 			throw new RequestException('This endpoint is not available in interim mode.');
 
 		if (in_array($parameters->pickType, self::TOURNAMENT_ALLOWED_PICK_TYPES, true) == false)
@@ -1735,7 +1769,7 @@ class RiotAPI
 		$this->setEndpoint("/lol/tournament/" . self::ENDPOINT_VERSION_TOURNAMENT . "/codes/{$tournament_code}")
 			->setData($data)
 			->useKey(self::SET_TOURNAMENT_KEY)
-			->makeCall(null, self::METHOD_PUT);
+			->makeCall(Region::GLOBAL, self::METHOD_PUT);
 
 		return $this->getResult();
 	}
@@ -1751,12 +1785,12 @@ class RiotAPI
 	 */
 	public function getTournamentCodeData( string $tournament_code ): Objects\TournamentCodeDto
 	{
-		if ($this->getSetting(self::SET_INTERIM, true))
+		if ($this->getSetting(self::SET_INTERIM, false))
 			throw new RequestException('This endpoint is not available in interim mode.');
 
 		$this->setEndpoint("/lol/tournament/" . self::ENDPOINT_VERSION_TOURNAMENT . "/codes/{$tournament_code}")
 			->useKey(self::SET_TOURNAMENT_KEY)
-			->makeCall();
+			->makeCall(Region::GLOBAL);
 
 		return new Objects\TournamentCodeDto($this->getResult());
 	}
@@ -1772,7 +1806,7 @@ class RiotAPI
 	 */
 	public function createTournamentProvider( ProviderRegistrationParameters $parameters ): int
 	{
-		if ($this->getSetting(self::SET_INTERIM, true))
+		if ($this->getSetting(self::SET_INTERIM, false))
 			return $this->createTournamentProvider_STUB($parameters);
 
 		if (empty($parameters->url))
@@ -1786,7 +1820,7 @@ class RiotAPI
 		$this->setEndpoint("/lol/tournament/" . self::ENDPOINT_VERSION_TOURNAMENT . "/providers")
 			->setData($data)
 			->useKey(self::SET_TOURNAMENT_KEY)
-			->makeCall(null, self::METHOD_POST);
+			->makeCall(Region::GLOBAL, self::METHOD_POST);
 
 		return $this->getResult();
 	}
@@ -1802,7 +1836,7 @@ class RiotAPI
 	 */
 	public function createTournament( TournamentRegistrationParameters $parameters ): int
 	{
-		if ($this->getSetting(self::SET_INTERIM, true))
+		if ($this->getSetting(self::SET_INTERIM, false))
 			return $this->createTournament_STUB($parameters);
 
 		if (empty($parameters->name))
@@ -1816,7 +1850,7 @@ class RiotAPI
 		$this->setEndpoint("/lol/tournament/" . self::ENDPOINT_VERSION_TOURNAMENT . "/tournaments")
 			->setData($data)
 			->useKey(self::SET_TOURNAMENT_KEY)
-			->makeCall(null, self::METHOD_POST);
+			->makeCall(Region::GLOBAL, self::METHOD_POST);
 
 		return $this->getResult();
 	}
@@ -1832,12 +1866,12 @@ class RiotAPI
 	 */
 	public function getTournamentLobbyEvents( string $tournament_code ): Objects\LobbyEventDTOWrapper
 	{
-		if ($this->getSetting(self::SET_INTERIM, true))
+		if ($this->getSetting(self::SET_INTERIM, false))
 			return $this->getTournamentLobbyEvents_STUB($tournament_code);
 
 		$this->setEndpoint("/lol/tournament/" . self::ENDPOINT_VERSION_TOURNAMENT . "/lobby-events/by-code/{$tournament_code}")
 			->useKey(self::SET_TOURNAMENT_KEY)
-			->makeCall();
+			->makeCall(Region::GLOBAL);
 
 		return new Objects\LobbyEventDtoWrapper($this->getResult());
 	}
@@ -1890,12 +1924,12 @@ class RiotAPI
 
 		$data = json_encode($parameters);
 
-		$this->setEndpoint("/lol/tournament-stub/" . self::ENDPOINT_VERSION_TOURNAMENT . "/codes")
+		$this->setEndpoint("/lol/tournament-stub/" . self::ENDPOINT_VERSION_TOURNAMENT_STUB . "/codes")
 			->addQuery('tournamentId', $tournament_id)
 			->addQuery('count', $count)
 			->setData($data)
 			->useKey(self::SET_TOURNAMENT_KEY)
-			->makeCall(null, self::METHOD_POST);
+			->makeCall(Region::GLOBAL, self::METHOD_POST);
 
 		return $this->getResult();
 	}
@@ -1916,15 +1950,17 @@ class RiotAPI
 		if (empty($parameters->url))
 			throw new RequestParameterException('Callback URL (url) may not be empty.');
 
-		if (in_array($parameters->region, self::TOURNAMENT_ALLOWED_REGIONS, true) == false)
+		if (in_array(strtolower($parameters->region), self::TOURNAMENT_ALLOWED_REGIONS, true) == false)
 			throw new RequestParameterException('Value of region (region) is invalid. Allowed values: ' . implode(', ', self::TOURNAMENT_ALLOWED_REGIONS));
+
+		$parameters->region = strtoupper($parameters->region);
 
 		$data = json_encode($parameters, JSON_UNESCAPED_SLASHES);
 
-		$this->setEndpoint("/lol/tournament-stub/" . self::ENDPOINT_VERSION_TOURNAMENT . "/providers")
+		$this->setEndpoint("/lol/tournament-stub/" . self::ENDPOINT_VERSION_TOURNAMENT_STUB . "/providers")
 			->setData($data)
 			->useKey(self::SET_TOURNAMENT_KEY)
-			->makeCall(null, self::METHOD_POST);
+			->makeCall(Region::GLOBAL, self::METHOD_POST);
 
 		return $this->getResult();
 	}
@@ -1950,10 +1986,10 @@ class RiotAPI
 
 		$data = json_encode($parameters, JSON_UNESCAPED_SLASHES);
 
-		$this->setEndpoint("/lol/tournament/" . self::ENDPOINT_VERSION_TOURNAMENT . "/tournaments")
+		$this->setEndpoint("/lol/tournament-stub/" . self::ENDPOINT_VERSION_TOURNAMENT_STUB . "/tournaments")
 			->setData($data)
 			->useKey(self::SET_TOURNAMENT_KEY)
-			->makeCall(null, self::METHOD_POST);
+			->makeCall(Region::GLOBAL, self::METHOD_POST);
 
 		return $this->getResult();
 	}
@@ -1970,10 +2006,33 @@ class RiotAPI
 	 */
 	public function getTournamentLobbyEvents_STUB( string $tournament_code ): Objects\LobbyEventDtoWrapper
 	{
-		$this->setEndpoint("/lol/tournament-stub/" . self::ENDPOINT_VERSION_TOURNAMENT . "/lobby-events/by-code/{$tournament_code}")
+		$this->setEndpoint("/lol/tournament-stub/" . self::ENDPOINT_VERSION_TOURNAMENT_STUB . "/lobby-events/by-code/{$tournament_code}")
 			->useKey(self::SET_TOURNAMENT_KEY)
-			->makeCall();
+			->makeCall(Region::GLOBAL);
 
 		return new Objects\LobbyEventDtoWrapper($this->getResult());
+	}
+
+
+	/****************************************d*d*
+	 *
+	 *  Endpoint for testing purposes
+	 *
+	 ********************************************/
+
+	/**
+	 * @param             $specs
+	 * @param string|null $region
+	 * @param string|null $method
+	 *
+	 * @return mixed
+	 * @internal
+	 */
+	public function makeTestEndpointCall( $specs, string $region = null, string $method = null )
+	{
+		$this->setEndpoint("/lol/test-endpoint/v0/" . $specs)
+			->makeCall($region ?: null, $method ?: self::METHOD_GET);
+
+		//return $this->getResult();
 	}
 }

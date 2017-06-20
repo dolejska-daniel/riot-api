@@ -21,6 +21,9 @@ declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
 
+use RiotAPI\Exceptions\RequestException;
+use RiotAPI\Exceptions\ServerException;
+use RiotAPI\Exceptions\ServerLimitException;
 use RiotAPI\RiotAPI;
 use RiotAPI\Definitions\Region;
 use RiotAPI\Definitions\Platform;
@@ -34,15 +37,14 @@ class LibraryTest extends TestCase
 	public function testInit()
 	{
 		$api = new RiotAPI([
-			RiotAPI::SET_KEY    => getenv('API_KEY'),
-			RiotAPI::SET_REGION => Region::EUROPE_EAST,
+			RiotAPI::SET_KEY            => getenv('API_KEY'),
+			RiotAPI::SET_REGION         => Region::EUROPE_EAST,
+			RiotAPI::SET_USE_DUMMY_DATA => true,
 		]);
 
 		$this->assertInstanceOf(RiotAPI::class, $api);
 
-		return [
-			[ $api ],
-		];
+		return $api;
 	}
 
 	public function testInit_cachingDefaults()
@@ -79,7 +81,7 @@ class LibraryTest extends TestCase
 			[
 				[
 					getenv('API_KEY') => [
-						IRateLimitControl::INTERVAL_1S => "ASD",
+						IRateLimitControl::INTERVAL_1S => "INVALID_COUNT",
 						IRateLimitControl::INTERVAL_10S => 50,
 					],
 				]
@@ -92,7 +94,7 @@ class LibraryTest extends TestCase
 					],
 					getenv('TOURNAMENT_API_KEY') => [
 						IRateLimitControl::INTERVAL_1S => 10,
-						IRateLimitControl::INTERVAL_10S => "ASD",
+						IRateLimitControl::INTERVAL_10S => "INVALID_COUNT",
 					],
 				]
 			],
@@ -186,8 +188,7 @@ class LibraryTest extends TestCase
 	}
 
 	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
+	 * @depends testInit
 	 *
 	 * @param RiotAPI $api
 	 */
@@ -199,8 +200,7 @@ class LibraryTest extends TestCase
 	}
 
 	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
+	 * @depends testInit
 	 *
 	 * @param RiotAPI $api
 	 */
@@ -212,10 +212,9 @@ class LibraryTest extends TestCase
 	}
 
 	/**
-	 * @depends      testInit
+	 * @depends testInit
 	 * @depends      testChangeRegion
 	 * @depends      testChangeSettings_single
-	 * @dataProvider testInit
 	 *
 	 * @param RiotAPI $api
 	 */
@@ -286,77 +285,170 @@ class LibraryTest extends TestCase
 		]);
 	}
 
-	public function testMakeCall_InvalidMethod()
+	/**
+	 * @depends testInit
+	 *
+	 * @param RiotAPI $api
+	 */
+	public function testMakeCall_InvalidMethod( RiotAPI $api )
 	{
-		//  TODO
-		$this->markTestIncomplete('This test has not been implemented yet.');
-	}
+		$this->expectException(RequestException::class);
+		$this->expectExceptionMessage("Invalid method selected.");
 
-	public function testMakeCall_503()
-	{
-		//  TODO
-		$this->markTestIncomplete('This test has not been implemented yet.');
-	}
-
-	public function testMakeCall_500()
-	{
-		//  TODO
-		$this->markTestIncomplete('This test has not been implemented yet.');
-	}
-
-	public function testMakeCall_429()
-	{
-		//  TODO
-		$this->markTestIncomplete('This test has not been implemented yet.');
-	}
-
-	public function testMakeCall_415()
-	{
-		//  TODO
-		$this->markTestIncomplete('This test has not been implemented yet.');
-	}
-
-	public function testMakeCall_404()
-	{
-		//  TODO
-		$this->markTestIncomplete('This test has not been implemented yet.');
-	}
-
-	public function testMakeCall_403()
-	{
-		//  TODO
-		$this->markTestIncomplete('This test has not been implemented yet.');
-	}
-
-	public function testMakeCall_401()
-	{
-		//  TODO
-		$this->markTestIncomplete('This test has not been implemented yet.');
-	}
-
-	public function testMakeCall_400()
-	{
-		//  TODO
-		$this->markTestIncomplete('This test has not been implemented yet.');
-	}
-
-	public function testMakeCall_4xx()
-	{
-		//  TODO
-		$this->markTestIncomplete('This test has not been implemented yet.');
+		$api->makeTestEndpointCall("", null, "INVALID_METHOD");
 	}
 
 	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
+	 * @depends testInit
+	 *
+	 * @param RiotAPI $api
+	 */
+	public function testMakeCall_503( RiotAPI $api )
+	{
+		$this->expectException(ServerException::class);
+		$this->expectExceptionMessage("RiotAPI: Service is unavailable.");
+
+		$api->makeTestEndpointCall(503);
+	}
+
+	/**
+	 * @depends testInit
+	 *
+	 * @param RiotAPI $api
+	 */
+	public function testMakeCall_500( RiotAPI $api )
+	{
+		$this->expectException(ServerException::class);
+		$this->expectExceptionMessage("RiotAPI: Internal server error occured.");
+
+		$api->makeTestEndpointCall(500);
+	}
+
+	/**
+	 * @depends testInit
+	 *
+	 * @param RiotAPI $api
+	 */
+	public function testMakeCall_429( RiotAPI $api )
+	{
+		$this->expectException(ServerLimitException::class);
+		$this->expectExceptionMessage("RiotAPI: Rate limit for this API key was exceeded.");
+
+		$api->makeTestEndpointCall(429);
+	}
+
+	/**
+	 * @depends testInit
+	 *
+	 * @param RiotAPI $api
+	 */
+	public function testMakeCall_415( RiotAPI $api )
+	{
+		$this->expectException(RequestException::class);
+		$this->expectExceptionMessage("Request: Unsupported media type.");
+
+		$api->makeTestEndpointCall(415);
+	}
+
+	/**
+	 * @depends testInit
+	 *
+	 * @param RiotAPI $api
+	 */
+	public function testMakeCall_404( RiotAPI $api )
+	{
+		$this->expectException(RequestException::class);
+		$this->expectExceptionMessage("Request: Not found.");
+
+		$api->makeTestEndpointCall(404);
+	}
+
+	/**
+	 * @depends testInit
+	 *
+	 * @param RiotAPI $api
+	 */
+	public function testMakeCall_403( RiotAPI $api )
+	{
+		$this->expectException(RequestException::class);
+		$this->expectExceptionMessage("Request: Forbidden.");
+
+		$api->makeTestEndpointCall(403);
+	}
+
+	/**
+	 * @depends testInit
+	 *
+	 * @param RiotAPI $api
+	 */
+	public function testMakeCall_401( RiotAPI $api )
+	{
+		$this->expectException(RequestException::class);
+		$this->expectExceptionMessage("Request: Unauthorized.");
+
+		$api->makeTestEndpointCall(401);
+	}
+
+	/**
+	 * @depends testInit
+	 *
+	 * @param RiotAPI $api
+	 */
+	public function testMakeCall_400( RiotAPI $api )
+	{
+		$this->expectException(RequestException::class);
+		$this->expectExceptionMessage("Request: Invalid request.");
+
+		$api->makeTestEndpointCall(400);
+	}
+
+	/**
+	 * @depends testInit
+	 *
+	 * @param RiotAPI $api
+	 */
+	public function testMakeCall_4xx( RiotAPI $api )
+	{
+		$this->expectException(RequestException::class);
+		$this->expectExceptionMessage("RiotAPI: Unknown error occured.");
+
+		$api->makeTestEndpointCall(498);
+	}
+
+	/**
+	 * @depends testInit
+	 *
+	 * @param RiotAPI $api
+	 */
+	public function testMakeCall_NoDummyData( RiotAPI $api )
+	{
+		$this->expectException(RequestException::class);
+		$this->expectExceptionMessage("No DummyData available for call.");
+
+		$api->makeTestEndpointCall("no-dummy-data");
+	}
+
+	/**
+	 * @depends testInit
+	 *
+	 * @param RiotAPI $api
+	 */
+	public function testMakeCall_DummyDataEmpty( RiotAPI $api )
+	{
+		$this->expectException(RequestException::class);
+		$this->expectExceptionMessage("No DummyData available for call.");
+
+		$api->makeTestEndpointCall("empty");
+	}
+
+	/**
+	 * @depends testInit
 	 *
 	 * @param RiotAPI $api
 	 */
 	public function testDestruct( RiotAPI $api )
 	{
-		//  TODO
-		$this->markTestIncomplete('This test has not been implemented yet.');
-
 		$api->__destruct();
+		$this->assertTrue(true);
 	}
 }

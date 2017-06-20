@@ -32,14 +32,11 @@ class RegionTest extends RiotAPITestCase
 
 		$this->assertInstanceOf(Region::class, $obj);
 
-		return [
-			[ $obj ],
-		];
+		return $obj;
 	}
 
 	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
+	 * @depends testInit
 	 *
 	 * @param Region $region
 	 */
@@ -50,8 +47,7 @@ class RegionTest extends RiotAPITestCase
 	}
 
 	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
+	 * @depends testInit
 	 *
 	 * @param Region $region
 	 */
@@ -62,8 +58,7 @@ class RegionTest extends RiotAPITestCase
 	}
 
 	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
+	 * @depends testInit
 	 *
 	 * @param Region $region
 	 */

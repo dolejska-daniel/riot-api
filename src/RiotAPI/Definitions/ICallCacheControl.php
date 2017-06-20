@@ -52,7 +52,7 @@ interface ICallCacheControl
 	 * @param        $data
 	 * @param int    $length
 	 *
-	 * @return
+	 * @return bool
 	 */
-	public function saveCallData( string $hash, $data, int $length );
+	public function saveCallData( string $hash, $data, int $length ): bool;
 }

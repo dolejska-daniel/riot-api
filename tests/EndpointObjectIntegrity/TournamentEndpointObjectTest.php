@@ -40,9 +40,7 @@ class TournamentEndpointObjectTest extends RiotAPITestCase
 
 		$this->assertInstanceOf(RiotAPI::class, $api);
 
-		return [
-			[ $api ],
-		];
+		return $api;
 	}
 
 	public function testInitInterim()
@@ -57,14 +55,11 @@ class TournamentEndpointObjectTest extends RiotAPITestCase
 
 		$this->assertInstanceOf(RiotAPI::class, $api);
 
-		return [
-			[ $api ],
-		];
+		return $api;
 	}
 
 	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
+	 * @depends testInit
 	 *
 	 * @param RiotAPI $api
 	 */
@@ -92,15 +87,12 @@ class TournamentEndpointObjectTest extends RiotAPITestCase
 	}
 
 	/**
-	 * @depends      testInitInterim
-	 * @dataProvider testInitInterim
+	 * @depends testInitInterimInterim
 	 *
 	 * @param RiotAPI $api
 	 */
 	public function testCreateTournamentCodes_Interim( RiotAPI $api )
 	{
-		$this->markTestIncomplete('No DummyData for this call yet.');
-
 		$codeParams = new Objects\TournamentCodeParameters([
 			'allowedSummonerIds' => new Objects\SummonerIdParams([
 				'participants' => [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ],
@@ -113,7 +105,7 @@ class TournamentEndpointObjectTest extends RiotAPITestCase
 
 		//  Get library processed results
 		/** @var array $result */
-		$result = $api->createTournamentCodes(1, 10, $codeParams);
+		$result = $api->createTournamentCodes(1132, 10, $codeParams);
 		//  Get raw result
 		$rawResult = $api->getResult();
 
@@ -121,8 +113,7 @@ class TournamentEndpointObjectTest extends RiotAPITestCase
 	}
 
 	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
+	 * @depends testInit
 	 *
 	 * @param RiotAPI $api
 	 */
@@ -145,15 +136,12 @@ class TournamentEndpointObjectTest extends RiotAPITestCase
 	}
 
 	/**
-	 * @depends      testInitInterim
-	 * @dataProvider testInitInterim
+	 * @depends testInitInterimInterim
 	 *
 	 * @param RiotAPI $api
 	 */
 	public function testCreateTournamentProvider_Interim( RiotAPI $api )
 	{
-		$this->markTestIncomplete('No DummyData for this call yet.');
-
 		$providerParams = new Objects\ProviderRegistrationParameters([
 			'region' => Region::EUROPE_EAST,
 			'url'    => 'http://api.turnay.cz'
@@ -169,8 +157,7 @@ class TournamentEndpointObjectTest extends RiotAPITestCase
 	}
 
 	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
+	 * @depends testInit
 	 *
 	 * @param RiotAPI $api
 	 */
@@ -193,15 +180,12 @@ class TournamentEndpointObjectTest extends RiotAPITestCase
 	}
 
 	/**
-	 * @depends      testInitInterim
-	 * @dataProvider testInitInterim
+	 * @depends testInitInterimInterim
 	 *
 	 * @param RiotAPI $api
 	 */
 	public function testCreateTournament_Interim( RiotAPI $api )
 	{
-		$this->markTestIncomplete('No DummyData for this call yet.');
-
 		$tournamentParams = new Objects\TournamentRegistrationParameters([
 			'providerId' => 672,
 			'name'       => 'TestTournament',
@@ -217,8 +201,7 @@ class TournamentEndpointObjectTest extends RiotAPITestCase
 	}
 
 	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
+	 * @depends testInit
 	 *
 	 * @param RiotAPI $api
 	 */
@@ -236,18 +219,15 @@ class TournamentEndpointObjectTest extends RiotAPITestCase
 	}
 
 	/**
-	 * @depends      testInitInterim
-	 * @dataProvider testInitInterim
+	 * @depends testInitInterimInterim
 	 *
 	 * @param RiotAPI $api
 	 */
 	public function testGetTournamentLobbyEvents_Interim( RiotAPI $api )
 	{
-		$this->markTestIncomplete('No DummyData for this call yet.');
-
 		//  Get library processed results
 		/** @var Objects\LobbyEventDtoWrapper $result */
-		$result = $api->getTournamentLobbyEvents('239d180f-fb8a-439e-85d9-95142e10b4f5');
+		$result = $api->getTournamentLobbyEvents('EUNE1132-TOURNAMENTCODE0001');
 		//  Get raw result
 		$rawResult = $api->getResult();
 
@@ -255,8 +235,7 @@ class TournamentEndpointObjectTest extends RiotAPITestCase
 	}
 
 	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
+	 * @depends testInit
 	 *
 	 * @param RiotAPI $api
 	 */
@@ -282,8 +261,7 @@ class TournamentEndpointObjectTest extends RiotAPITestCase
 	}
 
 	/**
-	 * @depends      testInitInterim
-	 * @dataProvider testInitInterim
+	 * @depends testInitInterimInterim
 	 *
 	 * @param RiotAPI $api
 	 */
@@ -305,8 +283,7 @@ class TournamentEndpointObjectTest extends RiotAPITestCase
 	}
 
 	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
+	 * @depends testInit
 	 *
 	 * @param RiotAPI $api
 	 */
@@ -324,8 +301,7 @@ class TournamentEndpointObjectTest extends RiotAPITestCase
 	}
 
 	/**
-	 * @depends      testInitInterim
-	 * @dataProvider testInitInterim
+	 * @depends testInitInterimInterim
 	 *
 	 * @param RiotAPI $api
 	 */

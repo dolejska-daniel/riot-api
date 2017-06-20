@@ -37,9 +37,7 @@ class SummonerEndpointTest extends RiotAPITestCase
 
 		$this->assertInstanceOf(RiotAPI::class, $api);
 
-		return [
-			[ $api ],
-		];
+		return $api;
 	}
 
 	public static function randomString( $length = 8 ): string
@@ -54,8 +52,7 @@ class SummonerEndpointTest extends RiotAPITestCase
 	}
 
 	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
+	 * @depends testInit
 	 *
 	 * @param RiotAPI $api
 	 */
@@ -74,8 +71,7 @@ class SummonerEndpointTest extends RiotAPITestCase
 	}
 
 	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
+	 * @depends testInit
 	 *
 	 * @param RiotAPI $api
 	 */
@@ -94,8 +90,7 @@ class SummonerEndpointTest extends RiotAPITestCase
 	}
 
 	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
+	 * @depends testInit
 	 *
 	 * @param RiotAPI $api
 	 */

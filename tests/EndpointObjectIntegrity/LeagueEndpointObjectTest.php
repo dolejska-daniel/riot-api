@@ -36,14 +36,11 @@ class LeagueEndpointObjectTest extends RiotAPITestCase
 
 		$this->assertInstanceOf(RiotAPI::class, $api);
 
-		return [
-			[ $api ],
-		];
+		return $api;
 	}
 
 	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
+	 * @depends testInit
 	 *
 	 * @param RiotAPI $api
 	 */
@@ -59,8 +56,7 @@ class LeagueEndpointObjectTest extends RiotAPITestCase
 	}
 
 	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
+	 * @depends testInit
 	 *
 	 * @param RiotAPI $api
 	 */
@@ -76,8 +72,7 @@ class LeagueEndpointObjectTest extends RiotAPITestCase
 	}
 
 	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
+	 * @depends testInit
 	 *
 	 * @param RiotAPI $api
 	 */
@@ -93,8 +88,7 @@ class LeagueEndpointObjectTest extends RiotAPITestCase
 	}
 
 	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
+	 * @depends testInit
 	 *
 	 * @param RiotAPI $api
 	 */

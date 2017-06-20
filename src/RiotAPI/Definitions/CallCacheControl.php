@@ -32,12 +32,10 @@ class CallCacheControl implements ICallCacheControl
 
 	/**
 	 *   CallCacheControl constructor.
-	 *
-	 * @param IRegion $region
 	 */
-	public function __construct( IRegion $region )
+	public function __construct()
 	{
-		$this->storage = new CallCacheStorage($region);
+		$this->storage = new CallCacheStorage();
 	}
 
 	/**
@@ -70,9 +68,12 @@ class CallCacheControl implements ICallCacheControl
 	 * @param string $hash
 	 * @param        $data
 	 * @param int    $lenght
+	 *
+	 * @return bool
 	 */
-	public function saveCallData( string $hash, $data, int $lenght )
+	public function saveCallData( string $hash, $data, int $lenght ): bool
 	{
 		$this->storage->save($hash, $data, $lenght);
+		return true;
 	}
 }

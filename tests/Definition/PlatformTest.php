@@ -33,14 +33,11 @@ class PlatformTest extends RiotAPITestCase
 
 		$this->assertInstanceOf(Platform::class, $obj);
 
-		return [
-			[ $obj ],
-		];
+		return $obj;
 	}
 
 	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
+	 * @depends testInit
 	 *
 	 * @param Platform $region
 	 */
@@ -51,8 +48,7 @@ class PlatformTest extends RiotAPITestCase
 	}
 
 	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
+	 * @depends testInit
 	 *
 	 * @param Platform $region
 	 */
@@ -63,8 +59,7 @@ class PlatformTest extends RiotAPITestCase
 	}
 
 	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
+	 * @depends testInit
 	 *
 	 * @param Platform $region
 	 */

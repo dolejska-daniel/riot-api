@@ -31,12 +31,9 @@ class FileCacheProviderTest extends RiotAPITestCase
 
 	public static $cacheDir;
 
-	public static $nonWritableCacheDir;
-
 	public function testInit()
 	{
-		self::$cacheDir            = $cacheDir            = __DIR__ . DIRECTORY_SEPARATOR . "cache" . DIRECTORY_SEPARATOR;
-		self::$nonWritableCacheDir = $nonWritableCacheDir = __DIR__ . DIRECTORY_SEPARATOR . "nonwritable-dir" . DIRECTORY_SEPARATOR;
+		self::$cacheDir = $cacheDir = __DIR__ . DIRECTORY_SEPARATOR . "cache-fcp" . DIRECTORY_SEPARATOR;
 		self::$data = [
 			[
 				'key1' => "SECRET_API_KEY",
@@ -54,16 +51,13 @@ class FileCacheProviderTest extends RiotAPITestCase
 			],
 		];
 
-		self::deleteDir($cacheDir);
-		self::deleteDir($nonWritableCacheDir);
+		self::deleteDir(self::$cacheDir);
 
 		$obj = new FileCacheProvider(self::$cacheDir);
 
 		$this->assertInstanceOf(FileCacheProvider::class, $obj);
 
-		return [
-			[ $obj ],
-		];
+		return $obj;
 	}
 
 	public function testInit_InvalidPath()
@@ -75,22 +69,7 @@ class FileCacheProviderTest extends RiotAPITestCase
 	}
 
 	/**
-	 * @requires OS Linux
-	 */
-	public function testInit_Exception()
-	{
-		$this->markTestIncomplete("This test has not been implemented yet.");
-
-		$this->expectException(SettingsException::class);
-		$this->expectExceptionMessage("is not writable.");
-
-		mkdir(self::$nonWritableCacheDir, 440);
-		new FileCacheProvider(self::$nonWritableCacheDir);
-	}
-
-	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
+	 * @depends testInit
 	 *
 	 * @param FileCacheProvider $provider
 	 */
@@ -104,8 +83,7 @@ class FileCacheProviderTest extends RiotAPITestCase
 	}
 
 	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
+	 * @depends testInit
 	 *
 	 * @param FileCacheProvider $provider
 	 */
@@ -118,8 +96,7 @@ class FileCacheProviderTest extends RiotAPITestCase
 	}
 
 	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
+	 * @depends testInit
 	 *
 	 * @param FileCacheProvider $provider
 	 */
@@ -134,9 +111,8 @@ class FileCacheProviderTest extends RiotAPITestCase
 	}
 
 	/**
-	 * @depends      testInit
-	 * @depends      testSave
-	 * @dataProvider testInit
+	 * @depends testInit
+	 * @depends testSave
 	 *
 	 * @param FileCacheProvider $provider
 	 */
@@ -148,8 +124,7 @@ class FileCacheProviderTest extends RiotAPITestCase
 	}
 
 	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
+	 * @depends testInit
 	 *
 	 * @param FileCacheProvider $provider
 	 */
@@ -159,8 +134,7 @@ class FileCacheProviderTest extends RiotAPITestCase
 	}
 
 	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
+	 * @depends testInit
 	 *
 	 * @runInSeparateProcess
 	 * @param FileCacheProvider $provider
@@ -173,9 +147,8 @@ class FileCacheProviderTest extends RiotAPITestCase
 	}
 
 	/**
-	 * @depends      testInit
-	 * @depends      testIsSaved
-	 * @dataProvider testInit
+	 * @depends testInit
+	 * @depends testIsSaved
 	 *
 	 * @param FileCacheProvider $provider
 	 */
@@ -187,9 +160,8 @@ class FileCacheProviderTest extends RiotAPITestCase
 	}
 
 	/**
-	 * @depends      testInit
-	 * @depends      testIsSaved
-	 * @dataProvider testInit
+	 * @depends testInit
+	 * @depends testIsSaved
 	 *
 	 * @param FileCacheProvider $provider
 	 */
@@ -207,9 +179,8 @@ class FileCacheProviderTest extends RiotAPITestCase
 	}
 
 	/**
-	 * @depends      testInit
-	 * @depends      testIsSaved
-	 * @dataProvider testInit
+	 * @depends testInit
+	 * @depends testIsSaved
 	 *
 	 * @param FileCacheProvider $provider
 	 */

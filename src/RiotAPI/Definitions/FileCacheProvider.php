@@ -41,10 +41,8 @@ class FileCacheProvider implements ICacheProvider
 	 */
 	public function __construct( string $cacheDir )
 	{
-		if (!is_dir($cacheDir) && !@mkdir($cacheDir, 0777, true))
+		if (!is_dir($cacheDir) && !@mkdir($cacheDir, 0777, true) || !@is_writable($cacheDir))
 			throw new SettingsException("Provided cache directory path '$cacheDir' is invalid/failed to be created.");
-		elseif (!@is_writable($cacheDir))
-			throw new SettingsException("Provided cache directory path '$cacheDir' is not writable.");
 
 		$this->cacheDir = realpath($cacheDir);
 	}

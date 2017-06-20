@@ -1,0 +1,1 @@
+a:3:{s:7:"headers";a:7:{i:0;s:24:"HTTP/1.1 401 Bad Request";s:12:"Content-Type";s:30:"application/json;charset=utf-8";s:22:"X-App-Rate-Limit-Count";s:10:"1:10,1:600";s:25:"X-Method-Rate-Limit-Count";s:10:"1:10,1:600";s:18:"X-Rate-Limit-Count";s:10:"1:10,1:600";s:14:"Content-Length";s:1:"2";s:10:"Connection";s:10:"keep-alive";}s:8:"response";s:2:"{}";s:4:"code";i:400;}

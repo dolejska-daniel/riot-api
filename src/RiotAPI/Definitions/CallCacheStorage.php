@@ -28,32 +28,12 @@ namespace RiotAPI\Definitions;
 class CallCacheStorage
 {
 	/** @var array $cache */
-	protected $cache;
+	protected $cache = [];
 
 	/**
 	 *   CallCacheStorage constructor.
 	 */
 	public function __construct() {}
-
-	/**
-	 *   Sleep magic method - provides list of properties to be unserialized.
-	 *
-	 * @return array
-	 */
-	public function __sleep()
-	{
-		return [ 'cache' ];
-	}
-
-	/**
-	 *   Wakeup magic method - ensures deletion of expired records.
-	 */
-	public function __wakeup()
-	{
-		foreach ($this->cache as $hash => $c)
-			if ($c['expires'] < time())
-				unset($this->cache[$hash]);
-	}
 
 
 	/**
@@ -65,10 +45,10 @@ class CallCacheStorage
 	 */
 	public function isCached( string $hash ): bool
 	{
-		if (isset($this->cache[$hash]) == false || $cached = $this->cache[$hash] == false)
+		if (isset($this->cache[$hash]) == false)
 			return false;
 
-		if ($cached['expires'] < time())
+		if ($this->cache[$hash]['expires'] < time())
 		{
 			unset($this->cache[$hash]);
 			return false;
@@ -86,7 +66,9 @@ class CallCacheStorage
 	 */
 	public function load( string $hash )
 	{
-		return $this->cache[$hash]['data'];
+		return $this->isCached($hash)
+			? $this->cache[$hash]['data']
+			: false;
 	}
 
 	/**

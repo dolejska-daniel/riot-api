@@ -29,9 +29,9 @@ interface IRegion
 {
 	const GLOBAL = 'global';
 
-	const PBE    = 'pbe';
+	const AMERICAS = 'americas';
 
-	const STATUS = 'status';
+	const PBE    = 'pbe';
 
 	/**
 	 *   Returns region list.

@@ -40,21 +40,16 @@ class TournamentStubEndpointObjectTest extends RiotAPITestCase
 
 		$this->assertInstanceOf(RiotAPI::class, $api);
 
-		return [
-			[ $api ],
-		];
+		return $api;
 	}
 
 	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
+	 * @depends testInit
 	 *
 	 * @param RiotAPI $api
 	 */
 	public function testCreateTournamentCodes( RiotAPI $api )
 	{
-		$this->markTestIncomplete('No DummyData for this call yet.');
-
 		$params = new Objects\TournamentCodeParameters([
 			'allowedSummonerIds' => new Objects\SummonerIdParams([
 				'participants' => [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ],
@@ -67,7 +62,7 @@ class TournamentStubEndpointObjectTest extends RiotAPITestCase
 
 		//  Get library processed results
 		/** @var array $result */
-		$result = $api->createTournamentCodes_STUB(1, 10, $params);
+		$result = $api->createTournamentCodes_STUB(1132, 10, $params);
 		//  Get raw result
 		$rawResult = $api->getResult();
 
@@ -75,15 +70,12 @@ class TournamentStubEndpointObjectTest extends RiotAPITestCase
 	}
 
 	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
+	 * @depends testInit
 	 *
 	 * @param RiotAPI $api
 	 */
 	public function testCreateTournamentProvider( RiotAPI $api )
 	{
-		$this->markTestIncomplete('No DummyData for this call yet.');
-
 		$providerParams = new Objects\ProviderRegistrationParameters([
 			'region' => Region::EUROPE_EAST,
 			'url'    => 'http://api.turnay.cz'
@@ -99,15 +91,12 @@ class TournamentStubEndpointObjectTest extends RiotAPITestCase
 	}
 
 	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
+	 * @depends testInit
 	 *
 	 * @param RiotAPI $api
 	 */
 	public function testCreateTournament( RiotAPI $api )
 	{
-		$this->markTestIncomplete('No DummyData for this call yet.');
-
 		$tournamentParams = new Objects\TournamentRegistrationParameters([
 			'providerId' => 672,
 			'name'       => 'TestTournament',
@@ -123,18 +112,15 @@ class TournamentStubEndpointObjectTest extends RiotAPITestCase
 	}
 
 	/**
-	 * @depends      testInit
-	 * @dataProvider testInit
+	 * @depends testInit
 	 *
 	 * @param RiotAPI $api
 	 */
 	public function testGetTournamentLobbyEvents( RiotAPI $api )
 	{
-		$this->markTestIncomplete('No DummyData for this call yet.');
-
 		//  Get library processed results
 		/** @var Objects\LobbyEventDtoWrapper $result */
-		$result = $api->getTournamentLobbyEvents_STUB('239d180f-fb8a-439e-85d9-95142e10b4f5');
+		$result = $api->getTournamentLobbyEvents_STUB('EUNE1132-TOURNAMENTCODE0001');
 		//  Get raw result
 		$rawResult = $api->getResult();
 

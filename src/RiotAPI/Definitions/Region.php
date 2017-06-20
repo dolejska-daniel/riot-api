@@ -70,7 +70,7 @@ class Region implements IRegion
 		self::KOREA           => self::KOREA,
 		self::JAPAN           => self::JAPAN,
 		self::GLOBAL          => self::GLOBAL,
-		self::STATUS          => "http://status.leagueoflegends.com",
+		self::AMERICAS        => self::AMERICAS,
 	);
 
 

@@ -2,7 +2,7 @@
 
 > Version v0.3
 
-[![build status](https://gitlab.dolejska.me/dolejskad/riot-api/badges/master/build.svg)](https://gitlab.dolejska.me/dolejskad/riot-api/commits/master)
+[![Build Status](https://travis-ci.org/dolejska-daniel/riot-api.svg?branch=master)](https://travis-ci.org/dolejska-daniel/riot-api)
 [![coverage report](https://gitlab.dolejska.me/dolejskad/riot-api/badges/master/coverage.svg)](https://gitlab.dolejska.me/dolejskad/riot-api/commits/master)
 [![GitHub release](https://img.shields.io/github/release/dolejska-daniel/riot-api.svg)](https://github.com/dolejska-daniel/riot-api)
 [![GitHub pre release](https://img.shields.io/github/release/dolejska-daniel/riot-api/all.svg?label=pre%20release)](https://github.com/dolejska-daniel/riot-api)

@@ -116,8 +116,14 @@ class RateLimitStorage
 	 */
 	public function registerCall( string $api_key, string $region, string $header )
 	{
-		foreach (explode(',', $header) as $used => $timeInterval)
+		foreach (explode(',', $header) as $currentLimit)
+		{
+			$currentLimit = explode(':', $currentLimit);
+			$used = $currentLimit[0];
+			$timeInterval = $currentLimit[1];
+
 			$this->setUsed($api_key, $region, $timeInterval, $used);
+		}
 
 		sort($this->limits[$region][$api_key], SORT_DESC);
 	}
