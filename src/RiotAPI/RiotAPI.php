@@ -1812,8 +1812,10 @@ class RiotAPI
 		if (empty($parameters->url))
 			throw new RequestParameterException('Callback URL (url) may not be empty.');
 
-		if (in_array($parameters->region, self::TOURNAMENT_ALLOWED_REGIONS, true) == false)
+		if (in_array(strtolower($parameters->region), self::TOURNAMENT_ALLOWED_REGIONS, true) == false)
 			throw new RequestParameterException('Value of region (region) is invalid. Allowed values: ' . implode(', ', self::TOURNAMENT_ALLOWED_REGIONS));
+
+		$parameters->region = strtoupper($parameters->region);
 
 		$data = json_encode($parameters, JSON_UNESCAPED_SLASHES);
 
