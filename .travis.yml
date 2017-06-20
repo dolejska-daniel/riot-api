@@ -7,12 +7,11 @@ php:
 #    - '7.1'
 #    - nightly
 
-# Special addons
-addons:
-    # Code coverage
-    code_climate:
-        repo_token: $CODECLIMATE_REPO_TOKEN
-        coverage_report: $TRAVIS_BUILD_DIR/build/logs/clover.xml
+# Environment variables
+env:
+  global:
+    - CC_TEST_REPORTER_ID=$CODECLIMATE_REPO_TOKEN
+    - GIT_COMMITTED_AT=$(if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then git log -1 --pretty=format:%ct; else git log -1 --skip 1 --pretty=format:%ct; fi)
 
 # Save cache of dependencies
 cache:
@@ -25,8 +24,8 @@ install:
 
 # Start tests
 script:
-    - vendor/bin/phpunit -v --bootstrap phpunit.php --configuration phpunit.xml --coverage-text --coverage-clover=$TRAVIS_BUILD_DIR/build/logs/clover.xml --colors=never
+    - vendor/bin/phpunit -v --bootstrap phpunit.php --configuration phpunit.xml --coverage-text --colors=never
 
 # If successfull, report coverage
 after_success:
-    - vendor/bin/test-reporter
+    - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT; fi
