@@ -7,6 +7,12 @@ php:
 #    - '7.1'
 #    - nightly
 
+# Special addons
+addons:
+    # Code coverage
+    code_climate:
+        repo_token: 7248bb93a9bac52b0c7a4f5f574462ddd363535aed1c2ab0b30cea20d6ae0b96
+
 # Save cache of dependencies
 cache:
     directories:
@@ -19,3 +25,7 @@ install:
 # Start tests
 script:
     - vendor/bin/phpunit -v --bootstrap phpunit.php --configuration phpunit.xml --coverage-text --colors=never
+
+# If successfull, report coverage
+after_success:
+    - vendor/bin/test-reporter

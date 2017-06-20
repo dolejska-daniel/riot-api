@@ -17,7 +17,8 @@
 		"curl/curl": "^1.6.0"
 	},
 	"require-dev": {
-		"phpunit/phpunit": "6.2.2"
+		"phpunit/phpunit": "6.2.2",
+		"codeclimate/php-test-reporter": "v0.4.4"
 	},
 	"autoload": {
 		"classmap": [
@@ -28,5 +29,5 @@
 			"DataDragonAPI\\": "src/DataDragonAPI"
 		}
 	},
-	"minimum-stability": "stable"
+	"minimum-stability": "dev"
 }
