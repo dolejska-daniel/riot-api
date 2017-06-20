@@ -1,0 +1,21 @@
+# Project language
+language: php
+
+# Language versions to test agains
+php:
+    - '7.0'
+#    - '7.1'
+#    - nightly
+
+# Save cache of dependencies
+cache:
+    directories:
+        - vendor/
+
+# Install dependencies
+install:
+    - composer install
+
+# Start tests
+script:
+    - vendor/bin/phpunit -v --bootstrap phpunit.php --configuration phpunit.xml --coverage-text --colors=never

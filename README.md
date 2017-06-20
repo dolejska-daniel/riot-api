@@ -120,15 +120,15 @@ And there is a lot more what you can set when initializing the library, here is 
 | -------------------- | ----- | ----------- |
 | `RiotAPI::SET_REGION` | `Region::EUROPE_EAST`, `Region::EUROPE_WEST`, `Region::NORTH_AMERICA`, … | ***Required.*** Used to specify, to which endpoint calls are going to be made. |
 | `RiotAPI::SET_KEY` | `string` | ***Required.*** Option to specify your _API key_. |
-| `RiotAPI::SET_VERIFY_SSL` | `bool` | Use this option to disable SSL verification. Useful when testing on localhost. Shoul not be used in production. |
 | `RiotAPI::SET_TOURNAMENT_KEY` | `string` | Option to specify your _tournament API key_. |
+| `RiotAPI::SET_VERIFY_SSL` | `bool` | Use this option to disable SSL verification. Useful when testing on localhost. Shoul not be used in production. |
 | `RiotAPI::SET_KEY_INCLUDE_TYPE` | `RiotAPI::KEY_AS_QUERY_PARAM`, `RiotAPI::KEY_AS_HEADER` | This option determines how is API key going to be included in the requests (by default `RiotAPI::KEY_AS_HEADER`). |
 | `RiotAPI::SET_INTERIM` | `bool` | By specifying this, you tell the library to use interim-only endpoints (eg. tournament calls will be sent to stub endpoints). |
 | `RiotAPI::SET_CACHE_RATELIMIT` | `bool` | This option tells the library to take care of not exceeding your API key's rate limit by counting the requests (you should also set desired limits using `RiotAPI::SET_RATELIMITS` or `defaults` will be used). |
 | `RiotAPI::SET_RATELIMITS` | `array` | Option to specify per-key API call rate limits. |
 | `RiotAPI::SET_CACHE_CALLS` | `bool` | This option tells the library to cache fetched data from API and to try to re-use already fetched data (you should also set option `RiotAPI::SET_CACHE_CALLS_LENGTH` to specify for how long should fetched data be stored in cache). |
 | `RiotAPI::SET_CACHE_CALLS_LENGTH` | `int` | Option to specify how log should fetched data from API be saved in cache. |
-| `RiotAPI::SET_CACHE_PROVIDER` | `RiotAPI::CACHE_PROVIDER_FILE`, `RiotAPI::CACHE_PROVIDER_MEMCACHED`, `ICacheProvider` | this option will allow you to either select from provided CacheProviders or to select your own |
+| `RiotAPI::SET_CACHE_PROVIDER` | `RiotAPI::CACHE_PROVIDER_FILE`, `RiotAPI::CACHE_PROVIDER_MEMCACHED`, `ICacheProvider` | Using this option you can select from our cache providers or event provide your own. It must implement `ICacheProvider` interface. |
 | `RiotAPI::SET_CACHE_PROVIDER_PARAMS` | `array` | These are parameters, that will be passed to the CacheProvider on it's initialization. |
 
 ## Usage example
@@ -183,7 +183,8 @@ print_r($champion->getData());  //  Or array of all the data
 ## DataDragon API
 
 How easy it is to work with images? For instance, to get splash image of Orianna?
-`DataDragonAPI::getChampionSplashO($api->getStaticChampion(61))`, that easy.
+
+`echo DataDragonAPI::getChampionSplashO($api->getStaticChampion(61));`, that easy.
 
 Want to know more? _TBA_
 
