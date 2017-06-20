@@ -11,7 +11,8 @@ php:
 addons:
     # Code coverage
     code_climate:
-        repo_token: 7248bb93a9bac52b0c7a4f5f574462ddd363535aed1c2ab0b30cea20d6ae0b96
+        repo_token: $CODECLIMATE_REPO_TOKEN
+        coverage_report: $TRAVIS_BUILD_DIR/build/logs/clover.xml
 
 # Save cache of dependencies
 cache:
@@ -24,7 +25,7 @@ install:
 
 # Start tests
 script:
-    - vendor/bin/phpunit -v --bootstrap phpunit.php --configuration phpunit.xml --coverage-text --colors=never
+    - vendor/bin/phpunit -v --bootstrap phpunit.php --configuration phpunit.xml --coverage-text --coverage-clover=$TRAVIS_BUILD_DIR/build/logs/clover.xml --colors=never
 
 # If successfull, report coverage
 after_success:

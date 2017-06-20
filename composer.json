@@ -29,5 +29,5 @@
 			"DataDragonAPI\\": "src/DataDragonAPI"
 		}
 	},
-	"minimum-stability": "dev"
+	"minimum-stability": "stable"
 }
