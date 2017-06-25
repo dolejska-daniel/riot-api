@@ -8,8 +8,8 @@ php:
 #    - nightly
 
 addons:
-  code_climate:
-    repo_token: $CODECLIMATE_REPO_TOKEN
+    code_climate:
+        repo_token: $CODECLIMATE_REPO_TOKEN
 
 # Save cache of dependencies
 cache:
@@ -25,4 +25,4 @@ script:
     - vendor/bin/phpunit -v --bootstrap phpunit.php --configuration phpunit.xml --coverage-text --coverage-clover $TRAVIS_BUILD_DIR/build/logs/clover.xml --colors=never
 
 after_success:
-  - vendor/bin/test-reporter -n --coverage-report=$TRAVIS_BUILD_DIR/build/logs/clover.xml --verbose
+    - vendor/bin/test-reporter -n --coverage-report=$TRAVIS_BUILD_DIR/build/logs/clover.xml --verbose

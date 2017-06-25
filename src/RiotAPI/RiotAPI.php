@@ -511,6 +511,7 @@ class RiotAPI
 	 */
 	public function setRegion( string $region ): self
 	{
+		$region = strtolower($region);
 		$this->setSetting(self::SET_REGION, $region);
 		$this->setSetting(self::SET_PLATFORM, $this->platforms->getPlatformName($region));
 		return $this;
@@ -525,6 +526,7 @@ class RiotAPI
 	 */
 	public function setTemporaryRegion( string $tempRegion ): self
 	{
+		$tempRegion = strtolower($tempRegion);
 		$this->setSetting(self::SET_ORIG_REGION, $this->getSetting(self::SET_REGION));
 		$this->setSetting(self::SET_REGION, $tempRegion);
 		$this->setSetting(self::SET_PLATFORM, $this->platforms->getPlatformName($tempRegion));
@@ -654,7 +656,7 @@ class RiotAPI
 			$curlHeaders[] = 'Connection: Keep-Alive';
 
 			curl_setopt($ch, CURLOPT_URL, $url);
-			curl_setopt($ch, CURLOPT_PUT, true);
+			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
 			curl_setopt($ch, CURLOPT_POSTFIELDS,
 				$this->post_data);
 		}
