@@ -48,10 +48,12 @@ class RateLimitControl implements IRateLimitControl
 	 * @param string $api_key
 	 * @param array  $limits
 	 *
+	 * @return void
 	 * @throws SettingsException
 	 */
 	public function setLimits( string $api_key, array $limits )
 	{
+		//  Allowed interval list
 		$intervals = [
 			IRateLimitControl::INTERVAL_1S,
 			IRateLimitControl::INTERVAL_10S,
@@ -61,16 +63,18 @@ class RateLimitControl implements IRateLimitControl
 
 		foreach ($limits as $interval => $limit)
 		{
+			//  Validate provided limits
 			if (!in_array($interval, $intervals, true) || !is_int($limit))
 				throw new SettingsException('Invalid rate limit interval provided.');
 
 			$limits[$interval] = [
 				'used'    => 0,
 				'limit'   => $limit,
-				'expires' => 0,
+				'expires' => time() + $interval,
 			];
 		}
 
+		//  Set limits
 		$this->storage->init($api_key, $limits);
 	}
 

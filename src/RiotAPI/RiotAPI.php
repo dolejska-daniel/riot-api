@@ -197,6 +197,9 @@ class RiotAPI
 	/** @var array $result_data */
 	protected $result_data;
 
+	/** @var string $result_data */
+	protected $result_data_raw;
+
 	/** @var array $result_headers */
 	protected $result_headers;
 
@@ -263,11 +266,22 @@ class RiotAPI
 			? $custom_platformDataProvider
 			: new Platform();
 
+		//  Some caching will be made, let's set up cache provider
 		if ($this->getSetting(self::SET_CACHE_CALLS) || $this->getSetting(self::SET_CACHE_RATELIMIT))
 			$this->_setupCacheProvider();
 
+		//  Ratelimits are going to be cached
+		if ($this->getSetting(self::SET_CACHE_RATELIMIT))
+			$this->_setupCacheRateLimits();
+
+		//  Call data are going to be cached
+		if ($this->getSetting(self::SET_CACHE_CALLS))
+			$this->_setupCacheCalls();
+
+		//  Set up before calls callbacks
 		$this->_setupBeforeCalls();
 
+		//  Set up afterl calls callbacks
 		$this->_setupAfterCalls();
 
 		//  Sets platform based on current region
@@ -313,9 +327,12 @@ class RiotAPI
 			throw new SettingsException("CacheProvider class failed to be initialized: " . $ex->getMessage() . ".", 0, $ex);
 		}
 
-		//  Caching API's rate limit headers
+		//  Loads existing cache or creates new storages
 		$this->loadCache();
+	}
 
+	public function _setupCacheRateLimits()
+	{
 		//  Gets ratelimit settings or sets defaults
 		$rateLimits = $this->getSetting(self::SET_RATELIMITS, [
 			$this->getSetting(self::SET_KEY) => [
@@ -349,6 +366,12 @@ class RiotAPI
 		}
 	}
 
+	public function _setupCacheCalls()
+	{
+		if ($this->isSettingSet(self::SET_CACHE_CALLS_LENGTH) == false)
+			$this->setSetting(self::SET_CACHE_CALLS_LENGTH, 60);
+	}
+
 	protected function _setupBeforeCalls()
 	{
 		//  API rate limit check before call is made
@@ -370,13 +393,13 @@ class RiotAPI
 		//  Save result data, if CallCache is enabled
 		$this->afterCall[] = function ( $url, $requestHash ) {
 			if ($this->getSetting(self::SET_CACHE_CALLS) && $this->ccc != false)
-				$this->ccc->saveCallData($requestHash, $this->result_data, $this->getSetting(self::SET_CACHE_CALLS_LENGTH, 300));
+				$this->ccc->saveCallData($requestHash, $this->result_data_raw, $this->getSetting(self::SET_CACHE_CALLS_LENGTH, 60));
 		};
 
 		//  Save result data as new DummyData if enabled and if data does not already exist
 		$this->afterCall[] = function ( $url, $requestHash ) {
 			if ($this->getSetting(self::SET_SAVE_DUMMY_DATA, false) && file_exists($this->getDummyDataFileName()) == false)
-				$this->_saveDummyData($this->result_headers, json_encode($this->result_data), 200);
+				$this->_saveDummyData($this->result_headers, $this->result_data_raw, 200);
 		};
 
 
@@ -403,7 +426,7 @@ class RiotAPI
 		{
 			//  ratelimit cache enabled, try to load already existing object
 			$rlc = $this->cache->load(self::CACHE_KEY_RLC);
-			if ($rlc === false)
+			if ($rlc == false)
 				//  nothing loaded, creating new instance
 				$rlc = new RateLimitControl($this->regions);
 
@@ -414,7 +437,7 @@ class RiotAPI
 		{
 			//  call cache enabled, try to load already existing object
 			$callCache = $this->cache->load(self::CACHE_KEY_CCC);
-			if ($callCache === false)
+			if ($callCache == false)
 				//  nothing loaded, creating new instance
 				$callCache = new CallCacheControl();
 
@@ -440,7 +463,7 @@ class RiotAPI
 		if ($this->getSetting(self::SET_CACHE_CALLS, false))
 		{
 			//  save CallCacheControl
-			$this->cache->save(self::CACHE_KEY_CCC, $this->ccc, $this->getSetting(self::SET_CACHE_CALLS_LENGTH, 300));
+			$this->cache->save(self::CACHE_KEY_CCC, $this->ccc, $this->getSetting(self::SET_CACHE_CALLS_LENGTH, 60));
 		}
 	}
 
@@ -701,7 +724,21 @@ class RiotAPI
 		if ($overrideRegion)
 			$this->unsetTemporaryRegion();
 
-		$this->result_data    = json_decode($response, true);
+		if (($curl_errno = curl_errno($ch)) !== 0)
+		{
+			$curl_error = curl_error($ch);
+			$curl_error_info = "";
+			if ($curl_errno == 60)
+			{
+				$curl_error_info = " (if you are on localhost, try setting the RiotAPI::SET_VERIFY_SSL to false)";
+			}
+
+			throw new RequestException('cURL error ocurred: ' . $curl_error . $curl_error_info, $curl_errno);
+		}
+
+		$this->result_data_raw = $response;
+		$this->result_data     = json_decode($response, true);
+		$this->result_headers  = $headers;
 
 		$errMessage = "";
 		if (!is_null($this->result_data) && isset($this->result_data->status) && isset($this->result_data->status->message))
@@ -745,7 +782,6 @@ class RiotAPI
 
 		$this->_afterCall($url, $requestHash);
 
-		$this->result_headers = $headers;
 		$this->query_data     = array();
 		$this->post_data      = null;
 		$this->used_key       = self::SET_KEY;

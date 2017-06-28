@@ -41,15 +41,6 @@ class RateLimitStorage
 			$this->limits[$regionId] = [];
 	}
 
-	public function __wakeup()
-	{
-		foreach ($this->limits as $region_index => $regions)
-			foreach ($regions as $key_index => $key_data)
-				if ($key_data['expires'] < time())
-					unset($this->limits[$region_index][$key_index]);
-
-	}
-
 	/**
 	 *   Initializes limits for providede API key on all regions.
 	 *
@@ -59,7 +50,38 @@ class RateLimitStorage
 	public function init( string $api_key, array $limits )
 	{
 		foreach ($this->limits as $region => $key_limits)
-			$this->limits[$region][$api_key] = $limits;
+		{
+			//  Set limits for each region registered
+			if (isset($this->limits[$region][$api_key]))
+			{
+				//  Some limits are already in place
+				foreach ($this->limits[$region][$api_key] as $interval => $saved_limits)
+				{
+					if (isset($limits[$interval]))
+					{
+						//  Set new limits for existing $interval of $api_key on $region
+						$this->limits[$region][$api_key][$interval]['limit'] = $limits[$interval]['limit'];
+					}
+					else
+					{
+						//  Unset existing $interval limit, it's not set in newly provided limits
+						unset($this->limits[$region][$api_key][$interval]);
+					}
+				}
+
+				foreach ($limits as $interval => $new_limits)
+				{
+					if (isset($this->limits[$region][$api_key][$interval]) == false)
+					{
+						//  Set new limits for non-existing $interval of $api_key on $region
+						$this->limits[$region][$api_key][$interval] = $new_limits;
+					}
+				}
+			}
+			else
+				//  Set limits for $api_key on $region
+				$this->limits[$region][$api_key] = $limits;
+		}
 	}
 
 	/**
@@ -70,7 +92,7 @@ class RateLimitStorage
 	 *
 	 * @return mixed
 	 */
-	protected function getIntervals( string $api_key, string $region )
+	public function getIntervals( string $api_key, string $region )
 	{
 		return $this->limits[$region][$api_key];
 	}
@@ -83,7 +105,7 @@ class RateLimitStorage
 	 * @param int    $timeInterval
 	 * @param int    $value
 	 */
-	protected function setUsed( string $api_key, string $region, int $timeInterval, int $value )
+	public function setUsed( string $api_key, string $region, int $timeInterval, int $value )
 	{
 		$this->limits[$region][$api_key][$timeInterval]['used'] = $value;
 		if ($value == 1)
@@ -100,9 +122,12 @@ class RateLimitStorage
 	 */
 	public function canCall( string $api_key, string $region ): bool
 	{
-		foreach ($this->getIntervals($api_key, $region) as $timeLimit => $limits)
+		foreach ($this->getIntervals($api_key, $region) as $timeInterval => $limits)
+		{
+			//  Check all saved intervals for this region
 			if ($limits['used'] >= $limits['limit'] && $limits['expires'] > time())
 				return false;
+		}
 
 		return true;
 	}
@@ -119,12 +144,10 @@ class RateLimitStorage
 		foreach (explode(',', $header) as $currentLimit)
 		{
 			$currentLimit = explode(':', $currentLimit);
-			$used = $currentLimit[0];
-			$timeInterval = $currentLimit[1];
+			$used = (int)$currentLimit[0];
+			$timeInterval = (int)$currentLimit[1];
 
 			$this->setUsed($api_key, $region, $timeInterval, $used);
 		}
-
-		sort($this->limits[$region][$api_key], SORT_DESC);
 	}
 }
