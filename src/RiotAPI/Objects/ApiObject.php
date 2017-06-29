@@ -19,6 +19,11 @@
 
 namespace RiotAPI\Objects;
 
+use RiotAPI\Exceptions\GeneralException;
+use RiotAPI\Exceptions\SettingsException;
+use RiotAPI\RiotAPI;
+
+
 /**
  *   Class ApiObject
  *
@@ -29,9 +34,12 @@ abstract class ApiObject implements IApiObject
 	/**
 	 *   ApiObject constructor.
 	 *
-	 * @param array $data
+	 * @param array   $data
+	 * @param RiotAPI $api
+	 *
+	 * @throws SettingsException
 	 */
-	public function __construct( array $data )
+	public function __construct( array $data, RiotAPI $api = null )
 	{
 		// Tries to assigns data to class properties
 		$selfRef = new \ReflectionClass($this);
@@ -54,17 +62,19 @@ abstract class ApiObject implements IApiObject
 						$newRef = new \ReflectionClass("$namespace\\$dataType->class");
 						if ($dataType->isArray)
 						{
-							//  Property is array of special DataType
+							//  Property is array of special DataType (another API object)
 							foreach ($value as $identifier => $d)
-								$this->$property[$identifier] = $newRef->newInstance($d);
+								$this->$property[$identifier] = $newRef->newInstance($d, $api);
 						}
 						else
 						{
-							$this->$property = $newRef->newInstance($value);
+							//  Property is special DataType (another API object)
+							$this->$property = $newRef->newInstance($value, $api);
 						}
 					}
 					else
 					{
+						//  Property is general value
 						$this->$property = $value;
 					}
 				}
@@ -77,6 +87,22 @@ abstract class ApiObject implements IApiObject
 		}
 
 		$this->_data = $data;
+
+		//  Is API reference passed?
+		if ($api)
+		{
+			//  Gets declared extensions
+			$objectExtensions = $api->getSetting(RiotAPI::SET_EXTENSIONS);
+			//  Is there extension for this class?
+			if (isset($objectExtensions[$selfRef->getName()]) && $extension = $objectExtensions[$selfRef->getName()])
+			{
+				$extension = new \ReflectionClass($extension);
+				if ($extension->implementsInterface(IApiObjectExtension::class) == false)
+					throw new SettingsException('ObjectExtender ' . $extension . ' does not implement IApiObjectExtension interface.');
+
+				$this->_extension = @$extension->newInstanceArgs([ &$this, &$api ]);
+			}
+		}
 	}
 
 	/**
@@ -133,5 +159,38 @@ abstract class ApiObject implements IApiObject
 	public function getData(): array
 	{
 		return $this->_data;
+	}
+
+
+	/**
+	 *   Object extender.
+	 *
+	 * @var IApiObjectExtension
+	 */
+	protected $_extension;
+
+	/**
+	 *   Magic call method used for calling ObjectExtender methods.
+	 *
+	 * @param $name
+	 * @param $arguments
+	 *
+	 * @return mixed
+	 * @throws GeneralException
+	 */
+	public function __call( $name, $arguments )
+	{
+		if (!$this->_extension)
+			throw new GeneralException("Method '$name' not found, no extension exists for this ApiObject.");
+
+		try
+		{
+			$r = new \ReflectionClass($this->_extension);
+			return $r->getMethod($name)->invokeArgs($this->_extension, $arguments);
+		}
+		catch (\Exception $ex)
+		{
+			throw new GeneralException("Method '$name' failed to be executed: " . $ex->getMessage(), 0, $ex);
+		}
 	}
 }

@@ -23,24 +23,17 @@ use RiotAPI\RiotAPI;
 
 
 /**
- *   Interface IApiObject
+ *   Interface IApiObjectExtension
  *
  * @package RiotAPI\Objects
  */
-interface IApiObject
+interface IApiObjectExtension
 {
 	/**
-	 *   IApiObject constructor. Initializes the object.
+	 *   IApiObjectExtension constructor. Initializes the object extension.
 	 *
-	 * @param array   $data
-	 * @param RiotAPI $api
+	 * @param IApiObject $apiObject - The extended object (eg. SummonerDto, etc.)
+	 * @param RiotAPI    $api       - The library instance
 	 */
-	public function __construct( array $data, RiotAPI $api );
-
-	/**
-	 *   Gets all the original data fetched from RiotAPI.
-	 *
-	 * @return array
-	 */
-	public function getData(): array;
+	public function __construct( IApiObject &$apiObject, RiotAPI &$api );
 }
