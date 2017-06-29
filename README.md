@@ -13,26 +13,27 @@
 
 1. [Introduction](#introduction)
 2. [League of Legends API](#league-of-legends-api)
-	1. [Endpoint versions](#endpoint-versions)
-	2. [Initializing the library](#initializing-the-library)
-	3. [Usage example](#usage-example)
-	4. [Endpoints and functions](#endpoints-and-functions)
-		1. [Champion](#champion)
-		2. [Champion Mastery](#champion-mastery)
-		3. [League](#league)
-		4. [Masteries](#masteries)
-		5. [Match](#match)
-		6. [Runes](#runes)
-		7. [Spectator](#spectator)
-		8. [Static Data](#static-data)
-		9. [Status](#status)
-		10. [Summoner](#summoner)
-		11. [Tournament & Tournament Stub](#tournament-tournament-stub)
-	5. [Cache providers](#cache-providers)
-	6. [Rate limiting](#rate-limiting)
-	7. [Call caching](#call-caching)
-	8. [StaticData linking](#staticdata-linking)
-	9. [Extensions](#extensions)
+	1. [Downloading](#downloading)
+	2. [Endpoint versions](#endpoint-versions)
+	3. [Initializing the library](#initializing-the-library)
+	4. [Usage example](#usage-example)
+	5. [Endpoints and functions](#endpoints-and-functions)
+		1. [Champion](#champion-)
+		2. [Champion Mastery](#champion-mastery-)
+		3. [League](#league-)
+		4. [Masteries](#masteries-)
+		5. [Match](#match-)
+		6. [Runes](#runes-)
+		7. [Spectator](#spectator-)
+		8. [Static Data](#static-data-)
+		9. [Status](#status-)
+		10. [Summoner](#summoner-)
+		11. [Tournament & Tournament Stub](#tournament---tournament-stub-)
+	6. [Cache providers](#cache-providers)
+	7. [Rate limiting](#rate-limiting)
+	8. [Call caching](#call-caching)
+	9. [StaticData linking](#staticdata-linking)
+	10. [Extensions](#extensions)
 3. [DataDragon API](#datadragon-api)
 
 # Introduction
@@ -58,6 +59,16 @@ to send pull requests if you find anything that is worth improving!
 Please, read on :)
 
 # League of Legends API
+
+## Downloading
+
+The easiest way to get this library is to use [Composer](https://getcomposer.org/). While
+having Composer installed it takes only `composer require dolejska-daniel/riot-api` to
+get the library ready!
+
+If you are not fan of Composer, you can download [whole repository in .zip archive](https://github.com/dolejska-daniel/riot-api/archive/master.zip)
+or clone the repository using Git - `git clone https://github.com/dolejska-daniel/riot-api`.
+_But in this case, you will have to create your own autoload function._
 
 ## Endpoint versions
 
