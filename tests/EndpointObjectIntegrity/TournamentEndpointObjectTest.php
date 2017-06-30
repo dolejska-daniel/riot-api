@@ -123,7 +123,7 @@ class TournamentEndpointObjectTest extends RiotAPITestCase
 
 		$providerParams = new Objects\ProviderRegistrationParameters([
 			'region' => Region::EUROPE_EAST,
-			'url'    => 'http://api.turnay.cz'
+			'url'    => 'http://callbackurl.com'
 		]);
 
 		//  Get library processed results
@@ -144,7 +144,7 @@ class TournamentEndpointObjectTest extends RiotAPITestCase
 	{
 		$providerParams = new Objects\ProviderRegistrationParameters([
 			'region' => Region::EUROPE_EAST,
-			'url'    => 'http://api.turnay.cz'
+			'url'    => 'http://callbackurl.com'
 		]);
 
 		//  Get library processed results

@@ -346,7 +346,7 @@ class TournamentEndpointTest extends RiotAPITestCase
 
 		$providerParams = new Objects\ProviderRegistrationParameters([
 			'region' => 'THIS_IS_INVALID_REGION',
-			'url'    => 'http://api.turnay.cz'
+			'url'    => 'http://callbackurl.com'
 		]);
 
 		//  Get library processed results
