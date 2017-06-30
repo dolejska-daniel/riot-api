@@ -34,6 +34,7 @@
 	7. [Call caching](#call-caching)
 	8. [StaticData linking](#staticdata-linking)
 	9. [Extensions](#extensions)
+	10. [Callback functions](#callback-functions)
 4. [DataDragon API](#datadragon-api)
 
 # Introduction
@@ -123,12 +124,12 @@ And there is a lot more what you can set when initializing the library, here is 
 | `RiotAPI::SET_VERIFY_SSL` | `bool` `default true` | Use this option to disable SSL verification. Useful when testing on localhost. Shoul not be used in production. |
 | `RiotAPI::SET_KEY_INCLUDE_TYPE` | `RiotAPI::KEY_AS_QUERY_PARAM`, `RiotAPI::KEY_AS_HEADER` | This option determines how is API key going to be included in the requests (by default `RiotAPI::KEY_AS_HEADER`). |
 | `RiotAPI::SET_INTERIM` | `bool` `default false` | By specifying this, you tell the library to be in `interim mode` and use interim-only endpoints (eg. tournament calls will be sent to stub endpoints). |
-| `RiotAPI::SET_CACHE_RATELIMIT` | `bool` `default false` | This option tells the library to take care of not exceeding your API key's rate limit by counting the requests (you should also set desired limits using `RiotAPI::SET_RATELIMITS` or `defaults` will be used). |
-| `RiotAPI::SET_RATELIMITS` | `array` | Option to specify per-key API call rate limits. |
-| `RiotAPI::SET_CACHE_CALLS` | `bool` `default false` | This option tells the library to cache fetched data from API and to try to re-use already fetched data (you should also set option `RiotAPI::SET_CACHE_CALLS_LENGTH` to specify for how long should fetched data be stored in cache). |
-| `RiotAPI::SET_CACHE_CALLS_LENGTH` | `int` `default 60` | Option to specify how log should fetched data from API be saved in cache. |
-| `RiotAPI::SET_CACHE_PROVIDER` | `RiotAPI::CACHE_PROVIDER_FILE`, `RiotAPI::CACHE_PROVIDER_MEMCACHED`, `ICacheProvider` | Using this option you can select from our cache providers or even provide your own.  See [cache providers](#cache-providers) for more information. |
-| `RiotAPI::SET_CACHE_PROVIDER_PARAMS` | `array` | These are parameters, that will be passed to the CacheProvider on it's initialization. |
+| `RiotAPI::SET_CACHE_RATELIMIT` | `bool` `default false` | This option tells the library to take care of not exceeding your API key's rate limit by counting the requests (you should also set desired limits using `RiotAPI::SET_RATELIMITS` or `defaults` will be used). See [rate limiting](#rate-limiting) for more information. |
+| `RiotAPI::SET_RATELIMITS` | `array` | Option to specify per-key API call rate limits. See [rate limiting](#rate-limiting) for more information. |
+| `RiotAPI::SET_CACHE_CALLS` | `bool` `default false` | This option tells the library to cache fetched data from API and to try to re-use already fetched data (you should also set option `RiotAPI::SET_CACHE_CALLS_LENGTH` to specify for how long should fetched data be stored in cache). See [call caching](#call-caching) for more information. |
+| `RiotAPI::SET_CACHE_CALLS_LENGTH` | `int`&#124;`array` `default 60` | Option to specify how log should fetched data from API be saved in cache. See [call caching](#call-caching) for more information. |
+| `RiotAPI::SET_CACHE_PROVIDER` | `RiotAPI::CACHE_PROVIDER_FILE`, `RiotAPI::CACHE_PROVIDER_MEMCACHED`, `ICacheProvider` | Using this option you can select from our cache providers or even provide your own. See [cache providers](#cache-providers) for more information. |
+| `RiotAPI::SET_CACHE_PROVIDER_PARAMS` | `array` | These are parameters, that will be passed to the CacheProvider on it's initialization. See [cache providers](#cache-providers) for more information. |
 | `RiotAPI::SET_EXTENSIONS` | `array` | This option contains extensions for any ApiObject. See [extensions](#extensions) for more information. |
 
 ## Usage example
@@ -539,7 +540,7 @@ $api = new RiotAPI([
 
 ## StaticData linking
 
-_Planned for upcomming versions._
+_Planned for `v0.8`._
 
 ## Extensions
 
@@ -586,6 +587,12 @@ if ($page = $masteryPages->getPageByName('MasterPageName'))
 On initialization the extension class is provided with `Objects\IApiObject` reference
 (in example case above it would be `Objects\MasteryPagesDto`) and `RiotAPI` instance
 reference. 
+
+## Callback functions
+
+Custom function callback before and after the call is made.
+
+_Planned for `v0.8`._
 
 # DataDragon API
 
