@@ -1,6 +1,6 @@
 # RiotAPI PHP7 wrapper
 
-> Version v0.6
+> Version v0.7
 
 [![Build Status](https://travis-ci.org/dolejska-daniel/riot-api.svg?branch=master)](https://travis-ci.org/dolejska-daniel/riot-api)
 [![Test Coverage](https://codeclimate.com/github/dolejska-daniel/riot-api/badges/coverage.svg)](https://codeclimate.com/github/dolejska-daniel/riot-api/coverage)
@@ -12,12 +12,12 @@
 # Table of Contents
 
 1. [Introduction](#introduction)
-2. [League of Legends API](#league-of-legends-api)
-	1. [Downloading](#downloading)
-	2. [Endpoint versions](#endpoint-versions)
-	3. [Initializing the library](#initializing-the-library)
-	4. [Usage example](#usage-example)
-	5. [Resources and endpoints](#resources-and-endpoints)
+2. [Downloading](#downloading)
+3. [League of Legends API](#league-of-legends-api)
+	1. [Endpoint versions](#endpoint-versions)
+	2. [Initializing the library](#initializing-the-library)
+	3. [Usage example](#usage-example)
+	4. [Resources and endpoints](#resources-and-endpoints)
 		1. [Champion](#champion-)
 		2. [Champion Mastery](#champion-mastery-)
 		3. [League](#league-)
@@ -29,12 +29,12 @@
 		9. [Status](#status-)
 		10. [Summoner](#summoner-)
 		11. [Tournament & Tournament Stub](#tournament---tournament-stub-)
-	6. [Cache providers](#cache-providers)
-	7. [Rate limiting](#rate-limiting)
-	8. [Call caching](#call-caching)
-	9. [StaticData linking](#staticdata-linking)
-	10. [Extensions](#extensions)
-3. [DataDragon API](#datadragon-api)
+	5. [Cache providers](#cache-providers)
+	6. [Rate limiting](#rate-limiting)
+	7. [Call caching](#call-caching)
+	8. [StaticData linking](#staticdata-linking)
+	9. [Extensions](#extensions)
+4. [DataDragon API](#datadragon-api)
 
 # Introduction
 
@@ -45,22 +45,20 @@ League of Legends' API. A small DataDragon API is included.
 Here are some handy features:
 
 - **Rate limit caching** and limit exceeding prevention.
-- **Call caching**, enabling the library to re-use already fetched data within short timespan
-- **Objects everywhere**! API calls return data in special objects.
+- **Call caching**, enabling the library to re-use already fetched data within short timespan.
+- **Object extensions** - you can create your own extensions for any ApiObject returned
+ by the library and use custom functions defined in these extensions.
 - **Interim mode** support, you are going to be able to use the API the same way
-whether your key is in interim mode or not (meaning you won't need to change anything
-when you jump to production).
-- **Object extensions** - you can create your own extensions for any ApiObject and use custom
-functions defined in these extensions.
+ whether your key is in `interim mode` or not (meaning you won't need to change anything
+ when you jump to production).
+- **Objects everywhere**! API calls return data in special objects.
 
 I would be grateful for any feedback - so if you can give me any, just do it! Also feel free
 to send pull requests if you find anything that is worth improving!
 
 Please, read on :)
 
-# League of Legends API
-
-## Downloading
+# Downloading
 
 The easiest way to get this library is to use [Composer](https://getcomposer.org/). While
 having Composer installed it takes only `composer require dolejska-daniel/riot-api` to
@@ -70,25 +68,27 @@ If you are not fan of Composer, you can download [whole repository in .zip archi
 or clone the repository using Git - `git clone https://github.com/dolejska-daniel/riot-api`.
 _But in this case, you will have to create your own autoload function._
 
+# League of Legends API
+
 ## Endpoint versions
 
 Below you can find table of implemented API endpoints and the version in which they are currently implemented.
 
 | Endpoint         | Status |
 | ---------------- | ------ |
-| Champion         | ![Champion endpoint implemented version](https://img.shields.io/badge/implemented_version-v3-brightgreen.svg) |
-| Champion Mastery | ![Champion Mastery endpoint implemented version](https://img.shields.io/badge/implemented_version-v3-brightgreen.svg) |
-| League           | ![League endpoint implemented version](https://img.shields.io/badge/implemented_version-v3-brightgreen.svg) |
-| Masteries        | ![Masteries endpoint implemented version](https://img.shields.io/badge/implemented_version-v3-brightgreen.svg) |
-| Match            | ![Match endpoint implemented version](https://img.shields.io/badge/implemented_version-v3-brightgreen.svg) |
-| Runes            | ![Runes endpoint implemented version](https://img.shields.io/badge/implemented_version-v3-brightgreen.svg) |
-| Spectator        | ![Spectator endpoint implemented version](https://img.shields.io/badge/implemented_version-v3-brightgreen.svg) |
-| Static Data      | ![Static Data endpoint implemented version](https://img.shields.io/badge/implemented_version-v3-brightgreen.svg) |
+| [Champion](#champion-) | ![Champion endpoint implemented version](https://img.shields.io/badge/implemented_version-v3-brightgreen.svg) |
+| [Champion Mastery](#champion-mastery-) | ![Champion Mastery endpoint implemented version](https://img.shields.io/badge/implemented_version-v3-brightgreen.svg) |
+| [League](#league-) | ![League endpoint implemented version](https://img.shields.io/badge/implemented_version-v3-brightgreen.svg) |
+| [Masteries](#masteries-) | ![Masteries endpoint implemented version](https://img.shields.io/badge/implemented_version-v3-brightgreen.svg) |
+| [Match](#match-) | ![Match endpoint implemented version](https://img.shields.io/badge/implemented_version-v3-brightgreen.svg) |
+| [Runes](#runes-) | ![Runes endpoint implemented version](https://img.shields.io/badge/implemented_version-v3-brightgreen.svg) |
+| [Spectator](#spectator-) | ![Spectator endpoint implemented version](https://img.shields.io/badge/implemented_version-v3-brightgreen.svg) |
+| [Static Data](#static-data-) | ![Static Data endpoint implemented version](https://img.shields.io/badge/implemented_version-v3-brightgreen.svg) |
 | Stats            | ![Stats endpoint implemented version](https://img.shields.io/badge/implemented_version-removed-red.svg) |
-| Status           | ![Status endpoint implemented version](https://img.shields.io/badge/implemented_version-v3-brightgreen.svg) |
-| Summoner         | ![Summoner endpoint implemented version](https://img.shields.io/badge/implemented_version-v3-brightgreen.svg) |
-| Tournament       | ![Tournament endpoint implemented version](https://img.shields.io/badge/implemented_version-v3-brightgreen.svg) |
-| Tournament Stub  | ![Tournament Stub endpoint implemented version](https://img.shields.io/badge/implemented_version-v3-brightgreen.svg) |
+| [Status](#status-) | ![Status endpoint implemented version](https://img.shields.io/badge/implemented_version-v3-brightgreen.svg) |
+| [Summoner](#summoner-) | ![Summoner endpoint implemented version](https://img.shields.io/badge/implemented_version-v3-brightgreen.svg) |
+| [Tournament](#tournament---tournament-stub-) | ![Tournament endpoint implemented version](https://img.shields.io/badge/implemented_version-v3-brightgreen.svg) |
+| [Tournament Stub](#tournament---tournament-stub-) | ![Tournament Stub endpoint implemented version](https://img.shields.io/badge/implemented_version-v3-brightgreen.svg) |
 
 ## Initializing the library
 
@@ -117,7 +117,7 @@ And there is a lot more what you can set when initializing the library, here is 
 
 | Library settings key | Value | Description |
 | -------------------- | ----- | ----------- |
-| `RiotAPI::SET_REGION` | `Region::EUROPE_EAST`, `Region::EUROPE_WEST`, `Region::NORTH_AMERICA`, … | ***Required.*** Used to specify, to which endpoint calls are going to be made. |
+| `RiotAPI::SET_REGION` | `Region::EUROPE_EAST`, `Region::EUROPE_WEST`, `Region::NORTH_AMERICA`, `string` | ***Required.*** Used to specify, to which endpoint calls are going to be made. |
 | `RiotAPI::SET_KEY` | `string` | ***Required.*** Option to specify your _API key_. |
 | `RiotAPI::SET_TOURNAMENT_KEY` | `string` | Option to specify your _tournament API key_. |
 | `RiotAPI::SET_VERIFY_SSL` | `bool` `default true` | Use this option to disable SSL verification. Useful when testing on localhost. Shoul not be used in production. |
@@ -180,8 +180,8 @@ print_r($champion->getData());  //  Or array of all the data
  */
 ```
 
-You can get more details about endpoints and functions in
-[endpoints and functions](#endpoints-and-functions) section.
+You can get more details about these functions in
+[resources and endpoints](#resources-and-endpoints) section below.
 
 ## Resources and endpoints
 
@@ -189,7 +189,7 @@ Below you will find tables containting `endpoint` functions for each `resource`.
 are only important when you want to use `resource` specific [call caching](#call-caching).
 Otherwise they doesn't play any significant role.
 
-Parameters with default value are optional.
+Parameters with specified default value are optional.
 
 ### Champion ![Champion endpoint implemented version](https://img.shields.io/badge/implemented_version-v3-brightgreen.svg)
 
