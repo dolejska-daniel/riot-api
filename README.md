@@ -50,6 +50,10 @@ Here are some handy features:
 - **Call caching**, enabling the library to re-use already fetched data within short timespan.
 - **Object extensions** - you can create your own extensions for any ApiObject returned
  by the library and use custom functions defined in these extensions.
+- **StaticData linking** - library can automatically link Static Data related to your
+request right into the returned object.
+- **Custom callbacks** - you can set custom function which will be called before
+or after the request is processed.
 - **Interim mode** support, you are going to be able to use the API the same way
  whether your key is in `interim mode` or not (meaning you won't need to change anything
  when you jump to production).
