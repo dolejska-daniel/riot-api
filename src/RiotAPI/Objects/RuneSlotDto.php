@@ -28,9 +28,11 @@ namespace RiotAPI\Objects;
  *   runes (v3)
  *     @link https://developer.riotgames.com/api-methods/#runes-v3/GET_getRunePagesBySummonerId
  *
+ * @linkable $runeId (getStaticRune)
+ *
  * @package RiotAPI\Objects
  */
-class RuneSlotDto extends ApiObject
+class RuneSlotDto extends ApiObjectLinkable
 {
 	/**
 	 *   Rune slot ID.

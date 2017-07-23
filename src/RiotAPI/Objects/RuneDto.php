@@ -28,9 +28,11 @@ namespace RiotAPI\Objects;
  *     @link https://developer.riotgames.com/api-methods/#match-v3/GET_getMatch
  *     @link https://developer.riotgames.com/api-methods/#match-v3/GET_getMatchByTournamentCode
  *
+ * @linkable $runeId (getStaticRune)
+ *
  * @package RiotAPI\Objects
  */
-class RuneDto extends ApiObject
+class RuneDto extends ApiObjectLinkable
 {
 	/** @var int $runeId */
 	public $runeId;

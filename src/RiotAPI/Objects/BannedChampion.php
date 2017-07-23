@@ -28,9 +28,11 @@ namespace RiotAPI\Objects;
  *     @link https://developer.riotgames.com/api-methods/#spectator-v3/GET_getCurrentGameInfoBySummoner
  *     @link https://developer.riotgames.com/api-methods/#spectator-v3/GET_getFeaturedGames
  *
+ * @linkable $championId (getStaticChampion)
+ *
  * @package RiotAPI\Objects
  */
-class BannedChampion extends ApiObject
+class BannedChampion extends ApiObjectLinkable
 {
 	/**
 	 *   The turn during which the champion was banned.

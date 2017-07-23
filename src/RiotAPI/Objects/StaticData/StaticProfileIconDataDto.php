@@ -19,7 +19,7 @@
 
 namespace RiotAPI\Objects\StaticData;
 
-use RiotAPI\Objects\ApiObject;
+use RiotAPI\Objects\ApiObjectIterable;
 
 
 /**
@@ -30,9 +30,11 @@ use RiotAPI\Objects\ApiObject;
  *   lol-static-data (v3)
  *     @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getProfileIcons
  *
+ * @iterable $data
+ *
  * @package RiotAPI\Objects\StaticData
  */
-class StaticProfileIconDataDto extends ApiObject
+class StaticProfileIconDataDto extends ApiObjectIterable
 {
 	/** @var StaticProfileIconDetailsDto[] $data */
 	public $data;

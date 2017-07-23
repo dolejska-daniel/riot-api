@@ -27,9 +27,11 @@ namespace RiotAPI\Objects;
  *   match (v3)
  *     @link https://developer.riotgames.com/api-methods/#match-v3/GET_getMatchTimeline
  *
+ * @iterable $frames
+ *
  * @package RiotAPI\Objects
  */
-class MatchTimelineDto extends ApiObject
+class MatchTimelineDto extends ApiObjectIterable
 {
 	/** @var MatchFrameDto[] $frames */
 	public $frames;

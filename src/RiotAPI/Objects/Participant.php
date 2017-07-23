@@ -27,9 +27,11 @@ namespace RiotAPI\Objects;
  *   spectator (v3)
  *     @link https://developer.riotgames.com/api-methods/#spectator-v3/GET_getFeaturedGames
  *
+ * @linkable $championId (getStaticChampion)
+ *
  * @package RiotAPI\Objects
  */
-class Participant extends ApiObject
+class Participant extends ApiObjectLinkable
 {
 	/**
 	 *   The ID of the profile icon used by this participant.

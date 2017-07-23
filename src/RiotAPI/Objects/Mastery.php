@@ -27,9 +27,11 @@ namespace RiotAPI\Objects;
  *   spectator (v3)
  *     @link https://developer.riotgames.com/api-methods/#spectator-v3/GET_getCurrentGameInfoBySummoner
  *
+ * @linkable $masteryId (getStaticMastery)
+ *
  * @package RiotAPI\Objects
  */
-class Mastery extends ApiObject
+class Mastery extends ApiObjectLinkable
 {
 	/**
 	 *   The ID of the mastery.

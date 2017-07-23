@@ -31,9 +31,11 @@ namespace RiotAPI\Objects;
  *     @link https://developer.riotgames.com/api-methods/#match-v3/GET_getMatch
  *     @link https://developer.riotgames.com/api-methods/#match-v3/GET_getMatchByTournamentCode
  *
+ * @linkable $id (getStaticMastery)
+ *
  * @package RiotAPI\Objects
  */
-class MasteryDto extends ApiObject
+class MasteryDto extends ApiObjectLinkable
 {
 	/**
 	 *   Mastery ID. For static information correlating to masteries, please refer 

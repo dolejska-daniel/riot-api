@@ -27,9 +27,11 @@ namespace RiotAPI\Objects;
  *   lol-status (v3)
  *     @link https://developer.riotgames.com/api-methods/#lol-status-v3/GET_getShardData
  *
+ * @iterable $updates
+ *
  * @package RiotAPI\Objects
  */
-class Incident extends ApiObject
+class Incident extends ApiObjectIterable
 {
 	/** @var bool $active */
 	public $active;
