@@ -136,7 +136,7 @@ And there is a lot more what you can set when initializing the library, here is 
 | `RiotAPI::SET_CACHE_PROVIDER` | `RiotAPI::CACHE_PROVIDER_FILE`, `RiotAPI::CACHE_PROVIDER_MEMCACHED`, `ICacheProvider` | Using this option you can select from our cache providers or even provide your own. See [cache providers](#cache-providers) for more information. |
 | `RiotAPI::SET_CACHE_PROVIDER_PARAMS` | `array` | These are parameters, that will be passed to the CacheProvider on it's initialization. See [cache providers](#cache-providers) for more information. |
 | `RiotAPI::SET_EXTENSIONS` | `array` | This option contains extensions for any ApiObject. See [extensions](#extensions) for more information. |
-| `RiotAPI::SET_STATICDATA_LINKING` | `array` | Option to specify whether or not should StaticData linking be enabled. See [StaticData linking](#staticdata-linking) for more information. |
+| `RiotAPI::SET_STATICDATA_LINKING` | `bool` `default false` | Option to specify whether or not should StaticData linking be enabled. See [StaticData linking](#staticdata-linking) for more information. |
 | `RiotAPI::SET_STATICDATA_LOCALE` | `string` | This option sets language in which should StaticData be fetched. See [StaticData linking](#staticdata-linking) for more information. |
 | `RiotAPI::SET_STATICDATA_VERSION` | `string` | This option sets game version from which should StaticData be fetched. See [StaticData linking](#staticdata-linking) for more information. |
 | `RiotAPI::SET_CALLBACKS_BEFORE` | `callable`&#124;`callable[]` | Functions set in this option will be called before request is made. See [callback functions](#callback-functions) for more information. |
