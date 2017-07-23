@@ -29,9 +29,11 @@ namespace RiotAPI\Objects;
  *     @link https://developer.riotgames.com/api-methods/#champion-v3/GET_getChampions
  *     @link https://developer.riotgames.com/api-methods/#champion-v3/GET_getChampionsById
  *
+ * @linkable $id (getStaticChampion)
+ *
  * @package RiotAPI\Objects
  */
-class ChampionDto extends ApiObject
+class ChampionDto extends ApiObjectLinkable
 {
 	/**
 	 *   Ranked play enabled flag.

@@ -21,28 +21,16 @@ namespace RiotAPI\Objects;
 
 
 /**
- *   Class MatchlistDto
- *
- * Used in:
- *   match (v3)
- *     @link https://developer.riotgames.com/api-methods/#match-v3/GET_getMatchlist
- *     @link https://developer.riotgames.com/api-methods/#match-v3/GET_getRecentMatchlist
- *
- * @iterable $matches
+ *   Class ApiObjectLinkable
  *
  * @package RiotAPI\Objects
  */
-class MatchlistDto extends ApiObjectIterable
+abstract class ApiObjectLinkable extends ApiObject
 {
-	/** @var MatchReferenceDto[] $matches */
-	public $matches;
+	protected $staticData = null;
 
-	/** @var int $totalGames */
-	public $totalGames;
-
-	/** @var int $startIndex */
-	public $startIndex;
-
-	/** @var int $endIndex */
-	public $endIndex;
+	public function __get( $name )
+	{
+		return $this->staticData->$name;
+	}
 }

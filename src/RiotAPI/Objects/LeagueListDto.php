@@ -29,9 +29,11 @@ namespace RiotAPI\Objects;
  *     @link https://developer.riotgames.com/api-methods/#league-v3/GET_getAllLeaguesForSummoner
  *     @link https://developer.riotgames.com/api-methods/#league-v3/GET_getMasterLeague
  *
+ * @iterable $entries
+ *
  * @package RiotAPI\Objects
  */
-class LeagueListDto extends ApiObject
+class LeagueListDto extends ApiObjectIterable
 {
 	/** @var string $tier */
 	public $tier;

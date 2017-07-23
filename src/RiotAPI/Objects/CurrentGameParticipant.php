@@ -27,9 +27,11 @@ namespace RiotAPI\Objects;
  *   spectator (v3)
  *     @link https://developer.riotgames.com/api-methods/#spectator-v3/GET_getCurrentGameInfoBySummoner
  *
+ * @linkable $championId (getStaticChampion)
+ *
  * @package RiotAPI\Objects
  */
-class CurrentGameParticipant extends ApiObject
+class CurrentGameParticipant extends ApiObjectLinkable
 {
 	/**
 	 *   The ID of the profile icon used by this participant.

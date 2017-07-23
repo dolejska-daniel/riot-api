@@ -27,9 +27,11 @@ namespace RiotAPI\Objects;
  *   spectator (v3)
  *     @link https://developer.riotgames.com/api-methods/#spectator-v3/GET_getCurrentGameInfoBySummoner
  *
+ * @linkable $runeId (getStaticRune)
+ *
  * @package RiotAPI\Objects
  */
-class Rune extends ApiObject
+class Rune extends ApiObjectLinkable
 {
 	/**
 	 *   The count of this rune used by the participant.

@@ -47,6 +47,9 @@ abstract class ApiObject implements IApiObject
 		$iterableProp = $selfRef->hasProperty('_iterable')
 			? self::getIterablePropertyName($selfRef->getDocComment())
 			: false;
+		$linkableProp = $selfRef->hasProperty('staticData')
+			? self::getLinkablePropertyData($selfRef->getDocComment())
+			: [ 'name' => false, 'function' => false];
 
 		foreach ($data as $property => $value)
 		{
@@ -81,6 +84,22 @@ abstract class ApiObject implements IApiObject
 
 				if ($iterableProp == $property)
 					$this->_iterable = $this->$property;
+
+				//  Is API reference passed?
+				if ($api)
+				{
+					//  Should this property be linked and is it allowed?
+					if ($linkableProp['name'] == $property && $api->getSetting(RiotAPI::SET_STATICDATA_LINKING, false))
+					{
+						$params = [];
+						$params[] = $value;
+						$params[] = $api->getSetting(RiotAPI::SET_STATICDATA_LOCALE, null);
+						$params[] = $api->getSetting(RiotAPI::SET_STATICDATA_VERSION, null);
+
+						$data = call_user_func_array(array($api, $linkableProp['function']), $params);
+						$this->staticData = $data;
+					}
+				}
 			}
 			//  If property does not exist
 			catch (\ReflectionException $ex) {}
@@ -106,7 +125,7 @@ abstract class ApiObject implements IApiObject
 	}
 
 	/**
-	 *   Returns DataType specified in PHPDoc comment.
+	 *   Returns name of iterable property specified in PHPDoc comment.
 	 *
 	 * @param string $phpDocComment
 	 *
@@ -114,9 +133,25 @@ abstract class ApiObject implements IApiObject
 	 */
 	public static function getIterablePropertyName( string $phpDocComment )
 	{
-		preg_match('/@iterable\s([\w\$]+)/', $phpDocComment, $matches);
+		preg_match('/@iterable\s\$([\w]+)/', $phpDocComment, $matches);
 		if (isset($matches[1]))
-			return substr($matches[1], 1);
+			return $matches[1];
+
+		return false;
+	}
+
+	/**
+	 *   Returns data of linkable property specified in PHPDoc comment.
+	 *
+	 * @param string $phpDocComment
+	 *
+	 * @return bool|array
+	 */
+	public static function getLinkablePropertyData( string $phpDocComment )
+	{
+		preg_match('/@linkable\s\$([\w]+)\s\(([\w\$]+)\)/', $phpDocComment, $matches);
+		if (isset($matches[1]) && isset($matches[2]))
+			return [ 'name' => $matches[1], 'function' => $matches[2]];
 
 		return false;
 	}

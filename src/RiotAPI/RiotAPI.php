@@ -82,6 +82,11 @@ class RiotAPI
 		SET_CACHE_CALLS           = 'SET_CACHE_CALLS',           // Used to set whether or not to temporary saveCallData API call's results
 		SET_CACHE_CALLS_LENGTH    = 'SET_CACHE_CALLS_LENGTH',    // Specifies for how long are call results saved
 		SET_EXTENSIONS            = 'SET_EXTENSIONS',            // Specifies ApiObject's extensions
+		SET_STATICDATA_LINKING    = 'SET_STATICDATA_LINKING',
+		SET_STATICDATA_LOCALE     = 'SET_STATICDATA_LOCALE',
+		SET_STATICDATA_VERSION    = 'SET_STATICDATA_VERSION',
+		SET_CALLBACKS_BEFORE      = 'SET_CALLBACKS_BEFORE',
+		SET_CALLBACKS_AFTER       = 'SET_CALLBACKS_AFTER',
 		SET_API_BASEURL           = 'SET_API_BASEURL',
 		SET_USE_DUMMY_DATA        = 'SET_USE_DUMMY_DATA',
 		SET_SAVE_DUMMY_DATA       = 'SET_SAVE_DUMMY_DATA';
@@ -173,6 +178,11 @@ class RiotAPI
 			self::SET_RATELIMITS,
 			self::SET_USE_DUMMY_DATA,
 			self::SET_EXTENSIONS,
+			self::SET_STATICDATA_LINKING,
+			self::SET_STATICDATA_LOCALE,
+			self::SET_STATICDATA_VERSION,
+			self::SET_CALLBACKS_BEFORE,
+			self::SET_CALLBACKS_AFTER,
 		],
 		SETTINGS_INIT_ONLY = [
 			self::SET_RATELIMITS,
@@ -367,7 +377,7 @@ class RiotAPI
 
 			//  Gets default parameters
 			$params = $this->getSetting(self::SET_CACHE_PROVIDER_PARAMS, []);
-			//  and created new instance of this cache provider
+			//  and creates new instance of this cache provider
 			$this->cache = $cacheProvider->newInstanceArgs($params);
 		}
 		catch (\ReflectionException $ex)
@@ -477,18 +487,30 @@ class RiotAPI
 				if (!$this->rlc->canCall($this->getSetting($this->used_key), $this->getSetting(self::SET_REGION)))
 					throw new ServerLimitException('API call rate limit would be exceeded by this call.');
 		};
+
+		$callbacks = $this->getSetting(self::SET_CALLBACKS_BEFORE, []);
+		if (is_array($callbacks) == false)
+			$callbacks = [$callbacks];
+
+		foreach ($callbacks as $c)
+		{
+			if (is_callable($c) == false)
+				throw new SettingsException("Provided value of '" . self::SET_CALLBACKS_BEFORE . "' option is not valid.");
+
+			$this->beforeCall[] = $c;
+		}
 	}
 
 	protected function _setupAfterCalls()
 	{
 		//  Register, that call has been made if RateLimit cache is enabled
-		$this->afterCall[] = function ( $url, $requestHash ) {
+		$this->afterCall[] = function () {
 			if ($this->getSetting(self::SET_CACHE_RATELIMIT) && $this->rlc != false && isset($this->result_headers[self::API_HEADER_APP_RATELIMIT]))
 				$this->rlc->registerCall($this->getSetting($this->used_key), $this->getSetting(self::SET_REGION), $this->result_headers[self::API_HEADER_APP_RATELIMIT]);
 		};
 
 		//  Save result data, if CallCache is enabled and when the old result has expired
-		$this->afterCall[] = function ( $url, $requestHash ) {
+		$this->afterCall[] = function ( $api, $url, $requestHash ) {
 			if ($this->getSetting(self::SET_CACHE_CALLS) && $this->ccc != false && $this->ccc->isCallCached($requestHash) == false)
 			{
 				//  Get information for how long to save the data
@@ -498,12 +520,22 @@ class RiotAPI
 		};
 
 		//  Save result data as new DummyData if enabled and if data does not already exist
-		$this->afterCall[] = function ( $url, $requestHash ) {
+		$this->afterCall[] = function () {
 			if ($this->getSetting(self::SET_SAVE_DUMMY_DATA, false) && file_exists($this->getDummyDataFileName()) == false)
 				$this->_saveDummyData($this->result_headers, $this->result_data_raw, 200);
 		};
 
+		$callbacks = $this->getSetting(self::SET_CALLBACKS_AFTER, []);
+		if (is_array($callbacks) == false)
+			$callbacks = [$callbacks];
 
+		foreach ($callbacks as $c)
+		{
+			if (is_callable($c) == false)
+				throw new SettingsException("Provided value of '" . self::SET_CALLBACKS_AFTER . "' option is not valid.");
+
+			$this->afterCall[] = $c;
+		}
 	}
 
 	/**
@@ -781,10 +813,10 @@ class RiotAPI
 		if ($overrideRegion)
 			$this->setTemporaryRegion($overrideRegion);
 
-		$this->_beforeCall();
-
 		$url = $this->_getCallUrl($curlHeaders);
 		$requestHash = md5($url);
+
+		$this->_beforeCall($url, $requestHash);
 
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -913,7 +945,7 @@ class RiotAPI
 			throw new RequestException("RiotAPI: Unknown error occured. ($response_code)" . $errMessage);
 		}
 
-		$this->_afterCall($url, $requestHash);
+		$this->_afterCall($url, $requestHash, $ch);
 
 		$this->query_data     = array();
 		$this->post_data      = null;
@@ -944,22 +976,22 @@ class RiotAPI
 		]));
 	}
 
-	protected function _beforeCall()
+	protected function _beforeCall( string $url, string $requestHash )
 	{
 		foreach ($this->beforeCall as $function)
 		{
-			if ($function() === false)
+			if ($function($this, $url, $requestHash) === false)
 			{
 				throw new RequestException("Request terminated by beforeCall function.");
 			}
 		}
 	}
 
-	protected function _afterCall( string $url, string $requestHash )
+	protected function _afterCall( string $url, string $requestHash, $curlResource )
 	{
 		foreach ($this->afterCall as $function)
 		{
-			$function($url, $requestHash);
+			$function($this, $url, $requestHash, $curlResource);
 		}
 	}
 
@@ -1656,15 +1688,17 @@ class RiotAPI
 	/**
 	 *   Retrieve match by match ID.
 	 *
-	 * @param int $match_id
+	 * @param int      $match_id
+	 * @param int|null $for_account_id If provided, used to identify the participant to be unobfuscated.
 	 *
 	 * @return Objects\MatchDto
 	 * @link https://developer.riotgames.com/api-methods/#match-v3/GET_getMatch
 	 */
-	public function getMatch( int $match_id ): Objects\MatchDto
+	public function getMatch( int $match_id, int $for_account_id = null ): Objects\MatchDto
 	{
 		$this->setEndpoint("/lol/match/" . self::RESOURCE_MATCH_V3 . "/matches/{$match_id}")
 			->setResource(self::RESOURCE_MATCH)
+			->addQuery('forAccountId', $for_account_id)
 			->makeCall();
 
 		return new Objects\MatchDto($this->getResult(), $this);

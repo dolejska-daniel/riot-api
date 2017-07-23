@@ -28,9 +28,11 @@ namespace RiotAPI\Objects;
  *     @link https://developer.riotgames.com/api-methods/#match-v3/GET_getMatch
  *     @link https://developer.riotgames.com/api-methods/#match-v3/GET_getMatchByTournamentCode
  *
+ * @linkable $championId (getStaticChampion)
+ *
  * @package RiotAPI\Objects
  */
-class TeamBansDto extends ApiObject
+class TeamBansDto extends ApiObjectLinkable
 {
 	/** @var int $pickTurn */
 	public $pickTurn;

@@ -22,17 +22,18 @@ namespace RiotAPI\Objects;
 
 /**
  *   Class ChampionMasteryDto
- * This object contains single Champion Mastery information for
-                                                        player and champion combination.
+ * This object contains single Champion Mastery information for player and champion combination.
  *
  * Used in:
  *   champion-mastery (v3)
  *     @link https://developer.riotgames.com/api-methods/#champion-mastery-v3/GET_getAllChampionMasteries
  *     @link https://developer.riotgames.com/api-methods/#champion-mastery-v3/GET_getChampionMastery
  *
+ * @linkable $championId (getStaticChampion)
+ *
  * @package RiotAPI\Objects
  */
-class ChampionMasteryDto extends ApiObject
+class ChampionMasteryDto extends ApiObjectLinkable
 {
 	/**
 	 *   Is chest granted for this champion or not in current season.

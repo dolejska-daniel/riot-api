@@ -35,6 +35,7 @@
 	8. [StaticData linking](#staticdata-linking)
 	9. [Extensions](#extensions)
 	10. [Callback functions](#callback-functions)
+	11. [CLI support](#cli-support)
 4. [DataDragon API](#datadragon-api)
 
 # Introduction
@@ -131,6 +132,11 @@ And there is a lot more what you can set when initializing the library, here is 
 | `RiotAPI::SET_CACHE_PROVIDER` | `RiotAPI::CACHE_PROVIDER_FILE`, `RiotAPI::CACHE_PROVIDER_MEMCACHED`, `ICacheProvider` | Using this option you can select from our cache providers or even provide your own. See [cache providers](#cache-providers) for more information. |
 | `RiotAPI::SET_CACHE_PROVIDER_PARAMS` | `array` | These are parameters, that will be passed to the CacheProvider on it's initialization. See [cache providers](#cache-providers) for more information. |
 | `RiotAPI::SET_EXTENSIONS` | `array` | This option contains extensions for any ApiObject. See [extensions](#extensions) for more information. |
+| `RiotAPI::SET_STATICDATA_LINKING` | `array` | This option . See [StaticData linking](#staticdata-linking) for more information. |
+| `RiotAPI::SET_STATICDATA_LOCALE` | `array` | This option . See [StaticData linking](#staticdata-linking) for more information. |
+| `RiotAPI::SET_STATICDATA_VERSION` | `array` | This option . See [StaticData linking](#staticdata-linking) for more information. |
+| `RiotAPI::SET_CALLBACKS_BEFORE` | `array` | This option . See [callback functions](#callback-functions) for more information. |
+| `RiotAPI::SET_CALLBACKS_AFTER` | `array` | This option . See [callback functions](#callback-functions) for more information. |
 
 ## Usage example
 
@@ -236,7 +242,7 @@ All these functions are `endpoints` of `resource` `RiotAPI::RESOURCE_MATCH`.
 
 | Function name | Parameters | Return type |
 | ------------- | ---------- | ----------- |
-| `getMatch` | `int $match_id` | [`Objects\MatchDto`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/MatchDto.php) |
+| `getMatch` | `int $match_id`, `int $for_account_id = null` | [`Objects\MatchDto`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/MatchDto.php) |
 | `getMatchByTournamentCode` | `int $match_id`, `string $tournament_code` | [`Objects\MatchDto`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/MatchDto.php) |
 | `getMatchIdsByTournamentCode` | `string $tournament_code` | `int[]` |
 | `getMatchlistByAccount` | `int $account_id` | [`Objects\MatchlistDto`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/MatchlistDto.php) |
@@ -392,8 +398,8 @@ When using this feature, you can set `RiotAPI::SET_CACHE_PROVIDER` to any class,
 thought it has to implement `Objects\ICacheProvider` interface. By using `RiotAPI::SET_CACHE_PROVIDER_PARAMS`
 option, you can pass any variables to the cache provider.
 
-| Settings key | Data type | Possible values |
-| ------------ | --------- | --------------- |
+| Settings key | Data type | Info / Possible values |
+| ------------ | --------- | ---------------------- |
 | `RiotAPI::SET_CACHE_PROVIDER` | `ICacheProvider` | `RiotAPI::CACHE_PROVIDER_FILE`, `RiotAPI::CACHE_PROVIDER_MEMCACHED`, `ICacheProvider` |
 | `RiotAPI::SET_CACHE_PROVIDER_PARAMS` | `array` | _see example below_ |
 
@@ -443,12 +449,12 @@ to enable this feature, you have to set `RiotAPI::SET_CACHE_RATELIMIT` to `true`
 won't provide `RiotAPI::SET_RATELIMITS` as well, then default development ratelimits will
 be used (10/10s, 500/600s).
 
-| Settings key | Data type | Possible values |
+| Settings key | Data type | Info / Possible values |
 | ------------ | --------- | --------------- |
 | `RiotAPI::SET_CACHE_RATELIMIT` | `bool` | `true`, `false` |
 | `RiotAPI::SET_RATELIMITS` | `array` | _see example below_ |
 
-| Variable | Data type | Possible values |
+| Variable | Data type | Info / Possible values |
 | -------- | --------- | --------------- |
 | `$YOUR_RIOT_API_KEYx` | `string` | _your Riot API key, or tournament API key_ |
 | `$TIME_INTERVALx` | `int` | `IRateLimitControl::INTERVAL_1S`, `IRateLimitControl::INTERVAL_10S`, `IRateLimitControl::INTERVAL_10M`, `IRateLimitControl::INTERVAL_1H` |
@@ -483,7 +489,7 @@ In order to enable this feature, you have to set `RiotAPI::SET_CACHE_CALLS` to `
 You should also provide `RiotAPI::SET_CACHE_CALLS_LENGTH` option or else default
 time interval of `60 seconds` will be used.
 
-| Settings key | Data type | Possible values |
+| Settings key | Data type | Info / Possible values |
 | -------- | --------- | --------------- |
 | `RiotAPI::SET_CACHE_CALLS` | `bool` | `true`, `false` |
 | `RiotAPI::SET_CACHE_CALLS_LENGTH` | `int`&#124;`array` | _see example below_ |
@@ -492,7 +498,7 @@ time interval of `60 seconds` will be used.
 will be set onto every `resource-endpoint` or it can be `array` specifying the time interval
 separately for each `resource` - **only specified resources will be cached in this case.**
 
-| Variable | Data type | Possible values |
+| Variable | Data type |Info / Possible values |
 | -------- | --------- | --------------- |
 | `$RESOURCEx` | `string` | `RiotAPI::RESOURCE_CHAMPION`, `RiotAPI::RESOURCE_CHAMPIONMASTERY`, `RiotAPI::RESOURCE_LEAGUE`, `RiotAPI::RESOURCE_STATICDATA`, `RiotAPI::RESOURCE_STATUS`, `RiotAPI::RESOURCE_MASTERIES`, `RiotAPI::RESOURCE_MATCH`, `RiotAPI::RESOURCE_RUNES`, `RiotAPI::RESOURCE_SPECTATOR`, `RiotAPI::RESOURCE_SUMMONER`, `RiotAPI::RESOURCE_TOURNAMENT`, `RiotAPI::RESOURCE_TOURNAMENT_STUB` |
 | `$TIME_LIMITx` | `int` | _time limit in seconds_ |
@@ -540,7 +546,68 @@ $api = new RiotAPI([
 
 ## StaticData linking
 
-_Planned for `v0.8`._
+This feature allows you to automatically link static data related to your request.
+This action __is time consuming__ (works well when caching call data for
+`StaticData resource`), but calls to `StaticData resource` are not counted
+to your rate limit so there is no problem in using it.
+
+| Settings key | Data type | Info / Possible values |
+| -------- | --------- | --------------- |
+| `RiotAPI::SET_STATICDATA_LINKING` | `bool` | `true`, `false` |
+| `RiotAPI::SET_STATICDATA_LOCALE` | `string` | _Optional._ Language in which will static data be returned. Supports only languages supported by region. |
+| `RiotAPI::SET_STATICDATA_VERSION` | `string` | _Optional._ Game version - when not provided newest version is used. |
+
+Only objects shown in table below will be used for automatic static data linking.
+
+| Linkable object | Link target |
+| --------------- | ----------- 
+| [`Objects\BannedChampion`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/BannedChampion.php) | `StaticChampion` |
+| [`Objects\ChampionDto`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/ChampionDto.php) | `StaticChampion` |
+| [`Objects\ChampionMasteryDto`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/ChampionMasteryDto.php) | `StaticChampion` |
+| [`Objects\CurrentGameParticipant`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/CurrentGameParticipant.php) | `StaticChampion` |
+| [`Objects\Mastery`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/Mastery.php) | `StaticMastery` |
+| [`Objects\MasteryDto`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/MasteryDto.php) | `StaticMastery` |
+| [`Objects\MatchReferenceDto`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/BannedChampion.php) | `StaticChampion` |
+| [`Objects\Participant`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/BannedChampion.php) | `StaticChampion` |
+| [`Objects\ParticipantDto`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/BannedChampion.php) | `StaticChampion` |
+| [`Objects\Rune`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/BannedChampion.php) | `StaticRune` |
+| [`Objects\RuneDto`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/BannedChampion.php) | `StaticRune` |
+| [`Objects\RuneSlotDto`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/BannedChampion.php) | `StaticRune` |
+| [`Objects\TeamBansDto`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/BannedChampion.php) | `StaticChampion` |
+
+**Library initialization**:
+```php
+use RiotAPI\RiotAPI;
+
+$api = new RiotAPI([
+	// ...
+	RiotAPI::SET_STATICDATA_LINKING => true,
+	// ...
+]);
+```
+
+And from now on, static data will be automatically linked to some specific objects
+shown above. You can easily access static data properties for these objects like this:
+
+```php
+//  ...
+
+//  this call returns Objects\ChampionDto
+$champion = $api->getChampion(61);
+
+//  accessing Objects\ChampionDto's property
+echo $champion->id; // 61
+echo $champion->freeToPlay; // false
+echo $champion->rankedPlayEnabled; // true
+
+//  accessing static data property by magic method
+//  (this will only work when static data property name
+//    you want to access is not already in use by original object)
+echo $champion->name; // Orianna
+
+//  accessing static data through special property
+echo $champion->staticData->name; // Orianna
+```
 
 ## Extensions
 
@@ -592,7 +659,66 @@ reference.
 
 Custom function callback before and after the call is made.
 
-_Planned for `v0.8`._
+| Settings key | Data type | Info / Possible values |
+| -------- | --------- | --------------- |
+| `RiotAPI::SET_CALLBACKS_BEFORE` | `callable`&#124;`callable[]` | _see example below_ |
+| `RiotAPI::SET_CALLBACKS_AFTER` | `callable`&#124;`callable[]` | _see example below_ |
+
+**Before request callbacks:**
+
+Every before request callback will receive these parameters:
+
+| Parameter name | Data type | Description |
+| -------------- | --------- | ----------- |
+| $api           | `RiotAPI` | Instance of RiotAPI. If you wish to edit something in the instance, use `&$api` instead, in your callback function declaration. |
+| $url           | `string`  | Complete URL to be called in request. |
+| $requestHash   | `string`  | This hash is used when caching request. It is unique identificator _of URL_. Requests on same endpoints with same parameters will have same hash.
+
+Before request callbacks have ability to cancel upcomming request - when `false` is returned
+by _any callback_ function, exception `Exceptions\RequestException` is raised and
+request is cancelled.
+
+In case rate limiting feature is enabled and limit should be exceeded by upcomming call,
+no before request callbacks will be called and `Exceptions\ServerLimitException`
+exception will be raised.
+
+**After request callback function parameters:**
+
+Every after request callback will receive these parameters:
+
+| Parameter name | Data type | Description |
+| -------------- | --------- | ----------- |
+| $api           | `RiotAPI` | Instance of RiotAPI. If you wish to edit something in the instance, use `&$api` instead, in your callback function declaration. |
+| $url           | `string`  | Complete URL to be called in request. |
+| $requestHash   | `string`  | This hash is used when caching request. It is unique identificator _of URL_. Requests on same endpoints with same parameters will have same hash. |
+| $curlResource  | `resource` | cUrl resource used in request, can be used to get usefull request information (e.g. with `curl_getinfo` function). |
+
+In case the call failed, exception will be raised based on HTTP code and no after request
+callbacks will be called.
+
+**Library initialization:**
+
+```php
+use RiotAPI\RiotAPI;
+
+$api = new RiotAPI([
+	// ...
+	RiotAPI::SET_CALLBACKS_BEFORE => [
+		function($api, $url, $requestHash) {
+			// function logic
+		},
+		array($object, 'functionName'),
+	],
+	RiotAPI::SET_CALLBACKS_AFTER => function($api, $url, $requestHash, $curlResource) {
+		// function logic
+	},
+	// ...
+]);
+```
+
+## CLI support
+
+_Planned for upcomming releases._
 
 # DataDragon API
 
