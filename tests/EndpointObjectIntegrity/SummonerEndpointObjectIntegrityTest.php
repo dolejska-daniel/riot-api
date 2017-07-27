@@ -24,7 +24,7 @@ use RiotAPI\Objects;
 use RiotAPI\Definitions\Region;
 
 
-class ChampionMasteryEndpointObjectTest extends RiotAPITestCase
+class SummonerEndpointObjectIntegrityTest extends RiotAPITestCase
 {
 	public function testInit()
 	{
@@ -44,15 +44,16 @@ class ChampionMasteryEndpointObjectTest extends RiotAPITestCase
 	 *
 	 * @param RiotAPI $api
 	 */
-	public function testGetChampionMastery( RiotAPI $api )
+	public function testGetSummonerByAccount( RiotAPI $api )
 	{
 		//  Get library processed results
-		/** @var Objects\ChampionMasteryDto $result */
-		$result = $api->getChampionMastery(30904166, 61);
+		/** @var Objects\SummonerDto $result */
+		$result = $api->getSummonerByAccount(35545652);
 		//  Get raw result
 		$rawResult = $api->getResult();
 
-		$this->checkObjectPropertiesAndDataValidity($result, $rawResult, Objects\ChampionMasteryDto::class);
+		//  Check result validity
+		$this->checkObjectPropertiesAndDataValidity($result, $rawResult, Objects\SummonerDto::class);
 	}
 
 	/**
@@ -60,15 +61,16 @@ class ChampionMasteryEndpointObjectTest extends RiotAPITestCase
 	 *
 	 * @param RiotAPI $api
 	 */
-	public function testGetChampionMasteries( RiotAPI $api )
+	public function testGetSummonerByName( RiotAPI $api )
 	{
 		//  Get library processed results
-		/** @var Objects\ChampionMasteryDto[] $result */
-		$result = $api->getChampionMasteries(30904166);
+		/** @var Objects\SummonerDto $result */
+		$result = $api->getSummonerByName('I am TheKronnY');
 		//  Get raw result
 		$rawResult = $api->getResult();
 
-		$this->checkObjectPropertiesAndDataValidityOfObjectList($result, $rawResult, Objects\ChampionMasteryDto::class);
+		//  Check result validity
+		$this->checkObjectPropertiesAndDataValidity($result, $rawResult, Objects\SummonerDto::class);
 	}
 
 	/**
@@ -76,14 +78,15 @@ class ChampionMasteryEndpointObjectTest extends RiotAPITestCase
 	 *
 	 * @param RiotAPI $api
 	 */
-	public function testGetChampionMasteryScore( RiotAPI $api )
+	public function testGetSummoner( RiotAPI $api )
 	{
 		//  Get library processed results
-		/** @var Objects\ChampionMasteryDto $result */
-		$result = $api->getChampionMasteryScore(30904166);
+		/** @var Objects\SummonerDto $result */
+		$result = $api->getSummoner(30904166);
 		//  Get raw result
 		$rawResult = $api->getResult();
 
-		$this->assertSame($rawResult, $result, "Data do not match original request result data!");
+		//  Check result validity
+		$this->checkObjectPropertiesAndDataValidity($result, $rawResult, Objects\SummonerDto::class);
 	}
 }

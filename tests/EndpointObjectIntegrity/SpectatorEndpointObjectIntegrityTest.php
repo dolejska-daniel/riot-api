@@ -24,7 +24,7 @@ use RiotAPI\Objects;
 use RiotAPI\Definitions\Region;
 
 
-class ChampionEndpointObjectTest extends RiotAPITestCase
+class SpectatorEndpointObjectIntegrityTest extends RiotAPITestCase
 {
 	public function testInit()
 	{
@@ -44,15 +44,15 @@ class ChampionEndpointObjectTest extends RiotAPITestCase
 	 *
 	 * @param RiotAPI $api
 	 */
-	public function testGetChampions( RiotAPI $api )
+	public function testGetCurrentGame( RiotAPI $api )
 	{
 		//  Get library processed results
-		/** @var Objects\ChampionListDto $result */
-		$result = $api->getChampions();
+		/** @var Objects\CurrentGameInfo $result */
+		$result = $api->getCurrentGameInfo(30904166);
 		//  Get raw result
 		$rawResult = $api->getResult();
 
-		$this->checkObjectPropertiesAndDataValidity($result, $rawResult, Objects\ChampionListDto::class);
+		$this->checkObjectPropertiesAndDataValidity($result, $rawResult, Objects\CurrentGameInfo::class);
 	}
 
 	/**
@@ -60,14 +60,14 @@ class ChampionEndpointObjectTest extends RiotAPITestCase
 	 *
 	 * @param RiotAPI $api
 	 */
-	public function testGetChampion( RiotAPI $api )
+	public function testGetFeaturedGames( RiotAPI $api )
 	{
 		//  Get library processed results
-		/** @var Objects\ChampionDto $result */
-		$result = $api->getChampionById(61); //  Orianna <3
+		/** @var Objects\FeaturedGames $result */
+		$result = $api->getFeaturedGames();
 		//  Get raw result
 		$rawResult = $api->getResult();
 
-		$this->checkObjectPropertiesAndDataValidity($result, $rawResult, Objects\ChampionDto::class);
+		$this->checkObjectPropertiesAndDataValidity($result, $rawResult, Objects\FeaturedGames::class);
 	}
 }

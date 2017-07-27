@@ -24,7 +24,7 @@ use RiotAPI\Objects;
 use RiotAPI\Definitions\Region;
 
 
-class RunesEndpointObjectTest extends RiotAPITestCase
+class StatusEndpointObjectIntegrityTest extends RiotAPITestCase
 {
 	public function testInit()
 	{
@@ -44,14 +44,14 @@ class RunesEndpointObjectTest extends RiotAPITestCase
 	 *
 	 * @param RiotAPI $api
 	 */
-	public function testGetRunesBySummoner( RiotAPI $api )
+	public function testGetStatusData( RiotAPI $api )
 	{
 		//  Get library processed results
-		/** @var Objects\RunePagesDto $result */
-		$result = $api->getRunesBySummoner(30904166);
+		/** @var Objects\ShardStatus $result */
+		$result = $api->getStatusData();
 		//  Get raw result
 		$rawResult = $api->getResult();
 
-		$this->checkObjectPropertiesAndDataValidity($result, $rawResult, Objects\RunePagesDto::class);
+		$this->checkObjectPropertiesAndDataValidity($result, $rawResult, Objects\ShardStatus::class);
 	}
 }

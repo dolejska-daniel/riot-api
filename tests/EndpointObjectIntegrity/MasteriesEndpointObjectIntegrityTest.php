@@ -24,7 +24,7 @@ use RiotAPI\Objects;
 use RiotAPI\Definitions\Region;
 
 
-class SpectatorEndpointObjectTest extends RiotAPITestCase
+class MasteriesEndpointObjectIntegrityTest extends RiotAPITestCase
 {
 	public function testInit()
 	{
@@ -44,30 +44,14 @@ class SpectatorEndpointObjectTest extends RiotAPITestCase
 	 *
 	 * @param RiotAPI $api
 	 */
-	public function testGetCurrentGame( RiotAPI $api )
+	public function testGetMasteriesBySummoner( RiotAPI $api )
 	{
 		//  Get library processed results
-		/** @var Objects\CurrentGameInfo $result */
-		$result = $api->getCurrentGameInfo(30904166);
+		/** @var Objects\MasteryPagesDto $result */
+		$result = $api->getMasteriesBySummoner(30904166);
 		//  Get raw result
 		$rawResult = $api->getResult();
 
-		$this->checkObjectPropertiesAndDataValidity($result, $rawResult, Objects\CurrentGameInfo::class);
-	}
-
-	/**
-	 * @depends testInit
-	 *
-	 * @param RiotAPI $api
-	 */
-	public function testGetFeaturedGames( RiotAPI $api )
-	{
-		//  Get library processed results
-		/** @var Objects\FeaturedGames $result */
-		$result = $api->getFeaturedGames();
-		//  Get raw result
-		$rawResult = $api->getResult();
-
-		$this->checkObjectPropertiesAndDataValidity($result, $rawResult, Objects\FeaturedGames::class);
+		$this->checkObjectPropertiesAndDataValidity($result, $rawResult, Objects\MasteryPagesDto::class);
 	}
 }

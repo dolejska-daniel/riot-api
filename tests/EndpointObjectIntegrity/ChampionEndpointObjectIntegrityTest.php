@@ -24,7 +24,7 @@ use RiotAPI\Objects;
 use RiotAPI\Definitions\Region;
 
 
-class MasteriesEndpointObjectTest extends RiotAPITestCase
+class ChampionEndpointObjectIntegrityTest extends RiotAPITestCase
 {
 	public function testInit()
 	{
@@ -44,14 +44,30 @@ class MasteriesEndpointObjectTest extends RiotAPITestCase
 	 *
 	 * @param RiotAPI $api
 	 */
-	public function testGetMasteriesBySummoner( RiotAPI $api )
+	public function testGetChampions( RiotAPI $api )
 	{
 		//  Get library processed results
-		/** @var Objects\MasteryPagesDto $result */
-		$result = $api->getMasteriesBySummoner(30904166);
+		/** @var Objects\ChampionListDto $result */
+		$result = $api->getChampions();
 		//  Get raw result
 		$rawResult = $api->getResult();
 
-		$this->checkObjectPropertiesAndDataValidity($result, $rawResult, Objects\MasteryPagesDto::class);
+		$this->checkObjectPropertiesAndDataValidity($result, $rawResult, Objects\ChampionListDto::class);
+	}
+
+	/**
+	 * @depends testInit
+	 *
+	 * @param RiotAPI $api
+	 */
+	public function testGetChampion( RiotAPI $api )
+	{
+		//  Get library processed results
+		/** @var Objects\ChampionDto $result */
+		$result = $api->getChampionById(61); //  Orianna <3
+		//  Get raw result
+		$rawResult = $api->getResult();
+
+		$this->checkObjectPropertiesAndDataValidity($result, $rawResult, Objects\ChampionDto::class);
 	}
 }

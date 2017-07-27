@@ -26,7 +26,7 @@ use RiotAPI\Definitions\Region;
 use RiotAPI\Exceptions\RequestException;
 
 
-class MatchEndpointObjectTest extends RiotAPITestCase
+class MatchEndpointObjectIntegrityTest extends RiotAPITestCase
 {
 	public function testInit()
 	{

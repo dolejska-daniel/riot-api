@@ -24,7 +24,7 @@ use RiotAPI\Objects\StaticData;
 use RiotAPI\Definitions\Region;
 
 
-class StaticDataEndpointObjectTest extends RiotAPITestCase
+class StaticDataEndpointObjectIntegrityTest extends RiotAPITestCase
 {
 	public function testInit()
 	{

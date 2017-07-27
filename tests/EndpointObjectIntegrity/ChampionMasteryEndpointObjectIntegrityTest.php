@@ -24,7 +24,7 @@ use RiotAPI\Objects;
 use RiotAPI\Definitions\Region;
 
 
-class LeagueEndpointObjectTest extends RiotAPITestCase
+class ChampionMasteryEndpointObjectIntegrityTest extends RiotAPITestCase
 {
 	public function testInit()
 	{
@@ -44,15 +44,15 @@ class LeagueEndpointObjectTest extends RiotAPITestCase
 	 *
 	 * @param RiotAPI $api
 	 */
-	public function testGetLeaguesForSummoner( RiotAPI $api )
+	public function testGetChampionMastery( RiotAPI $api )
 	{
 		//  Get library processed results
-		/** @var Objects\LeagueListDto[] $result */
-		$result = $api->getLeaguesForSummoner(30904166);
+		/** @var Objects\ChampionMasteryDto $result */
+		$result = $api->getChampionMastery(30904166, 61);
 		//  Get raw result
 		$rawResult = $api->getResult();
 
-		$this->checkObjectPropertiesAndDataValidityOfObjectList($result, $rawResult, Objects\LeagueListDto::class);
+		$this->checkObjectPropertiesAndDataValidity($result, $rawResult, Objects\ChampionMasteryDto::class);
 	}
 
 	/**
@@ -60,15 +60,15 @@ class LeagueEndpointObjectTest extends RiotAPITestCase
 	 *
 	 * @param RiotAPI $api
 	 */
-	public function testGetLeaguePositionsForSummoner( RiotAPI $api )
+	public function testGetChampionMasteries( RiotAPI $api )
 	{
 		//  Get library processed results
-		/** @var Objects\LeaguePositionDto[] $result */
-		$result = $api->getLeaguePositionsForSummoner(30904166);
+		/** @var Objects\ChampionMasteryDto[] $result */
+		$result = $api->getChampionMasteries(30904166);
 		//  Get raw result
 		$rawResult = $api->getResult();
 
-		$this->checkObjectPropertiesAndDataValidityOfObjectList($result, $rawResult, Objects\LeaguePositionDto::class);
+		$this->checkObjectPropertiesAndDataValidityOfObjectList($result, $rawResult, Objects\ChampionMasteryDto::class);
 	}
 
 	/**
@@ -76,30 +76,14 @@ class LeagueEndpointObjectTest extends RiotAPITestCase
 	 *
 	 * @param RiotAPI $api
 	 */
-	public function testGetLeagueChallenger( RiotAPI $api )
+	public function testGetChampionMasteryScore( RiotAPI $api )
 	{
 		//  Get library processed results
-		/** @var Objects\LeagueListDto $result */
-		$result = $api->getLeagueChallenger('RANKED_SOLO_5x5');
+		/** @var Objects\ChampionMasteryDto $result */
+		$result = $api->getChampionMasteryScore(30904166);
 		//  Get raw result
 		$rawResult = $api->getResult();
 
-		$this->checkObjectPropertiesAndDataValidity($result, $rawResult, Objects\LeagueListDto::class);
-	}
-
-	/**
-	 * @depends testInit
-	 *
-	 * @param RiotAPI $api
-	 */
-	public function testGetLeagueMaster( RiotAPI $api )
-	{
-		//  Get library processed results
-		/** @var Objects\LeagueListDto $result */
-		$result = $api->getLeagueChallenger('RANKED_SOLO_5x5');
-		//  Get raw result
-		$rawResult = $api->getResult();
-
-		$this->checkObjectPropertiesAndDataValidity($result, $rawResult, Objects\LeagueListDto::class);
+		$this->assertSame($rawResult, $result, "Data do not match original request result data!");
 	}
 }

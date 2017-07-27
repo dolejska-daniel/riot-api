@@ -1,6 +1,6 @@
 # RiotAPI PHP7 wrapper
 
-> Version v0.8
+> Version pre-v0.9
 
 [![Build Status](https://travis-ci.org/dolejska-daniel/riot-api.svg?branch=master)](https://travis-ci.org/dolejska-daniel/riot-api)
 [![Test Coverage](https://codeclimate.com/github/dolejska-daniel/riot-api/badges/coverage.svg)](https://codeclimate.com/github/dolejska-daniel/riot-api/coverage)
@@ -130,7 +130,6 @@ And there is a lot more what you can set when initializing the library, here is 
 | `RiotAPI::SET_KEY_INCLUDE_TYPE` | `RiotAPI::KEY_AS_QUERY_PARAM`, `RiotAPI::KEY_AS_HEADER` | This option determines how is API key going to be included in the requests (by default `RiotAPI::KEY_AS_HEADER`). |
 | `RiotAPI::SET_INTERIM` | `bool` `default false` | By specifying this, you tell the library to be in `interim mode` and use interim-only endpoints (eg. tournament calls will be sent to stub endpoints). |
 | `RiotAPI::SET_CACHE_RATELIMIT` | `bool` `default false` | This option tells the library to take care of not exceeding your API key's rate limit by counting the requests (you should also set desired limits using `RiotAPI::SET_RATELIMITS` or `defaults` will be used). See [rate limiting](#rate-limiting) for more information. |
-| `RiotAPI::SET_RATELIMITS` | `array` | Option to specify per-key API call rate limits. See [rate limiting](#rate-limiting) for more information. |
 | `RiotAPI::SET_CACHE_CALLS` | `bool` `default false` | This option tells the library to cache fetched data from API and to try to re-use already fetched data (you should also set option `RiotAPI::SET_CACHE_CALLS_LENGTH` to specify for how long should fetched data be stored in cache). See [call caching](#call-caching) for more information. |
 | `RiotAPI::SET_CACHE_CALLS_LENGTH` | `int`&#124;`array` `default 60` | Option to specify how log should fetched data from API be saved in cache. See [call caching](#call-caching) for more information. |
 | `RiotAPI::SET_CACHE_PROVIDER` | `RiotAPI::CACHE_PROVIDER_FILE`, `RiotAPI::CACHE_PROVIDER_MEMCACHED`, `ICacheProvider` | Using this option you can select from our cache providers or even provide your own. See [cache providers](#cache-providers) for more information. |
@@ -196,201 +195,8 @@ You can get more details about these functions in
 
 ## Resources and endpoints
 
-Below you will find tables containting `endpoint` functions for each `resource`. `resources`
-are only important when you want to use `resource` specific [call caching](#call-caching).
-Otherwise they doesn't play any significant role.
-
-Parameters with specified default value are optional.
-
-### Champion ![Champion endpoint implemented version](https://img.shields.io/badge/implemented_version-v3-brightgreen.svg)
-
-All these functions are `endpoints` of `resource` `RiotAPI::RESOURCE_CHAMPION`.
-
-| Function name | Parameters | Return type |
-| ------------- | ---------- | ----------- |
-| `getChampions` | `bool $only_free_to_play = null` | [`Objects\ChampionListDto`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/ChampionListDto.php) |
-| `getChampionById` | `int $champion_id` | [`Objects\ChampionDto`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/ChampionDto.php) |
-
-### Champion Mastery ![Champion Mastery endpoint implemented version](https://img.shields.io/badge/implemented_version-v3-brightgreen.svg)
-
-All these functions are `endpoints` of `resource` `RiotAPI::RESOURCE_CHAMPIONMASTERY`.
-
-| Function name | Parameters | Return type |
-| ------------- | ---------- | ----------- |
-| `getChampionMastery` | `int $summoner_id`, `int $champion_id` | [`Objects\ChampionMasteryDto`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/ChampionMasteryDto.php) |
-| `getChampionMasteries` | `int $summoner_id` | [`Objects\ChampionMasteryDto[]`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/ChampionMasteryDto.php) |
-| `getChampionMasteryScore` | `int $summoner_id` | `int` |
-
-### League ![League endpoint implemented version](https://img.shields.io/badge/implemented_version-v3-brightgreen.svg)
-
-All these functions are `endpoints` of `resource` `RiotAPI::RESOURCE_LEAGUE`.
-
-| Function name | Parameters | Return type |
-| ------------- | ---------- | ----------- |
-| `getLeaguesForSummoner` | `int $summoner_id` | [`Objects\LeagueListDto[]`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/LeagueListDto.php) |
-| `getLeaguePositionsForSummoner` | `int $summoner_id` | [`Objects\LeaguePositionDto[]`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/LeaguePositionDto.php) |
-| `getLeagueChallenger` | `string $game_queue_type` | [`Objects\LeagueListDto`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/LeagueListDto.php) |
-| `getLeagueMaster` | `string $game_queue_type` | [`Objects\LeagueListDto`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/LeagueListDto.php) |
-
-### Masteries ![Masteries endpoint implemented version](https://img.shields.io/badge/implemented_version-v3-brightgreen.svg)
-
-All these functions are `endpoints` of `resource` `RiotAPI::RESOURCE_MASTERIES`.
-
-| Function name | Parameters | Return type |
-| ------------- | ---------- | ----------- |
-| `getMasteriesBySummoner` | `int $summoner_id` | [`Objects\MasteryPagesDto`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/MasteryPagesDto.php) |
-
-### Match ![Match endpoint implemented version](https://img.shields.io/badge/implemented_version-v3-brightgreen.svg)
-
-All these functions are `endpoints` of `resource` `RiotAPI::RESOURCE_MATCH`.
-
-| Function name | Parameters | Return type |
-| ------------- | ---------- | ----------- |
-| `getMatch` | `int $match_id`, `int $for_account_id = null` | [`Objects\MatchDto`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/MatchDto.php) |
-| `getMatchByTournamentCode` | `int $match_id`, `string $tournament_code` | [`Objects\MatchDto`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/MatchDto.php) |
-| `getMatchIdsByTournamentCode` | `string $tournament_code` | `int[]` |
-| `getMatchlistByAccount` | `int $account_id` | [`Objects\MatchlistDto`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/MatchlistDto.php) |
-| `getRecentMatchlistByAccount` | `int $account_id` | [`Objects\MatchlistDto`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/MatchlistDto.php) |
-| `getMatchTimeline` | `int $match_id` | [`Objects\MatchTimelineDto`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/MatchTimelineDto.php) |
-
-### Runes ![Runes endpoint implemented version](https://img.shields.io/badge/implemented_version-v3-brightgreen.svg)
-
-All these functions are `endpoints` of `resource` `RiotAPI::RESOURCE_RUNES`.
-
-| Function name | Parameters | Return type |
-| ------------- | ---------- | ----------- |
-| `getRunesBySummoner` | `int $summoner_id` | [`Objects\RunePagesDto`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/RunePagesDto.php) |
-
-### Spectator ![Spectator endpoint implemented version](https://img.shields.io/badge/implemented_version-v3-brightgreen.svg)
-
-All these functions are `endpoints` of `resource` `RiotAPI::RESOURCE_SPECTATOR`.
-
-| Function name | Parameters | Return type |
-| ------------- | ---------- | ----------- |
-| `getCurrentGameInfo` | - | [`Objects\CurrentGameInfo`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/CurrentGameInfo.php) |
-| `getFeaturedGames` | - | [`Objects\FeaturedGames`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/FeaturedGames.php) |
-
-### Static Data ![Static Data endpoint implemented version](https://img.shields.io/badge/implemented_version-v3-brightgreen.svg)
-
-All these functions are `endpoints` of `resource` `RiotAPI::RESOURCE_STATICDATA`.
-
-| Function name | Parameters | Return type |
-| ------------- | ---------- | ----------- |
-| `getStaticChampions` | `string $locale = null`, `string $version = null`, `bool $data_by_id = null`, `string`&#124;`string[] $tags = null` | [`StaticData\StaticChampionListDto`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/StaticData/StaticChampionListDto.php) |
-| `getStaticChampion` | `int $champion_id`, `string $locale = null`, `string $version = null`, `string`&#124;`string[] $tags = null` | [`StaticData\StaticChampionDto`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/StaticData/StaticChampionDto.php) |
-| `getStaticItems` | `string $locale = null`, `string $version = null`, `string`&#124;`string[] $tags = null` | [`StaticData\StaticItemListDto`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/StaticData/StaticItemListDto.php) |
-| `getStaticItem` | `bool $item_id`, `string $locale = null`, `string $version = null`, `string`&#124;`string[] $tags = null` | [`StaticData\StaticItemDto`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/StaticData/StaticItemDto.php) |
-| `getStaticLanguageStrings` | `string $locale = null`, `string $version = null` | [`StaticData\StaticLanguageStringsDto`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/StaticData/StaticLanguageStringsDto.php) |
-| `getStaticLanguages` | - | `string[]` |
-| `getStaticMaps` | `string $locale = null`, `string $version = null` | [`StaticData\StaticMapDataDto`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/StaticData/StaticMapDataDto.php) |
-| `getStaticMasteries` | `string $locale = null`, `string $version = null`, `string`&#124;`string[] $tags = null` | [`StaticData\StaticMasteryListDto`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/StaticData/StaticMasteryListDto.php) |
-| `getStaticMastery` | `bool $mastery_id = null`, `string $locale = null`, `string $version = null`, `string`&#124;`string[] $tags = null` | [`StaticData\StaticMasteryDto`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/StaticData/StaticMasteryDto.php) |
-| `getStaticProfileIcons` | `string $locale = null`, `string $version = null` | [`StaticData\StaticProfileIconDataDto`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/StaticData/StaticProfileIconDataDto.php) |
-| `getStaticRealm` | - | [`StaticData\StaticRealmDto`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/StaticData/StaticRealmDto.php) |
-| `getStaticRunes` | `string $locale = null`, `string $version = null`, `string`&#124;`string[] $tags = null` | [`StaticData\StaticRuneListDto`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/StaticData/StaticRuneListDto.php) |
-| `getStaticRune` | `int $rune_id`, `string $locale = null`, `string $version = null`, `string`&#124;`string[] $tags = null` | [`StaticData\StaticRuneDto`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/StaticData/StaticRuneDto.php) |
-| `getStaticSummonerSpells` | `string $locale = null`, `string $version = null`, `bool $data_by_id = null`, `string`&#124;`string[] $tags = null` | [`StaticData\StaticSummonerSpellListDto`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/StaticData/StaticSummonerSpellListDto.php) |
-| `getStaticSummonerSpell` | `int $summoner_spell_id`, `string $locale = null`, `string $version = null`, `string`&#124;`string[] $tags = null` | [`StaticData\StaticSummonerSpellDto`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/StaticData/StaticSummonerSpellDto.php) |
-| `getStaticVersions` | - | `string[]` |
-
-### Status ![Status endpoint implemented version](https://img.shields.io/badge/implemented_version-v3-brightgreen.svg)
-
-All these functions are `endpoints` of `resource` `RiotAPI::RESOURCE_STATUS`.
-
-| Function name | Parameters | Return type |
-| ------------- | ---------- | ----------- |
-| `getStatusData` | - | [`Objects\ShardStatus`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/ShardStatus.php) |
-
-### Summoner ![Summoner endpoint implemented version](https://img.shields.io/badge/implemented_version-v3-brightgreen.svg)
-
-All these functions are `endpoints` of `resource` `RiotAPI::RESOURCE_SUMMONER`.
-
-| Function name | Parameters | Return type |
-| ------------- | ---------- | ----------- |
-| `getSummoner` | `int $summoner_id` | [`Objects\SummonerDto`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/SummonerDto.php) |
-| `getSummonerByName` | `string $summoner_name` | [`Objects\SummonerDto`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/SummonerDto.php) |
-| `getSummonerByAccount` | `int $account_id` | [`Objects\SummonerDto`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/SummonerDto.php) |
-
-### Tournament ![Tournament endpoint implemented version](https://img.shields.io/badge/implemented_version-v3-brightgreen.svg) & Tournament Stub ![Tournament Stub endpoint implemented version](https://img.shields.io/badge/implemented_version-v3-brightgreen.svg)
-
-All these functions are `endpoints` of `resource` `RiotAPI::RESOURCE_TOURNAMENT`. When using `interim mode`
-`resource` `RiotAPI::RESOURCE_TOURNAMENT_STUB` will be used instead.
-
-**Only these functions are available in** `interim mode`:
-- `createTournamentCodes`
-- `createTournamentProvider`
-- `createTournament`
-- `getTournamentLobbyEvents`
-
-Other functions will throw [`Exceptions\RequestException`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Exceptions/RequestException.php)
-when used in `interim mode`.
-
-| Function name | Parameters | Return type |
-| ------------- | ---------- | ----------- |
-| `createTournamentCodes` | `int $tournament_id`, `int $count`, [`Objects\TournamentCodeParameters`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/TournamentCodeParameters.php) | `string[]` |
-| `editTournamentCode` | `string $tournament_code`, [`Objects\TournamentCodeUpdateParameters`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/TournamentCodeUpdateParameters.php) | - |
-| `getTournamentCodeData` | `string $tournament_code` | [`Objects\TournamentCodeDto`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/TournamentCodeDto.php) |
-| `createTournamentProvider` | [`Objects\ProviderRegistrationParameters`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/ProviderRegistrationParameters.php) | `int` |
-| `createTournament` | [`Objects\TournamentRegistrationParameters`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/TournamentRegistrationParameters.php) | `int` |
-| `getTournamentLobbyEvents` | `string $tournament_code` | [`Objects\LobbyEventDtoWrapper`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/LobbyEventDtoWrapper.php) |
-
-**Using special objects in requests**:
-
-[`Objects\TournamentCodeParameters`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/TournamentCodeParameters.php) and [`Objects\SummonerIdParams`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/SummonerIdParams.php):
-
-```php
-//  ...
-$codeParams = new Objects\TournamentCodeParameters([
-	'allowedSummonerIds' => new Objects\SummonerIdParams([
-		'participants' => [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ],
-	]),
-	'mapType'       => 'SUMMONERS_RIFT',
-	'pickType'      => 'ALL_RANDOM',
-	'spectatorType' => 'ALL',
-	'teamSize'      => 5,
-]);
-
-$codes = $api->createTournamentCodes($tournament_id, $count, $codeParams);
-```
-
-[`Objects\TournamentCodeUpdateParameters`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/TournamentCodeUpdateParameters.php):
-
-```php
-//  ...
-$codeParams = new Objects\TournamentCodeUpdateParameters([
-	'allowedParticipants' => implode(',', [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ]),
-	'mapType'             => 'SUMMONERS_RIFT',
-	'pickType'            => 'ALL_RANDOM',
-	'spectatorType'       => 'ALL',
-	'teamSize'            => 5,
-]);
-
-$api->editTournamentCode($tournament_code, $codeParams);
-```
-
-[`Objects\ProviderRegistrationParameters`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/ProviderRegistrationParameters.php):
-
-```php
-//  ...
-$providerParams = new Objects\ProviderRegistrationParameters([
-	'region' => Region::EUROPE_EAST,
-	'url'    => $callback_url,
-]);
-
-$provider_id = $api->createTournamentProvider($providerParams);
-```
-
-[`Objects\TournamentRegistrationParameters`](https://github.com/dolejska-daniel/riot-api/blob/master/src/RiotAPI/Objects/TournamentRegistrationParameters.php):
-
-```php
-//  ...
-$tournamentParams = new Objects\TournamentRegistrationParameters([
-	'providerId' => $provider_id,
-	'name'       => $tournament_name,
-]);
-
-$provider_id = $api->createTournament($tournamentParams);
-```
+Please see [the wiki](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI%3A-Resources-and-endpoints)
+for more info on resources and endpoints.
 
 ## Cache providers
 
@@ -437,7 +243,6 @@ __`RiotAPI::CACHE_PROVIDER_MEMCACHED` parameters__:
 | -------------- | --------- | -------- | ----------- |
 | `server list` | `array` | `[ '127.0.0.1', 11211 ]` | this array contains memcached servers to connect to |
 
-`server list` example:
 ```php
 $serverList = [
 	[ $SERVER_IP1, $SERVER_PORT1 ],
@@ -448,21 +253,14 @@ $serverList = [
 
 ## Rate limiting
 
-This clever feature will easily prevent exceeding your pre-set call limits. In order
-to enable this feature, you have to set `RiotAPI::SET_CACHE_RATELIMIT` to `true`. If you
-won't provide `RiotAPI::SET_RATELIMITS` as well, then default development ratelimits will
-be used (10/10s, 500/600s).
+This clever feature will easily prevent exceeding your per key 
+call limits & method limits. In order to enable this feature, you have to set
+`RiotAPI::SET_CACHE_RATELIMIT` to `true`. Everything is completly automatic,
+so all you need to do is to enable this feature.
 
 | Settings key | Data type | Info / Possible values |
-| ------------ | --------- | --------------- |
+| ------------ | --------- | ---------------------- |
 | `RiotAPI::SET_CACHE_RATELIMIT` | `bool` | `true`, `false` |
-| `RiotAPI::SET_RATELIMITS` | `array` | _see example below_ |
-
-| Variable | Data type | Info / Possible values |
-| -------- | --------- | --------------- |
-| `$YOUR_RIOT_API_KEYx` | `string` | _your Riot API key, or tournament API key_ |
-| `$TIME_INTERVALx` | `int` | `IRateLimitControl::INTERVAL_1S`, `IRateLimitControl::INTERVAL_10S`, `IRateLimitControl::INTERVAL_10M`, `IRateLimitControl::INTERVAL_1H` |
-| `$MAXIMUM_NUMBER_OF_CALLSx` | `int` | _maximum number of calls_ |
 
 **Library initialization**:
 ```php
@@ -471,16 +269,6 @@ use RiotAPI\RiotAPI;
 $api = new RiotAPI([
 	// ...
 	RiotAPI::SET_CACHE_RATELIMIT => true,
-	RiotAPI::SET_RATELIMITS => [
-		$YOUR_RIOT_API_KEY1 => [
-			$TIME_INTERVAL1 => $MAXIMUM_NUMBER_OF_CALLS1,
-			$TIME_INTERVAL2 => $MAXIMUM_NUMBER_OF_CALLS2,
-		],
-		$YOUR_RIOT_API_KEY2 => [
-			$TIME_INTERVAL3 => $MAXIMUM_NUMBER_OF_CALLS3,
-			$TIME_INTERVAL4 => $MAXIMUM_NUMBER_OF_CALLS4,
-		],
-	],
 	// ...
 ]);
 ```

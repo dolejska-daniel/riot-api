@@ -24,7 +24,7 @@ use RiotAPI\Objects;
 use RiotAPI\Definitions\Region;
 
 
-class SummonerEndpointObjectTest extends RiotAPITestCase
+class LeagueEndpointObjectIntegrityTest extends RiotAPITestCase
 {
 	public function testInit()
 	{
@@ -44,16 +44,15 @@ class SummonerEndpointObjectTest extends RiotAPITestCase
 	 *
 	 * @param RiotAPI $api
 	 */
-	public function testGetSummonerByAccount( RiotAPI $api )
+	public function testGetLeaguesForSummoner( RiotAPI $api )
 	{
 		//  Get library processed results
-		/** @var Objects\SummonerDto $result */
-		$result = $api->getSummonerByAccount(35545652);
+		/** @var Objects\LeagueListDto[] $result */
+		$result = $api->getLeaguesForSummoner(30904166);
 		//  Get raw result
 		$rawResult = $api->getResult();
 
-		//  Check result validity
-		$this->checkObjectPropertiesAndDataValidity($result, $rawResult, Objects\SummonerDto::class);
+		$this->checkObjectPropertiesAndDataValidityOfObjectList($result, $rawResult, Objects\LeagueListDto::class);
 	}
 
 	/**
@@ -61,16 +60,15 @@ class SummonerEndpointObjectTest extends RiotAPITestCase
 	 *
 	 * @param RiotAPI $api
 	 */
-	public function testGetSummonerByName( RiotAPI $api )
+	public function testGetLeaguePositionsForSummoner( RiotAPI $api )
 	{
 		//  Get library processed results
-		/** @var Objects\SummonerDto $result */
-		$result = $api->getSummonerByName('I am TheKronnY');
+		/** @var Objects\LeaguePositionDto[] $result */
+		$result = $api->getLeaguePositionsForSummoner(30904166);
 		//  Get raw result
 		$rawResult = $api->getResult();
 
-		//  Check result validity
-		$this->checkObjectPropertiesAndDataValidity($result, $rawResult, Objects\SummonerDto::class);
+		$this->checkObjectPropertiesAndDataValidityOfObjectList($result, $rawResult, Objects\LeaguePositionDto::class);
 	}
 
 	/**
@@ -78,15 +76,30 @@ class SummonerEndpointObjectTest extends RiotAPITestCase
 	 *
 	 * @param RiotAPI $api
 	 */
-	public function testGetSummoner( RiotAPI $api )
+	public function testGetLeagueChallenger( RiotAPI $api )
 	{
 		//  Get library processed results
-		/** @var Objects\SummonerDto $result */
-		$result = $api->getSummoner(30904166);
+		/** @var Objects\LeagueListDto $result */
+		$result = $api->getLeagueChallenger('RANKED_SOLO_5x5');
 		//  Get raw result
 		$rawResult = $api->getResult();
 
-		//  Check result validity
-		$this->checkObjectPropertiesAndDataValidity($result, $rawResult, Objects\SummonerDto::class);
+		$this->checkObjectPropertiesAndDataValidity($result, $rawResult, Objects\LeagueListDto::class);
+	}
+
+	/**
+	 * @depends testInit
+	 *
+	 * @param RiotAPI $api
+	 */
+	public function testGetLeagueMaster( RiotAPI $api )
+	{
+		//  Get library processed results
+		/** @var Objects\LeagueListDto $result */
+		$result = $api->getLeagueChallenger('RANKED_SOLO_5x5');
+		//  Get raw result
+		$rawResult = $api->getResult();
+
+		$this->checkObjectPropertiesAndDataValidity($result, $rawResult, Objects\LeagueListDto::class);
 	}
 }

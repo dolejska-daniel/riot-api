@@ -19,6 +19,8 @@
 
 namespace RiotAPI\Definitions;
 
+use RiotAPI\RiotAPI;
+
 
 /**
  *   Class RateLimitStorage
@@ -41,47 +43,62 @@ class RateLimitStorage
 			$this->limits[$regionId] = [];
 	}
 
+	protected static function parseLimitHeaders( $header )
+	{
+		$limits = [];
+		foreach (explode(',', $header) as $limitInterval)
+		{
+			$limitInterval = explode(':', $limitInterval);
+			$limit         = (int)$limitInterval[0];
+			$interval      = (int)$limitInterval[1];
+
+			$limits[$interval] = $limit;
+		}
+
+		return $limits;
+	}
+
 	/**
 	 *   Initializes limits for providede API key on all regions.
 	 *
 	 * @param string $api_key
+	 * @param string $region
 	 * @param array  $limits
 	 */
-	public function init( string $api_key, array $limits )
+	public function initApp( string $api_key, string $region, array $limits )
 	{
-		foreach ($this->limits as $region => $key_limits)
+		$output = [];
+		foreach ($limits as $interval => $limit)
 		{
-			//  Set limits for each region registered
-			if (isset($this->limits[$region][$api_key]))
-			{
-				//  Some limits are already in place
-				foreach ($this->limits[$region][$api_key] as $interval => $saved_limits)
-				{
-					if (isset($limits[$interval]))
-					{
-						//  Set new limits for existing $interval of $api_key on $region
-						$this->limits[$region][$api_key][$interval]['limit'] = $limits[$interval]['limit'];
-					}
-					else
-					{
-						//  Unset existing $interval limit, it's not set in newly provided limits
-						unset($this->limits[$region][$api_key][$interval]);
-					}
-				}
-
-				foreach ($limits as $interval => $new_limits)
-				{
-					if (isset($this->limits[$region][$api_key][$interval]) == false)
-					{
-						//  Set new limits for non-existing $interval of $api_key on $region
-						$this->limits[$region][$api_key][$interval] = $new_limits;
-					}
-				}
-			}
-			else
-				//  Set limits for $api_key on $region
-				$this->limits[$region][$api_key] = $limits;
+			$output[$interval] = [
+				'used'    => 0,
+				'limit'   => $limit,
+				'expires' => time() + $interval,
+			];
 		}
+		$this->limits[$region][$api_key]['app'] = $output;
+	}
+
+	/**
+	 *   Initializes limits for providede API key on all regions.
+	 *
+	 * @param string $api_key
+	 * @param string $region
+	 * @param string $endpoint
+	 * @param array  $limits
+	 */
+	public function initMethod( string $api_key, string $region, string $endpoint, array $limits )
+	{
+		$output = [];
+		foreach ($limits as $interval => $limit)
+		{
+			$output[$interval] = [
+				'used'    => 0,
+				'limit'   => $limit,
+				'expires' => time() + $interval,
+			];
+		}
+		$this->limits[$region][$api_key]['method'][$endpoint] = $output;
 	}
 
 	/**
@@ -92,9 +109,23 @@ class RateLimitStorage
 	 *
 	 * @return mixed
 	 */
-	public function getIntervals( string $api_key, string $region )
+	public function getAppLimits( string $api_key, string $region )
 	{
-		return $this->limits[$region][$api_key];
+		return @$this->limits[$region][$api_key]['app'];
+	}
+
+	/**
+	 *   Returns interval limits for provided API key on provided region.
+	 *
+	 * @param string $api_key
+	 * @param string $region
+	 * @param string $endpoint
+	 *
+	 * @return mixed
+	 */
+	public function getMethodLimits( string $api_key, string $region, string $endpoint)
+	{
+		return @$this->limits[$region][$api_key]['method'][$endpoint];
 	}
 
 	/**
@@ -105,11 +136,27 @@ class RateLimitStorage
 	 * @param int    $timeInterval
 	 * @param int    $value
 	 */
-	public function setUsed( string $api_key, string $region, int $timeInterval, int $value )
+	public function setAppUsed( string $api_key, string $region, int $timeInterval, int $value )
 	{
-		$this->limits[$region][$api_key][$timeInterval]['used'] = $value;
+		$this->limits[$region][$api_key]['app'][$timeInterval]['used'] = $value;
 		if ($value == 1)
-			$this->limits[$region][$api_key][$timeInterval]['expires'] = time() + $timeInterval;
+			$this->limits[$region][$api_key]['app'][$timeInterval]['expires'] = time() + $timeInterval;
+	}
+
+	/**
+	 *   Sets new value for used API calls for provided API key on provided region.
+	 *
+	 * @param string $api_key
+	 * @param string $region
+	 * @param string $endpoint
+	 * @param int    $timeInterval
+	 * @param int    $value
+	 */
+	public function setMethodUsed( string $api_key, string $region, string $endpoint, int $timeInterval, int $value )
+	{
+		$this->limits[$region][$api_key]['method'][$endpoint][$timeInterval]['used'] = $value;
+		if ($value == 1)
+			$this->limits[$region][$api_key]['method'][$endpoint][$timeInterval]['expires'] = time() + $timeInterval;
 	}
 
 	/**
@@ -117,16 +164,33 @@ class RateLimitStorage
 	 *
 	 * @param string $api_key
 	 * @param string $region
+	 * @param string $resource
+	 * @param string $endpoint
 	 *
 	 * @return bool
 	 */
-	public function canCall( string $api_key, string $region ): bool
+	public function canCall( string $api_key, string $region, string $resource, string $endpoint): bool
 	{
-		foreach ($this->getIntervals($api_key, $region) as $timeInterval => $limits)
+		$appLimits = $this->getAppLimits($api_key, $region);
+		if (is_array($appLimits) && $resource != RiotAPI::RESOURCE_STATICDATA)
 		{
-			//  Check all saved intervals for this region
-			if ($limits['used'] >= $limits['limit'] && $limits['expires'] > time())
-				return false;
+			foreach ($appLimits as $timeInterval => $limits)
+			{
+				//  Check all saved intervals for this region
+				if ($limits['used'] >= $limits['limit'] && $limits['expires'] > time())
+					return false;
+			}
+		}
+
+		$methodLimits = $this->getMethodLimits($api_key, $region, $endpoint);
+		if (is_array($methodLimits))
+		{
+			foreach ($methodLimits as $timeInterval => $limits)
+			{
+				//  Check all saved intervals for this endpoint
+				if ($limits['used'] >= $limits['limit'] && $limits['expires'] > time())
+					return false;
+			}
 		}
 
 		return true;
@@ -137,17 +201,51 @@ class RateLimitStorage
 	 *
 	 * @param string $api_key
 	 * @param string $region
-	 * @param string $header
+	 * @param string $app_header
 	 */
-	public function registerCall( string $api_key, string $region, string $header )
+	public function registerAppLimits( string $api_key, string $region, string $app_header )
 	{
-		foreach (explode(',', $header) as $currentLimit)
-		{
-			$currentLimit = explode(':', $currentLimit);
-			$used = (int)$currentLimit[0];
-			$timeInterval = (int)$currentLimit[1];
+		$limits = self::parseLimitHeaders($app_header);
+		$this->initApp($api_key, $region, $limits);
+	}
 
-			$this->setUsed($api_key, $region, $timeInterval, $used);
+	/**
+	 *   Registers that new API call has been made.
+	 *
+	 * @param string $api_key
+	 * @param string $region
+	 * @param string $endpoint
+	 * @param string $method_header
+	 */
+	public function registerMethodLimits( string $api_key, string $region, string $endpoint, string $method_header )
+	{
+		$limits = self::parseLimitHeaders($method_header);
+		$this->initMethod($api_key, $region, $endpoint, $limits);
+	}
+
+	/**
+	 *   Registers that new API call has been made.
+	 *
+	 * @param string $api_key
+	 * @param string $region
+	 * @param string $endpoint
+	 * @param string $app_header
+	 * @param string $method_header
+	 */
+	public function registerCall( string $api_key, string $region, string $endpoint, string $app_header = null, string $method_header = null )
+	{
+		if ($app_header)
+		{
+			$limits = self::parseLimitHeaders($app_header);
+			foreach ($limits as $interval => $used)
+				$this->setAppUsed($api_key, $region, $interval, $used);
+		}
+
+		if ($method_header)
+		{
+			$limits = self::parseLimitHeaders($method_header);
+			foreach ($limits as $interval => $used)
+				$this->setMethodUsed($api_key, $region, $endpoint, $interval, $used);
 		}
 	}
 }

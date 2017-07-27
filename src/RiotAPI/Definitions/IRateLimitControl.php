@@ -27,14 +27,6 @@ namespace RiotAPI\Definitions;
  */
 interface IRateLimitControl
 {
-	const INTERVAL_1S = 1;
-
-	const INTERVAL_10S = 10;
-
-	const INTERVAL_10M = 600;
-
-	const INTERVAL_1H = 3600;
-
 	/**
 	 *   IRateLimitControl constructor.
 	 *
@@ -43,33 +35,40 @@ interface IRateLimitControl
 	public function __construct( IRegion $region );
 
 	/**
-	 *   Sets time interval limits for provided API key.
-	 *
-	 * @param string $api_key
-	 * @param array  $limits
-	 *
-	 * @return mixed
-	 */
-	public function setLimits( string $api_key, array $limits );
-
-	/**
 	 *   Determines whether or not API call can be made.
 	 *
 	 * @param string $api_key
 	 * @param string $region
+	 * @param string $resource
+	 * @param string $endpoint
 	 *
 	 * @return bool
 	 */
-	public function canCall( string $api_key, string $region ): bool;
+	public function canCall( string $api_key, string $region, string $resource, string $endpoint): bool;
 
 	/**
 	 *   Registers that new API call has been made.
 	 *
 	 * @param string $api_key
 	 * @param string $region
-	 * @param string $header
+	 * @param string $endpoint
+	 * @param string $app_header
+	 * @param string $method_header
 	 *
 	 * @return
 	 */
-	public function registerCall( string $api_key, string $region, string $header );
+	public function registerLimits( string $api_key, string $region, string $endpoint, string $app_header, string $method_header );
+
+	/**
+	 *   Registers that new API call has been made.
+	 *
+	 * @param string $api_key
+	 * @param string $region
+	 * @param string $endpoint
+	 * @param string $app_header
+	 * @param string $method_header
+	 *
+	 * @return
+	 */
+	public function registerCall( string $api_key, string $region, string $endpoint, string $app_header, string $method_header );
 }

@@ -26,7 +26,7 @@ use RiotAPI\Definitions\Region;
 use RiotAPI\Exceptions\RequestException;
 
 
-class TournamentEndpointObjectTest extends RiotAPITestCase
+class TournamentEndpointObjectIntegrityTest extends RiotAPITestCase
 {
 	public function testInit()
 	{

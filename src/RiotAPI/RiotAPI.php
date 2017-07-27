@@ -75,7 +75,6 @@ class RiotAPI
 		SET_KEY_INCLUDE_TYPE      = 'SET_KEY_INCLUDE_TYPE',      // API key used by default
 		SET_TOURNAMENT_KEY        = 'SET_TOURNAMENT_KEY',        // API key used when working with tournaments
 		SET_INTERIM               = 'SET_INTERIM',               // Used to set whether or not is your application in Interim mode (Tournament STUB endpoints)
-		SET_RATELIMITS            = 'SET_RATELIMITS',            // Specifies limits for provided API keys
 		SET_CACHE_PROVIDER        = 'SET_CACHE_PROVIDER',        // Specifies CacheProvider class name
 		SET_CACHE_PROVIDER_PARAMS = 'SET_CACHE_PROVIDER_PARAMS', // Specifies parameters passed to CacheProvider class when initializing
 		SET_CACHE_RATELIMIT       = 'SET_CACHE_RATELIMIT',       // Used to set whether or not to saveCallData and check API key's rate limit
@@ -116,11 +115,12 @@ class RiotAPI
 	 * Available API headers.
 	 */
 	const
-		API_HEADER_API_KEY          = 'X-Riot-Token',
-		API_HEADER_RATELIMIT        = 'X-Rate-Limit-Count',
-		API_HEADER_RATELIMIT_TYPE   = 'X-Rate-Limit-Type',
-		API_HEADER_METHOD_RATELIMIT = 'X-Method-Rate-Limit-Count',
-		API_HEADER_APP_RATELIMIT    = 'X-App-Rate-Limit-Count';
+		HEADER_API_KEY                = 'X-Riot-Token',
+		HEADER_RATELIMIT_TYPE         = 'X-Rate-Limit-Type',
+		HEADER_METHOD_RATELIMIT       = 'X-Method-Rate-Limit',
+		HEADER_METHOD_RATELIMIT_COUNT = 'X-Method-Rate-Limit-Count',
+		HEADER_APP_RATELIMIT          = 'X-App-Rate-Limit',
+		HEADER_APP_RATELIMIT_COUNT    = 'X-App-Rate-Limit-Count';
 
 	/**
 	 * Constants required for tournament API calls.
@@ -175,7 +175,6 @@ class RiotAPI
 			self::SET_CACHE_RATELIMIT,
 			self::SET_CACHE_CALLS,
 			self::SET_CACHE_CALLS_LENGTH,
-			self::SET_RATELIMITS,
 			self::SET_USE_DUMMY_DATA,
 			self::SET_EXTENSIONS,
 			self::SET_STATICDATA_LINKING,
@@ -185,7 +184,6 @@ class RiotAPI
 			self::SET_CALLBACKS_AFTER,
 		],
 		SETTINGS_INIT_ONLY = [
-			self::SET_RATELIMITS,
 		];
 
 	/**
@@ -236,7 +234,7 @@ class RiotAPI
 	protected $rlc;
 
 	/** @var int $rlc_savetime */
-	protected $rlc_savetime = IRateLimitControl::INTERVAL_1H;
+	protected $rlc_savetime = 3600;
 
 	/** @var ICallCacheControl $ccc */
 	protected $ccc;
@@ -253,6 +251,9 @@ class RiotAPI
 
 	/** @var string $resource */
 	protected $resource;
+
+	/** @var string $resource_endpoint */
+	protected $resource_endpoint;
 
 
 	/** @var array $query_data */
@@ -334,10 +335,6 @@ class RiotAPI
 		if ($this->getSetting(self::SET_CACHE_CALLS) || $this->getSetting(self::SET_CACHE_RATELIMIT))
 			$this->_setupCacheProvider();
 
-		//  Ratelimits are going to be cached
-		if ($this->getSetting(self::SET_CACHE_RATELIMIT))
-			$this->_setupCacheRateLimits();
-
 		//  Call data are going to be cached
 		if ($this->getSetting(self::SET_CACHE_CALLS))
 			$this->_setupCacheCalls();
@@ -395,41 +392,6 @@ class RiotAPI
 		$this->loadCache();
 	}
 
-	public function _setupCacheRateLimits()
-	{
-		//  Gets ratelimit settings or sets defaults
-		$rateLimits = $this->getSetting(self::SET_RATELIMITS, [
-			$this->getSetting(self::SET_KEY) => [
-				IRateLimitControl::INTERVAL_10S => 10,
-				IRateLimitControl::INTERVAL_10M => 500,
-			],
-		]);
-
-		//  If ratelimit settings is not set by user and tournament key is set,
-		//  default ratelimits are also set for this key
-		if ($this->isSettingSet(self::SET_RATELIMITS) == false
-			&& $this->isSettingSet(self::SET_TOURNAMENT_KEY))
-		{
-			$rateLimits[$this->getSetting(self::SET_TOURNAMENT_KEY)] = [
-				IRateLimitControl::INTERVAL_10S => 10,
-				IRateLimitControl::INTERVAL_10M => 500,
-			];
-		}
-
-		//  Checks ratelimits and sets them
-		foreach ($rateLimits as $api_key => $limits)
-		{
-			if (!is_array($limits))
-				throw new SettingsException("Rate limit settings are not in valid format.");
-
-			foreach ($limits as $interval => $limit)
-				if (!is_integer($interval) || !is_integer($limit))
-					throw new SettingsException("Rate limit settings are not in valid format.");
-
-			$this->rlc->setLimits($api_key, $limits);
-		}
-	}
-
 	public function _setupCacheCalls()
 	{
 		if ($this->isSettingSet(self::SET_CACHE_CALLS_LENGTH) == false)
@@ -484,7 +446,7 @@ class RiotAPI
 		//  API rate limit check before call is made
 		$this->beforeCall[] = function () {
 			if ($this->getSetting(self::SET_CACHE_RATELIMIT) && $this->rlc != false)
-				if (!$this->rlc->canCall($this->getSetting($this->used_key), $this->getSetting(self::SET_REGION)))
+				if ($this->rlc->canCall($this->getSetting($this->used_key), $this->getSetting(self::SET_REGION), $this->getResource(), $this->getResourceEndpoint()) == false)
 					throw new ServerLimitException('API call rate limit would be exceeded by this call.');
 		};
 
@@ -503,10 +465,16 @@ class RiotAPI
 
 	protected function _setupAfterCalls()
 	{
+		//  Save ratelimits received with this request if RateLimit cache is enabled
+		$this->afterCall[] = function () {
+			if ($this->getSetting(self::SET_CACHE_RATELIMIT) && $this->rlc != false)
+				$this->rlc->registerLimits($this->getSetting($this->used_key), $this->getSetting(self::SET_REGION), $this->getResourceEndpoint(), @$this->result_headers[self::HEADER_APP_RATELIMIT], @$this->result_headers[self::HEADER_METHOD_RATELIMIT]);
+		};
+
 		//  Register, that call has been made if RateLimit cache is enabled
 		$this->afterCall[] = function () {
-			if ($this->getSetting(self::SET_CACHE_RATELIMIT) && $this->rlc != false && isset($this->result_headers[self::API_HEADER_APP_RATELIMIT]))
-				$this->rlc->registerCall($this->getSetting($this->used_key), $this->getSetting(self::SET_REGION), $this->result_headers[self::API_HEADER_APP_RATELIMIT]);
+			if ($this->getSetting(self::SET_CACHE_RATELIMIT) && $this->rlc != false)
+				$this->rlc->registerCall($this->getSetting($this->used_key), $this->getSetting(self::SET_REGION), $this->getResourceEndpoint(), @$this->result_headers[self::HEADER_APP_RATELIMIT_COUNT], @$this->result_headers[self::HEADER_METHOD_RATELIMIT_COUNT]);
 		};
 
 		//  Save result data, if CallCache is enabled and when the old result has expired
@@ -734,12 +702,14 @@ class RiotAPI
 	 *   Sets call resource for target endpoint.
 	 *
 	 * @param string $resource
+	 * @param string $endpoint
 	 *
 	 * @return RiotAPI
 	 */
-	protected function setResource( string $resource ): self
+	protected function setResource( string $resource, string $endpoint ): self
 	{
 		$this->resource = $resource;
+		$this->resource_endpoint = $endpoint;
 		return $this;
 	}
 
@@ -751,6 +721,16 @@ class RiotAPI
 	protected function getResource(): string
 	{
 		return $this->resource;
+	}
+
+	/**
+	 *   Returns call resource and endpoint for last call.
+	 *
+	 * @return string
+	 */
+	protected function getResourceEndpoint(): string
+	{
+		return $this->resource . $this->resource_endpoint;
 	}
 
 	/**
@@ -1020,7 +1000,7 @@ class RiotAPI
 		elseif ($this->getSetting(self::SET_KEY_INCLUDE_TYPE) === self::KEY_AS_HEADER)
 		{
 			//  API key is to be included as request header
-			$curlHeaders[] = self::API_HEADER_API_KEY . ': ' . $this->getSetting($this->used_key);
+			$curlHeaders[] = self::HEADER_API_KEY . ': ' . $this->getSetting($this->used_key);
 			$url_keyPart = (!empty($this->query_data) ? '?' : '');
 		}
 
@@ -1076,7 +1056,7 @@ class RiotAPI
 	public function getChampions( bool $only_free_to_play = false ): Objects\ChampionListDto
 	{
 		$this->setEndpoint("/lol/platform/" . self::RESOURCE_CHAMPION_V3 . "/champions")
-			->setResource(self::RESOURCE_CHAMPION)
+			->setResource(self::RESOURCE_CHAMPION, "/champions")
 			->addQuery("freeToPlay", $only_free_to_play ? 'true' : 'false')
 			->makeCall();
 
@@ -1094,7 +1074,7 @@ class RiotAPI
 	public function getChampionById( int $champion_id ): Objects\ChampionDto
 	{
 		$this->setEndpoint("/lol/platform/" . self::RESOURCE_CHAMPION_V3 . "/champions/{$champion_id}")
-			->setResource(self::RESOURCE_CHAMPION)
+			->setResource(self::RESOURCE_CHAMPION, "/champions/%i")
 			->makeCall();
 
 		return new Objects\ChampionDto($this->getResult(), $this);
@@ -1125,7 +1105,7 @@ class RiotAPI
 	public function getChampionMastery( int $summoner_id, int $champion_id ): Objects\ChampionMasteryDto
 	{
 		$this->setEndpoint("/lol/champion-mastery/" . self::RESOURCE_CHAMPION_V3 . "/champion-masteries/by-summoner/{$summoner_id}/by-champion/{$champion_id}")
-			->setResource(self::RESOURCE_CHAMPIONMASTERY)
+			->setResource(self::RESOURCE_CHAMPIONMASTERY, "/champion-masteries/by-summoner/%s/by-champion/%i")
 			->makeCall();
 
 		return new Objects\ChampionMasteryDto($this->getResult(), $this);
@@ -1143,7 +1123,7 @@ class RiotAPI
 	public function getChampionMasteries( int $summoner_id ): array
 	{
 		$this->setEndpoint("/lol/champion-mastery/" . self::RESOURCE_CHAMPION_V3 . "/champion-masteries/by-summoner/{$summoner_id}")
-			->setResource(self::RESOURCE_CHAMPIONMASTERY)
+			->setResource(self::RESOURCE_CHAMPIONMASTERY, "/champion-masteries/by-summoner/%i")
 			->makeCall();
 
 		$r = array();
@@ -1165,7 +1145,7 @@ class RiotAPI
 	public function getChampionMasteryScore( int $summoner_id ): int
 	{
 		$this->setEndpoint("/lol/champion-mastery/" . self::RESOURCE_CHAMPION_V3 . "/scores/by-summoner/{$summoner_id}")
-			->setResource(self::RESOURCE_CHAMPIONMASTERY)
+			->setResource(self::RESOURCE_CHAMPIONMASTERY, "/scores/by-summoner/%i")
 			->makeCall();
 
 		return $this->getResult();
@@ -1195,7 +1175,7 @@ class RiotAPI
 	public function getCurrentGameInfo( int $summoner_id ): Objects\CurrentGameInfo
 	{
 		$this->setEndpoint("/lol/spectator/" . self::RESOURCE_SPECTATOR_V3 . "/active-games/by-summoner/{$summoner_id}")
-			->setResource(self::RESOURCE_SPECTATOR)
+			->setResource(self::RESOURCE_SPECTATOR, "/active-games/by-summoner/%i")
 			->makeCall();
 
 		return new Objects\CurrentGameInfo($this->getResult(), $this);
@@ -1210,7 +1190,7 @@ class RiotAPI
 	public function getFeaturedGames(): Objects\FeaturedGames
 	{
 		$this->setEndpoint("/lol/spectator/" . self::RESOURCE_SPECTATOR_V3 . "/featured-games")
-			->setResource(self::RESOURCE_SPECTATOR)
+			->setResource(self::RESOURCE_SPECTATOR, "/featured-games")
 			->makeCall();
 
 		return new Objects\FeaturedGames($this->getResult(), $this);
@@ -1238,7 +1218,7 @@ class RiotAPI
 	public function getLeaguesForSummoner( int $summoner_id ): array
 	{
 		$this->setEndpoint("/lol/league/" . self::RESOURCE_LEAGUE_V3 . "/leagues/by-summoner/{$summoner_id}")
-			->setResource(self::RESOURCE_LEAGUE)
+			->setResource(self::RESOURCE_LEAGUE, "/leagues/by-summoner/%i")
 			->makeCall();
 
 		$r = [];
@@ -1259,7 +1239,7 @@ class RiotAPI
 	public function getLeaguePositionsForSummoner( int $summoner_id ): array
 	{
 		$this->setEndpoint("/lol/league/" . self::RESOURCE_LEAGUE_V3 . "/positions/by-summoner/{$summoner_id}")
-			->setResource(self::RESOURCE_LEAGUE)
+			->setResource(self::RESOURCE_LEAGUE, "/positions/by-summoner/%i")
 			->makeCall();
 
 		$r = [];
@@ -1280,7 +1260,7 @@ class RiotAPI
 	public function getLeagueChallenger( string $game_queue_type ): Objects\LeagueListDto
 	{
 		$this->setEndpoint("/lol/league/" . self::RESOURCE_LEAGUE_V3 . "/challengerleagues/by-queue/{$game_queue_type}")
-			->setResource(self::RESOURCE_LEAGUE)
+			->setResource(self::RESOURCE_LEAGUE, "/challengerleagues/by-queue/%s")
 			->makeCall();
 
 		return new Objects\LeagueListDto($this->getResult(), $this);
@@ -1297,7 +1277,7 @@ class RiotAPI
 	public function getLeagueMaster( string $game_queue_type ): Objects\LeagueListDto
 	{
 		$this->setEndpoint("/lol/league/" . self::RESOURCE_LEAGUE_V3 . "/masterleagues/by-queue/{$game_queue_type}")
-			->setResource(self::RESOURCE_LEAGUE)
+			->setResource(self::RESOURCE_LEAGUE, "/masterleagues/by-queue/%s")
 			->makeCall();
 
 		return new Objects\LeagueListDto($this->getResult(), $this);
@@ -1328,7 +1308,7 @@ class RiotAPI
 	public function getStaticChampions( string $locale = null, string $version = null, bool $data_by_id = null, $tags = null ): StaticData\StaticChampionListDto
 	{
 		$this->setEndpoint("/lol/static-data/" . self::RESOURCE_STATICDATA_V3 . "/champions")
-			->setResource(self::RESOURCE_STATICDATA)
+			->setResource(self::RESOURCE_STATICDATA, "/champions")
 			->addQuery("locale", $locale)
 			->addQuery("version", $version)
 			->addQuery("dataById", $data_by_id ? 'true' : 'false')
@@ -1352,7 +1332,7 @@ class RiotAPI
 	public function getStaticChampion( int $champion_id, string $locale = null, string $version = null, $tags = null ): StaticData\StaticChampionDto
 	{
 		$this->setEndpoint("/lol/static-data/" . self::RESOURCE_STATICDATA_V3 . "/champions/{$champion_id}")
-			->setResource(self::RESOURCE_STATICDATA)
+			->setResource(self::RESOURCE_STATICDATA, "/champions/%i")
 			->addQuery("locale", $locale)
 			->addQuery("version", $version)
 			->addQuery("tags", $tags)
@@ -1374,7 +1354,7 @@ class RiotAPI
 	public function getStaticItems( string $locale = null, string $version = null, $tags = null ): StaticData\StaticItemListDto
 	{
 		$this->setEndpoint("/lol/static-data/" . self::RESOURCE_STATICDATA_V3 . "/items")
-			->setResource(self::RESOURCE_STATICDATA)
+			->setResource(self::RESOURCE_STATICDATA, "/items")
 			->addQuery("locale", $locale)
 			->addQuery("version", $version)
 			->addQuery("tags", $tags)
@@ -1397,7 +1377,7 @@ class RiotAPI
 	public function getStaticItem( int $item_id, string $locale = null, string $version = null, $tags = null ): StaticData\StaticItemDto
 	{
 		$this->setEndpoint("/lol/static-data/" . self::RESOURCE_STATICDATA_V3 . "/items/{$item_id}")
-			->setResource(self::RESOURCE_STATICDATA)
+			->setResource(self::RESOURCE_STATICDATA, "/items/%i")
 			->addQuery("locale", $locale)
 			->addQuery("version", $version)
 			->addQuery("tags", $tags)
@@ -1418,7 +1398,7 @@ class RiotAPI
 	public function getStaticLanguageStrings( string $locale = null, string $version = null ): StaticData\StaticLanguageStringsDto
 	{
 		$this->setEndpoint("/lol/static-data/" . self::RESOURCE_STATICDATA_V3 . "/language-strings")
-			->setResource(self::RESOURCE_STATICDATA)
+			->setResource(self::RESOURCE_STATICDATA, "/language-strings")
 			->addQuery("locale", $locale)
 			->addQuery("version", $version)
 			->makeCall();
@@ -1435,7 +1415,7 @@ class RiotAPI
 	public function getStaticLanguages(): array
 	{
 		$this->setEndpoint("/lol/static-data/" . self::RESOURCE_STATICDATA_V3 . "/languages")
-			->setResource(self::RESOURCE_STATICDATA)
+			->setResource(self::RESOURCE_STATICDATA, "/languages")
 			->makeCall();
 
 		return $this->getResult();
@@ -1453,7 +1433,7 @@ class RiotAPI
 	public function getStaticMaps( string $locale = null, string $version = null ): StaticData\StaticMapDataDto
 	{
 		$this->setEndpoint("/lol/static-data/" . self::RESOURCE_STATICDATA_V3 . "/maps")
-			->setResource(self::RESOURCE_STATICDATA)
+			->setResource(self::RESOURCE_STATICDATA, "/maps")
 			->addQuery("locale", $locale)
 			->addQuery("version", $version)
 			->makeCall();
@@ -1474,7 +1454,7 @@ class RiotAPI
 	public function getStaticMasteries( string $locale = null, string $version = null, $tags = null ): StaticData\StaticMasteryListDto
 	{
 		$this->setEndpoint("/lol/static-data/" . self::RESOURCE_STATICDATA_V3 . "/masteries")
-			->setResource(self::RESOURCE_STATICDATA)
+			->setResource(self::RESOURCE_STATICDATA, "/masteries")
 			->addQuery("locale", $locale)
 			->addQuery("version", $version)
 			->addQuery("tags", $tags)
@@ -1497,7 +1477,7 @@ class RiotAPI
 	public function getStaticMastery( int $mastery_id, string $locale = null, string $version = null, $tags = null ): StaticData\StaticMasteryDto
 	{
 		$this->setEndpoint("/lol/static-data/" . self::RESOURCE_STATICDATA_V3 . "/masteries/{$mastery_id}")
-			->setResource(self::RESOURCE_STATICDATA)
+			->setResource(self::RESOURCE_STATICDATA, "/masteries/%i")
 			->addQuery("locale", $locale)
 			->addQuery("version", $version)
 			->addQuery("tags", $tags)
@@ -1518,7 +1498,7 @@ class RiotAPI
 	public function getStaticProfileIcons( string $locale = null, string $version = null ): StaticData\StaticProfileIconDataDto
 	{
 		$this->setEndpoint("/lol/static-data/" . self::RESOURCE_STATICDATA_V3 . "/profile-icons")
-			->setResource(self::RESOURCE_STATICDATA)
+			->setResource(self::RESOURCE_STATICDATA, "/profile-icons")
 			->addQuery("locale", $locale)
 			->addQuery("version", $version)
 			->makeCall();
@@ -1535,7 +1515,7 @@ class RiotAPI
 	public function getStaticRealm(): StaticData\StaticRealmDto
 	{
 		$this->setEndpoint("/lol/static-data/" . self::RESOURCE_STATICDATA_V3 . "/realms")
-			->setResource(self::RESOURCE_STATICDATA)
+			->setResource(self::RESOURCE_STATICDATA, "/realms")
 			->makeCall();
 
 		return new StaticData\StaticRealmDto($this->getResult(), $this);
@@ -1554,7 +1534,7 @@ class RiotAPI
 	public function getStaticRunes( string $locale = null, string $version = null, $tags = null ): StaticData\StaticRuneListDto
 	{
 		$this->setEndpoint("/lol/static-data/" . self::RESOURCE_STATICDATA_V3 . "/runes")
-			->setResource(self::RESOURCE_STATICDATA)
+			->setResource(self::RESOURCE_STATICDATA, "/runes")
 			->addQuery("locale", $locale)
 			->addQuery("version", $version)
 			->addQuery("tags", $tags)
@@ -1577,7 +1557,7 @@ class RiotAPI
 	public function getStaticRune( int $rune_id, string $locale = null, string $version = null, $tags = null ): StaticData\StaticRuneDto
 	{
 		$this->setEndpoint("/lol/static-data/" . self::RESOURCE_STATICDATA_V3 . "/runes/{$rune_id}")
-			->setResource(self::RESOURCE_STATICDATA)
+			->setResource(self::RESOURCE_STATICDATA, "/runes/%i")
 			->addQuery("locale", $locale)
 			->addQuery("version", $version)
 			->addQuery("tags", $tags)
@@ -1600,7 +1580,7 @@ class RiotAPI
 	public function getStaticSummonerSpells( string $locale = null, string $version = null, bool $data_by_id = false, $tags = null ): StaticData\StaticSummonerSpellListDto
 	{
 		$this->setEndpoint("/lol/static-data/" . self::RESOURCE_STATICDATA_V3 . "/summoner-spells")
-			->setResource(self::RESOURCE_STATICDATA)
+			->setResource(self::RESOURCE_STATICDATA, "/summoner-spells")
 			->addQuery("locale", $locale)
 			->addQuery("version", $version)
 			->addQuery("dataById", $data_by_id ? 'true' : 'false')
@@ -1624,7 +1604,7 @@ class RiotAPI
 	public function getStaticSummonerSpell( int $summoner_spell_id, string $locale = null, string $version = null, $tags = null ): StaticData\StaticSummonerSpellDto
 	{
 		$this->setEndpoint("/lol/static-data/" . self::RESOURCE_STATICDATA_V3 . "/summoner-spells/{$summoner_spell_id}")
-			->setResource(self::RESOURCE_STATICDATA)
+			->setResource(self::RESOURCE_STATICDATA, "/summoner-spells/%i")
 			->addQuery("locale", $locale)
 			->addQuery("version", $version)
 			->addQuery("tags", $tags)
@@ -1642,7 +1622,7 @@ class RiotAPI
 	public function getStaticVersions(): array
 	{
 		$this->setEndpoint("/lol/static-data/" . self::RESOURCE_STATICDATA_V3 . "/versions")
-			->setResource(self::RESOURCE_STATICDATA)
+			->setResource(self::RESOURCE_STATICDATA, "/versions")
 			->makeCall();
 
 		return $this->getResult();
@@ -1668,7 +1648,7 @@ class RiotAPI
 	public function getStatusData(): Objects\ShardStatus
 	{
 		$this->setEndpoint("/lol/status/" . self::RESOURCE_STATUS_V3 . "/shard-data")
-			->setResource(self::RESOURCE_STATICDATA)
+			->setResource(self::RESOURCE_STATICDATA, "/shard-data")
 			->makeCall();
 
 		return new Objects\ShardStatus($this->getResult(), $this);
@@ -1697,7 +1677,7 @@ class RiotAPI
 	public function getMatch( int $match_id, int $for_account_id = null ): Objects\MatchDto
 	{
 		$this->setEndpoint("/lol/match/" . self::RESOURCE_MATCH_V3 . "/matches/{$match_id}")
-			->setResource(self::RESOURCE_MATCH)
+			->setResource(self::RESOURCE_MATCH, "/matches/%i")
 			->addQuery('forAccountId', $for_account_id)
 			->makeCall();
 
@@ -1716,7 +1696,7 @@ class RiotAPI
 	public function getMatchByTournamentCode( int $match_id, string $tournament_code ): Objects\MatchDto
 	{
 		$this->setEndpoint("/lol/match/" . self::RESOURCE_MATCH_V3 . "/matches/{$match_id}/by-tournament-code/{$tournament_code}")
-			->setResource(self::RESOURCE_MATCH)
+			->setResource(self::RESOURCE_MATCH, "/matches/%i/by-tournament-code/%s")
 			->makeCall();
 
 		return new Objects\MatchDto($this->getResult(), $this);
@@ -1733,7 +1713,7 @@ class RiotAPI
 	public function getMatchIdsByTournamentCode( string $tournament_code ): array
 	{
 		$this->setEndpoint("/lol/match/" . self::RESOURCE_MATCH_V3 . "/matches/by-tournament-code/{$tournament_code}/ids")
-			->setResource(self::RESOURCE_MATCH)
+			->setResource(self::RESOURCE_MATCH, "/matches/by-tournament-code/%s/ids")
 			->makeCall();
 
 		return $this->getResult();
@@ -1757,7 +1737,7 @@ class RiotAPI
 	public function getMatchlistByAccount( int $account_id, $queue = null, $season = null, $champion = null, int $beginTime = null, int $endTime = null, int $beginIndex = null, int $endIndex = null ): Objects\MatchlistDto
 	{
 		$this->setEndpoint("/lol/match/" . self::RESOURCE_MATCH_V3 . "/matchlists/by-account/{$account_id}")
-			->setResource(self::RESOURCE_MATCH)
+			->setResource(self::RESOURCE_MATCH, "/matchlists/by-account/%i")
 			->addQuery('queue', $queue)
 			->addQuery('season', $season)
 			->addQuery('champion', $champion)
@@ -1781,7 +1761,7 @@ class RiotAPI
 	public function getRecentMatchlistByAccount( int $account_id ): Objects\MatchlistDto
 	{
 		$this->setEndpoint("/lol/match/" . self::RESOURCE_MATCH_V3 . "/matchlists/by-account/{$account_id}/recent")
-			->setResource(self::RESOURCE_MATCH)
+			->setResource(self::RESOURCE_MATCH, "/matchlists/by-account/%i/recent")
 			->makeCall();
 
 		return new Objects\MatchlistDto($this->getResult(), $this);
@@ -1798,7 +1778,7 @@ class RiotAPI
 	public function getMatchTimeline( int $match_id ): Objects\MatchTimelineDto
 	{
 		$this->setEndpoint("/lol/match/" . self::RESOURCE_MATCH_V3 . "/timelines/by-match/{$match_id}")
-			->setResource(self::RESOURCE_MATCH)
+			->setResource(self::RESOURCE_MATCH, "/timelines/by-match/%i")
 			->makeCall();
 
 		return new Objects\MatchTimelineDto($this->getResult(), $this);
@@ -1826,7 +1806,7 @@ class RiotAPI
 	public function getSummoner( int $summoner_id ): Objects\SummonerDto
 	{
 		$this->setEndpoint("/lol/summoner/" . self::RESOURCE_SUMMONER_V3 . "/summoners/{$summoner_id}")
-			->setResource(self::RESOURCE_SUMMONER)
+			->setResource(self::RESOURCE_SUMMONER, "/summoners/%i")
 			->makeCall();
 
 		return new Objects\SummonerDto($this->getResult(), $this);
@@ -1845,7 +1825,7 @@ class RiotAPI
 		$summoner_name = str_replace(' ', '', $summoner_name);
 
 		$this->setEndpoint("/lol/summoner/" . self::RESOURCE_SUMMONER_V3 . "/summoners/by-name/{$summoner_name}")
-			->setResource(self::RESOURCE_SUMMONER)
+			->setResource(self::RESOURCE_SUMMONER, "/summoners/by-name/%s")
 			->makeCall();
 
 		return new Objects\SummonerDto($this->getResult(), $this);
@@ -1862,7 +1842,7 @@ class RiotAPI
 	public function getSummonerByAccount( int $account_id ): Objects\SummonerDto
 	{
 		$this->setEndpoint("/lol/summoner/" . self::RESOURCE_SUMMONER_V3 . "/summoners/by-account/{$account_id}")
-			->setResource(self::RESOURCE_SUMMONER)
+			->setResource(self::RESOURCE_SUMMONER, "/summoners/by-account/%i")
 			->makeCall();
 
 		return new Objects\SummonerDto($this->getResult(), $this);
@@ -1890,7 +1870,7 @@ class RiotAPI
 	public function getMasteriesBySummoner( int $summoner_id ): Objects\MasteryPagesDto
 	{
 		$this->setEndpoint("/lol/platform/" . self::RESOURCE_MASTERIES_V3 . "/masteries/by-summoner/{$summoner_id}")
-			->setResource(self::RESOURCE_MASTERIES)
+			->setResource(self::RESOURCE_MASTERIES, "/masteries/by-summoner/%i")
 			->makeCall();
 
 		return new Objects\MasteryPagesDto($this->getResult(), $this);
@@ -1918,7 +1898,7 @@ class RiotAPI
 	public function getRunesBySummoner( int $summoner_id ): Objects\RunePagesDto
 	{
 		$this->setEndpoint("/lol/platform/" . self::RESOURCE_RUNES_V3 . "/runes/by-summoner/{$summoner_id}")
-			->setResource(self::RESOURCE_RUNES)
+			->setResource(self::RESOURCE_RUNES, "/runes/by-summoner/%i")
 			->makeCall();
 
 		return new Objects\RunePagesDto($this->getResult(), $this);
@@ -1975,7 +1955,7 @@ class RiotAPI
 		$data = json_encode($parameters);
 
 		$this->setEndpoint("/lol/tournament/" . self::RESOURCE_TOURNAMENT_V3 . "/codes")
-			->setResource(self::RESOURCE_TOURNAMENT)
+			->setResource(self::RESOURCE_TOURNAMENT, "/codes")
 			->addQuery('tournamentId', $tournament_id)
 			->addQuery('count', $count)
 			->setData($data)
@@ -2013,7 +1993,7 @@ class RiotAPI
 		$data = json_encode($parameters);
 
 		$this->setEndpoint("/lol/tournament/" . self::RESOURCE_TOURNAMENT_V3 . "/codes/{$tournament_code}")
-			->setResource(self::RESOURCE_TOURNAMENT)
+			->setResource(self::RESOURCE_TOURNAMENT, "/codes/%s")
 			->setData($data)
 			->useKey(self::SET_TOURNAMENT_KEY)
 			->makeCall(Region::GLOBAL, self::METHOD_PUT);
@@ -2036,7 +2016,7 @@ class RiotAPI
 			throw new RequestException('This endpoint is not available in interim mode.');
 
 		$this->setEndpoint("/lol/tournament/" . self::RESOURCE_TOURNAMENT_V3 . "/codes/{$tournament_code}")
-			->setResource(self::RESOURCE_TOURNAMENT)
+			->setResource(self::RESOURCE_TOURNAMENT, "/codes/%s")
 			->useKey(self::SET_TOURNAMENT_KEY)
 			->makeCall(Region::GLOBAL);
 
@@ -2068,7 +2048,7 @@ class RiotAPI
 		$data = json_encode($parameters, JSON_UNESCAPED_SLASHES);
 
 		$this->setEndpoint("/lol/tournament/" . self::RESOURCE_TOURNAMENT_V3 . "/providers")
-			->setResource(self::RESOURCE_TOURNAMENT)
+			->setResource(self::RESOURCE_TOURNAMENT, "/providers")
 			->setData($data)
 			->useKey(self::SET_TOURNAMENT_KEY)
 			->makeCall(Region::GLOBAL, self::METHOD_POST);
@@ -2099,7 +2079,7 @@ class RiotAPI
 		$data = json_encode($parameters, JSON_UNESCAPED_SLASHES);
 
 		$this->setEndpoint("/lol/tournament/" . self::RESOURCE_TOURNAMENT_V3 . "/tournaments")
-			->setResource(self::RESOURCE_TOURNAMENT)
+			->setResource(self::RESOURCE_TOURNAMENT, "/tournaments")
 			->setData($data)
 			->useKey(self::SET_TOURNAMENT_KEY)
 			->makeCall(Region::GLOBAL, self::METHOD_POST);
@@ -2122,7 +2102,7 @@ class RiotAPI
 			return $this->getTournamentLobbyEvents_STUB($tournament_code);
 
 		$this->setEndpoint("/lol/tournament/" . self::RESOURCE_TOURNAMENT_V3 . "/lobby-events/by-code/{$tournament_code}")
-			->setResource(self::RESOURCE_TOURNAMENT)
+			->setResource(self::RESOURCE_TOURNAMENT, "/lobby-events/by-code/%s")
 			->useKey(self::SET_TOURNAMENT_KEY)
 			->makeCall(Region::GLOBAL);
 
@@ -2179,7 +2159,7 @@ class RiotAPI
 		$data = json_encode($parameters);
 
 		$this->setEndpoint("/lol/tournament-stub/" . self::RESOURCE_TOURNAMENT_STUB_V3 . "/codes")
-			->setResource(self::RESOURCE_TOURNAMENT)
+			->setResource(self::RESOURCE_TOURNAMENT, "/codes")
 			->addQuery('tournamentId', $tournament_id)
 			->addQuery('count', $count)
 			->setData($data)
@@ -2213,7 +2193,7 @@ class RiotAPI
 		$data = json_encode($parameters, JSON_UNESCAPED_SLASHES);
 
 		$this->setEndpoint("/lol/tournament-stub/" . self::RESOURCE_TOURNAMENT_STUB_V3 . "/providers")
-			->setResource(self::RESOURCE_TOURNAMENT_STUB)
+			->setResource(self::RESOURCE_TOURNAMENT_STUB, "/providers")
 			->setData($data)
 			->useKey(self::SET_TOURNAMENT_KEY)
 			->makeCall(Region::GLOBAL, self::METHOD_POST);
@@ -2243,7 +2223,7 @@ class RiotAPI
 		$data = json_encode($parameters, JSON_UNESCAPED_SLASHES);
 
 		$this->setEndpoint("/lol/tournament-stub/" . self::RESOURCE_TOURNAMENT_STUB_V3 . "/tournaments")
-			->setResource(self::RESOURCE_TOURNAMENT_STUB)
+			->setResource(self::RESOURCE_TOURNAMENT_STUB, "/tournaments")
 			->setData($data)
 			->useKey(self::SET_TOURNAMENT_KEY)
 			->makeCall(Region::GLOBAL, self::METHOD_POST);
@@ -2264,7 +2244,7 @@ class RiotAPI
 	public function getTournamentLobbyEvents_STUB( string $tournament_code ): Objects\LobbyEventDtoWrapper
 	{
 		$this->setEndpoint("/lol/tournament-stub/" . self::RESOURCE_TOURNAMENT_STUB_V3 . "/lobby-events/by-code/{$tournament_code}")
-			->setResource(self::RESOURCE_TOURNAMENT_STUB)
+			->setResource(self::RESOURCE_TOURNAMENT_STUB, "/lobby-events/by-code/%s")
 			->useKey(self::SET_TOURNAMENT_KEY)
 			->makeCall(Region::GLOBAL);
 

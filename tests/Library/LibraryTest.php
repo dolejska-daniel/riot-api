@@ -70,37 +70,6 @@ class LibraryTest extends TestCase
 		$this->assertInstanceOf(RiotAPI::class, $api);
 	}
 
-	public function get_invalidRatelimits()
-	{
-		return [
-			[
-				[
-					getenv('API_KEY') => 30,
-				]
-			],
-			[
-				[
-					getenv('API_KEY') => [
-						IRateLimitControl::INTERVAL_1S => "INVALID_COUNT",
-						IRateLimitControl::INTERVAL_10S => 50,
-					],
-				]
-			],
-			[
-				[
-					getenv('API_KEY') => [
-						IRateLimitControl::INTERVAL_1S => 10,
-						IRateLimitControl::INTERVAL_10S => 50,
-					],
-					getenv('TOURNAMENT_API_KEY') => [
-						IRateLimitControl::INTERVAL_1S => 10,
-						IRateLimitControl::INTERVAL_10S => "INVALID_COUNT",
-					],
-				]
-			],
-		];
-	}
-
 	public function testInit_settings_missingRequired()
 	{
 		$this->expectException(SettingsException::class);
@@ -164,26 +133,6 @@ class LibraryTest extends TestCase
 			RiotAPI::SET_CACHE_RATELIMIT       => true,
 			RiotAPI::SET_CACHE_PROVIDER        => RiotAPI::CACHE_PROVIDER_FILE,
 			RiotAPI::SET_CACHE_PROVIDER_PARAMS => [ '' ],
-		]);
-	}
-
-
-	/**
-	 * @dataProvider get_invalidRatelimits
-	 *
-	 * @param array $ratelimits
-	 */
-	public function testInit_settings_invalid_rateLimits( array $ratelimits )
-	{
-		$this->expectException(SettingsException::class);
-		$this->expectExceptionMessage("Rate limit settings are not in valid format.");
-
-		new RiotAPI([
-			RiotAPI::SET_KEY             => getenv('API_KEY'),
-			RiotAPI::SET_REGION          => Region::EUROPE_EAST,
-			RiotAPI::SET_CACHE_RATELIMIT => true,
-			RiotAPI::SET_CACHE_PROVIDER  => RiotAPI::CACHE_PROVIDER_FILE,
-			RiotAPI::SET_RATELIMITS      => $ratelimits,
 		]);
 	}
 
