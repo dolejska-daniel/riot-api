@@ -1642,14 +1642,16 @@ class RiotAPI
 	/**
 	 *   Get status data - shard list.
 	 *
+	 * @param string|null $override_region
+	 *
 	 * @return Objects\ShardStatus
 	 * @link https://developer.riotgames.com/api-methods/#lol-status-v3/GET_getShardData
 	 */
-	public function getStatusData(): Objects\ShardStatus
+	public function getStatusData( string $override_region = null ): Objects\ShardStatus
 	{
 		$this->setEndpoint("/lol/status/" . self::RESOURCE_STATUS_V3 . "/shard-data")
 			->setResource(self::RESOURCE_STATICDATA, "/shard-data")
-			->makeCall();
+			->makeCall($override_region);
 
 		return new Objects\ShardStatus($this->getResult(), $this);
 	}

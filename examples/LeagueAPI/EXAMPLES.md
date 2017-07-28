@@ -38,43 +38,71 @@ __getChampionMasteryScore__:
 
 __getLeaguesForSummoner__:
 
+_TBA_
+
 __getLeaguePositionsForSummoner__:
+
+_TBA_
 
 __getLeagueChallenger__:
 
+_TBA_
+
 __getLeagueMaster__:
+
+_TBA_
 
 
 ## Masteries resource
 
 __getMasteriesBySummoner__:
 
+_TBA_
+
 
 ## Match resource
 
 __getMatch__:
 
+_TBA_
+
 __getMatchByTournamentCode__:
+
+_TBA_
 
 __getMatchIdsByTournamentCode__:
 
+_TBA_
+
 __getMatchlistByAccount__:
+
+_TBA_
 
 __getRecentMatchlistByAccount__:
 
+_TBA_
+
 __getMatchTimeline__:
+
+_TBA_
 
 
 ## Runes resource
 
 __getRunesBySummoner__:
 
+_TBA_
+
 
 ## Spectator resource
 
 __getCurrentGameInfo__:
 
+_TBA_
+
 __getFeaturedGames__:
+
+_TBA_
 
 
 ## StaticData resource
@@ -86,26 +114,47 @@ _I believe there is no need to create examples for static data usage._
 
 __getStatusData__:
 
+- [Fetch active region status data](https://github.com/dolejska-daniel/riot-api/blob/master/examples/LeagueAPI/Status/getStatusData.php)
+- [Fetch custom region status data](https://github.com/dolejska-daniel/riot-api/blob/master/examples/LeagueAPI/Status/getStatusData_NA.php)
+
 
 ## Summoner resource
 
 __getSummoner__:
 
+_TBA_
+
 __getSummonerByName__:
 
+_TBA_
+
 __getSummonerByAccount__:
+
+_TBA_
 
 
 ## Tournament & Tournament STUB resource
 
 __createTournamentCodes__:
 
+_TBA_
+
 __editTournamentCode__:
+
+_TBA_
 
 __getTournamentCodeData__:
 
+_TBA_
+
 __createTournamentProvider__:
+
+_TBA_
 
 __createTournament__:
 
+_TBA_
+
 __getTournamentLobbyEvents__:
+
+_TBA_
