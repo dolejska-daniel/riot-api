@@ -21,9 +21,17 @@ __getChampionById__:
 
 __getChampionMastery__:
 
+- [Fetch champion mastery for given summoner and champion](https://github.com/dolejska-daniel/riot-api/blob/master/examples/LeagueAPI/ChampionMastery/getChampionMastery_61.php)
+- [Fetch champion mastery for given summoner and champion (with StaticData linking)](https://github.com/dolejska-daniel/riot-api/blob/master/examples/LeagueAPI/ChampionMastery/getChampionMastery_61_linking.php)
+
 __getChampionMasteries__:
 
+- [Fetch all champion mastery entries for given summoner](https://github.com/dolejska-daniel/riot-api/blob/master/examples/LeagueAPI/ChampionMastery/getChampionMasteries.php)
+- [Fetch all champion mastery entries for given summoner (with StaticData linking)](https://github.com/dolejska-daniel/riot-api/blob/master/examples/LeagueAPI/ChampionMastery/getChampionMasteries_linking.php)
+
 __getChampionMasteryScore__:
+
+- [Fetch champion mastery score for given summoner](https://github.com/dolejska-daniel/riot-api/blob/master/examples/LeagueAPI/ChampionMastery/getChampionMasteryScore.php))
 
 
 ## League resource
