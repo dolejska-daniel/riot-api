@@ -22,6 +22,7 @@ declare(strict_types=1);
 use RiotAPI\Definitions\Region;
 use RiotAPI\Definitions\RateLimitControl;
 use RiotAPI\Exceptions\SettingsException;
+use RiotAPI\RiotAPI;
 
 
 class RateLimitControlTest extends RiotAPITestCase
@@ -30,13 +31,33 @@ class RateLimitControlTest extends RiotAPITestCase
 
 	public static $region;
 
+	public static $endpoint;
+
+	public static $resource;
+
+	public static $app_limit_header;
+
+	public static $app_count_header;
+
+	public static $method_limit_header;
+
+	public static $method_count_header;
+
 	/**
 	 * @after serialize
 	 */
 	public function testInit()
 	{
-		self::$apiKey = getenv("API_KEY");
-		self::$region = Region::EUROPE_EAST;
+		self::$apiKey   = getenv("API_KEY");
+		self::$region   = Region::EUROPE_EAST;
+		self::$endpoint = RiotAPI::RESOURCE_CHAMPION . "/champions";
+		self::$resource = RiotAPI::RESOURCE_CHAMPION;
+
+		self::$app_limit_header = "1:1,10:10";
+		self::$app_count_header = "1:1,1:10";
+
+		self::$method_limit_header = "100:1,10000:10";
+		self::$method_count_header = "1:1,1:10";
 
 		$obj = new RateLimitControl(new Region());
 
@@ -50,10 +71,9 @@ class RateLimitControlTest extends RiotAPITestCase
 	 *
 	 * @param RateLimitControl $control
 	 */
-	public function testSetLimits_Valid( RateLimitControl $control )
+	public function testSetLimits( RateLimitControl $control )
 	{
-		//  TODO
-		$this->markTestIncomplete('This test has not been implemented yet.');
+		$control->registerLimits(self::$apiKey, self::$region, self::$endpoint, self::$app_limit_header, self::$method_limit_header);
 	}
 
 	/**
@@ -65,10 +85,7 @@ class RateLimitControlTest extends RiotAPITestCase
 	 */
 	public function testCanCall_True( RateLimitControl $control )
 	{
-		//  TODO
-		$this->markTestIncomplete('This test has not been implemented yet.');
-
-		$this->assertTrue($control->canCall(self::$apiKey, self::$region));
+		$this->assertTrue($control->canCall(self::$apiKey, self::$region, self::$resource, self::$endpoint));
 
 		return $control;
 	}
@@ -80,10 +97,7 @@ class RateLimitControlTest extends RiotAPITestCase
 	 */
 	public function testCanCall_False( RateLimitControl $control )
 	{
-		//  TODO
-		$this->markTestIncomplete('This test has not been implemented yet.');
-
-		$this->assertTrue($control->canCall(self::$apiKey, self::$region));
+		$this->assertTrue($control->canCall(self::$apiKey, self::$region, self::$resource, self::$endpoint));
 	}
 
 	/**
@@ -94,12 +108,9 @@ class RateLimitControlTest extends RiotAPITestCase
 	 */
 	public function testCanCall_TrueExpired( RateLimitControl $control )
 	{
-		//  TODO
-		$this->markTestIncomplete('This test has not been implemented yet.');
-
-		$this->assertFalse($control->canCall(self::$apiKey, self::$region));
-		while ($control->canCall(self::$apiKey, self::$region));
-		$this->assertTrue($control->canCall(self::$apiKey, self::$region));
+		$this->assertFalse($control->canCall(self::$apiKey, self::$region, self::$resource, self::$endpoint));
+		while ($control->canCall(self::$apiKey, self::$region, self::$resource, self::$endpoint));
+		$this->assertTrue($control->canCall(self::$apiKey, self::$region, self::$resource, self::$endpoint));
 	}
 
 	/**
@@ -111,10 +122,7 @@ class RateLimitControlTest extends RiotAPITestCase
 	 */
 	public function testRegisterCall( RateLimitControl $control )
 	{
-		//  TODO
-		$this->markTestIncomplete('This test has not been implemented yet.');
-
-		$control->registerCall(self::$apiKey, self::$region, "1:1,1:10");
+		$control->registerCall(self::$apiKey, self::$region, self::$endpoint, self::$app_count_header, self::$method_count_header);
 		return $control;
 	}
 }

@@ -116,9 +116,6 @@ abstract class ApiObject implements IApiObject
 			if (isset($objectExtensions[$selfRef->getName()]) && $extension = $objectExtensions[$selfRef->getName()])
 			{
 				$extension = new \ReflectionClass($extension);
-				if ($extension->implementsInterface(IApiObjectExtension::class) == false)
-					throw new SettingsException('ObjectExtender ' . $extension . ' does not implement IApiObjectExtension interface.');
-
 				$this->_extension = @$extension->newInstanceArgs([ &$this, &$api ]);
 			}
 		}

@@ -33,6 +33,7 @@ use RiotAPI\Definitions\IRateLimitControl;
 use RiotAPI\Definitions\RateLimitControl;
 
 use RiotAPI\Objects;
+use RiotAPI\Objects\IApiObjectExtension;
 use RiotAPI\Objects\StaticData;
 use RiotAPI\Objects\ProviderRegistrationParameters;
 use RiotAPI\Objects\TournamentCodeParameters;
@@ -300,9 +301,31 @@ class RiotAPI
 			throw new SettingsException("Value of settings parameter '" . self::SET_KEY_INCLUDE_TYPE . "' is not valid.");
 		}
 
-		if (isset($settings[self::SET_EXTENSIONS]) && !is_array($settings[self::SET_EXTENSIONS]))
+		if (isset($settings[self::SET_EXTENSIONS]))
 		{
-			throw new SettingsException("Value of settings parameter '" . self::SET_EXTENSIONS . "' is not valid.");
+			if (!is_array($settings[self::SET_EXTENSIONS]))
+			{
+				throw new SettingsException("Value of settings parameter '" . self::SET_EXTENSIONS . "' is not valid.");
+			}
+			else
+			{
+				foreach ($settings[self::SET_EXTENSIONS] as $api_object => $extender)
+				{
+					try
+					{
+						$ref = new \ReflectionClass($extender);
+						if ($ref->implementsInterface(IApiObjectExtension::class) == false)
+							throw new SettingsException("ObjectExtender '$extender' does not implement IApiObjectExtension interface.");
+
+						if ($ref->isInstantiable() == false)
+							throw new SettingsException("ObjectExtender '$extender' is not instantiable.");
+					}
+					catch (\ReflectionException $ex)
+					{
+						throw new SettingsException("Value of settings parameter '" . self::SET_EXTENSIONS . "' is not valid.", 0, $ex);
+					}
+				}
+			}
 		}
 
 		if (isset($settings[self::SET_CACHE_CALLS_LENGTH]))

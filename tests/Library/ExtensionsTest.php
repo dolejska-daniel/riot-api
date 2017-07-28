@@ -21,13 +21,21 @@ declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
 
+use RiotAPI\Exceptions\GeneralException;
 use RiotAPI\Extensions\MasteryPagesDtoExtension;
 use RiotAPI\Objects\IApiObject;
+use RiotAPI\Objects\MasteryPageDto;
 use RiotAPI\Objects\MasteryPagesDto;
 use RiotAPI\RiotAPI;
 use RiotAPI\Definitions\Region;
 
 use RiotAPI\Exceptions\SettingsException;
+
+
+abstract class NoninstantiableExtension implements \RiotAPI\Objects\IApiObjectExtension
+{
+	public function __construct( IApiObject &$apiObject, RiotAPI &$api ) {}
+}
 
 
 class ExtensionsTest extends TestCase
@@ -61,7 +69,7 @@ class ExtensionsTest extends TestCase
 		return $api;
 	}
 
-	public function testInit_invalid_settings()
+	public function testInit_settings_invalid_Value()
 	{
 		$this->expectException(SettingsException::class);
 		$this->expectExceptionMessage("Value of settings parameter");
@@ -72,5 +80,93 @@ class ExtensionsTest extends TestCase
 			RiotAPI::SET_USE_DUMMY_DATA => true,
 			RiotAPI::SET_EXTENSIONS     => IApiObject::class,
 		]);
+	}
+
+	public function testInit_settings_invalid_ClassInterface()
+	{
+		$this->expectException(SettingsException::class);
+		$this->expectExceptionMessage('does not implement IApiObjectExtension interface');
+
+		new RiotAPI([
+			RiotAPI::SET_KEY            => getenv('API_KEY'),
+			RiotAPI::SET_REGION         => Region::EUROPE_EAST,
+			RiotAPI::SET_USE_DUMMY_DATA => true,
+			RiotAPI::SET_EXTENSIONS     => [
+				MasteryPagesDto::class => IApiObject::class,
+			],
+		]);
+	}
+
+	public function testInit_settings_invalid_NoninstantiableClass()
+	{
+		$this->expectException(SettingsException::class);
+		$this->expectExceptionMessage('is not instantiable');
+
+		new RiotAPI([
+			RiotAPI::SET_KEY            => getenv('API_KEY'),
+			RiotAPI::SET_REGION         => Region::EUROPE_EAST,
+			RiotAPI::SET_USE_DUMMY_DATA => true,
+			RiotAPI::SET_EXTENSIONS     => [
+				MasteryPagesDto::class => NoninstantiableExtension::class,
+			],
+		]);
+	}
+
+	public function testInit_settings_invalid_Class()
+	{
+		$this->expectException(SettingsException::class);
+		$this->expectExceptionMessage('is not valid');
+
+		new RiotAPI([
+			RiotAPI::SET_KEY            => getenv('API_KEY'),
+			RiotAPI::SET_REGION         => Region::EUROPE_EAST,
+			RiotAPI::SET_USE_DUMMY_DATA => true,
+			RiotAPI::SET_EXTENSIONS     => [
+				MasteryPagesDto::class => "InvalidClass",
+			],
+		]);
+	}
+
+	/**
+	 * @depends testInit
+	 *
+	 * @param RiotAPI $api
+	 */
+	public function testCallExtensionFunction_Valid( RiotAPI $api )
+	{
+		$masteryPages = $api->getMasteriesBySummoner(30904166);
+
+		$this->assertTrue($masteryPages->pageExists("- Modif -"));
+		$this->assertFalse($masteryPages->pageExists("NONEXISTENT_PAGE_NAME"));
+
+		$this->assertInstanceOf(MasteryPageDto::class, $masteryPages->getPageByName("- Modif -"));
+	}
+
+	/**
+	 * @depends testInit
+	 *
+	 * @param RiotAPI $api
+	 */
+	public function testCallExtensionFunction_Invalid( RiotAPI $api )
+	{
+		$this->expectException(GeneralException::class);
+		$this->expectExceptionMessage('failed to be executed');
+
+		$masteryPages = $api->getMasteriesBySummoner(30904166);
+		$masteryPages->invalidFunction();
+	}
+
+	/**
+	 * @depends testInit_noExtension
+	 *
+	 * @param RiotAPI $api
+	 */
+	public function testCallExtensionFunction_NoExtension( RiotAPI $api )
+	{
+		$this->expectException(GeneralException::class);
+		$this->expectExceptionMessage('no extension exists for this ApiObject');
+
+		$masteryPages = $api->getMasteriesBySummoner(30904166);
+		$masteryPages->invalidFunction();
 	}
 }

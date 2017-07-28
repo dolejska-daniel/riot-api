@@ -70,7 +70,7 @@ class LibraryTest extends TestCase
 		$this->assertInstanceOf(RiotAPI::class, $api);
 	}
 
-	public function testInit_settings_missingRequired()
+	public function testInit_settings_invalid_missingRequired()
 	{
 		$this->expectException(SettingsException::class);
 		$this->expectExceptionMessage("is missing!");

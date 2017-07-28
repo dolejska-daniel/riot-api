@@ -27,7 +27,7 @@ namespace RiotAPI\Objects;
  */
 abstract class ApiObjectLinkable extends ApiObject
 {
-	protected $staticData = null;
+	public $staticData = null;
 
 	public function __get( $name )
 	{
