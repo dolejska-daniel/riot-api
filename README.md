@@ -1,6 +1,6 @@
 # RiotAPI PHP7 wrapper
 
-> Version pre-v0.9
+> Version v0.9
 
 [![Build Status](https://travis-ci.org/dolejska-daniel/riot-api.svg?branch=master)](https://travis-ci.org/dolejska-daniel/riot-api)
 [![Test Coverage](https://codeclimate.com/github/dolejska-daniel/riot-api/badges/coverage.svg)](https://codeclimate.com/github/dolejska-daniel/riot-api/coverage)
@@ -499,7 +499,7 @@ $api = new RiotAPI([
 
 ## CLI support
 
-_Planned for upcomming releases._
+For more information about CLI support, please visit [wiki pages](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI%3A-CLI-support).
 
 # DataDragon API
 
