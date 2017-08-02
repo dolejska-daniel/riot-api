@@ -106,7 +106,7 @@ $api = new RiotAPI([
 ]);
 
 //  And now you are ready to rock!
-$ch = $api->getChampion(61); // Orianna <3
+$ch = $api->getStaticChampion(61); // Orianna <3
 ```
 
 And there is a lot more what you can set when initializing the library, here is a complete list:
@@ -375,7 +375,7 @@ shown above. You can easily access static data properties for these objects like
 //  ...
 
 //  this call returns Objects\ChampionDto
-$champion = $api->getChampion(61);
+$champion = $api->getChampionById(61);
 
 //  accessing Objects\ChampionDto's property
 echo $champion->id; // 61
