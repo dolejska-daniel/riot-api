@@ -154,7 +154,6 @@ class RiotAPI
 			Region::OCEANIA,
 			Region::RUSSIA,
 			Region::TURKEY,
-			Region::PBE,
 		];
 
 	const

@@ -57,12 +57,15 @@ class Platform implements IPlatform
 
 	const JAPAN = 'jp1';
 
-	const GLOBAL = 'global';
-
 	const AMERICAS = 'americas';
+
+	const EUROPE = 'europe';
+
+	const ASIA = 'asia';
 
 	public static $list = array(
 		Region::NORTH_AMERICA   => self::NORTH_AMERICA,
+		Region::EUROPE          => self::EUROPE,
 		Region::EUROPE_WEST     => self::EUROPE_WEST,
 		Region::EUROPE_EAST     => self::EUROPE_EAST,
 		Region::LAMERICA_SOUTH  => self::LAMERICA_SOUTH,
@@ -73,8 +76,8 @@ class Platform implements IPlatform
 		Region::OCEANIA         => self::OCEANIA,
 		Region::KOREA           => self::KOREA,
 		Region::JAPAN           => self::JAPAN,
-		Region::GLOBAL          => self::GLOBAL,
 		Region::AMERICAS        => self::AMERICAS,
+		Region::ASIA            => self::ASIA,
 	);
 
 
