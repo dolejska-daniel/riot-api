@@ -59,6 +59,7 @@ class Region implements IRegion
 
 	public static $list = array(
 		self::NORTH_AMERICA   => self::NORTH_AMERICA,
+		self::EUROPE          => self::EUROPE,
 		self::EUROPE_WEST     => self::EUROPE_WEST,
 		self::EUROPE_EAST     => self::EUROPE_EAST,
 		self::LAMERICA_SOUTH  => self::LAMERICA_SOUTH,
@@ -67,9 +68,9 @@ class Region implements IRegion
 		self::RUSSIA          => self::RUSSIA,
 		self::TURKEY          => self::TURKEY,
 		self::OCEANIA         => self::OCEANIA,
+		self::ASIA            => self::ASIA,
 		self::KOREA           => self::KOREA,
 		self::JAPAN           => self::JAPAN,
-		self::GLOBAL          => self::GLOBAL,
 		self::AMERICAS        => self::AMERICAS,
 	);
 

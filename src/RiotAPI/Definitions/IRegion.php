@@ -27,11 +27,11 @@ namespace RiotAPI\Definitions;
  */
 interface IRegion
 {
-	const GLOBAL = 'global';
+	const EUROPE = 'europe';
 
 	const AMERICAS = 'americas';
 
-	const PBE    = 'pbe';
+	const ASIA = 'asia';
 
 	/**
 	 *   Returns region list.

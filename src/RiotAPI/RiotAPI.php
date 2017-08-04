@@ -1985,7 +1985,7 @@ class RiotAPI
 			->addQuery('count', $count)
 			->setData($data)
 			->useKey(self::SET_TOURNAMENT_KEY)
-			->makeCall(Region::GLOBAL, self::METHOD_POST);
+			->makeCall(Region::AMERICAS, self::METHOD_POST);
 
 		return $this->getResult();
 	}
@@ -2021,7 +2021,7 @@ class RiotAPI
 			->setResource(self::RESOURCE_TOURNAMENT, "/codes/%s")
 			->setData($data)
 			->useKey(self::SET_TOURNAMENT_KEY)
-			->makeCall(Region::GLOBAL, self::METHOD_PUT);
+			->makeCall(Region::AMERICAS, self::METHOD_PUT);
 
 		return $this->getResult();
 	}
@@ -2043,7 +2043,7 @@ class RiotAPI
 		$this->setEndpoint("/lol/tournament/" . self::RESOURCE_TOURNAMENT_V3 . "/codes/{$tournament_code}")
 			->setResource(self::RESOURCE_TOURNAMENT, "/codes/%s")
 			->useKey(self::SET_TOURNAMENT_KEY)
-			->makeCall(Region::GLOBAL);
+			->makeCall(Region::AMERICAS);
 
 		return new Objects\TournamentCodeDto($this->getResult(), $this);
 	}
@@ -2076,7 +2076,7 @@ class RiotAPI
 			->setResource(self::RESOURCE_TOURNAMENT, "/providers")
 			->setData($data)
 			->useKey(self::SET_TOURNAMENT_KEY)
-			->makeCall(Region::GLOBAL, self::METHOD_POST);
+			->makeCall(Region::AMERICAS, self::METHOD_POST);
 
 		return $this->getResult();
 	}
@@ -2107,7 +2107,7 @@ class RiotAPI
 			->setResource(self::RESOURCE_TOURNAMENT, "/tournaments")
 			->setData($data)
 			->useKey(self::SET_TOURNAMENT_KEY)
-			->makeCall(Region::GLOBAL, self::METHOD_POST);
+			->makeCall(Region::AMERICAS, self::METHOD_POST);
 
 		return $this->getResult();
 	}
@@ -2129,7 +2129,7 @@ class RiotAPI
 		$this->setEndpoint("/lol/tournament/" . self::RESOURCE_TOURNAMENT_V3 . "/lobby-events/by-code/{$tournament_code}")
 			->setResource(self::RESOURCE_TOURNAMENT, "/lobby-events/by-code/%s")
 			->useKey(self::SET_TOURNAMENT_KEY)
-			->makeCall(Region::GLOBAL);
+			->makeCall(Region::AMERICAS);
 
 		return new Objects\LobbyEventDtoWrapper($this->getResult(), $this);
 	}
@@ -2189,7 +2189,7 @@ class RiotAPI
 			->addQuery('count', $count)
 			->setData($data)
 			->useKey(self::SET_TOURNAMENT_KEY)
-			->makeCall(Region::GLOBAL, self::METHOD_POST);
+			->makeCall(Region::AMERICAS, self::METHOD_POST);
 
 		return $this->getResult();
 	}
@@ -2221,7 +2221,7 @@ class RiotAPI
 			->setResource(self::RESOURCE_TOURNAMENT_STUB, "/providers")
 			->setData($data)
 			->useKey(self::SET_TOURNAMENT_KEY)
-			->makeCall(Region::GLOBAL, self::METHOD_POST);
+			->makeCall(Region::AMERICAS, self::METHOD_POST);
 
 		return $this->getResult();
 	}
@@ -2251,7 +2251,7 @@ class RiotAPI
 			->setResource(self::RESOURCE_TOURNAMENT_STUB, "/tournaments")
 			->setData($data)
 			->useKey(self::SET_TOURNAMENT_KEY)
-			->makeCall(Region::GLOBAL, self::METHOD_POST);
+			->makeCall(Region::AMERICAS, self::METHOD_POST);
 
 		return $this->getResult();
 	}
@@ -2271,7 +2271,7 @@ class RiotAPI
 		$this->setEndpoint("/lol/tournament-stub/" . self::RESOURCE_TOURNAMENT_STUB_V3 . "/lobby-events/by-code/{$tournament_code}")
 			->setResource(self::RESOURCE_TOURNAMENT_STUB, "/lobby-events/by-code/%s")
 			->useKey(self::SET_TOURNAMENT_KEY)
-			->makeCall(Region::GLOBAL);
+			->makeCall(Region::AMERICAS);
 
 		return new Objects\LobbyEventDtoWrapper($this->getResult(), $this);
 	}
