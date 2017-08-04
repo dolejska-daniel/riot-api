@@ -7,6 +7,7 @@
 [![GitHub release](https://img.shields.io/github/release/dolejska-daniel/riot-api.svg)](https://github.com/dolejska-daniel/riot-api)
 [![GitHub pre release](https://img.shields.io/github/release/dolejska-daniel/riot-api/all.svg?label=pre%20release)](https://github.com/dolejska-daniel/riot-api)
 [![Packagist](https://img.shields.io/packagist/v/dolejska-daniel/riot-api.svg)](https://packagist.org/packages/dolejska-daniel/riot-api)
+[![Packagist](https://img.shields.io/packagist/dm/dolejska-daniel/riot-api.svg)](https://packagist.org/packages/dolejska-daniel/riot-api)
 [![Packagist](https://img.shields.io/packagist/l/dolejska-daniel/riot-api.svg)](https://packagist.org/packages/dolejska-daniel/riot-api)
 
 # Table of Contents
@@ -105,7 +106,7 @@ $api = new RiotAPI([
 ]);
 
 //  And now you are ready to rock!
-$ch = $api->getChampion(61); // Orianna <3
+$ch = $api->getStaticChampion(61); // Orianna <3
 ```
 
 And there is a lot more what you can set when initializing the library, here is a complete list:
@@ -374,7 +375,7 @@ shown above. You can easily access static data properties for these objects like
 //  ...
 
 //  this call returns Objects\ChampionDto
-$champion = $api->getChampion(61);
+$champion = $api->getChampionById(61);
 
 //  accessing Objects\ChampionDto's property
 echo $champion->id; // 61
