@@ -4,9 +4,10 @@ language: php
 # Language versions to test agains
 php:
     - '7.0'
-#    - '7.1'
-#    - nightly
+    - '7.1'
+    - nightly
 
+# Allow addons
 addons:
     code_climate:
         repo_token: $CODECLIMATE_REPO_TOKEN
@@ -24,5 +25,6 @@ install:
 script:
     - vendor/bin/phpunit -v --bootstrap phpunit.php --configuration phpunit.xml --coverage-text --coverage-clover $TRAVIS_BUILD_DIR/build/logs/clover.xml --colors=never
 
+# Submit coverage results
 after_success:
     - vendor/bin/test-reporter -n --coverage-report=$TRAVIS_BUILD_DIR/build/logs/clover.xml --verbose
