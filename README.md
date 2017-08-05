@@ -38,8 +38,6 @@ Here are some handy features:
 - **Rate limit caching** and limit exceeding prevention - fully automatic.
 - **Call caching** - this enables the library to re-use already fetched data within short
 timespan - saving time and API rate limit.
-- **Object extensions** - you can create your own extensions for any ApiObject returned
- by the library and use custom functions defined in these extensions.
 - **StaticData linking** - library can automatically link Static Data related to your
 request right into the returned object.
 - **Custom callbacks** - you can set custom function which will be called before
