@@ -32,7 +32,7 @@ class TournamentStubEndpointObjectIntegrityTest extends RiotAPITestCase
 	{
 		$api = new RiotAPI([
 			RiotAPI::SET_KEY                => getenv('API_KEY'),
-			RiotAPI::SET_TOURNAMENT_KEY     => getenv('API_KEY_TOURNAMENT'),
+			RiotAPI::SET_TOURNAMENT_KEY     => getenv('API_TOURNAMENT_KEY'),
 			RiotAPI::SET_INTERIM            => true,
 			RiotAPI::SET_REGION             => Region::EUROPE_EAST,
 			RiotAPI::SET_USE_DUMMY_DATA     => true,

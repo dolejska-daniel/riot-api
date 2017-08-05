@@ -246,6 +246,9 @@ class RiotAPI
 	/** @var string $used_key */
 	protected $used_key = self::SET_KEY;
 
+	/** @var string $used_method */
+	protected $used_method;
+
 	/** @var string $endpoint */
 	protected $endpoint;
 
@@ -815,10 +818,10 @@ class RiotAPI
 		if ($overrideRegion)
 			$this->setTemporaryRegion($overrideRegion);
 
+		$this->used_method = $method;
+
 		$url = $this->_getCallUrl($curlHeaders);
 		$requestHash = md5($url);
-
-		$this->_beforeCall($url, $requestHash);
 
 		$ch = curl_init();
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -855,30 +858,39 @@ class RiotAPI
 
 		curl_setopt($ch, CURLOPT_HTTPHEADER, $curlHeaders);
 
+		$this->_beforeCall($url, $requestHash);
+
 		if ($this->getSetting(self::SET_USE_DUMMY_DATA, false))
 		{
-			//  DummyData are going to be used
+			//  DummyData are supposed to be used
 			try
 			{
+				//  try loading the data
 				$this->_loadDummyData($headers, $response, $response_code);
 			}
 			catch (RequestException $ex)
 			{
+				//  loading failed, check whether an actual request should be made
 				if ($this->getSetting(self::SET_SAVE_DUMMY_DATA, false) == false)
+					//  saving is not allowed, dummydata does not exist
 					throw new RequestException("No DummyData available for call.");
 			}
 		}
 
+		//  was response already fetched?
 		if (isset($response) == false)
 		{
 			if ($this->getSetting(self::SET_CACHE_CALLS) && $this->ccc != false && $this->ccc->isCallCached($requestHash))
 			{
+				//  calls are cached and this request is saved in cache
 				$response = $this->ccc->loadCallData($requestHash);
 				$response_code = 200;
 				$headers = [];
 			}
 			else
 			{
+				//  calls are not cached or this request is not cached
+				//  perform call to Riot API
 				$raw_data = curl_exec($ch);
 				$header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
 
@@ -908,8 +920,9 @@ class RiotAPI
 		$this->result_headers  = $headers;
 
 		$errMessage = "";
-		if (!is_null($this->result_data) && isset($this->result_data->status) && isset($this->result_data->status->message))
-			$errMessage = " " . $this->result_data->status->message;
+		if (!is_null($this->result_data) && isset($this->result_data['status']) && isset($this->result_data['status']['message']))
+			$errMessage = " " . $this->result_data['status']['message'];
+
 		if ($response_code == 503)
 		{
 			throw new ServerException('RiotAPI: Service is unavailable.');
@@ -1031,12 +1044,13 @@ class RiotAPI
 
 	protected function getDummyDataFileName(): string
 	{
+		$method = $this->used_method;
 		$endp = str_replace([ '/', '.' ], [ '-', '' ], substr($this->endpoint, 1));
-		$quer = str_replace([ '&', '=' ], [ '_', '-' ], http_build_query($this->query_data));
+		$quer = str_replace([ '&', '%26', '=', '%3D' ], [ '_', '_', '-', '-' ], http_build_query($this->query_data));
 		if (strlen($quer))
 			$quer = "_" . $quer;
 
-		return __DIR__ . "/../../tests/DummyData/$endp$quer.json";
+		return __DIR__ . "/../../tests/DummyData/{$method}_$endp$quer.json";
 	}
 
 	public static function parseHeaders( $requestHeaders ): array

@@ -51,7 +51,7 @@ class LibraryTest extends TestCase
 	{
 		$api = new RiotAPI([
 			RiotAPI::SET_KEY             => getenv('API_KEY'),
-			RiotAPI::SET_TOURNAMENT_KEY  => getenv('TOURNAMENT_API_KEY'),
+			RiotAPI::SET_TOURNAMENT_KEY  => getenv('API_TOURNAMENT_KEY'),
 			RiotAPI::SET_REGION          => Region::EUROPE_EAST,
 			RiotAPI::SET_CACHE_RATELIMIT => true,
 			RiotAPI::SET_CACHE_CALLS     => true,

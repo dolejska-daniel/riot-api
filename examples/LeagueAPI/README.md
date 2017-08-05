@@ -31,7 +31,7 @@ __getChampionMasteries__:
 
 __getChampionMasteryScore__:
 
-- [Fetch champion mastery score for given summoner](https://github.com/dolejska-daniel/riot-api/blob/master/examples/LeagueAPI/ChampionMastery/getChampionMasteryScore.php))
+- [Fetch champion mastery score for given summoner](https://github.com/dolejska-daniel/riot-api/blob/master/examples/LeagueAPI/ChampionMastery/getChampionMasteryScore.php)
 
 
 ## League resource
