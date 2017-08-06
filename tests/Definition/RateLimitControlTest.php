@@ -91,29 +91,6 @@ class RateLimitControlTest extends RiotAPITestCase
 	}
 
 	/**
-	 * @depends testRegisterCall
-	 *
-	 * @param RateLimitControl $control
-	 */
-	public function testCanCall_False( RateLimitControl $control )
-	{
-		$this->assertTrue($control->canCall(self::$apiKey, self::$region, self::$resource, self::$endpoint));
-	}
-
-	/**
-	 * @depends testCanCall_False
-	 *
-	 * @runInSeparateProcess
-	 * @param RateLimitControl $control
-	 */
-	public function testCanCall_TrueExpired( RateLimitControl $control )
-	{
-		$this->assertFalse($control->canCall(self::$apiKey, self::$region, self::$resource, self::$endpoint));
-		while ($control->canCall(self::$apiKey, self::$region, self::$resource, self::$endpoint));
-		$this->assertTrue($control->canCall(self::$apiKey, self::$region, self::$resource, self::$endpoint));
-	}
-
-	/**
 	 * @depends testCanCall_True
 	 *
 	 * @param RateLimitControl $control
@@ -124,5 +101,30 @@ class RateLimitControlTest extends RiotAPITestCase
 	{
 		$control->registerCall(self::$apiKey, self::$region, self::$endpoint, self::$app_count_header, self::$method_count_header);
 		return $control;
+	}
+
+	/**
+	 * @depends testRegisterCall
+	 *
+	 * @param RateLimitControl $control
+	 *
+	 * @return RateLimitControl
+	 */
+	public function testCanCall_False( RateLimitControl $control )
+	{
+		$this->assertFalse($control->canCall(self::$apiKey, self::$region, self::$resource, self::$endpoint));
+		return $control;
+	}
+
+	/**
+	 * @depends testCanCall_False
+	 *
+	 * @param RateLimitControl $control
+	 */
+	public function testCanCall_TrueExpired( RateLimitControl $control )
+	{
+		$this->assertFalse($control->canCall(self::$apiKey, self::$region, self::$resource, self::$endpoint));
+		while ($control->canCall(self::$apiKey, self::$region, self::$resource, self::$endpoint) == false);
+		$this->assertTrue($control->canCall(self::$apiKey, self::$region, self::$resource, self::$endpoint));
 	}
 }

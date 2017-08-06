@@ -32,7 +32,7 @@ use RiotAPI\Definitions\IRateLimitControl;
 use RiotAPI\Exceptions\SettingsException;
 
 
-class LibraryTest extends TestCase
+class LibraryTest extends RiotAPITestCase
 {
 	public function testInit()
 	{
@@ -239,6 +239,20 @@ class LibraryTest extends TestCase
 	 *
 	 * @param RiotAPI $api
 	 */
+	public function testMakeCall_InvalidMethod_KeyAsQuery( RiotAPI $api )
+	{
+		$this->expectException(RequestException::class);
+		$this->expectExceptionMessage("Invalid method selected.");
+
+		$api->setSetting(RiotAPI::SET_KEY_INCLUDE_TYPE, RiotAPI::KEY_AS_QUERY_PARAM);
+		$api->makeTestEndpointCall("", null, "INVALID_METHOD");
+	}
+
+	/**
+	 * @depends testInit
+	 *
+	 * @param RiotAPI $api
+	 */
 	public function testMakeCall_InvalidMethod( RiotAPI $api )
 	{
 		$this->expectException(RequestException::class);
@@ -362,6 +376,18 @@ class LibraryTest extends TestCase
 		$this->expectExceptionMessage("RiotAPI: Unknown error occured.");
 
 		$api->makeTestEndpointCall(498);
+	}
+
+	/**
+	 * @depends testInit
+	 *
+	 * @param RiotAPI $api
+	 */
+	public function testMakeCall_testVersions( RiotAPI $api )
+	{
+		$data = $api->makeTestEndpointCall('versions');
+
+		$this->assertSame($data, $api->getResult());
 	}
 
 	/**

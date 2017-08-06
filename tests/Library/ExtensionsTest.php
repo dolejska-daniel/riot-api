@@ -140,6 +140,7 @@ class ExtensionsTest extends TestCase
 		$this->assertFalse($masteryPages->pageExists("NONEXISTENT_PAGE_NAME"));
 
 		$this->assertInstanceOf(MasteryPageDto::class, $masteryPages->getPageByName("- Modif -"));
+		$this->assertNull($masteryPages->getPageByName("NONEXISTENT_PAGE_NAME"));
 	}
 
 	/**

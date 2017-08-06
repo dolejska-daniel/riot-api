@@ -64,8 +64,6 @@ class MatchEndpointObjectIntegrityTest extends RiotAPITestCase
 	 */
 	public function testGetTournamentMatch( RiotAPI $api )
 	{
-		$this->markTestIncomplete('No DummyData for this call yet.');
-
 		//  Get library processed results
 		/** @var Objects\MatchDto $result */
 		$result = $api->getMatchByTournamentCode(2641970449, '239d180f-fb8a-439e-85d9-95142e10b4f5');
@@ -82,8 +80,6 @@ class MatchEndpointObjectIntegrityTest extends RiotAPITestCase
 	 */
 	public function testGetTournamentMatchIds( RiotAPI $api )
 	{
-		$this->markTestIncomplete('No DummyData for this call yet.');
-
 		//  Get library processed results
 		/** @var array $result */
 		$result = $api->getMatchIdsByTournamentCode('239d180f-fb8a-439e-85d9-95142e10b4f5');

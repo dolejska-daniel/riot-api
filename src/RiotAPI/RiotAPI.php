@@ -438,14 +438,17 @@ class RiotAPI
 				$new_value = [];
 				$resources = $this->resources;
 				foreach ($resources as $resource)
+				{
 					if (isset($value[$resource]))
 					{
 						if ($value[$resource] > $this->ccc_savetime)
 							$this->ccc_savetime = $value[$resource];
+
 						$new_value[$resource] = $value[$resource];
 					}
 					else
 						$new_value[$resource] = null;
+				}
 
 				$this->setSetting(self::SET_CACHE_CALLS_LENGTH, $new_value);
 			}
@@ -454,12 +457,10 @@ class RiotAPI
 				//  The value is numeric, lets set the same limit to all resources
 				$new_value = [];
 				$resources = $this->resources;
+				$this->ccc_savetime = $value;
+
 				foreach ($resources as $resource)
-				{
-					if ($value > $this->ccc_savetime)
-						$this->ccc_savetime = $value;
 					$new_value[$resource] = $value;
-				}
 
 				$this->setSetting(self::SET_CACHE_CALLS_LENGTH, $new_value);
 			}
@@ -619,8 +620,10 @@ class RiotAPI
 	 */
 	public function setSetting( string $name, $value ): self
 	{
+		/*
 		if (in_array($name, self::SETTINGS_INIT_ONLY))
 			throw new SettingsException("Settings option '$name' can only be set on initialization of the library.");
+		*/
 
 		$this->settings[$name] = $value;
 		return $this;
@@ -2302,12 +2305,13 @@ class RiotAPI
 	 * @param string|null $method
 	 *
 	 * @internal
+	 * @return mixed
 	 */
 	public function makeTestEndpointCall( $specs, string $region = null, string $method = null )
 	{
 		$this->setEndpoint("/lol/test-endpoint/v0/" . $specs)
 			->makeCall($region ?: null, $method ?: self::METHOD_GET);
 
-		//return $this->getResult();
+		return $this->getResult();
 	}
 }
