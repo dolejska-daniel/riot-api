@@ -38,12 +38,15 @@ class LiveTest extends TestCase
 	public function testInit()
 	{
 		$api = new RiotAPI([
-			RiotAPI::SET_KEY         => getenv('API_KEY'),
-			RiotAPI::SET_REGION      => Region::EUROPE_EAST,
-			RiotAPI::SET_VERIFY_SSL  => false,
-			RiotAPI::SET_CACHE_RATELIMIT => true,
-			RiotAPI::SET_CACHE_CALLS => true,
-			RiotAPI::SET_CACHE_CALLS_LENGTH => 60,
+			RiotAPI::SET_KEY                => getenv('API_KEY'),
+			RiotAPI::SET_TOURNAMENT_KEY     => getenv('API_TOURNAMENT_KEY'),
+			RiotAPI::SET_REGION             => Region::EUROPE_EAST,
+			RiotAPI::SET_VERIFY_SSL         => false,
+			RiotAPI::SET_CACHE_RATELIMIT    => true,
+			RiotAPI::SET_CACHE_CALLS        => true,
+			RiotAPI::SET_CACHE_CALLS_LENGTH => 600,
+			RiotAPI::SET_USE_DUMMY_DATA     => false,
+			RiotAPI::SET_SAVE_DUMMY_DATA    => true,
 		]);
 
 		$this->assertInstanceOf(RiotAPI::class, $api);
@@ -62,8 +65,10 @@ class LiveTest extends TestCase
 	{
 		$this->markAsRisky();
 
-		$summoner = $api->getSummoner(30904166);
-		$this->assertSame("I am TheKronnY", $summoner->name);
+		$summoner = $api->getSummonerByName("KuliS");
+		$this->assertSame("KuliS", $summoner->name);
+		$this->assertSame(32473526, $summoner->id);
+		$this->assertSame(35079181, $summoner->accountId);
 
 		return $api;
 	}
@@ -73,9 +78,6 @@ class LiveTest extends TestCase
 	 */
 	public function testLiveCall_cached()
 	{
-		$this->markTestIncomplete("This test has not been implemented yet.");
-		return;
-
 		$this->markAsRisky();
 
 		$api = new RiotAPI([
@@ -85,7 +87,9 @@ class LiveTest extends TestCase
 			RiotAPI::SET_CACHE_CALLS_LENGTH => 60,
 		]);
 
-		$summoner = $api->getSummoner(30904166);
-		$this->assertSame("I am TheKronnY", $summoner->name);
+		$summoner = $api->getSummonerByName("KuliS");
+		$this->assertSame("KuliS", $summoner->name);
+		$this->assertSame(32473526, $summoner->id);
+		$this->assertSame(35079181, $summoner->accountId);
 	}
 }

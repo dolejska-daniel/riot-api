@@ -383,11 +383,37 @@ class LibraryTest extends RiotAPITestCase
 	 *
 	 * @param RiotAPI $api
 	 */
-	public function testMakeCall_testVersions( RiotAPI $api )
+	public function testMakeCall_test_Versions( RiotAPI $api )
 	{
 		$data = $api->makeTestEndpointCall('versions');
 
 		$this->assertSame($data, $api->getResult());
+	}
+
+	/**
+	 * @depends testInit
+	 *
+	 * @param RiotAPI $api
+	 */
+	public function testMakeCall_test_PUT( RiotAPI $api )
+	{
+		$data = $api->makeTestEndpointCall('put', null, RiotAPI::METHOD_PUT);
+
+		$this->assertSame($data, $api->getResult());
+	}
+
+	public function testCurlException()
+	{
+		$this->expectException(RequestException::class);
+		$this->expectExceptionMessage('cURL error ocurred');
+
+		$api = new RiotAPI([
+			RiotAPI::SET_KEY         => getenv('API_KEY'),
+			RiotAPI::SET_REGION      => Region::EUROPE_EAST,
+			RiotAPI::SET_API_BASEURL => '.invalid.api.url.riotgames.com',
+		]);
+
+		$api->makeTestEndpointCall('versions');
 	}
 
 	/**
