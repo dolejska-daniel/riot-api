@@ -62,17 +62,8 @@ class LiveTest extends TestCase
 	{
 		$this->markAsRisky();
 
-		try
-		{
-			$rabadon = $api->getStaticItem(3089);
-		}
-		catch (ServerLimitException $ex)
-		{
-			$this->markTestIncomplete("Ratelimit exceeded.");
-			return;
-		}
-
-		$this->assertSame("Rabadon's Deathcap", $rabadon->name);
+		$summoner = $api->getSummoner(30904166);
+		$this->assertSame("I am TheKronnY", $summoner->name);
 
 		return $api;
 	}
@@ -94,7 +85,7 @@ class LiveTest extends TestCase
 			RiotAPI::SET_CACHE_CALLS_LENGTH => 60,
 		]);
 
-		$rabadon = $api->getStaticItem(3089);
-		$this->assertSame("Rabadon's Deathcap", $rabadon->name);
+		$summoner = $api->getSummoner(30904166);
+		$this->assertSame("I am TheKronnY", $summoner->name);
 	}
 }
