@@ -22,6 +22,7 @@ declare(strict_types=1);
 use PHPUnit\Framework\TestCase;
 
 use RiotAPI\Exceptions\GeneralException;
+use RiotAPI\Exceptions\ServerLimitException;
 use RiotAPI\Extensions\MasteryPagesDtoExtension;
 use RiotAPI\Objects\IApiObject;
 use RiotAPI\Objects\MasteryPageDto;
@@ -61,7 +62,16 @@ class LiveTest extends TestCase
 	{
 		$this->markAsRisky();
 
-		$rabadon = $api->getStaticItem(3089);
+		try
+		{
+			$rabadon = $api->getStaticItem(3089);
+		}
+		catch (ServerLimitException $ex)
+		{
+			$this->markTestIncomplete("Ratelimit exceeded.");
+			return;
+		}
+
 		$this->assertSame("Rabadon's Deathcap", $rabadon->name);
 
 		return $api;
@@ -73,6 +83,8 @@ class LiveTest extends TestCase
 	public function testLiveCall_cached()
 	{
 		$this->markTestIncomplete("This test has not been implemented yet.");
+		return;
+
 		$this->markAsRisky();
 
 		$api = new RiotAPI([
