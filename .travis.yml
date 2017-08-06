@@ -1,6 +1,10 @@
 # Project language
 language: php
 
+sudo: required
+
+dist: trusty
+
 # Language versions to test agains
 php:
     - '7.0'
