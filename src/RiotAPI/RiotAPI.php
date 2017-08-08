@@ -888,7 +888,7 @@ class RiotAPI
 				//  loading failed, check whether an actual request should be made
 				if ($this->getSetting(self::SET_SAVE_DUMMY_DATA, false) == false)
 					//  saving is not allowed, dummydata does not exist
-					throw new RequestException("No DummyData available for call.");
+					throw new RequestException("No DummyData available for call. " . $this->getDummyDataFileName());
 			}
 		}
 
@@ -1057,10 +1057,11 @@ class RiotAPI
 		$method = $this->used_method;
 		$endp = str_replace([ '/', '.' ], [ '-', '' ], substr($this->endpoint, 1));
 		$quer = str_replace([ '&', '%26', '=', '%3D' ], [ '_', '_', '-', '-' ], http_build_query($this->query_data));
+		$data = !empty($this->post_data) ? '_' . md5(http_build_query($this->query_data)) : '';
 		if (strlen($quer))
 			$quer = "_" . $quer;
 
-		return __DIR__ . "/../../tests/DummyData/{$method}_$endp$quer.json";
+		return __DIR__ . "/../../tests/DummyData/{$method}_$endp$quer$data.json";
 	}
 
 	public static function parseHeaders( $requestHeaders ): array
