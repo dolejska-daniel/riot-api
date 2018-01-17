@@ -85,6 +85,7 @@ class RiotAPI
 		SET_STATICDATA_LINKING    = 'SET_STATICDATA_LINKING',
 		SET_STATICDATA_LOCALE     = 'SET_STATICDATA_LOCALE',
 		SET_STATICDATA_VERSION    = 'SET_STATICDATA_VERSION',
+		SET_STATICDATA_TAGS       = 'SET_STATICDATA_TAGS',
 		SET_CALLBACKS_BEFORE      = 'SET_CALLBACKS_BEFORE',
 		SET_CALLBACKS_AFTER       = 'SET_CALLBACKS_AFTER',
 		SET_API_BASEURL           = 'SET_API_BASEURL',
@@ -220,6 +221,7 @@ class RiotAPI
 		self::SET_VERIFY_SSL       => true,
 		self::SET_USE_DUMMY_DATA   => false,
 		self::SET_SAVE_DUMMY_DATA  => false,
+		self::SET_STATICDATA_TAGS  => [ 'info' ],
 	);
 
 	/** @var IRegion $regions */
@@ -336,23 +338,55 @@ class RiotAPI
 			}
 		}
 
-		if (isset($settings[self::SET_CACHE_CALLS_LENGTH]))
+		if (isset($settings[self::SET_CACHE_CALLS]) && $settings[self::SET_CACHE_CALLS])
 		{
-			if (is_array($settings[self::SET_CACHE_CALLS_LENGTH]))
+			//  Call caching should be enabled
+			if (isset($settings[self::SET_CACHE_CALLS_LENGTH]))
 			{
-				array_walk($settings[self::SET_CACHE_CALLS_LENGTH], function ($value, $key) {
-					if ((!is_integer($value) && !is_null($value)) || strpos($key, ':') == false)
-						throw new SettingsException("Value of settings parameter '" . self::SET_CACHE_CALLS_LENGTH . "' is not valid.");
-				});
+				//  Resource caching lengths are specified
+				if (is_array($settings[self::SET_CACHE_CALLS_LENGTH]))
+				{
+					array_walk($settings[self::SET_CACHE_CALLS_LENGTH], function ($value, $key) {
+						if ((!is_integer($value) && !is_null($value)) || strpos($key, ':') == false)
+							throw new SettingsException("Value of settings parameter '" . self::SET_CACHE_CALLS_LENGTH . "' is not valid.");
+					});
+				}
+				elseif (!is_integer($settings[self::SET_CACHE_CALLS_LENGTH]))
+					throw new SettingsException("Value of settings parameter '" . self::SET_CACHE_CALLS_LENGTH . "' is not valid.");
 			}
-			elseif (!is_integer($settings[self::SET_CACHE_CALLS_LENGTH]))
-				throw new SettingsException("Value of settings parameter '" . self::SET_CACHE_CALLS_LENGTH . "' is not valid.");
+			else
+			{
+				//  Use default resource caching lengths
+				$settings[self::SET_CACHE_CALLS_LENGTH] = [
+					self::RESOURCE_CHAMPION         => 60 * 10,
+					self::RESOURCE_CHAMPIONMASTERY  => 60 * 60,
+					self::RESOURCE_LEAGUE           => 60 * 10,
+					self::RESOURCE_MATCH            => 60,
+					self::RESOURCE_SPECTATOR        => 60,
+					self::RESOURCE_STATICDATA       => 60 * 60 * 24,
+					self::RESOURCE_STATUS           => 60,
+					self::RESOURCE_SUMMONER         => 60 * 60,
+					self::RESOURCE_TOURNAMENT       => 0,
+					self::RESOURCE_TOURNAMENT_STUB  => 0,
+				];
+			}
 		}
 
 		//  Assigns allowed settings
 		foreach (self::SETTINGS_ALLOWED as $key)
 			if (isset($settings[$key]))
 				$this->settings[$key] = $settings[$key];
+
+		if ($this->getSetting(self::SET_STATICDATA_LINKING) == true)
+		{
+			$calls_caching_settings = $this->getSetting(self::SET_CACHE_CALLS_LENGTH, []);
+			if ($this->getSetting(self::SET_CACHE_CALLS) == false
+				|| (is_array($calls_caching_settings) && (isset($calls_caching_settings[self::RESOURCE_STATICDATA]) == false || $calls_caching_settings[self::RESOURCE_STATICDATA] <= 0))
+				|| $calls_caching_settings <= 0)
+			{
+				throw new SettingsException('Using STATICDATA LINKING feature requires enabled call caching on STATICDATA RESOURCE.');
+			}
+		}
 
 		$this->regions = $custom_regionDataProvider
 			? $custom_regionDataProvider
@@ -509,7 +543,7 @@ class RiotAPI
 				$this->rlc->registerCall($this->getSetting($this->used_key), $this->getSetting(self::SET_REGION), $this->getResourceEndpoint(), @$this->result_headers[self::HEADER_APP_RATELIMIT_COUNT], @$this->result_headers[self::HEADER_METHOD_RATELIMIT_COUNT]);
 		};
 
-		//  Save result data, if CallCache is enabled and when the old result has expired 9121edc7df36caeaedc9b9bf5a3bf9b8
+		//  Save result data, if CallCache is enabled and when the old result has expired
 		$this->afterCall[] = function ( $api, $url, $requestHash ) {
 			if ($this->getSetting(self::SET_CACHE_CALLS, false) && $this->ccc != false && $this->ccc->isCallCached($requestHash) == false)
 			{
@@ -972,9 +1006,9 @@ class RiotAPI
 
 		$this->_afterCall($url, $requestHash, $ch);
 
-		$this->query_data     = array();
-		$this->post_data      = null;
-		$this->used_key       = self::SET_KEY;
+		$this->query_data = array();
+		$this->post_data  = null;
+		$this->used_key   = self::SET_KEY;
 
 		curl_close($ch);
 	}

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016-2017  Daniel Dolejška
+ * Copyright (C) 2016-2018  Daniel Dolejška
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ namespace RiotAPI\Objects;
  *     @link https://developer.riotgames.com/api-methods/#champion-mastery-v3/GET_getAllChampionMasteries
  *     @link https://developer.riotgames.com/api-methods/#champion-mastery-v3/GET_getChampionMastery
  *
- * @linkable $championId (getStaticChampion)
+ * @linkable $championId (getStaticChampions)
  *
  * @package RiotAPI\Objects
  */
@@ -80,8 +80,14 @@ class ChampionMasteryDto extends ApiObjectLinkable
 	public $championPointsUntilNextLevel;
 
 	/**
-	 *   Number of points earned since current level has been achieved. Zero if 
-	 * player reached maximum champion level for this champion.
+	 *   The token earned for this champion to levelup.
+	 *
+	 * @var int $tokensEarned
+	 */
+	public $tokensEarned;
+
+	/**
+	 *   Number of points earned since current level has been achieved.
 	 *
 	 * @var int $championPointsSinceLastLevel
 	 */

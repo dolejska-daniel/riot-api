@@ -21,6 +21,7 @@ namespace RiotAPI\Objects;
 
 use RiotAPI\Exceptions\GeneralException;
 use RiotAPI\Exceptions\SettingsException;
+use RiotAPI\Objects\StaticData\StaticChampionListDto;
 use RiotAPI\RiotAPI;
 
 
@@ -35,9 +36,7 @@ abstract class ApiObject implements IApiObject
 	 *   ApiObject constructor.
 	 *
 	 * @param array   $data
-	 * @param RiotAPI $api
-	 *
-	 * @throws SettingsException
+	 * @param RiotAPI $api,
 	 */
 	public function __construct( array $data, RiotAPI $api = null )
 	{
@@ -92,12 +91,17 @@ abstract class ApiObject implements IApiObject
 					if ($linkableProp['name'] == $property && $api->getSetting(RiotAPI::SET_STATICDATA_LINKING, false))
 					{
 						$params = [];
-						$params[] = $value;
+						//  Request locale
 						$params[] = $api->getSetting(RiotAPI::SET_STATICDATA_LOCALE, null);
+						//  Static data version
 						$params[] = $api->getSetting(RiotAPI::SET_STATICDATA_VERSION, null);
+						//  Data by ID?
+						$params[] = true;
+						//  Included tags
+						$params[] = $api->getSetting(RiotAPI::SET_STATICDATA_TAGS, 'info');
 
 						$data = call_user_func_array(array($api, $linkableProp['function']), $params);
-						$this->staticData = $data;
+						$this->staticData = $data->data[$value];
 					}
 				}
 			}

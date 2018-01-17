@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016-2017  Daniel Dolejška
+ * Copyright (C) 2016-2018  Daniel Dolejška
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -53,7 +53,8 @@ class FeaturedGameInfo extends ApiObject
 	public $platformId;
 
 	/**
-	 *   The game mode.
+	 *   The game mode (Legal values: CLASSIC, ODIN, ARAM, TUTORIAL, ONEFORALL, 
+	 * ASCENSION, FIRSTBLOOD, KINGPORO).
 	 *
 	 * @var string $gameMode
 	 */
@@ -67,7 +68,7 @@ class FeaturedGameInfo extends ApiObject
 	public $mapId;
 
 	/**
-	 *   The game type.
+	 *   The game type (Legal values: CUSTOM_GAME, MATCHED_GAME, TUTORIAL_GAME).
 	 *
 	 * @var string $gameType
 	 */

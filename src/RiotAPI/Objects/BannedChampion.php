@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016-2017  Daniel Dolejška
+ * Copyright (C) 2016-2018  Daniel Dolejška
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -28,7 +28,7 @@ namespace RiotAPI\Objects;
  *     @link https://developer.riotgames.com/api-methods/#spectator-v3/GET_getCurrentGameInfoBySummoner
  *     @link https://developer.riotgames.com/api-methods/#spectator-v3/GET_getFeaturedGames
  *
- * @linkable $championId (getStaticChampion)
+ * @linkable $championId (getStaticChampions)
  *
  * @package RiotAPI\Objects
  */

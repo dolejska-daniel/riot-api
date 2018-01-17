@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016-2017  Daniel Dolejška
+ * Copyright (C) 2016-2018  Daniel Dolejška
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -29,7 +29,7 @@ namespace RiotAPI\Objects;
  *     @link https://developer.riotgames.com/api-methods/#champion-v3/GET_getChampions
  *     @link https://developer.riotgames.com/api-methods/#champion-v3/GET_getChampionsById
  *
- * @linkable $id (getStaticChampion)
+ * @linkable $id (getStaticChampions)
  *
  * @package RiotAPI\Objects
  */

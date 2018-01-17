@@ -117,6 +117,7 @@ class DataDragonAPI
 	 */
 	public static function initByRegion( string $region_name, array $customSettings = [] )
 	{
+		$region_name = strtolower($region_name);
 		$data = file_get_contents("https://ddragon.leagueoflegends.com/realms/$region_name.json");
 		if ($data == false)
 			throw new RequestException('Version list failed to be fetched from DataDragon.');

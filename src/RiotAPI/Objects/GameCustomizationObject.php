@@ -21,27 +21,27 @@ namespace RiotAPI\Objects;
 
 
 /**
- *   Class Incident
+ *   Class GameCustomizationObject
  *
  * Used in:
- *   lol-status (v3)
- *     @link https://developer.riotgames.com/api-methods/#lol-status-v3/GET_getShardData
- *
- * @iterable $updates
+ *   spectator (v3)
+ *     @link https://developer.riotgames.com/api-methods/#spectator-v3/GET_getCurrentGameInfoBySummoner
  *
  * @package RiotAPI\Objects
  */
-class Incident extends ApiObjectIterable
+class GameCustomizationObject extends ApiObject
 {
-	/** @var bool $active */
-	public $active;
+	/**
+	 *   Category identifier for Game Customization.
+	 *
+	 * @var string $category
+	 */
+	public $category;
 
-	/** @var string $created_at */
-	public $created_at;
-
-	/** @var int $id */
-	public $id;
-
-	/** @var Message[] $updates */
-	public $updates;
+	/**
+	 *   Game Customization content.
+	 *
+	 * @var string $content
+	 */
+	public $content;
 }

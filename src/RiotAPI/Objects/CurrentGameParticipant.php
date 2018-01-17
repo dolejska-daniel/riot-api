@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016-2017  Daniel Dolejška
+ * Copyright (C) 2016-2018  Daniel Dolejška
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -27,7 +27,7 @@ namespace RiotAPI\Objects;
  *   spectator (v3)
  *     @link https://developer.riotgames.com/api-methods/#spectator-v3/GET_getCurrentGameInfoBySummoner
  *
- * @linkable $championId (getStaticChampion)
+ * @linkable $championId (getStaticChampions)
  *
  * @package RiotAPI\Objects
  */
@@ -55,11 +55,11 @@ class CurrentGameParticipant extends ApiObjectLinkable
 	public $summonerName;
 
 	/**
-	 *   The runes used by this participant.
+	 *   List of Game Customizations.
 	 *
-	 * @var Rune[] $runes
+	 * @var GameCustomizationObject[] $gameCustomizationObjects
 	 */
-	public $runes;
+	public $gameCustomizationObjects;
 
 	/**
 	 *   Flag indicating whether or not this participant is a bot.
@@ -69,11 +69,11 @@ class CurrentGameParticipant extends ApiObjectLinkable
 	public $bot;
 
 	/**
-	 *   The team ID of this participant, indicating the participant's team.
+	 *   Perks/Runes Reforged Information.
 	 *
-	 * @var int $teamId
+	 * @var Perks $perks
 	 */
-	public $teamId;
+	public $perks;
 
 	/**
 	 *   The ID of the second summoner spell used by this participant.
@@ -83,11 +83,11 @@ class CurrentGameParticipant extends ApiObjectLinkable
 	public $spell2Id;
 
 	/**
-	 *   The masteries used by this participant.
+	 *   The team ID of this participant, indicating the participant's team.
 	 *
-	 * @var Mastery[] $masteries
+	 * @var int $teamId
 	 */
-	public $masteries;
+	public $teamId;
 
 	/**
 	 *   The ID of the first summoner spell used by this participant.

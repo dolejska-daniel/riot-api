@@ -33,6 +33,7 @@ class ApiObjectLinkableTest extends RiotAPITestCase
 			RiotAPI::SET_REGION             => Region::EUROPE_EAST,
 			RiotAPI::SET_USE_DUMMY_DATA     => true,
 			RiotAPI::SET_STATICDATA_LINKING => true,
+			RiotAPI::SET_CACHE_CALLS        => true,
 		]);
 
 		$this->assertInstanceOf(RiotAPI::class, $api);
