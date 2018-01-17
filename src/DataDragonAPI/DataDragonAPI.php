@@ -145,6 +145,7 @@ class DataDragonAPI
 	{
 		self::setSettings([
 			self::SET_VERSION  => $version,
+			self::SET_ENDPOINT => "http://ddragon.leagueoflegends.com/cdn/",
 		]);
 
 		if (!empty($customSettings))
@@ -179,7 +180,7 @@ class DataDragonAPI
 	public static function initByRealmObject( StaticRealmDto $realm, array $customSettings = [] )
 	{
 		self::setSettings([
-			self::SET_ENDPOINT => $realm->cdn,
+			self::SET_ENDPOINT => $realm->cdn . "/",
 			self::SET_VERSION  => $realm->dd,
 		]);
 
