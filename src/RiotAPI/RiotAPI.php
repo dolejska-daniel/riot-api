@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016-2017  Daniel Dolejška
+ * Copyright (C) 2016-2018  Daniel Dolejška
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -182,6 +182,7 @@ class RiotAPI
 			self::SET_STATICDATA_LINKING,
 			self::SET_STATICDATA_LOCALE,
 			self::SET_STATICDATA_VERSION,
+			self::SET_STATICDATA_TAGS,
 			self::SET_CALLBACKS_BEFORE,
 			self::SET_CALLBACKS_AFTER,
 			self::SET_API_BASEURL,
