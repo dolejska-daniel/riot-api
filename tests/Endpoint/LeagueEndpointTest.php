@@ -48,6 +48,8 @@ class LeagueEndpointTest extends RiotAPITestCase
 	 */
 	public function testGetLeaguesForSummoner( RiotAPI $api )
 	{
+		$this->markTestSkipped("This endpoint has been deprecated. And will be removed in later releases.");
+
 		//  Get library processed results
 		/** @var Objects\LeagueListDto[] $result */
 		$result = $api->getLeaguesForSummoner(30904166);

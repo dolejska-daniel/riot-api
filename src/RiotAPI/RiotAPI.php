@@ -362,8 +362,8 @@ class RiotAPI
 					self::RESOURCE_CHAMPION         => 60 * 10,
 					self::RESOURCE_CHAMPIONMASTERY  => 60 * 60,
 					self::RESOURCE_LEAGUE           => 60 * 10,
-					self::RESOURCE_MATCH            => 60,
-					self::RESOURCE_SPECTATOR        => 60,
+					self::RESOURCE_MATCH            => 0,
+					self::RESOURCE_SPECTATOR        => 0,
 					self::RESOURCE_STATICDATA       => 60 * 60 * 24,
 					self::RESOURCE_STATUS           => 60,
 					self::RESOURCE_SUMMONER         => 60 * 60,
@@ -1116,16 +1116,14 @@ class RiotAPI
 		return $r;
 	}
 
-
-	/****************************************d*d*
-	 *
-	 *  Champion Endpoint Methods
-	 *
-	 * @link https://developer.riotgames.com/api-methods/#champion-v3
-	 *
-	 ********************************************/
-	const RESOURCE_CHAMPION_V3 = 'v3';
+	/**
+	 * ==================================================================d=d=
+	 *     Champion Endpoint Methods
+	 *     @link https://developer.riotgames.com/api-methods/#champion-v3
+	 * ==================================================================d=d=
+	 **/
 	const RESOURCE_CHAMPION = '1237:champion';
+	const RESOURCE_CHAMPION_V3 = 'v3';
 
 	/**
 	 *   Retrieve all champions.
@@ -1133,6 +1131,11 @@ class RiotAPI
 	 * @param bool|false $only_free_to_play
 	 *
 	 * @return Objects\ChampionListDto
+	 *
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 *
 	 * @link https://developer.riotgames.com/api-methods/#champion-v3/GET_getChampions
 	 */
 	public function getChampions( bool $only_free_to_play = false ): Objects\ChampionListDto
@@ -1151,6 +1154,11 @@ class RiotAPI
 	 * @param int $champion_id
 	 *
 	 * @return Objects\ChampionDto
+	 *
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 *
 	 * @link https://developer.riotgames.com/api-methods/#champion-v3/GET_getChampionsById
 	 */
 	public function getChampionById( int $champion_id ): Objects\ChampionDto
@@ -1162,16 +1170,14 @@ class RiotAPI
 		return new Objects\ChampionDto($this->getResult(), $this);
 	}
 
-
-	/****************************************d*d*
-	 *
-	 *  Champion Mastery Endpoint Methods
-	 *
-	 * @link https://developer.riotgames.com/api-methods/#champion-mastery-v3
-	 *
-	 ********************************************/
-	const RESOURCE_CHAMPIONMASTERY_V3 = 'v3';
+	/**
+	 * ==================================================================d=d=
+	 *     Champion Mastery Endpoint Methods
+	 *     @link https://developer.riotgames.com/api-methods/#champion-mastery-v3
+	 * ==================================================================d=d=
+	 **/
 	const RESOURCE_CHAMPIONMASTERY = '1240:champion-mastery';
+	const RESOURCE_CHAMPIONMASTERY_V3 = 'v3';
 
 	/**
 	 *   Get a champion mastery by player id and champion id. Response code 204 means
@@ -1182,6 +1188,11 @@ class RiotAPI
 	 * @param int $champion_id
 	 *
 	 * @return Objects\ChampionMasteryDto
+	 *
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 *
 	 * @link https://developer.riotgames.com/api-methods/#champion-mastery-v3/GET_getChampionMastery
 	 */
 	public function getChampionMastery( int $summoner_id, int $champion_id ): Objects\ChampionMasteryDto
@@ -1200,6 +1211,11 @@ class RiotAPI
 	 * @param int $summoner_id
 	 *
 	 * @return Objects\ChampionMasteryDto[]
+	 *
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 *
 	 * @link https://developer.riotgames.com/api-methods/#champion-mastery-v3/GET_getAllChampionMasteries
 	 */
 	public function getChampionMasteries( int $summoner_id ): array
@@ -1222,6 +1238,11 @@ class RiotAPI
 	 * @param int $summoner_id
 	 *
 	 * @return int
+	 *
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 *
 	 * @link https://developer.riotgames.com/api-methods/#champion-mastery-v3/GET_getChampionMasteryScore
 	 */
 	public function getChampionMasteryScore( int $summoner_id ): int
@@ -1234,15 +1255,14 @@ class RiotAPI
 	}
 
 
-	/****************************************d*d*
-	 *
-	 *  Spectator Endpoint Methods
-	 *
-	 * @link https://developer.riotgames.com/api-methods/#spectator-v3
-	 *
-	 ********************************************/
-	const RESOURCE_SPECTATOR_V3 = 'v3';
+	/**
+	 * ==================================================================d=d=
+	 *     Spectator Endpoint Methods
+	 *     @link https://developer.riotgames.com/api-methods/#spectator-v3
+	 * ==================================================================d=d=
+	 **/
 	const RESOURCE_SPECTATOR = '1238:spectator';
+	const RESOURCE_SPECTATOR_V3 = 'v3';
 
 	/**
 	 *   Get current game information for the given summoner ID.
@@ -1250,7 +1270,10 @@ class RiotAPI
 	 * @param int $summoner_id
 	 *
 	 * @return Objects\CurrentGameInfo
+	 *
 	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
 	 *
 	 * @link https://developer.riotgames.com/api-methods/#spectator-v3/GET_getCurrentGameInfoBySummoner
 	 */
@@ -1267,6 +1290,11 @@ class RiotAPI
 	 *   Get list of featured games.
 	 *
 	 * @return Objects\FeaturedGames
+	 *
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 *
 	 * @link https://developer.riotgames.com/api-methods/#spectator-v3/GET_getFeaturedGames
 	 */
 	public function getFeaturedGames(): Objects\FeaturedGames
@@ -1279,15 +1307,36 @@ class RiotAPI
 	}
 
 
-	/****************************************d*d*
-	 *
-	 *  League Endpoint Methods
-	 *
-	 * @link https://developer.riotgames.com/api-methods/#league-v3
-	 *
-	 ********************************************/
-	const RESOURCE_LEAGUE_V3 = 'v3';
+	/**
+	 * ==================================================================d=d=
+	 *     League Endpoint Methods
+	 *     @link https://developer.riotgames.com/api-methods/#league-v3
+	 * ==================================================================d=d=
+	 **/
 	const RESOURCE_LEAGUE = '1342:league';
+	const RESOURCE_LEAGUE_V3 = 'v3';
+
+	/**
+	 *   Get league by its UUID.
+	 *
+	 * @param string $league_id
+	 *
+	 * @return Objects\LeagueListDto
+	 *
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 *
+	 * @link https://developer.riotgames.com/api-methods/#league-v3/GET_getLeagueById
+	 */
+	public function getLeagueById( string $league_id ): Objects\LeagueListDto
+	{
+		$this->setEndpoint("/lol/league/" . self::RESOURCE_LEAGUE_V3 . "/leagues/{$league_id}")
+			->setResource(self::RESOURCE_LEAGUE, "/leagues/%s")
+			->makeCall();
+
+		return new Objects\LeagueListDto($this->getResult(), $this);
+	}
 
 	/**
 	 *   Get leagues mapped by summoner ID for a given list of summoner IDs.
@@ -1295,10 +1344,18 @@ class RiotAPI
 	 * @param int $summoner_id
 	 *
 	 * @return Objects\LeagueListDto[]
+	 *
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 *
 	 * @link https://developer.riotgames.com/api-methods/#league-v3/GET_getAllLeaguesForSummoner
+	 * @deprecated
 	 */
 	public function getLeaguesForSummoner( int $summoner_id ): array
 	{
+		trigger_error("This endpoint has been deprecated. And will be removed in later releases.", E_USER_DEPRECATED);
+
 		$this->setEndpoint("/lol/league/" . self::RESOURCE_LEAGUE_V3 . "/leagues/by-summoner/{$summoner_id}")
 			->setResource(self::RESOURCE_LEAGUE, "/leagues/by-summoner/%i")
 			->makeCall();
@@ -1316,6 +1373,11 @@ class RiotAPI
 	 * @param int $summoner_id
 	 *
 	 * @return Objects\LeaguePositionDto[]
+	 *
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 *
 	 * @link https://developer.riotgames.com/api-methods/#league-v3/GET_getAllLeaguePositionsForSummoner
 	 */
 	public function getLeaguePositionsForSummoner( int $summoner_id ): array
@@ -1337,6 +1399,11 @@ class RiotAPI
 	 * @param string $game_queue_type
 	 *
 	 * @return Objects\LeagueListDto
+	 *
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 *
 	 * @link https://developer.riotgames.com/api-methods/#league-v3/GET_getChallengerLeague
 	 */
 	public function getLeagueChallenger( string $game_queue_type ): Objects\LeagueListDto
@@ -1354,6 +1421,11 @@ class RiotAPI
 	 * @param string $game_queue_type
 	 *
 	 * @return Objects\LeagueListDto
+	 *
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 *
 	 * @link https://developer.riotgames.com/api-methods/#league-v3/GET_getMasterLeague
 	 */
 	public function getLeagueMaster( string $game_queue_type ): Objects\LeagueListDto
@@ -1366,15 +1438,14 @@ class RiotAPI
 	}
 
 
-	/****************************************d*d*
-	 *
-	 *  Static Data Endpoint Methods
-	 *
-	 * @link https://developer.riotgames.com/api-methods/#lol-static-data-v3
-	 *
-	 ********************************************/
-	const RESOURCE_STATICDATA_V3 = 'v3';
+	/**
+	 * ==================================================================d=d=
+	 *     Static Data Endpoint Methods
+	 *     @link https://developer.riotgames.com/api-methods/#lol-static-data-v3
+	 * ==================================================================d=d=
+	 **/
 	const RESOURCE_STATICDATA = '1351:lol-static-data';
+	const RESOURCE_STATICDATA_V3 = 'v3';
 
 	/**
 	 *   Retrieves champion list.
@@ -1385,6 +1456,11 @@ class RiotAPI
 	 * @param string|array $tags
 	 *
 	 * @return StaticData\StaticChampionListDto
+	 *
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 *
 	 * @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getChampionList
 	 */
 	public function getStaticChampions( string $locale = null, string $version = null, bool $data_by_id = null, $tags = null ): StaticData\StaticChampionListDto
@@ -1409,6 +1485,11 @@ class RiotAPI
 	 * @param string|array $tags
 	 *
 	 * @return StaticData\StaticChampionDto
+	 *
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 *
 	 * @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getChampionById
 	 */
 	public function getStaticChampion( int $champion_id, string $locale = null, string $version = null, $tags = null ): StaticData\StaticChampionDto
@@ -1431,6 +1512,11 @@ class RiotAPI
 	 * @param string|array $tags
 	 *
 	 * @return StaticData\StaticItemListDto
+	 *
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 *
 	 * @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getItemList
 	 */
 	public function getStaticItems( string $locale = null, string $version = null, $tags = null ): StaticData\StaticItemListDto
@@ -1454,6 +1540,11 @@ class RiotAPI
 	 * @param string|array $tags
 	 *
 	 * @return StaticData\StaticItemDto
+	 *
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 *
 	 * @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getItemById
 	 */
 	public function getStaticItem( int $item_id, string $locale = null, string $version = null, $tags = null ): StaticData\StaticItemDto
@@ -1475,6 +1566,11 @@ class RiotAPI
 	 * @param string $version
 	 *
 	 * @return StaticData\StaticLanguageStringsDto
+	 *
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 *
 	 * @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getLanguageStrings
 	 */
 	public function getStaticLanguageStrings( string $locale = null, string $version = null ): StaticData\StaticLanguageStringsDto
@@ -1492,6 +1588,11 @@ class RiotAPI
 	 *   Retrieve supported languages data.
 	 *
 	 * @return array
+	 *
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 *
 	 * @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getLanguages
 	 */
 	public function getStaticLanguages(): array
@@ -1510,6 +1611,11 @@ class RiotAPI
 	 * @param string $version
 	 *
 	 * @return StaticData\StaticMapDataDto
+	 *
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 *
 	 * @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getMapData
 	 */
 	public function getStaticMaps( string $locale = null, string $version = null ): StaticData\StaticMapDataDto
@@ -1531,6 +1637,11 @@ class RiotAPI
 	 * @param string|array $tags
 	 *
 	 * @return StaticData\StaticMasteryListDto
+	 *
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 *
 	 * @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getMasteryList
 	 */
 	public function getStaticMasteries( string $locale = null, string $version = null, $tags = null ): StaticData\StaticMasteryListDto
@@ -1554,6 +1665,11 @@ class RiotAPI
 	 * @param string|array $tags
 	 *
 	 * @return StaticData\StaticMasteryDto
+	 *
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 *
 	 * @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getMasteryById
 	 */
 	public function getStaticMastery( int $mastery_id, string $locale = null, string $version = null, $tags = null ): StaticData\StaticMasteryDto
@@ -1575,6 +1691,11 @@ class RiotAPI
 	 * @param string $version
 	 *
 	 * @return StaticData\StaticProfileIconDataDto
+	 *
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 *
 	 * @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getProfileIcons
 	 */
 	public function getStaticProfileIcons( string $locale = null, string $version = null ): StaticData\StaticProfileIconDataDto
@@ -1592,6 +1713,11 @@ class RiotAPI
 	 *   Retrieve realm data. (Region versions)
 	 *
 	 * @return StaticData\StaticRealmDto
+	 *
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 *
 	 * @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getRealm
 	 */
 	public function getStaticRealm(): StaticData\StaticRealmDto
@@ -1611,6 +1737,11 @@ class RiotAPI
 	 * @param string|array $tags
 	 *
 	 * @return StaticData\StaticRuneListDto
+	 *
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 *
 	 * @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getRuneList
 	 */
 	public function getStaticRunes( string $locale = null, string $version = null, $tags = null ): StaticData\StaticRuneListDto
@@ -1634,6 +1765,11 @@ class RiotAPI
 	 * @param string|array $tags
 	 *
 	 * @return StaticData\StaticRuneDto
+	 *
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 *
 	 * @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getRuneById
 	 */
 	public function getStaticRune( int $rune_id, string $locale = null, string $version = null, $tags = null ): StaticData\StaticRuneDto
@@ -1657,6 +1793,11 @@ class RiotAPI
 	 * @param string|array $tags
 	 *
 	 * @return StaticData\StaticSummonerSpellListDto
+	 *
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 *
 	 * @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getSummonerSpellList
 	 */
 	public function getStaticSummonerSpells( string $locale = null, string $version = null, bool $data_by_id = false, $tags = null ): StaticData\StaticSummonerSpellListDto
@@ -1681,6 +1822,11 @@ class RiotAPI
 	 * @param string|array $tags
 	 *
 	 * @return StaticData\StaticSummonerSpellDto
+	 *
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 *
 	 * @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getSummonerSpellById
 	 */
 	public function getStaticSummonerSpell( int $summoner_spell_id, string $locale = null, string $version = null, $tags = null ): StaticData\StaticSummonerSpellDto
@@ -1699,6 +1845,11 @@ class RiotAPI
 	 *   Retrieve version data.
 	 *
 	 * @return array
+	 *
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 *
 	 * @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getVersions
 	 */
 	public function getStaticVersions(): array
@@ -1711,15 +1862,14 @@ class RiotAPI
 	}
 
 
-	/****************************************d*d*
-	 *
-	 *  Status Endpoint Methods
-	 *
-	 * @link https://developer.riotgames.com/api-methods/#lol-status-v3
-	 *
-	 ********************************************/
-	const RESOURCE_STATUS_V3 = 'v3';
+	/**
+	 * ==================================================================d=d=
+	 *     Status Endpoint Methods
+	 *     @link https://developer.riotgames.com/api-methods/#lol-status-v3
+	 * ==================================================================d=d=
+	 **/
 	const RESOURCE_STATUS = '1246:lol-status';
+	const RESOURCE_STATUS_V3 = 'v3';
 
 	/**
 	 *   Get status data - shard list.
@@ -1727,6 +1877,11 @@ class RiotAPI
 	 * @param string|null $override_region
 	 *
 	 * @return Objects\ShardStatus
+	 *
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 *
 	 * @link https://developer.riotgames.com/api-methods/#lol-status-v3/GET_getShardData
 	 */
 	public function getStatusData( string $override_region = null ): Objects\ShardStatus
@@ -1739,30 +1894,32 @@ class RiotAPI
 	}
 
 
-	/****************************************d*d*
-	 *
-	 *  Match Endpoint Methods
-	 *
-	 * @link https://developer.riotgames.com/api-methods/#match-v3
-	 *
-	 ********************************************/
-	const RESOURCE_MATCH_V3 = 'v3';
+	/**
+	 * ==================================================================d=d=
+	 *     Match Endpoint Methods
+	 *     @link https://developer.riotgames.com/api-methods/#match-v3
+	 * ==================================================================d=d=
+	 **/
 	const RESOURCE_MATCH = '1338:match';
+	const RESOURCE_MATCH_V3 = 'v3';
 
 	/**
 	 *   Retrieve match by match ID.
 	 *
-	 * @param int      $match_id
-	 * @param int|null $for_account_id If provided, used to identify the participant to be unobfuscated.
+	 * @param int $match_id
 	 *
 	 * @return Objects\MatchDto
+	 *
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 *
 	 * @link https://developer.riotgames.com/api-methods/#match-v3/GET_getMatch
 	 */
-	public function getMatch( int $match_id, int $for_account_id = null ): Objects\MatchDto
+	public function getMatch( int $match_id ): Objects\MatchDto
 	{
 		$this->setEndpoint("/lol/match/" . self::RESOURCE_MATCH_V3 . "/matches/{$match_id}")
 			->setResource(self::RESOURCE_MATCH, "/matches/%i")
-			->addQuery('forAccountId', $for_account_id)
 			->makeCall();
 
 		return new Objects\MatchDto($this->getResult(), $this);
@@ -1775,6 +1932,11 @@ class RiotAPI
 	 * @param string $tournament_code
 	 *
 	 * @return Objects\MatchDto
+	 *
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 *
 	 * @link https://developer.riotgames.com/api-methods/#match-v3/GET_getMatchByTournamentCode
 	 */
 	public function getMatchByTournamentCode( int $match_id, string $tournament_code ): Objects\MatchDto
@@ -1792,6 +1954,11 @@ class RiotAPI
 	 * @param string $tournament_code
 	 *
 	 * @return array
+	 *
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 *
 	 * @link https://developer.riotgames.com/api-methods/#match-v3/GET_getMatchIdsByTournamentCode
 	 */
 	public function getMatchIdsByTournamentCode( string $tournament_code ): array
@@ -1816,6 +1983,11 @@ class RiotAPI
 	 * @param int       $endIndex
 	 *
 	 * @return Objects\MatchlistDto
+	 *
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 *
 	 * @link https://developer.riotgames.com/api-methods/#match-v3/GET_getMatchlist
 	 */
 	public function getMatchlistByAccount( int $account_id, $queue = null, $season = null, $champion = null, int $beginTime = null, int $endTime = null, int $beginIndex = null, int $endIndex = null ): Objects\MatchlistDto
@@ -1840,6 +2012,11 @@ class RiotAPI
 	 * @param int $account_id
 	 *
 	 * @return Objects\MatchlistDto
+	 *
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 *
 	 * @link https://developer.riotgames.com/api-methods/#match-v3/GET_getRecentMatchlist
 	 */
 	public function getRecentMatchlistByAccount( int $account_id ): Objects\MatchlistDto
@@ -1857,6 +2034,11 @@ class RiotAPI
 	 * @param int $match_id
 	 *
 	 * @return Objects\MatchTimelineDto
+	 *
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 *
 	 * @link https://developer.riotgames.com/api-methods/#match-v3/GET_getMatchTimeline
 	 */
 	public function getMatchTimeline( int $match_id ): Objects\MatchTimelineDto
@@ -1869,15 +2051,14 @@ class RiotAPI
 	}
 
 
-	/****************************************d*d*
-	 *
-	 *  Summoner Endpoint Methods
-	 *
-	 * @link https://developer.riotgames.com/api-methods/#summoner-v3
-	 *
-	 ********************************************/
-	const RESOURCE_SUMMONER_V3 = 'v3';
+	/**
+	 * ==================================================================d=d=
+	 *     Summoner Endpoint Methods
+	 *     @link https://developer.riotgames.com/api-methods/#summoner-v3
+	 * ==================================================================d=d=
+	 **/
 	const RESOURCE_SUMMONER = '1235:summoner';
+	const RESOURCE_SUMMONER_V3 = 'v3';
 
 	/**
 	 *   Get single summoner object for a given summoner ID.
@@ -1885,6 +2066,11 @@ class RiotAPI
 	 * @param int $summoner_id
 	 *
 	 * @return Objects\SummonerDto
+	 *
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 *
 	 * @link https://developer.riotgames.com/api-methods/#summoner-v3/GET_getBySummonerId
 	 */
 	public function getSummoner( int $summoner_id ): Objects\SummonerDto
@@ -1902,6 +2088,11 @@ class RiotAPI
 	 * @param string $summoner_name
 	 *
 	 * @return Objects\SummonerDto
+	 *
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 *
 	 * @link https://developer.riotgames.com/api-methods/#summoner-v3/GET_getBySummonerName
 	 */
 	public function getSummonerByName( string $summoner_name ): Objects\SummonerDto
@@ -1921,6 +2112,11 @@ class RiotAPI
 	 * @param int $account_id
 	 *
 	 * @return Objects\SummonerDto
+	 *
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 *
 	 * @link https://developer.riotgames.com/api-methods/#summoner-v3/GET_getByAccountId
 	 */
 	public function getSummonerByAccount( int $account_id ): Objects\SummonerDto
@@ -1933,15 +2129,48 @@ class RiotAPI
 	}
 
 
-	/****************************************d*d*
+	/**
+	 * ==================================================================d=d=
+	 *     Third Party Code Endpoint Methods
+	 *     @link https://developer.riotgames.com/api-methods/#third-party-code-v3
+	 * ==================================================================d=d=
+	 **/
+	const RESOURCE_THIRD_PARTY_CODE = '1388:third-party-code';
+	const RESOURCE_THIRD_PARTY_CODE_V3 = 'v3';
+
+	/**
+	 *   Get third party code for given summoner ID.
 	 *
-	 *  Masteries Endpoint Methods
+	 * @param int $summoner_id
 	 *
-	 * @link https://developer.riotgames.com/api-methods/#masteries-v3
+	 * @return string
 	 *
-	 ********************************************/
-	const RESOURCE_MASTERIES_V3 = 'v3';
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 *
+	 * @link https://developer.riotgames.com/api-methods/#third-party-code-v3/GET_getThirdPartyCodeBySummonerId
+	 */
+	public function getThirdPartyCodeBySummonerId( int $summoner_id ): string
+	{
+		$this->setEndpoint("/lol/platform/" . self::RESOURCE_THIRD_PARTY_CODE_V3 . "/third-party-code/by-summoner/{$summoner_id}")
+			->setResource(self::RESOURCE_THIRD_PARTY_CODE, "/third-party-code/by-summoner/%i")
+			->makeCall();
+
+		return $this->getResult();
+	}
+
+
+	/**
+	 * ==================================================================d=d=
+	 *     Masteries Endpoint Methods
+	 *     @link https://developer.riotgames.com/api-methods/#masteries-v3
+	 *     @deprecated
+	 * ==================================================================d=d=
+	 **/
 	const RESOURCE_MASTERIES = '1243:masteries';
+	/** @deprecated  */
+	const RESOURCE_MASTERIES_V3 = 'v3';
 
 	/**
 	 *   Get mastery pages for a given summoner ID.
@@ -1949,10 +2178,18 @@ class RiotAPI
 	 * @param int $summoner_id
 	 *
 	 * @return Objects\MasteryPagesDto
+	 *
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 *
 	 * @link https://developer.riotgames.com/api-methods/#masteries-v3/GET_getMasteryPagesBySummonerId
+	 * @deprecated
 	 */
 	public function getMasteriesBySummoner( int $summoner_id ): Objects\MasteryPagesDto
 	{
+		trigger_error("This endpoint has been deprecated. And will be removed in later releases.", E_USER_DEPRECATED);
+
 		$this->setEndpoint("/lol/platform/" . self::RESOURCE_MASTERIES_V3 . "/masteries/by-summoner/{$summoner_id}")
 			->setResource(self::RESOURCE_MASTERIES, "/masteries/by-summoner/%i")
 			->makeCall();
@@ -1961,15 +2198,16 @@ class RiotAPI
 	}
 
 
-	/****************************************d*d*
-	 *
-	 *  Runes Endpoint Methods
-	 *
-	 * @link https://developer.riotgames.com/api-methods/#runes-v3
-	 *
-	 ********************************************/
-	const RESOURCE_RUNES_V3 = 'v3';
+	/**
+	 * ==================================================================d=d=
+	 *     Runes Endpoint Methods
+	 *     @link https://developer.riotgames.com/api-methods/#runes-v3
+	 *     @deprecated
+	 * ==================================================================d=d=
+	 **/
 	const RESOURCE_RUNES = '1244:runes';
+	/** @deprecated  */
+	const RESOURCE_RUNES_V3 = 'v3';
 
 	/**
 	 *   Get rune pages for a given summoner ID.
@@ -1977,10 +2215,18 @@ class RiotAPI
 	 * @param int $summoner_id
 	 *
 	 * @return Objects\RunePagesDto
+	 *
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 *
 	 * @link https://developer.riotgames.com/api-methods/#runes-v3/GET_getRunePagesBySummonerId
+	 * @deprecated
 	 */
 	public function getRunesBySummoner( int $summoner_id ): Objects\RunePagesDto
 	{
+		trigger_error("This endpoint has been deprecated. And will be removed in later releases.", E_USER_DEPRECATED);
+
 		$this->setEndpoint("/lol/platform/" . self::RESOURCE_RUNES_V3 . "/runes/by-summoner/{$summoner_id}")
 			->setResource(self::RESOURCE_RUNES, "/runes/by-summoner/%i")
 			->makeCall();
@@ -1989,15 +2235,14 @@ class RiotAPI
 	}
 
 
-	/****************************************d*d*
-	 *
-	 *  Tournament Endpoint Methods
-	 *
-	 * @link https://developer.riotgames.com/api-methods/#tournament-v3
-	 *
-	 ********************************************/
-	const RESOURCE_TOURNAMENT_V3 = 'v3';
+	/**
+	 * ==================================================================d=d=
+	 *     Tournament Endpoint Methods
+	 *     @link https://developer.riotgames.com/api-methods/#tournament-v3
+	 * ==================================================================d=d=
+	 **/
 	const RESOURCE_TOURNAMENT = '1231:tournament';
+	const RESOURCE_TOURNAMENT_V3 = 'v3';
 
 	/**
 	 *   Creates set of tournament codes for given tournament.
@@ -2007,7 +2252,12 @@ class RiotAPI
 	 * @param TournamentCodeParameters $parameters
 	 *
 	 * @return array
+	 *
+	 * @throws RequestException
 	 * @throws RequestParameterException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 *
 	 * @link https://developer.riotgames.com/api-methods/#tournament-v3/POST_createTournamentCode
 	 */
 	public function createTournamentCodes( int $tournament_id, int $count, TournamentCodeParameters $parameters ): array
@@ -2056,8 +2306,12 @@ class RiotAPI
 	 * @param Objects\TournamentCodeUpdateParameters $parameters
 	 *
 	 * @return Objects\LobbyEventDTOWrapper
+	 *
 	 * @throws RequestException
 	 * @throws RequestParameterException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 *
 	 * @link https://developer.riotgames.com/api-methods/#tournament-v3/PUT_updateCode
 	 */
 	public function editTournamentCode( string $tournament_code, TournamentCodeUpdateParameters $parameters )
@@ -2091,7 +2345,11 @@ class RiotAPI
 	 * @param string $tournament_code
 	 *
 	 * @return Objects\TournamentCodeDto
+	 *
 	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 *
 	 * @link https://developer.riotgames.com/api-methods/#tournament-v3/GET_getTournamentCode
 	 */
 	public function getTournamentCodeData( string $tournament_code ): Objects\TournamentCodeDto
@@ -2113,7 +2371,12 @@ class RiotAPI
 	 * @param ProviderRegistrationParameters $parameters
 	 *
 	 * @return int
+	 *
+	 * @throws RequestException
 	 * @throws RequestParameterException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 *
 	 * @link https://developer.riotgames.com/api-methods/#tournament-v3/POST_registerProviderData
 	 */
 	public function createTournamentProvider( ProviderRegistrationParameters $parameters ): int
@@ -2146,7 +2409,12 @@ class RiotAPI
 	 * @param TournamentRegistrationParameters $parameters
 	 *
 	 * @return int
+	 *
+	 * @throws RequestException
 	 * @throws RequestParameterException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 *
 	 * @link https://developer.riotgames.com/api-methods/#tournament-v3/POST_registerTournament
 	 */
 	public function createTournament( TournamentRegistrationParameters $parameters ): int
@@ -2177,7 +2445,11 @@ class RiotAPI
 	 * @param string $tournament_code
 	 *
 	 * @return Objects\LobbyEventDtoWrapper
-	 * @throws GeneralException
+	 *
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 *
 	 * @link https://developer.riotgames.com/api-methods/#tournament-v3/GET_getLobbyEventsByCode
 	 */
 	public function getTournamentLobbyEvents( string $tournament_code ): Objects\LobbyEventDtoWrapper
@@ -2194,15 +2466,14 @@ class RiotAPI
 	}
 
 
-	/****************************************d*d*
-	 *
-	 *  Tournament Stub Endpoint Methods
-	 *
-	 * @link https://developer.riotgames.com/api-methods/#tournament-stub-v3
-	 *
-	 ********************************************/
-	const RESOURCE_TOURNAMENT_STUB_V3 = 'v3';
+	/**
+	 * ==================================================================d=d=
+	 *     Tournament Stub Endpoint Methods
+	 *     @link https://developer.riotgames.com/api-methods/#tournament-stub-v3
+	 * ==================================================================d=d=
+	 **/
 	const RESOURCE_TOURNAMENT_STUB = '1242:tournament-stub';
+	const RESOURCE_TOURNAMENT_STUB_V3 = 'v3';
 
 	/**
 	 *   Create a mock tournament code for the given tournament.
@@ -2212,7 +2483,12 @@ class RiotAPI
 	 * @param TournamentCodeParameters $parameters
 	 *
 	 * @return array
+	 *
+	 * @throws RequestException
 	 * @throws RequestParameterException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 *
 	 * @link https://developer.riotgames.com/api-methods/#tournament-stub-v3/POST_createTournamentCode
 	 *
 	 * @internal
@@ -2259,7 +2535,12 @@ class RiotAPI
 	 * @param ProviderRegistrationParameters $parameters
 	 *
 	 * @return int
+	 *
+	 * @throws RequestException
 	 * @throws RequestParameterException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 *
 	 * @link https://developer.riotgames.com/api-methods/#tournament-stub-v3/POST_registerProviderData
 	 *
 	 * @internal
@@ -2291,7 +2572,12 @@ class RiotAPI
 	 * @param TournamentRegistrationParameters $parameters
 	 *
 	 * @return int
+	 *
+	 * @throws RequestException
 	 * @throws RequestParameterException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 *
 	 * @link https://developer.riotgames.com/api-methods/#tournament-stub-v3/POST_registerTournament
 	 *
 	 * @internal
@@ -2321,6 +2607,11 @@ class RiotAPI
 	 * @param string $tournament_code
 	 *
 	 * @return Objects\LobbyEventDtoWrapper
+	 *
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 *
 	 * @link https://developer.riotgames.com/api-methods/#tournament-stub-v3/GET_getLobbyEventsByCode
 	 *
 	 * @internal
@@ -2336,19 +2627,24 @@ class RiotAPI
 	}
 
 
-	/****************************************d*d*
-	 *
-	 *  Endpoint for testing purposes
-	 *
-	 ********************************************/
+	/**
+	 * ==================================================================d=d=
+	 *     Fake Endpoint for testing purposes
+	 * ==================================================================d=d=
+	 **/
 
 	/**
 	 * @param             $specs
 	 * @param string|null $region
 	 * @param string|null $method
 	 *
-	 * @internal
 	 * @return mixed
+	 *
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 *
+	 * @internal
 	 */
 	public function makeTestEndpointCall( $specs, string $region = null, string $method = null )
 	{

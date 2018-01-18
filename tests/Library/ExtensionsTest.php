@@ -134,6 +134,8 @@ class ExtensionsTest extends TestCase
 	 */
 	public function testCallExtensionFunction_Valid( RiotAPI $api )
 	{
+		$this->markTestSkipped("This endpoint has been deprecated. And will be removed in later releases.");
+
 		$masteryPages = $api->getMasteriesBySummoner(30904166);
 
 		$this->assertTrue($masteryPages->pageExists("- Modif -"));
@@ -150,6 +152,8 @@ class ExtensionsTest extends TestCase
 	 */
 	public function testCallExtensionFunction_Invalid( RiotAPI $api )
 	{
+		$this->markTestSkipped("This endpoint has been deprecated. And will be removed in later releases.");
+
 		$this->expectException(GeneralException::class);
 		$this->expectExceptionMessage('failed to be executed');
 
@@ -164,6 +168,8 @@ class ExtensionsTest extends TestCase
 	 */
 	public function testCallExtensionFunction_NoExtension( RiotAPI $api )
 	{
+		$this->markTestSkipped("This endpoint has been deprecated. And will be removed in later releases.");
+
 		$this->expectException(GeneralException::class);
 		$this->expectExceptionMessage('no extension exists for this ApiObject');
 

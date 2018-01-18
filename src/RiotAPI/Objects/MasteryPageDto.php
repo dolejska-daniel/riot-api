@@ -31,6 +31,7 @@ namespace RiotAPI\Objects;
  * @iterable $masteries
  *
  * @package RiotAPI\Objects
+ * @deprecated
  */
 class MasteryPageDto extends ApiObjectIterable
 {

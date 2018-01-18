@@ -46,6 +46,8 @@ class MasteriesEndpointObjectIntegrityTest extends RiotAPITestCase
 	 */
 	public function testGetMasteriesBySummoner( RiotAPI $api )
 	{
+		$this->markTestSkipped("This endpoint has been deprecated. And will be removed in later releases.");
+
 		//  Get library processed results
 		/** @var Objects\MasteryPagesDto $result */
 		$result = $api->getMasteriesBySummoner(30904166);

@@ -46,6 +46,8 @@ class RunesEndpointObjectIntegrityTest extends RiotAPITestCase
 	 */
 	public function testGetRunesBySummoner( RiotAPI $api )
 	{
+		$this->markTestSkipped("This endpoint has been deprecated. And will be removed in later releases.");
+
 		//  Get library processed results
 		/** @var Objects\RunePagesDto $result */
 		$result = $api->getRunesBySummoner(30904166);

@@ -31,6 +31,7 @@ namespace RiotAPI\Objects;
  * @iterable $slots
  *
  * @package RiotAPI\Objects
+ * @deprecated
  */
 class RunePageDto extends ApiObjectIterable
 {
