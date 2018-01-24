@@ -61,9 +61,10 @@ class LiveTest extends TestCase
 	 *
 	 * @return RiotAPI
 	 */
-	public function testLiveCall( RiotApI $api )
+	public function testLiveCall( RiotAPI $api )
 	{
 		$this->markAsRisky();
+		$this->markTestSkipped('Skipping live call test.');
 
 		$summoner = $api->getSummonerByName("KuliS");
 		$this->assertSame("KuliS", $summoner->name);
@@ -79,6 +80,7 @@ class LiveTest extends TestCase
 	public function testLiveCall_cached()
 	{
 		$this->markAsRisky();
+		$this->markTestSkipped('Skipping cached live call test.');
 
 		$api = new RiotAPI([
 			RiotAPI::SET_KEY         => "INVALID_KEY",

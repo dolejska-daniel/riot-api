@@ -232,9 +232,9 @@ For more information about CLI support, please see [the wiki pages](https://gith
 
 # DataDragon API
 
-How easy it is to work with images? For instance, to get splash image of Orianna?
+How easy is it to work with static images? For instance, to get splash image of Orianna?
 
 `echo DataDragonAPI::getChampionSplashO($api->getStaticChampion(61));`, that easy.
 
-Want to know more? _TBA_
+Want to know more? See [the wiki pages](https://github.com/dolejska-daniel/riot-api/wiki/DataDragonAPI:-How-to-begin)!
 
