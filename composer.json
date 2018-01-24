@@ -4,7 +4,7 @@
 	"description": "Riot League of Legends & DataDragon API wrapper for PHP7",
 	"keywords": ["riot","league of legends", "data dragon", "api", "wrapper", "php7"],
 	"homepage": "https://github.com/dolejska-daniel/riot-api",
-	"license": "GPL-3.0",
+	"license": "GPL-3.0-or-later",
 	"authors": [
 		{
 			"name": "Daniel Dolejška",
