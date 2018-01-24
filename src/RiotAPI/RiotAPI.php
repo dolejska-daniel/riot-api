@@ -205,6 +205,7 @@ class RiotAPI
 		self::RESOURCE_MATCH,
 		self::RESOURCE_SPECTATOR,
 		self::RESOURCE_SUMMONER,
+		self::RESOURCE_THIRD_PARTY_CODE,
 		self::RESOURCE_TOURNAMENT,
 		self::RESOURCE_TOURNAMENT_STUB,
 	];
@@ -365,6 +366,7 @@ class RiotAPI
 					self::RESOURCE_STATICDATA       => 60 * 60 * 24,
 					self::RESOURCE_STATUS           => 60,
 					self::RESOURCE_SUMMONER         => 60 * 60,
+					self::RESOURCE_THIRD_PARTY_CODE => 0,
 					self::RESOURCE_TOURNAMENT       => 0,
 					self::RESOURCE_TOURNAMENT_STUB  => 0,
 				];
@@ -547,7 +549,7 @@ class RiotAPI
 			if ($this->getSetting(self::SET_CACHE_CALLS, false) && $this->ccc != false && $this->ccc->isCallCached($requestHash) == false)
 			{
 				//  Get information for how long to save the data
-				if ($timeInterval = $this->getSetting(self::SET_CACHE_CALLS_LENGTH)[$this->getResource()])
+				if ($timeInterval = @$this->getSetting(self::SET_CACHE_CALLS_LENGTH)[$this->getResource()])
 					$this->ccc->saveCallData($requestHash, $this->result_data_raw, $timeInterval);
 			}
 		};
