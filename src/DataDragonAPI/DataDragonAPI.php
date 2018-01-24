@@ -277,6 +277,28 @@ class DataDragonAPI
 	}
 
 	/**
+	 *   Returns profile icon in img HTML TAG.
+	 *
+	 * @param string $summoner_name
+	 * @param string $platform_id
+	 *
+	 * @return Html
+	 * @throws SettingsException
+	 */
+	public static function getProfileIconByName( string $summoner_name, string $platform_id ): Html
+	{
+		self::checkInit();
+
+		$attrs = array_merge([
+			'class' => self::getSetting(self::SET_DEFAULT_CLASS) . " " . self::getSetting(self::SET_PROFILE_ICON_CLASS),
+			'src'   => "https://avatar.leagueoflegends.com/{$platform_id}/{$summoner_name}.png",
+			'alt'   => 'Profile Icon',
+		], self::getSetting(self::SET_CUSTOM_IMG_ATTRS, []));
+
+		return Html::el('img', $attrs);
+	}
+
+	/**
 	 *   Returns profile icon from API static-data Summoner object in img HTML TAG.
 	 *
 	 * @param SummonerDto $summoner
