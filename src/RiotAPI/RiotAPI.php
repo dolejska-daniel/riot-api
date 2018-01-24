@@ -19,7 +19,6 @@
 
 namespace RiotAPI;
 
-use function foo\func;
 use RiotAPI\Definitions\CallCacheControl;
 use RiotAPI\Definitions\FileCacheProvider;
 use RiotAPI\Definitions\ICacheProvider;
@@ -110,7 +109,7 @@ class RiotAPI
 	 * Cache constants used to identify cache target.
 	 */
 	const
-		CACHE_KEY_RLC   = 'rate-limit.cache',
+		CACHE_KEY_RLC = 'rate-limit.cache',
 		CACHE_KEY_CCC = 'api-calls.cache';
 
 	/**
@@ -125,24 +124,49 @@ class RiotAPI
 		HEADER_APP_RATELIMIT_COUNT    = 'X-App-Rate-Limit-Count';
 
 	/**
+	 * Pick type constants.
+	 */
+	const
+		PICK_BLIND            = 'BLIND_PICK',
+		PICK_DRAFT            = 'DRAFT_MODE',
+		PICK_RANDOM           = 'ALL_RANDOM',
+		PICK_DRAFT_TOURNAMENT = 'TOURNAMENT_DRAFT';
+
+	/**
+	 * Map constants.
+	 */
+	const
+		MAP_SUMMONERS_RIFT   = 'SUMMONERS_RIFT',
+		MAP_TWISTED_TREELINE = 'TWISTED_TREELINE',
+		MAP_HOWLING_ABYSS    = 'HOWLING_ABYSS';
+
+	/**
+	 * Spectator type constants.
+	 */
+	const
+		SPECTATOR_NONE       = 'NONE',
+		SPECTATOR_LOBBY_ONLY = 'LOBBYONLY',
+		SPECTATOR_ALL        = 'ALL';
+
+	/**
 	 * Constants required for tournament API calls.
 	 */
 	const
 		TOURNAMENT_ALLOWED_PICK_TYPES = [
-			'BLIND_PICK',
-			'DRAFT_MODE',
-			'ALL_RANDOM',
-			'TOURNAMENT_DRAFT',
+			self::PICK_BLIND,
+			self::PICK_DRAFT,
+			self::PICK_RANDOM,
+			self::PICK_DRAFT_TOURNAMENT,
 		],
 		TOURNAMENT_ALLOWED_MAPS = [
-			'SUMMONERS_RIFT',
-			'TWISTED_TREELINE',
-			'HOWLING_ABYSS',
+			self::MAP_SUMMONERS_RIFT,
+			self::MAP_TWISTED_TREELINE,
+			self::MAP_HOWLING_ABYSS,
 		],
 		TOURNAMENT_ALLOWED_SPECTATOR_TYPES = [
-			'NONE',
-			'LOBBYONLY',
-			'ALL',
+			self::SPECTATOR_NONE,
+			self::SPECTATOR_LOBBY_ONLY,
+			self::SPECTATOR_ALL,
 		],
 		TOURNAMENT_ALLOWED_REGIONS = [
 			Region::BRASIL,
