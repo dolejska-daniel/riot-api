@@ -30,6 +30,7 @@ use RiotAPI\Objects\StaticData\StaticItemDto;
 use RiotAPI\Objects\StaticData\StaticMapDetailsDto;
 use RiotAPI\Objects\StaticData\StaticMasteryDto;
 use RiotAPI\Objects\StaticData\StaticRuneDto;
+use RiotAPI\Objects\StaticData\StaticChampionSpellDto;
 use RiotAPI\Objects\StaticData\StaticSummonerSpellDto;
 
 use DataDragonAPI\Exception\RequestException;
@@ -51,7 +52,7 @@ class DataDragonAPI
 		SET_CHAMP_LOADING_CLASS = 'class-champ_loading',
 		SET_CHAMP_ICON_CLASS    = 'class-champ_icon',
 		SET_SPRITE_CLASS        = 'class-champ_icon_sprite',
-		SET_SUMSPELL_ICON_CLASS = 'class-summoner_spell',
+		SET_SPELL_ICON_CLASS    = 'class-spell',
 		SET_ITEM_ICON_CLASS     = 'class-item',
 		SET_UI_ICON_CLASS       = 'class-scoreboard',
 		SET_MINIMAP_CLASS       = 'class-minimap';
@@ -63,19 +64,19 @@ class DataDragonAPI
 	 * @var $settings array
 	 */
 	static protected $settings = array(
-		self::SET_ENDPOINT            => "http://ddragon.leagueoflegends.com/cdn/",
-		self::SET_DEFAULT_CLASS       => "dd-icon",
-		self::SET_PROFILE_ICON_CLASS  => 'icon-profile',
-		self::SET_MASTERY_ICON_CLASS  => 'icon-mastery',
-		self::SET_RUNE_ICON_CLASS     => 'icon-rune',
-		self::SET_CHAMP_SPLASH_CLASS  => 'champ-splash',
-		self::SET_CHAMP_LOADING_CLASS => 'champ-loading',
-		self::SET_CHAMP_ICON_CLASS    => 'icon-champ',
-		self::SET_SPRITE_CLASS        => 'sprite',
-		self::SET_SUMSPELL_ICON_CLASS => 'icon-sumspell',
-		self::SET_ITEM_ICON_CLASS     => 'icon-item',
-		self::SET_UI_ICON_CLASS       => 'icon-ui',
-		self::SET_MINIMAP_CLASS       => 'minimap',
+		self::SET_ENDPOINT            => 'http://ddragon.leagueoflegends.com/cdn/',
+		self::SET_DEFAULT_CLASS       => 'dd-icon',
+		self::SET_PROFILE_ICON_CLASS  => 'dd-icon-profile',
+		self::SET_MASTERY_ICON_CLASS  => 'dd-icon-mastery',
+		self::SET_RUNE_ICON_CLASS     => 'dd-icon-rune',
+		self::SET_CHAMP_SPLASH_CLASS  => 'dd-splash',
+		self::SET_CHAMP_LOADING_CLASS => 'dd-loading',
+		self::SET_CHAMP_ICON_CLASS    => 'dd-icon-champ',
+		self::SET_SPRITE_CLASS        => 'dd-sprite',
+		self::SET_SPELL_ICON_CLASS    => 'dd-icon-spell',
+		self::SET_ITEM_ICON_CLASS     => 'dd-icon-item',
+		self::SET_UI_ICON_CLASS       => 'dd-icon-ui',
+		self::SET_MINIMAP_CLASS       => 'dd-minimap',
 	);
 
 	static protected $initialized = false;
@@ -160,6 +161,10 @@ class DataDragonAPI
 	 *
 	 * @param RiotAPI $api
 	 * @param array   $customSettings
+	 *
+	 * @throws \RiotAPI\Exceptions\RequestException
+	 * @throws \RiotAPI\Exceptions\ServerException
+	 * @throws \RiotAPI\Exceptions\ServerLimitException
 	 */
 	public static function initByApi( RiotAPI $api, array $customSettings = [] )
 	{
@@ -175,7 +180,7 @@ class DataDragonAPI
 	 *   Creates new instance from Realm object.
 	 *
 	 * @param StaticRealmDto $realm
-	 * @param array     $customSettings
+	 * @param array          $customSettings
 	 */
 	public static function initByRealmObject( StaticRealmDto $realm, array $customSettings = [] )
 	{
@@ -240,6 +245,11 @@ class DataDragonAPI
 		return isset(self::$settings[$name]) && !empty(self::$settings[$name]);
 	}
 
+	/**
+	 *   Checks whether the library has been initialized.
+	 *
+	 * @throws SettingsException
+	 */
 	public static function checkInit()
 	{
 		if (!self::$initialized)
@@ -247,31 +257,34 @@ class DataDragonAPI
 	}
 
 
-	/****************************************d*d*
-	 *
-	 *  Available methods
-	 *
-	 * @link https://developer.riotgames.com/docs/static-data
-	 *
-	 ********************************************/
+	/**
+	 * ==================================================================d=d=
+	 *     Available methods
+	 *     @link https://developer.riotgames.com/docs/static-data
+	 * ==================================================================d=d=
+	 **/
 
 	/**
 	 *   Returns profile icon in img HTML TAG.
 	 *
-	 * @param int $profile_icon_id
+	 * @param int   $profile_icon_id
+	 * @param array $attributes
 	 *
 	 * @return Html
 	 * @throws SettingsException
 	 */
-	public static function getProfileIcon( int $profile_icon_id ): Html
+	public static function getProfileIcon( int $profile_icon_id, array $attributes = [] ): Html
 	{
 		self::checkInit();
 
-		$attrs = array_merge([
-			'class' => self::getSetting(self::SET_DEFAULT_CLASS) . " " . self::getSetting(self::SET_PROFILE_ICON_CLASS),
-			'src'   => self::getSetting(self::SET_ENDPOINT) . self::getSetting(self::SET_VERSION) . "/img/profileicon/{$profile_icon_id}.png",
-			'alt'   => 'Profile Icon',
-		], self::getSetting(self::SET_CUSTOM_IMG_ATTRS, []));
+		$attrs = array_merge([ 'alt' => 'Profile Icon' ], self::getSetting(self::SET_CUSTOM_IMG_ATTRS, []), $attributes);
+		$attrs['class'] = implode(' ', [
+			self::getSetting(self::SET_DEFAULT_CLASS),
+			self::getSetting(self::SET_PROFILE_ICON_CLASS),
+			@self::getSetting(self::SET_CUSTOM_IMG_ATTRS, [])['class'],
+			@$attributes['class'],
+		]);
+		$attrs['src'] = self::getSetting(self::SET_ENDPOINT) . self::getSetting(self::SET_VERSION) . "/img/profileicon/{$profile_icon_id}.png";
 
 		return Html::el('img', $attrs);
 	}
@@ -281,19 +294,20 @@ class DataDragonAPI
 	 *
 	 * @param string $summoner_name
 	 * @param string $platform_id
+	 * @param array  $attributes
 	 *
 	 * @return Html
-	 * @throws SettingsException
 	 */
-	public static function getProfileIconByName( string $summoner_name, string $platform_id ): Html
+	public static function getProfileIconByName( string $summoner_name, string $platform_id, array $attributes = [] ): Html
 	{
-		self::checkInit();
-
-		$attrs = array_merge([
-			'class' => self::getSetting(self::SET_DEFAULT_CLASS) . " " . self::getSetting(self::SET_PROFILE_ICON_CLASS),
-			'src'   => "https://avatar.leagueoflegends.com/{$platform_id}/{$summoner_name}.png",
-			'alt'   => 'Profile Icon',
-		], self::getSetting(self::SET_CUSTOM_IMG_ATTRS, []));
+		$attrs = array_merge([ 'alt' => 'Profile Icon' ], self::getSetting(self::SET_CUSTOM_IMG_ATTRS, []), $attributes);
+		$attrs['class'] = implode(' ', [
+			self::getSetting(self::SET_DEFAULT_CLASS),
+			self::getSetting(self::SET_PROFILE_ICON_CLASS),
+			@self::getSetting(self::SET_CUSTOM_IMG_ATTRS, [])['class'],
+			@$attributes['class'],
+		]);
+		$attrs['src'] = "https://avatar.leagueoflegends.com/{$platform_id}/{$summoner_name}.png";
 
 		return Html::el('img', $attrs);
 	}
@@ -302,13 +316,14 @@ class DataDragonAPI
 	 *   Returns profile icon from API static-data Summoner object in img HTML TAG.
 	 *
 	 * @param SummonerDto $summoner
+	 * @param array       $attributes
 	 *
 	 * @return Html
 	 * @throws SettingsException
 	 */
-	public static function getProfileIconO( SummonerDto $summoner ): Html
+	public static function getProfileIconO( SummonerDto $summoner, array $attributes = [] ): Html
 	{
-		return self::getProfileIcon($summoner->profileIconId);
+		return self::getProfileIcon($summoner->profileIconId, $attributes);
 	}
 
 	/**
@@ -316,16 +331,20 @@ class DataDragonAPI
 	 *
 	 * @param string $champion_name
 	 * @param int    $skin
+	 * @param array  $attributes
 	 *
 	 * @return Html
 	 */
-	public static function getChampionSplash( string $champion_name, int $skin = 0 ): Html
+	public static function getChampionSplash( string $champion_name, int $skin = 0, array $attributes = [] ): Html
 	{
-		$attrs = array_merge([
-			'class' => self::getSetting(self::SET_DEFAULT_CLASS) . " " . self::getSetting(self::SET_CHAMP_SPLASH_CLASS),
-			'src'   => self::getSetting(self::SET_ENDPOINT) . "img/champion/splash/{$champion_name}_{$skin}.jpg",
-			'alt'   => $champion_name,
-		], self::getSetting(self::SET_CUSTOM_IMG_ATTRS, []));
+		$attrs = array_merge([ 'alt' => $champion_name ], self::getSetting(self::SET_CUSTOM_IMG_ATTRS, []), $attributes);
+		$attrs['class'] = implode(' ', [
+			self::getSetting(self::SET_DEFAULT_CLASS),
+			self::getSetting(self::SET_CHAMP_SPLASH_CLASS),
+			@self::getSetting(self::SET_CUSTOM_IMG_ATTRS, [])['class'],
+			@$attributes['class'],
+		]);
+		$attrs['src'] = self::getSetting(self::SET_ENDPOINT) . "img/champion/splash/{$champion_name}_{$skin}.jpg";
 
 		return Html::el('img', $attrs);
 	}
@@ -334,14 +353,14 @@ class DataDragonAPI
 	 *   Returns champion splash from API static-data Champion object in img HTML TAG.
 	 *
 	 * @param StaticChampionDto $champion
-	 * @param int          $skin
+	 * @param int               $skin
+	 * @param array             $attributes
 	 *
 	 * @return Html
-	 * @throws SettingsException
 	 */
-	public static function getChampionSplashO( StaticChampionDto $champion, int $skin = 0 ): Html
+	public static function getChampionSplashO( StaticChampionDto $champion, int $skin = 0, array $attributes = [] ): Html
 	{
-		return self::getChampionSplash($champion->key, $skin);
+		return self::getChampionSplash($champion->key, $skin, $attributes);
 	}
 
 	/**
@@ -349,16 +368,20 @@ class DataDragonAPI
 	 *
 	 * @param string $champion_name
 	 * @param int    $skin
+	 * @param array  $attributes
 	 *
 	 * @return Html
 	 */
-	public static function getChampionLoading( string $champion_name, int $skin = 0 ): Html
+	public static function getChampionLoading( string $champion_name, int $skin = 0, array $attributes = [] ): Html
 	{
-		$attrs = array_merge([
-			'class' => self::getSetting(self::SET_DEFAULT_CLASS) . " " . self::getSetting(self::SET_CHAMP_LOADING_CLASS),
-			'src'   => self::getSetting(self::SET_ENDPOINT) . "img/champion/loading/{$champion_name}_{$skin}.jpg",
-			'alt'   => $champion_name,
-		], self::getSetting(self::SET_CUSTOM_IMG_ATTRS, []));
+		$attrs = array_merge([ 'alt' => $champion_name ], self::getSetting(self::SET_CUSTOM_IMG_ATTRS, []), $attributes);
+		$attrs['class'] = implode(' ', [
+			self::getSetting(self::SET_DEFAULT_CLASS),
+			self::getSetting(self::SET_CHAMP_LOADING_CLASS),
+			@self::getSetting(self::SET_CUSTOM_IMG_ATTRS, [])['class'],
+			@$attributes['class'],
+		]);
+		$attrs['src'] = self::getSetting(self::SET_ENDPOINT) . "img/champion/loading/{$champion_name}_{$skin}.jpg";
 
 		return Html::el('img', $attrs);
 	}
@@ -368,33 +391,37 @@ class DataDragonAPI
 	 * img HTML TAG.
 	 *
 	 * @param StaticChampionDto $champion
-	 * @param int          $skin
+	 * @param int               $skin
+	 * @param array             $attributes
 	 *
 	 * @return Html
-	 * @throws SettingsException
 	 */
-	public static function getChampionLoadingO( StaticChampionDto $champion, int $skin = 0 ): Html
+	public static function getChampionLoadingO( StaticChampionDto $champion, int $skin = 0, array $attributes = [] ): Html
 	{
-		return self::getChampionLoading($champion->key, $skin);
+		return self::getChampionLoading($champion->key, $skin, $attributes);
 	}
 
 	/**
 	 *   Returns champion icon in img HTML TAG.
 	 *
 	 * @param string $champion_name
+	 * @param array  $attributes
 	 *
 	 * @return Html
 	 * @throws SettingsException
 	 */
-	public static function getChampionIcon( string $champion_name ): Html
+	public static function getChampionIcon( string $champion_name, array $attributes = [] ): Html
 	{
 		self::checkInit();
 
-		$attrs = array_merge([
-			'class' => self::getSetting(self::SET_DEFAULT_CLASS) . " " . self::getSetting(self::SET_CHAMP_ICON_CLASS),
-			'src'   => self::getSetting(self::SET_ENDPOINT) . self::getSetting(self::SET_VERSION) . "/img/champion/{$champion_name}.png",
-			'alt'   => $champion_name,
-		], self::getSetting(self::SET_CUSTOM_IMG_ATTRS, []));
+		$attrs = array_merge([ 'alt' => $champion_name ], self::getSetting(self::SET_CUSTOM_IMG_ATTRS, []), $attributes);
+		$attrs['class'] = implode(' ', [
+			self::getSetting(self::SET_DEFAULT_CLASS),
+			self::getSetting(self::SET_CHAMP_ICON_CLASS),
+			@self::getSetting(self::SET_CUSTOM_IMG_ATTRS, [])['class'],
+			@$attributes['class'],
+		]);
+		$attrs['src'] = self::getSetting(self::SET_ENDPOINT) . self::getSetting(self::SET_VERSION) . "/img/champion/{$champion_name}.png";
 
 		return Html::el('img', $attrs);
 	}
@@ -407,9 +434,9 @@ class DataDragonAPI
 	 * @return Html
 	 * @throws SettingsException
 	 */
-	public static function getChampionIconO( StaticChampionDto $champion ): Html
+	public static function getChampionIconO( StaticChampionDto $champion, array $attributes = [] ): Html
 	{
-		return self::getChampionIcon($champion->key);
+		return self::getChampionIcon($champion->key, $attributes);
 	}
 
 	/**
@@ -420,20 +447,24 @@ class DataDragonAPI
 	 * @param int    $y
 	 * @param int    $w
 	 * @param int    $h
+	 * @param array  $attributes
 	 *
 	 * @return Html
 	 * @throws SettingsException
 	 */
-	public static function getFromSprite( string $source, int $x, int $y, int $w = 48, int $h = 48 ): Html
+	public static function getFromSprite( string $source, int $x, int $y, int $w = 48, int $h = 48, array $attributes = [] ): Html
 	{
 		self::checkInit();
 
-		$attrs = array_merge([
-			'class' => self::getSetting(self::SET_DEFAULT_CLASS) . " " . self::getSetting(self::SET_SPRITE_CLASS),
-			'style' => 'background: transparent url(' . self::getSetting(self::SET_ENDPOINT) . self::getSetting(self::SET_VERSION) . "/img/sprite/{$source}" . ") -{$x}px -{$y}px; width: {$w}px; height: {$h}px;",
-			'src'   => 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7',
-			'alt'   => 'Sprite Icon',
-		], self::getSetting(self::SET_CUSTOM_IMG_ATTRS, []));
+		$attrs = array_merge([ 'alt' => 'Sprite Icon' ], self::getSetting(self::SET_CUSTOM_IMG_ATTRS, []), $attributes);
+		$attrs['class'] = implode(' ', [
+			self::getSetting(self::SET_DEFAULT_CLASS),
+			self::getSetting(self::SET_SPRITE_CLASS),
+			@self::getSetting(self::SET_CUSTOM_IMG_ATTRS, [])['class'],
+			@$attributes['class'],
+		]);
+		$attrs['style'] = 'background: transparent url(' . self::getSetting(self::SET_ENDPOINT) . self::getSetting(self::SET_VERSION) . "/img/sprite/{$source}" . ") -{$x}px -{$y}px; width: {$w}px; height: {$h}px;";
+		$attrs['src'] = 'data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7';
 		
 		return Html::el('img', $attrs);
 	}
@@ -442,32 +473,37 @@ class DataDragonAPI
 	 *   Returns icon from API static-data ImageDto object in img HTML TAG.
 	 *
 	 * @param StaticImageDto $image
+	 * @param array          $attributes
 	 *
 	 * @return Html
 	 * @throws SettingsException
 	 */
-	public static function getFromSpriteO( StaticImageDto $image ): Html
+	public static function getFromSpriteO( StaticImageDto $image, array $attributes = [] ): Html
 	{
-		return self::getFromSprite($image->sprite, $image->x, $image->y, $image->w, $image->h);
+		return self::getFromSprite($image->sprite, $image->x, $image->y, $image->w, $image->h, $attributes);
 	}
 
 	/**
 	 *   Returns summoner spell icon in img HTML TAG.
 	 *
 	 * @param string $spell_name
+	 * @param array  $attributes
 	 *
 	 * @return Html
 	 * @throws SettingsException
 	 */
-	public static function getSummonerSpellIcon( string $spell_name ): Html
+	public static function getSpellIcon( string $spell_name, array $attributes = [] ): Html
 	{
 		self::checkInit();
 
-		$attrs = array_merge([
-			'class' => self::getSetting(self::SET_DEFAULT_CLASS) . " " . self::getSetting(self::SET_SUMSPELL_ICON_CLASS),
-			'src'   => self::getSetting(self::SET_ENDPOINT) . self::getSetting(self::SET_VERSION) . "/img/spell/{$spell_name}.png",
-			'alt'   => $spell_name,
-		], self::getSetting(self::SET_CUSTOM_IMG_ATTRS, []));
+		$attrs = array_merge([ 'alt'   => $spell_name ], self::getSetting(self::SET_CUSTOM_IMG_ATTRS, []), $attributes);
+		$attrs['class'] = implode(' ', [
+			self::getSetting(self::SET_DEFAULT_CLASS),
+			self::getSetting(self::SET_SPELL_ICON_CLASS),
+			@self::getSetting(self::SET_CUSTOM_IMG_ATTRS, [])['class'],
+			@$attributes['class'],
+		]);
+		$attrs['src'] = self::getSetting(self::SET_ENDPOINT) . self::getSetting(self::SET_VERSION) . "/img/spell/{$spell_name}.png";
 
 		return Html::el('img', $attrs);
 	}
@@ -477,32 +513,52 @@ class DataDragonAPI
 	 * HTML TAG.
 	 *
 	 * @param StaticSummonerSpellDto $summonerSpell
+	 * @param array                  $attributes
 	 *
 	 * @return Html
 	 * @throws SettingsException
 	 */
-	public static function getSummonerSpellIconO( StaticSummonerSpellDto $summonerSpell ): Html
+	public static function getSummonerSpellIconO( StaticSummonerSpellDto $summonerSpell, array $attributes = [] ): Html
 	{
-		return self::getSummonerSpellIcon($summonerSpell->key);
+		return self::getSpellIcon($summonerSpell->key, $attributes);
+	}
+
+	/**
+	 *   Returns spell icon from API static-data ChampionSpell object in img
+	 * HTML TAG.
+	 *
+	 * @param StaticChampionSpellDto $championSpell
+	 * @param array                  $attributes
+	 *
+	 * @return Html
+	 * @throws SettingsException
+	 */
+	public static function getChampionSpellIconO(StaticChampionSpellDto $championSpell, array $attributes = [] ): Html
+	{
+		return self::getSpellIcon($championSpell->key, $attributes);
 	}
 
 	/**
 	 *   Returns item icon in img HTML TAG.
 	 *
-	 * @param int $item_id
+	 * @param int    $item_id
+	 * @param array  $attributes
 	 *
 	 * @return Html
 	 * @throws SettingsException
 	 */
-	public static function getItemIcon( int $item_id ): Html
+	public static function getItemIcon( int $item_id, array $attributes = [] ): Html
 	{
 		self::checkInit();
 
-		$attrs = array_merge([
-			'class' => self::getSetting(self::SET_DEFAULT_CLASS) . " " . self::getSetting(self::SET_ITEM_ICON_CLASS),
-			'src'   => self::getSetting(self::SET_ENDPOINT) . self::getSetting(self::SET_VERSION) . "/img/item/{$item_id}.png",
-			'alt'   => $item_id,
-		], self::getSetting(self::SET_CUSTOM_IMG_ATTRS, []));
+		$attrs = array_merge([ 'alt'   => $item_id ], self::getSetting(self::SET_CUSTOM_IMG_ATTRS, []), $attributes);
+		$attrs['class'] = implode(' ', [
+			self::getSetting(self::SET_DEFAULT_CLASS),
+			self::getSetting(self::SET_ITEM_ICON_CLASS),
+			@self::getSetting(self::SET_CUSTOM_IMG_ATTRS, [])['class'],
+			@$attributes['class'],
+		]);
+		$attrs['src'] = self::getSetting(self::SET_ENDPOINT) . self::getSetting(self::SET_VERSION) . "/img/item/{$item_id}.png";
 
 		return Html::el('img', $attrs);
 	}
@@ -511,32 +567,37 @@ class DataDragonAPI
 	 *   Returns item icon from API static-data Item object in img HTML TAG.
 	 *
 	 * @param StaticItemDto $item
+	 * @param array         $attributes
 	 *
 	 * @return Html
 	 * @throws SettingsException
 	 */
-	public static function getItemIconO( StaticItemDto $item ): Html
+	public static function getItemIconO( StaticItemDto $item, array $attributes = [] ): Html
 	{
-		return self::getItemIcon($item->id);
+		return self::getItemIcon($item->id, $attributes);
 	}
 
 	/**
 	 *   Returns mastery icon in img HTML TAG.
 	 *
-	 * @param int $mastery_id
+	 * @param int    $mastery_id
+	 * @param array  $attributes
 	 *
 	 * @return Html
 	 * @throws SettingsException
 	 */
-	public static function getMasteryIcon( int $mastery_id ): Html
+	public static function getMasteryIcon( int $mastery_id, array $attributes = [] ): Html
 	{
 		self::checkInit();
 
-		$attrs = array_merge([
-			'class' => self::getSetting(self::SET_DEFAULT_CLASS) . " " . self::getSetting(self::SET_MASTERY_ICON_CLASS),
-			'src'   => self::getSetting(self::SET_ENDPOINT) . self::getSetting(self::SET_VERSION) . "/img/mastery/{$mastery_id}.png",
-			'alt'   => $mastery_id,
-		], self::getSetting(self::SET_CUSTOM_IMG_ATTRS, []));
+		$attrs = array_merge([ 'alt'   => $mastery_id ], self::getSetting(self::SET_CUSTOM_IMG_ATTRS, []), $attributes);
+		$attrs['class'] = implode(' ', [
+			self::getSetting(self::SET_DEFAULT_CLASS),
+			self::getSetting(self::SET_MASTERY_ICON_CLASS),
+			@self::getSetting(self::SET_CUSTOM_IMG_ATTRS, [])['class'],
+			@$attributes['class'],
+		]);
+		$attrs['src'] = self::getSetting(self::SET_ENDPOINT) . self::getSetting(self::SET_VERSION) . "/img/mastery/{$mastery_id}.png";
 
 		return Html::el('img', $attrs);
 	}
@@ -545,32 +606,37 @@ class DataDragonAPI
 	 *   Returns mastery icon from API static-data Mastery object in img HTML TAG.
 	 *
 	 * @param StaticMasteryDto $mastery
+	 * @param array            $attributes
 	 *
 	 * @return Html
 	 * @throws SettingsException
 	 */
-	public static function getMasteryIconO( StaticMasteryDto $mastery ): Html
+	public static function getMasteryIconO( StaticMasteryDto $mastery, array $attributes = [] ): Html
 	{
-		return self::getMasteryIcon($mastery->id);
+		return self::getMasteryIcon($mastery->id, $attributes);
 	}
 
 	/**
 	 *   Returns rune icon in img HTML TAG.
 	 *
-	 * @param int $rune_id
+	 * @param int    $rune_id
+	 * @param array  $attributes
 	 *
 	 * @return Html
 	 * @throws SettingsException
 	 */
-	public static function getRuneIcon( int $rune_id ): Html
+	public static function getRuneIcon( int $rune_id, array $attributes = [] ): Html
 	{
 		self::checkInit();
 
-		$attrs = array_merge([
-			'class' => self::getSetting(self::SET_DEFAULT_CLASS) . " " . self::getSetting(self::SET_RUNE_ICON_CLASS),
-			'src'   => self::getSetting(self::SET_ENDPOINT) . self::getSetting(self::SET_VERSION) . "/img/rune/{$rune_id}.png",
-			'alt'   => $rune_id,
-		], self::getSetting(self::SET_CUSTOM_IMG_ATTRS, []));
+		$attrs = array_merge([ 'alt'   => $rune_id ], self::getSetting(self::SET_CUSTOM_IMG_ATTRS, []), $attributes);
+		$attrs['class'] = implode(' ', [
+			self::getSetting(self::SET_DEFAULT_CLASS),
+			self::getSetting(self::SET_RUNE_ICON_CLASS),
+			@self::getSetting(self::SET_CUSTOM_IMG_ATTRS, [])['class'],
+			@$attributes['class'],
+		]);
+		$attrs['src'] = self::getSetting(self::SET_ENDPOINT) . self::getSetting(self::SET_VERSION) . "/img/rune/{$rune_id}.png";
 
 		return Html::el('img', $attrs);
 	}
@@ -579,32 +645,37 @@ class DataDragonAPI
 	 *   Returns rune icon from API static-data Rune object in img HTML TAG.
 	 *
 	 * @param StaticRuneDto $rune
+	 * @param array         $attributes
 	 *
 	 * @return Html
 	 * @throws SettingsException
 	 */
-	public static function getRuneIconO( StaticRuneDto $rune ): Html
+	public static function getRuneIconO( StaticRuneDto $rune, array $attributes = [] ): Html
 	{
-		return self::getRuneIcon($rune->id);
+		return self::getRuneIcon($rune->id, $attributes);
 	}
 
 	/**
 	 *   Returns minimap in img HTML TAG.
 	 *
-	 * @param int $map_id
+	 * @param int    $map_id
+	 * @param array  $attributes
 	 *
 	 * @return Html
 	 * @throws SettingsException
 	 */
-	public static function getMinimap( int $map_id ): Html
+	public static function getMinimap( int $map_id, array $attributes = [] ): Html
 	{
 		self::checkInit();
 
-		$attrs = array_merge([
-			'class' => self::getSetting(self::SET_DEFAULT_CLASS) . " " . self::getSetting(self::SET_MINIMAP_CLASS),
-			'src'   => self::getSetting(self::SET_ENDPOINT) . self::getSetting(self::SET_VERSION) . "/img/map/map{$map_id}.png",
-			'alt'   => $map_id,
-		], self::getSetting(self::SET_CUSTOM_IMG_ATTRS, []));
+		$attrs = array_merge([ 'alt' => $map_id ], self::getSetting(self::SET_CUSTOM_IMG_ATTRS, []), $attributes);
+		$attrs['class'] = implode(' ', [
+			self::getSetting(self::SET_DEFAULT_CLASS),
+			self::getSetting(self::SET_MINIMAP_CLASS),
+			@self::getSetting(self::SET_CUSTOM_IMG_ATTRS, [])['class'],
+			@$attributes['class'],
+		]);
+		$attrs['src'] = self::getSetting(self::SET_ENDPOINT) . self::getSetting(self::SET_VERSION) . "/img/map/map{$map_id}.png";
 
 		return Html::el('img', $attrs);
 	}
@@ -613,32 +684,37 @@ class DataDragonAPI
 	 *   Returns minimap from API static-data MapDetails object in img HTML TAG.
 	 *
 	 * @param StaticMapDetailsDto $mapDetails
-	 *
+	 * @param array               $attributes
+	 * 
 	 * @return Html
 	 * @throws SettingsException
 	 */
-	public static function getMinimapO( StaticMapDetailsDto $mapDetails ): Html
+	public static function getMinimapO( StaticMapDetailsDto $mapDetails, array $attributes = [] ): Html
 	{
-		return self::getMinimap($mapDetails->mapId);
+		return self::getMinimap($mapDetails->mapId, $attributes);
 	}
 
 	/**
 	 *   Returns UI icon in img HTML TAG.
 	 *
 	 * @param string $name
+	 * @param array  $attributes
 	 *
 	 * @return Html
 	 * @throws SettingsException
 	 */
-	public static function getScoreboardIcon( string $name ): Html
+	public static function getScoreboardIcon( string $name, array $attributes = [] ): Html
 	{
 		self::checkInit();
 
-		$attrs = array_merge([
-			'class' => self::getSetting(self::SET_DEFAULT_CLASS) . " " . self::getSetting(self::SET_UI_ICON_CLASS),
-			'src'   => self::getSetting(self::SET_ENDPOINT) . self::getSetting(self::SET_VERSION) . "/img/ui/{$name}.png",
-			'alt'   => $name,
-		], self::getSetting(self::SET_CUSTOM_IMG_ATTRS, []));
+		$attrs = array_merge([ 'alt' => $name ], self::getSetting(self::SET_CUSTOM_IMG_ATTRS, []), $attributes);
+		$attrs['class'] = implode(' ', [
+			self::getSetting(self::SET_DEFAULT_CLASS),
+			self::getSetting(self::SET_UI_ICON_CLASS),
+			@self::getSetting(self::SET_CUSTOM_IMG_ATTRS, [])['class'],
+			@$attributes['class'],
+		]);
+		$attrs['src'] = self::getSetting(self::SET_ENDPOINT) . self::getSetting(self::SET_VERSION) . "/img/ui/{$name}.png";
 
 		return Html::el('img', $attrs);
 	}
