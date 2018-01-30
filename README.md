@@ -1,6 +1,6 @@
 # RiotAPI PHP7 wrapper
 
-> Version v1.0.0
+> Version v2.0.0-rc.1
 
 [![Build Status](https://travis-ci.org/dolejska-daniel/riot-api.svg?branch=master)](https://travis-ci.org/dolejska-daniel/riot-api)
 [![Test Coverage](https://codeclimate.com/github/dolejska-daniel/riot-api/badges/coverage.svg)](https://codeclimate.com/github/dolejska-daniel/riot-api/coverage)
@@ -232,9 +232,46 @@ For more information about CLI support, please see [the wiki pages](https://gith
 
 # DataDragon API
 
-How easy is it to work with static images? For instance, to get splash image of Orianna?
+How easy is it to work with static images? For instance, to get loading screen art of Orianna?
 
-`echo DataDragonAPI::getChampionSplashO($api->getStaticChampion(61));`, that easy.
+**Source**:
+```php
+echo DataDragonAPI::getChampionLoading('Orianna');
+echo DataDragonAPI::getChampionLoading('Orianna', 7);
+```
 
-Want to know more? See [the wiki pages](https://github.com/dolejska-daniel/riot-api/wiki/DataDragonAPI:-How-to-begin)!
+**Output**:
+```html
+<img src="http://ddragon.leagueoflegends.com/cdn/img/champion/loading/Orianna_0.jpg" class="dd-icon dd-loading" alt="Orianna">
+<img src="http://ddragon.leagueoflegends.com/cdn/img/champion/loading/Orianna_7.jpg" class="dd-icon dd-loading" alt="Orianna">
+```
 
+**Render**:
+
+![Orianna](http://ddragon.leagueoflegends.com/cdn/img/champion/loading/Orianna_0.jpg)
+![Dark Star Orianna](http://ddragon.leagueoflegends.com/cdn/img/champion/loading/Orianna_7.jpg)
+
+...a bit of nostalgia?
+
+**Source**:
+```php
+DataDragonAPI::iniByVersion('0.151.2');
+echo DataDragonAPI::getItemIcon(3132);
+echo DataDragonAPI::getItemIcon(3126);
+echo DataDragonAPI::getItemIcon(3138);
+```
+
+**Output**:
+```html
+<img src="http://ddragon.leagueoflegends.com/cdn/0.151.2/img/item/3132.png" class="dd-icon dd-item" alt="3132">
+<img src="http://ddragon.leagueoflegends.com/cdn/0.151.2/img/item/3126.png" class="dd-icon dd-item" alt="3126">
+<img src="http://ddragon.leagueoflegends.com/cdn/0.151.2/img/item/3138.png" class="dd-icon dd-item" alt="3138">
+```
+
+**Render**:
+
+![Heart of Gold](http://ddragon.leagueoflegends.com/cdn/0.151.2/img/item/3132.png)
+![Madred's Bloodrazor](http://ddragon.leagueoflegends.com/cdn/0.151.2/img/item/3126.png)
+![Leviathan](http://ddragon.leagueoflegends.com/cdn/0.151.2/img/item/3138.png)
+
+For more, please see [the wiki pages](https://github.com/dolejska-daniel/riot-api/wiki/DataDragonAPI:-How-to-begin).
