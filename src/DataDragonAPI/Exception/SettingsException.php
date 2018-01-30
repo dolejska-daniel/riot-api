@@ -25,4 +25,4 @@ namespace DataDragonAPI\Exception;
  *
  * @package DataDragonAPI\Exception
  */
-class SettingsException extends \Exception {}
+class SettingsException extends GeneralException {}

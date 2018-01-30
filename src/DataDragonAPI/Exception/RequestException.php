@@ -25,4 +25,4 @@ namespace DataDragonAPI\Exception;
  *
  * @package DataDragonAPI\Exception
  */
-class RequestException extends \Exception {}
+class RequestException extends GeneralException {}

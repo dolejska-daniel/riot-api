@@ -25,4 +25,4 @@ namespace RiotAPI\Exceptions;
  *
  * @package RiotAPI\Exception
  */
-class SettingsException extends \Exception {}
+class SettingsException extends GeneralException {}

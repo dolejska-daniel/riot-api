@@ -25,4 +25,4 @@ namespace DataDragonAPI\Exception;
  *
  * @package DataDragonAPI\Exception
  */
-class ArgumentException extends \Exception {}
+class ArgumentException extends GeneralException {}
