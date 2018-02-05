@@ -26,7 +26,7 @@ namespace RiotAPI\Objects;
  * Used in:
  *   league (v3)
  *     @link https://developer.riotgames.com/api-methods/#league-v3/GET_getChallengerLeague
- *     @link https://developer.riotgames.com/api-methods/#league-v3/GET_getAllLeaguesForSummoner
+ *     @link https://developer.riotgames.com/api-methods/#league-v3/GET_getLeagueById
  *     @link https://developer.riotgames.com/api-methods/#league-v3/GET_getMasterLeague
  *     @link https://developer.riotgames.com/api-methods/#league-v3/GET_getAllLeaguePositionsForSummoner
  *

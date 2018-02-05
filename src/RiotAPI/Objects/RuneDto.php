@@ -25,10 +25,10 @@ namespace RiotAPI\Objects;
  *
  * Used in:
  *   match (v3)
- *     @link https://developer.riotgames.com/api-methods/#match-v3/GET_getMatch
+ *     @link https://developer.riotgames.com/api-methods/#match-v3/GET_getMatchIdsByTournamentCode
  *     @link https://developer.riotgames.com/api-methods/#match-v3/GET_getMatchByTournamentCode
  *
- * @linkable $runeId (getStaticRune)
+ * @linkable $runeId (getStaticRunes)
  *
  * @package RiotAPI\Objects
  */

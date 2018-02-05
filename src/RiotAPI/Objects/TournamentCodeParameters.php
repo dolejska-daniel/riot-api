@@ -61,7 +61,7 @@ class TournamentCodeParameters extends ApiObject
 	 * level, but rather the aggregate of teamOne and teamTwo. We may add the ability to 
 	 * enforce at the team level in the future.
 	 *
-	 * @var SummonerIdParams $allowedSummonerIds
+	 * @var int[] $allowedSummonerIds
 	 */
 	public $allowedSummonerIds;
 

@@ -2187,80 +2187,6 @@ class RiotAPI
 
 	/**
 	 * ==================================================================d=d=
-	 *     Masteries Endpoint Methods
-	 *     @link https://developer.riotgames.com/api-methods/#masteries-v3
-	 *     @deprecated
-	 * ==================================================================d=d=
-	 **/
-	const RESOURCE_MASTERIES = '1243:masteries';
-	/** @deprecated  */
-	const RESOURCE_MASTERIES_V3 = 'v3';
-
-	/**
-	 *   Get mastery pages for a given summoner ID.
-	 *
-	 * @param int $summoner_id
-	 *
-	 * @return Objects\MasteryPagesDto
-	 *
-	 * @throws RequestException
-	 * @throws ServerException
-	 * @throws ServerLimitException
-	 *
-	 * @link https://developer.riotgames.com/api-methods/#masteries-v3/GET_getMasteryPagesBySummonerId
-	 * @deprecated
-	 */
-	public function getMasteriesBySummoner( int $summoner_id ): Objects\MasteryPagesDto
-	{
-		trigger_error("This endpoint has been deprecated. And will be removed in later releases.", E_USER_DEPRECATED);
-
-		$this->setEndpoint("/lol/platform/" . self::RESOURCE_MASTERIES_V3 . "/masteries/by-summoner/{$summoner_id}")
-			->setResource(self::RESOURCE_MASTERIES, "/masteries/by-summoner/%i")
-			->makeCall();
-
-		return new Objects\MasteryPagesDto($this->getResult(), $this);
-	}
-
-
-	/**
-	 * ==================================================================d=d=
-	 *     Runes Endpoint Methods
-	 *     @link https://developer.riotgames.com/api-methods/#runes-v3
-	 *     @deprecated
-	 * ==================================================================d=d=
-	 **/
-	const RESOURCE_RUNES = '1244:runes';
-	/** @deprecated  */
-	const RESOURCE_RUNES_V3 = 'v3';
-
-	/**
-	 *   Get rune pages for a given summoner ID.
-	 *
-	 * @param int $summoner_id
-	 *
-	 * @return Objects\RunePagesDto
-	 *
-	 * @throws RequestException
-	 * @throws ServerException
-	 * @throws ServerLimitException
-	 *
-	 * @link https://developer.riotgames.com/api-methods/#runes-v3/GET_getRunePagesBySummonerId
-	 * @deprecated
-	 */
-	public function getRunesBySummoner( int $summoner_id ): Objects\RunePagesDto
-	{
-		trigger_error("This endpoint has been deprecated. And will be removed in later releases.", E_USER_DEPRECATED);
-
-		$this->setEndpoint("/lol/platform/" . self::RESOURCE_RUNES_V3 . "/runes/by-summoner/{$summoner_id}")
-			->setResource(self::RESOURCE_RUNES, "/runes/by-summoner/%i")
-			->makeCall();
-
-		return new Objects\RunePagesDto($this->getResult(), $this);
-	}
-
-
-	/**
-	 * ==================================================================d=d=
 	 *     Tournament Endpoint Methods
 	 *     @link https://developer.riotgames.com/api-methods/#tournament-v3
 	 * ==================================================================d=d=
@@ -2295,10 +2221,10 @@ class RiotAPI
 		if ($parameters->teamSize >= 6)
 			throw new RequestParameterException('Team size (teamSize) must be less than or equal to 5.');
 
-		if (empty($parameters->allowedSummonerIds->participants))
+		if (empty($parameters->allowedSummonerIds))
 			throw new RequestParameterException('List of participants (allowedSummonerIds->participants) may not be empty. If you wish to allow anyone, fill it with 0, 1, 2, 3, etc.');
 
-		if ($parameters->teamSize * 2 > count($parameters->allowedSummonerIds->participants))
+		if ($parameters->teamSize * 2 > count($parameters->allowedSummonerIds))
 			throw new RequestParameterException('Not enough players to fill teams (more participants required).');
 
 		if (in_array($parameters->pickType, self::TOURNAMENT_ALLOWED_PICK_TYPES, true) == false)
@@ -2525,10 +2451,10 @@ class RiotAPI
 		if ($parameters->teamSize >= 6)
 			throw new RequestParameterException('Team size (teamSize) must be less than or equal to 5.');
 
-		if (empty($parameters->allowedSummonerIds->participants))
+		if (empty($parameters->allowedSummonerIds))
 			throw new RequestParameterException('List of participants (allowedSummonerIds->participants) may not be empty. If you wish to allow anyone, fill it with 0, 1, 2, 3, etc.');
 
-		if ($parameters->teamSize * 2 > count($parameters->allowedSummonerIds->participants))
+		if ($parameters->teamSize * 2 > count($parameters->allowedSummonerIds))
 			throw new RequestParameterException('Not enough players to fill teams (more participants required).');
 
 		if (in_array($parameters->pickType, self::TOURNAMENT_ALLOWED_PICK_TYPES, true) == false)

@@ -21,22 +21,34 @@ namespace RiotAPI\Objects;
 
 
 /**
- *   Class SummonerIdParams
+ *   Class Perks
  *
  * Used in:
- *   tournament-stub (v3)
- *     @link https://developer.riotgames.com/api-methods/#tournament-stub-v3/POST_createTournamentCode
- *   tournament (v3)
- *     @link https://developer.riotgames.com/api-methods/#tournament-v3/POST_createTournamentCode
+ *   spectator (v3)
+ *     @link https://developer.riotgames.com/api-methods/#spectator-v3/GET_getCurrentGameInfoBySummoner
  *
  * @package RiotAPI\Objects
  */
-class SummonerIdParams extends ApiObject
+class Perks extends ApiObject
 {
 	/**
-	 *   the tournament participants.
+	 *   Primary runes path.
 	 *
-	 * @var int[] $participants
+	 * @var int $perkStyle
 	 */
-	public $participants;
+	public $perkStyle;
+
+	/**
+	 *   IDs of the perks/runes assigned.
+	 *
+	 * @var int[] $perkIds
+	 */
+	public $perkIds;
+
+	/**
+	 *   Secondary runes path.
+	 *
+	 * @var int $perkSubStyle
+	 */
+	public $perkSubStyle;
 }

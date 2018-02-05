@@ -54,9 +54,7 @@ class TournamentEndpointTest extends RiotAPITestCase
 		$this->expectExceptionMessage("Team size (teamSize) must be greater than or equal to 1.");
 
 		$params = new Objects\TournamentCodeParameters([
-			'allowedSummonerIds' => new Objects\SummonerIdParams([
-				'participants' => [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ],
-			]),
+			'allowedSummonerIds' => [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ],
 			'mapType'       => 'SUMMONERS_RIFT',
 			'pickType'      => 'ALL_RANDOM',
 			'spectatorType' => 'ALL',
@@ -78,9 +76,7 @@ class TournamentEndpointTest extends RiotAPITestCase
 		$this->expectExceptionMessage("Team size (teamSize) must be less than or equal to 5.");
 
 		$params = new Objects\TournamentCodeParameters([
-			'allowedSummonerIds' => new Objects\SummonerIdParams([
-				'participants' => [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ],
-			]),
+			'allowedSummonerIds' => [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ],
 			'mapType'       => 'SUMMONERS_RIFT',
 			'pickType'      => 'ALL_RANDOM',
 			'spectatorType' => 'ALL',
@@ -102,9 +98,7 @@ class TournamentEndpointTest extends RiotAPITestCase
 		$this->expectExceptionMessage("List of participants (allowedSummonerIds->participants) may not be empty.");
 
 		$params = new Objects\TournamentCodeParameters([
-			'allowedSummonerIds' => new Objects\SummonerIdParams([
-				'participants' => [],
-			]),
+			'allowedSummonerIds' => [],
 			'mapType'       => 'SUMMONERS_RIFT',
 			'pickType'      => 'ALL_RANDOM',
 			'spectatorType' => 'ALL',
@@ -126,9 +120,7 @@ class TournamentEndpointTest extends RiotAPITestCase
 		$this->expectExceptionMessage("Not enough players to fill teams (more participants required).");
 
 		$params = new Objects\TournamentCodeParameters([
-			'allowedSummonerIds' => new Objects\SummonerIdParams([
-				'participants' => [ 0, 1, 2, 3, 4, 5 ],
-			]),
+			'allowedSummonerIds' => [ 0, 1, 2, 3, 4, 5 ],
 			'mapType'       => 'SUMMONERS_RIFT',
 			'pickType'      => 'ALL_RANDOM',
 			'spectatorType' => 'ALL',
@@ -150,9 +142,7 @@ class TournamentEndpointTest extends RiotAPITestCase
 		$this->expectExceptionMessage("Value of pick type (pickType) is invalid.");
 
 		$params = new Objects\TournamentCodeParameters([
-			'allowedSummonerIds' => new Objects\SummonerIdParams([
-				'participants' => [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ],
-			]),
+			'allowedSummonerIds' => [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ],
 			'mapType'       => 'SUMMONERS_RIFT',
 			'pickType'      => 'THIS_IS_INVALID_PICK_TYPE',
 			'spectatorType' => 'ALL',
@@ -174,9 +164,7 @@ class TournamentEndpointTest extends RiotAPITestCase
 		$this->expectExceptionMessage("Value of map type (mapType) is invalid.");
 
 		$params = new Objects\TournamentCodeParameters([
-			'allowedSummonerIds' => new Objects\SummonerIdParams([
-				'participants' => [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ],
-			]),
+			'allowedSummonerIds' => [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ],
 			'mapType'       => 'THIS_IS_INVALID_MAP_TYPE',
 			'pickType'      => 'ALL_RANDOM',
 			'spectatorType' => 'ALL',
@@ -198,9 +186,7 @@ class TournamentEndpointTest extends RiotAPITestCase
 		$this->expectExceptionMessage("Value of spectator type (spectatorType) is invalid.");
 
 		$params = new Objects\TournamentCodeParameters([
-			'allowedSummonerIds' => new Objects\SummonerIdParams([
-				'participants' => [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ],
-			]),
+			'allowedSummonerIds' => [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ],
 			'mapType'       => 'SUMMONERS_RIFT',
 			'pickType'      => 'ALL_RANDOM',
 			'spectatorType' => 'THIS_IS_INVALID_SPECTATOR_TYPE',

@@ -22,36 +22,21 @@ namespace RiotAPI\Objects;
 
 /**
  *   Class MasteryDto
- * This object contains mastery information.
  *
  * Used in:
- *   masteries (v3)
- *     @link https://developer.riotgames.com/api-methods/#masteries-v3/GET_getMasteryPagesBySummonerId
  *   match (v3)
- *     @link https://developer.riotgames.com/api-methods/#match-v3/GET_getMatch
+ *     @link https://developer.riotgames.com/api-methods/#match-v3/GET_getMatchIdsByTournamentCode
  *     @link https://developer.riotgames.com/api-methods/#match-v3/GET_getMatchByTournamentCode
  *
- * @linkable $id (getStaticMastery)
+ * @linkable $id (getStaticMasteries)
  *
  * @package RiotAPI\Objects
  */
 class MasteryDto extends ApiObjectLinkable
 {
-	/**
-	 *   Mastery ID. For static information correlating to masteries, please refer 
-	 * to the LoL Static Data API.
-	 *
-	 * @var int $id
-	 */
-	public $id;
-
-	/**
-	 *   Mastery rank (i.e., the number of points put into this mastery).
-	 *
-	 * @var int $rank
-	 */
-	public $rank;
-
 	/** @var int $masteryId */
 	public $masteryId;
+
+	/** @var int $rank */
+	public $rank;
 }

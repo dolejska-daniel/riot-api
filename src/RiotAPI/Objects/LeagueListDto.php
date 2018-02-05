@@ -26,7 +26,7 @@ namespace RiotAPI\Objects;
  * Used in:
  *   league (v3)
  *     @link https://developer.riotgames.com/api-methods/#league-v3/GET_getChallengerLeague
- *     @link https://developer.riotgames.com/api-methods/#league-v3/GET_getAllLeaguesForSummoner
+ *     @link https://developer.riotgames.com/api-methods/#league-v3/GET_getLeagueById
  *     @link https://developer.riotgames.com/api-methods/#league-v3/GET_getMasterLeague
  *
  * @iterable $entries
@@ -35,15 +35,18 @@ namespace RiotAPI\Objects;
  */
 class LeagueListDto extends ApiObjectIterable
 {
+	/** @var string $leagueId */
+	public $leagueId;
+
 	/** @var string $tier */
 	public $tier;
+
+	/** @var LeagueItemDTO[] $entries */
+	public $entries;
 
 	/** @var string $queue */
 	public $queue;
 
 	/** @var string $name */
 	public $name;
-
-	/** @var LeagueItemDTO[] $entries */
-	public $entries;
 }

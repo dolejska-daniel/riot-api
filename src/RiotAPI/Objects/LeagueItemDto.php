@@ -26,7 +26,7 @@ namespace RiotAPI\Objects;
  * Used in:
  *   league (v3)
  *     @link https://developer.riotgames.com/api-methods/#league-v3/GET_getChallengerLeague
- *     @link https://developer.riotgames.com/api-methods/#league-v3/GET_getAllLeaguesForSummoner
+ *     @link https://developer.riotgames.com/api-methods/#league-v3/GET_getLeagueById
  *     @link https://developer.riotgames.com/api-methods/#league-v3/GET_getMasterLeague
  *
  * @package RiotAPI\Objects
@@ -51,8 +51,8 @@ class LeagueItemDto extends ApiObject
 	/** @var int $losses */
 	public $losses;
 
-	/** @var string $playerOrTeamId */
-	public $playerOrTeamId;
+	/** @var bool $freshBlood */
+	public $freshBlood;
 
 	/** @var string $playerOrTeamName */
 	public $playerOrTeamName;
@@ -60,8 +60,8 @@ class LeagueItemDto extends ApiObject
 	/** @var bool $inactive */
 	public $inactive;
 
-	/** @var bool $freshBlood */
-	public $freshBlood;
+	/** @var string $playerOrTeamId */
+	public $playerOrTeamId;
 
 	/** @var int $leaguePoints */
 	public $leaguePoints;

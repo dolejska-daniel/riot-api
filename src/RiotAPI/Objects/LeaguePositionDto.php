@@ -52,11 +52,11 @@ class LeaguePositionDto extends ApiObject
 	/** @var int $losses */
 	public $losses;
 
-	/** @var string $playerOrTeamId */
-	public $playerOrTeamId;
+	/** @var bool $freshBlood */
+	public $freshBlood;
 
-	/** @var string $leagueName */
-	public $leagueName;
+	/** @var string $leagueId */
+	public $leagueId;
 
 	/** @var string $playerOrTeamName */
 	public $playerOrTeamName;
@@ -64,8 +64,11 @@ class LeaguePositionDto extends ApiObject
 	/** @var bool $inactive */
 	public $inactive;
 
-	/** @var bool $freshBlood */
-	public $freshBlood;
+	/** @var string $playerOrTeamId */
+	public $playerOrTeamId;
+
+	/** @var string $leagueName */
+	public $leagueName;
 
 	/** @var string $tier */
 	public $tier;
