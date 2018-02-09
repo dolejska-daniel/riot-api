@@ -691,10 +691,8 @@ class RiotAPI
 	 */
 	public function setSetting( string $name, $value ): self
 	{
-		/*
 		if (in_array($name, self::SETTINGS_INIT_ONLY))
 			throw new SettingsException("Settings option '$name' can only be set on initialization of the library.");
-		*/
 
 		$this->settings[$name] = $value;
 		return $this;
@@ -706,6 +704,7 @@ class RiotAPI
 	 * @param array $values
 	 *
 	 * @return RiotAPI
+	 * @throws SettingsException
 	 */
 	public function setSettings( array $values ): self
 	{
@@ -733,11 +732,11 @@ class RiotAPI
 	 * @param string $region
 	 *
 	 * @return RiotAPI
+	 * @throws SettingsException
 	 */
 	public function setRegion( string $region ): self
 	{
-		$region = strtolower($region);
-		$this->setSetting(self::SET_REGION, $region);
+		$this->setSetting(self::SET_REGION, $this->regions->getRegionName($region));
 		$this->setSetting(self::SET_PLATFORM, $this->platforms->getPlatformName($region));
 		return $this;
 	}
@@ -748,12 +747,12 @@ class RiotAPI
 	 * @param string $tempRegion
 	 *
 	 * @return RiotAPI
+	 * @throws SettingsException
 	 */
 	public function setTemporaryRegion( string $tempRegion ): self
 	{
-		$tempRegion = strtolower($tempRegion);
 		$this->setSetting(self::SET_ORIG_REGION, $this->getSetting(self::SET_REGION));
-		$this->setSetting(self::SET_REGION, $tempRegion);
+		$this->setSetting(self::SET_REGION, $this->regions->getRegionName($tempRegion));
 		$this->setSetting(self::SET_PLATFORM, $this->platforms->getPlatformName($tempRegion));
 		return $this;
 	}
@@ -762,6 +761,7 @@ class RiotAPI
 	 *   Unets temporary region and returns original region.
 	 *
 	 * @return RiotAPI
+	 * @throws SettingsException
 	 */
 	public function unsetTemporaryRegion(): self
 	{
@@ -885,6 +885,8 @@ class RiotAPI
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
+	 * @throws SettingsException
+	 *
 	 * @internal
 	 */
 	protected function makeCall( string $overrideRegion = null, string $method = self::METHOD_GET )

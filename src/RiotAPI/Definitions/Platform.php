@@ -29,11 +29,9 @@ use RiotAPI\Exceptions\GeneralException;
  */
 class Platform implements IPlatform
 {
-	/****************************************d*d*
-	 *
-	 * Standard region platforms
-	 *
-	 ********************************************/
+	// ==================================================================d=d=
+	//     Standard regional platforms
+	// ==================================================================d=d=
 
 	const NORTH_AMERICA = 'na1';
 
@@ -81,11 +79,9 @@ class Platform implements IPlatform
 	);
 
 
-	/****************************************d*d*
-	 *
-	 * Control functions
-	 *
-	 ********************************************/
+	// ==================================================================d=d=
+	//     Control functions
+	// ==================================================================d=d=
 
 	public function getList(): array
 	{
@@ -95,7 +91,7 @@ class Platform implements IPlatform
 	public function getPlatformName( string $region ): string
 	{
 		if (!isset(self::$list[$region]))
-			throw new GeneralException('Invalid region selected. Can not find requested platform.');
+			throw new GeneralException('Invalid region provided. Can not find requested platform.');
 
 		return self::$list[$region];
 	}
