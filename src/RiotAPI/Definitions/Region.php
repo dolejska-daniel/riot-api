@@ -29,11 +29,9 @@ use RiotAPI\Exceptions\GeneralException;
  */
 class Region implements IRegion
 {
-	/****************************************d*d*
-	 *
-	 * Standard game regions
-	 *
-	 ********************************************/
+	// ==================================================================d=d=
+	//     Standard game regions (servers)
+	// ==================================================================d=d=
 
 	const NORTH_AMERICA = 'na';
 
@@ -75,11 +73,9 @@ class Region implements IRegion
 	);
 
 
-	/****************************************d*d*
-	 *
-	 * Control functions
-	 *
-	 ********************************************/
+	// ==================================================================d=d=
+	//     Control functions
+	// ==================================================================d=d=
 
 	public function getList(): array
 	{
@@ -88,8 +84,9 @@ class Region implements IRegion
 
 	public function getRegionName( string $region ): string
 	{
+		$region = strtolower($region);
 		if (!isset(self::$list[$region]))
-			throw new GeneralException('Invalid region selected. Can not find requested region.');
+			throw new GeneralException('Invalid region provided. Can not find requested region.');
 
 		return self::$list[$region];
 	}
