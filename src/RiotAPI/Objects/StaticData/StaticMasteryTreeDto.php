@@ -37,6 +37,15 @@ class StaticMasteryTreeDto extends ApiObject
 	/** @var StaticMasteryTreeListDto[] $Resolve */
 	public $Resolve;
 
+	/** @var StaticMasteryTreeListDto[] $Defense */
+	public $Defense;
+
+	/** @var StaticMasteryTreeListDto[] $Utility */
+	public $Utility;
+
+	/** @var StaticMasteryTreeListDto[] $Offense */
+	public $Offense;
+
 	/** @var StaticMasteryTreeListDto[] $Ferocity */
 	public $Ferocity;
 

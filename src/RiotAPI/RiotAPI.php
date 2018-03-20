@@ -1733,25 +1733,133 @@ class RiotAPI
 		return new StaticData\StaticProfileIconDataDto($this->getResult(), $this);
 	}
 
-	/**
-	 *   Retrieve realm data. (Region versions)
-	 *
-	 * @return StaticData\StaticRealmDto
-	 *
-	 * @throws RequestException
-	 * @throws ServerException
-	 * @throws ServerLimitException
-	 *
-	 * @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getRealm
-	 */
-	public function getStaticRealm(): StaticData\StaticRealmDto
-	{
-		$this->setEndpoint("/lol/static-data/" . self::RESOURCE_STATICDATA_V3 . "/realms")
-			->setResource(self::RESOURCE_STATICDATA, "/realms")
-			->makeCall();
+    /**
+     *   Retrieve realm data. (Region versions)
+     *
+     * @return StaticData\StaticRealmDto
+     *
+     * @throws RequestException
+     * @throws ServerException
+     * @throws ServerLimitException
+     *
+     * @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getRealm
+     */
+    public function getStaticRealm(): StaticData\StaticRealmDto
+    {
+        $this->setEndpoint("/lol/static-data/" . self::RESOURCE_STATICDATA_V3 . "/realms")
+            ->setResource(self::RESOURCE_STATICDATA, "/realms")
+            ->makeCall();
 
-		return new StaticData\StaticRealmDto($this->getResult(), $this);
-	}
+        return new StaticData\StaticRealmDto($this->getResult(), $this);
+    }
+
+    /**
+     *   Retrieve reforged rune path.
+     *
+     * @param string|null $locale
+     * @param string|null $version
+     *
+     * @return StaticData\StaticReforgedRunePathDto[]
+     *
+     * @throws RequestException
+     * @throws ServerException
+     * @throws ServerLimitException
+     * @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getReforgedRunePaths
+     */
+    public function getReforgedRunePaths( string $locale = null, string $version = null ): array
+    {
+        $this->setEndpoint("/lol/static-data/" . self::RESOURCE_STATICDATA_V3 . "/reforged-rune-paths")
+            ->setResource(self::RESOURCE_STATICDATA, "/reforged-rune-paths")
+            ->addQuery("locale", $locale)
+            ->addQuery("version", $version)
+            ->makeCall();
+
+        $r = [];
+        foreach ($this->getResult() as $item)
+            $r[] = new StaticData\StaticReforgedRunePathDto($item, $this);
+
+        return $r;
+    }
+
+    /**
+     *   Retrieve reforged rune path by ID.
+     *
+     * @param int|null    $id
+     * @param string|null $locale
+     * @param string|null $version
+     *
+     * @return StaticData\StaticReforgedRunePathDto
+     *
+     * @throws RequestException
+     * @throws ServerException
+     * @throws ServerLimitException
+     *
+     * @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getReforgedRunePathById
+     */
+    public function getReforgedRunePathById( int $id = null, string $locale = null, string $version = null ): StaticData\StaticReforgedRunePathDto
+    {
+        $this->setEndpoint("/lol/static-data/" . self::RESOURCE_STATICDATA_V3 . "/reforged-rune-paths/{$id}")
+            ->setResource(self::RESOURCE_STATICDATA, "/reforged-rune-paths/%i")
+            ->addQuery("locale", $locale)
+            ->addQuery("version", $version)
+            ->makeCall();
+
+        return new StaticData\StaticReforgedRunePathDto($this->getResult(), $this);
+    }
+
+    /**
+     *   Retrieve reforged rune path.
+     *
+     * @param string|null $locale
+     * @param string|null $version
+     *
+     * @return StaticData\StaticReforgedRuneDto[]
+     *
+     * @throws RequestException
+     * @throws ServerException
+     * @throws ServerLimitException
+     * @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getReforgedRunes
+     */
+    public function getReforgedRunes( string $locale = null, string $version = null ): array
+    {
+        $this->setEndpoint("/lol/static-data/" . self::RESOURCE_STATICDATA_V3 . "/reforged-runes")
+            ->setResource(self::RESOURCE_STATICDATA, "/reforged-runes")
+            ->addQuery("locale", $locale)
+            ->addQuery("version", $version)
+            ->makeCall();
+
+        $r = [];
+        foreach ($this->getResult() as $item)
+            $r[] = new StaticData\StaticReforgedRuneDto($item, $this);
+
+        return $r;
+    }
+
+    /**
+     *   Retrieve reforged rune path by ID.
+     *
+     * @param int|null    $id
+     * @param string|null $locale
+     * @param string|null $version
+     *
+     * @return StaticData\StaticReforgedRuneDto
+     *
+     * @throws RequestException
+     * @throws ServerException
+     * @throws ServerLimitException
+     *
+     * @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getReforgedRuneById
+     */
+    public function getReforgedRuneById( int $id = null, string $locale = null, string $version = null ): StaticData\StaticReforgedRuneDto
+    {
+        $this->setEndpoint("/lol/static-data/" . self::RESOURCE_STATICDATA_V3 . "/reforged-runes/{$id}")
+            ->setResource(self::RESOURCE_STATICDATA, "/reforged-runes/%i")
+            ->addQuery("locale", $locale)
+            ->addQuery("version", $version)
+            ->makeCall();
+
+        return new StaticData\StaticReforgedRuneDto($this->getResult(), $this);
+    }
 
 	/**
 	 *   Retrieves rune list.
@@ -1864,6 +1972,29 @@ class RiotAPI
 
 		return new StaticData\StaticSummonerSpellDto($this->getResult(), $this);
 	}
+
+    /**
+     *   Retrieves full tarball link.
+     *
+     * @param string $version
+     *
+     * @return string
+     *
+     * @throws RequestException
+     * @throws ServerException
+     * @throws ServerLimitException
+     *
+     * @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getFullTarballLink
+     */
+    public function getFullTarballLink( string $version = null ): string
+    {
+        $this->setEndpoint("/lol/static-data/" . self::RESOURCE_STATICDATA_V3 . "/tarball-links")
+            ->setResource(self::RESOURCE_STATICDATA, "/tarball-links")
+            ->addQuery("version", $version)
+            ->makeCall();
+
+        return $this->getResult();
+    }
 
 	/**
 	 *   Retrieve version data.

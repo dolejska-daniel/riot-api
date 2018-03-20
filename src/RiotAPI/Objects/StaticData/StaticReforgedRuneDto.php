@@ -23,43 +23,41 @@ use RiotAPI\Objects\ApiObject;
 
 
 /**
- *   Class StaticMasteryDto
- * This object contains mastery data.
+ *   Class StaticReforgedRuneDto
+ * This object contains reforged rune data.
  *
  * Used in:
  *   lol-static-data (v3)
- *     @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getMasteryList
- *     @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getMasteryById
+ *     @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getReforgedRunePaths
+ *     @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getReforgedRunePathById
+ *     @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getReforgedRunes
+ *     @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getReforgedRuneById
  *
  * @package RiotAPI\Objects\StaticData
  */
-class StaticMasteryDto extends ApiObject
+class StaticReforgedRuneDto extends ApiObject
 {
-	/** @var string $prereq */
-	public $prereq;
+	/** @var string $runePathName */
+	public $runePathName;
 
-	/**
-	 *   (Legal values: Cunning, Ferocity, Resolve, Defense, Offense, Utility).
-	 *
-	 * @var string $masteryTree
-	 */
-	public $masteryTree;
+	/** @var int $runePathId */
+	public $runePathId;
 
 	/** @var string $name */
 	public $name;
 
-	/** @var int $ranks */
-	public $ranks;
-
-	/** @var StaticImageDto $image */
-	public $image;
-
-	/** @var string[] $sanitizedDescription */
-	public $sanitizedDescription;
-
 	/** @var int $id */
 	public $id;
 
-	/** @var string[] $description */
-	public $description;
+	/** @var string $key */
+	public $key;
+
+	/** @var string $shortDesc */
+	public $shortDesc;
+
+	/** @var string $longDesc */
+	public $longDesc;
+
+	/** @var string $icon */
+	public $icon;
 }
