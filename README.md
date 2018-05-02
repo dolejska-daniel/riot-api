@@ -1,6 +1,6 @@
 # RiotAPI PHP7 wrapper
 
-> Version v2.0.0-rc.1
+> Version v2.0.0-rc.4
 
 [![Build Status](https://travis-ci.org/dolejska-daniel/riot-api.svg?branch=master)](https://travis-ci.org/dolejska-daniel/riot-api)
 [![Test Coverage](https://codeclimate.com/github/dolejska-daniel/riot-api/badges/coverage.svg)](https://codeclimate.com/github/dolejska-daniel/riot-api/coverage)
@@ -228,9 +228,15 @@ For more, please see [the wiki pages](https://github.com/dolejska-daniel/riot-ap
 
 ## [CLI support](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-CLI-support).
 
+You can easily get API results even in CLI:
+
+```shell
+root@localhost:~/src/RiotAPI# php7.0 RiotAPICLI.php getChampions --config ~/RiotAPI_Config.json
+```
+
 For more information about CLI support, please see [the wiki pages](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-CLI-support).
 
-# DataDragon API
+# [DataDragon API](https://github.com/dolejska-daniel/riot-api/wiki/DataDragonAPI:-How-to-begin)
 
 How easy is it to work with static images? For instance, to get loading screen art of Orianna?
 

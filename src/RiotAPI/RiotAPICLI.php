@@ -26,20 +26,18 @@ const ARGS = [
 	],
 	"alias name"    => "argument name",
 	*/
+	ARG_HELP    => [],
+	"-h"        => ARG_HELP,
 	ARG_CONFIG  => [
 		[ true, "string", null, "path" ],
 	],
 	"-c"        => ARG_CONFIG,
-	ARG_HELP    => [],
-	"-h"        => ARG_HELP,
 	ARG_OUTPUT  => [
 		[ true, "string", null, "path" ],
 	],
 	"-o"        => ARG_OUTPUT,
-	/*
 	ARG_VERBOSE => [],
 	"-v"        => ARG_VERBOSE,
-	*/
 ];
 
 //  CLI arg list
@@ -53,11 +51,16 @@ $argVals = [];
  */
 function printUsage( $target = STDOUT )
 {
-	fprintf($target, "\nUsage:\n  php RiotAPI_CLI.php {method} {param 1} ... {param x} {cli arg 1} {cli arg param 1} ... \n");
-	fprintf($target, "\nCLI args:");
-	foreach (ARGS as $argNname => $params)
+	global $argv;
+
+	fprintf($target, "Usage:\n  %s %s <method> <param_1>…<param_N> %s <config_path> [option_1]…[option_N] \n", PHP_BINARY, $argv[0], ARG_CONFIG);
+	fprintf($target, "\nFirst CLI script argument is API method name followed by N method arguments. Only method arguments without default value are mandatory, optional method arguments may be provided.");
+	fprintf($target, "\nLibrary method name with arguments is followed by CLI script options. Option %s IS REQUIRED for library initialization.", ARG_CONFIG);
+	fprintf($target, "\n\nLibrary config file is expected to be JSON array representation containing library settings. For more please see GitHub wiki pages (https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-CLI-support).");
+	fprintf($target, "\n\nOptions:");
+	$s = "  ";
+	foreach (ARGS as $argName => $params)
 	{
-		$s = "\n  ";
 		$p = "";
 		if (is_string($params))
 		{
@@ -75,13 +78,14 @@ function printUsage( $target = STDOUT )
 				$name     = $argParam[3];
 
 				if ($req)
-					$p.= ' {' . $dataType . ' ' . $name . '}';
+					$p.= ' <' . $dataType . ' ' . $name . '>';
 				else
 					$p.= " [$dataType $name ($default)]";
 			}
 		}
 
-		fprintf($target, "$s$argNname$p");
+		fprintf($target, "$s$argName$p");
+		$s = "\n  ";
 	}
 	fprintf($target, "\n");
 }
@@ -95,10 +99,14 @@ if ($argc < 2 || is_string($argv[1]) == false)
 
 require __DIR__ . "/../../vendor/autoload.php";
 
+use RiotAPI\Exceptions\InvalidMethodCLIException;
+use RiotAPI\Exceptions\InvalidParameterCLIException;
+use RiotAPI\Exceptions\MissingParameterCLIException;
+use RiotAPI\Exceptions\GeneralException;
 use RiotAPI\RiotAPI;
 
 //  check for help arg
-if ($argv[1] === "--help" || $argv[1] === "-h")
+if (in_array("--help", $argv) || in_array("-h", $argv))
 {
 	printUsage();
 	die();
@@ -106,18 +114,23 @@ if ($argv[1] === "--help" || $argv[1] === "-h")
 
 //  get main arguments
 $script       = $argv[0];
-$methodName   = $argv[1];
+$methodName   = @$argv[1];
 $methodParams = [];
 
 //  setup reflections
 $apiRef = new ReflectionClass(RiotAPI::class);
+if ($methodName == false || $apiRef->hasMethod($methodName) == false)
+{
+	throw new InvalidMethodCLIException("RiotAPI library method name is " . ($methodName ? "invalid. Library method '$methodName' does not exist or is not accessible." : "missing."));
+}
+
 $method = $apiRef->getMethod($methodName);
 $params = $method->getParameters();
 
 //  check method params
 $argIndex   = 2;
 $paramIndex = 0;
-for ($argIndex; $argIndex < $argc; $argIndex++)
+for (; $argIndex < $argc; $argIndex++)
 {
 	if (isset($params[$paramIndex]) == false)
 		//  method doesn't have more params
@@ -133,7 +146,7 @@ for ($argIndex; $argIndex < $argc; $argIndex++)
 		{
 			//  this param is not optional
 			printUsage(STDERR);
-			throw new Exception("Required parameter '{$param->getName()}' for method '{$method->getName()}' is missing.");
+			throw new MissingParameterCLIException("Required parameter '{$param->getName()}' for method '{$method->getName()}' is missing.");
 		}
 		else
 		{
@@ -151,11 +164,28 @@ for ($argIndex; $argIndex < $argc; $argIndex++)
 	elseif (is_numeric($arg))
 		$arg = (int)$arg;
 
+	if ($param->getType() == 'array')
+	{
+		//  API expects array, try to decode array
+		$data = @json_decode($arg);
+		if ($data == false)
+			throw new InvalidParameterCLIException("Parameter '{$param->getName()}' for method '{$method->getName()}' failed to be parsed as JSON string. Expected JSON string, got '$arg'");
+		$arg = $data;
+	}
+	elseif ($param->getType() == 'object')
+	{
+		//  API expects object, try to decode object
+		$data = @unserialize($arg);
+		if ($data == false)
+			throw new InvalidParameterCLIException("Parameter '{$param->getName()}' for method '{$method->getName()}' failed to be parsed as PHP serialized object. Expected PHP serialized object, got '$arg'");
+		$arg = $data;
+	}
+
 	$expectedDataType = (string)$param->getType();
 	$dataType = gettype($arg);
 
 	if (strpos($dataType, $expectedDataType) === false)
-		throw new Exception("Parameter '{$param->getName()}' for method '{$method->getName()}' is invalid. Expected '{$param->getType()}' got '$dataType'.");
+		throw new InvalidParameterCLIException("Parameter '{$param->getName()}' for method '{$method->getName()}' is invalid. Expected '{$param->getType()}' got '$dataType'.");
 
 	$methodParams[] = $arg;
 
@@ -163,7 +193,7 @@ for ($argIndex; $argIndex < $argc; $argIndex++)
 }
 
 //  check cli args
-for ($argIndex; $argIndex < $argc; $argIndex++)
+for (; $argIndex < $argc; $argIndex++)
 {
 	$arg = $argv[$argIndex];
 
@@ -213,7 +243,7 @@ for ($argIndex; $argIndex < $argc; $argIndex++)
 				{
 					//  this param is not optional
 					printUsage(STDERR);
-					throw new Exception("Required parameter '$name' for CLI argument '$argOrig' is missing.");
+					throw new MissingParameterCLIException("Required parameter '$name' for CLI argument '$argOrig' is missing.");
 				}
 				else
 				{
@@ -229,7 +259,7 @@ for ($argIndex; $argIndex < $argc; $argIndex++)
 			}
 
 			if (gettype($arg) != $dataType)
-				throw new Exception("Parameter '$name' for CLI argument '$argOrig' is invalid (data type).");
+				throw new MissingParameterCLIException("Parameter '$name' for CLI argument '$argOrig' is invalid (data type).");
 
 			if ($argParamCount > 1)
 				$argVals[$argument][] = $arg;
@@ -248,7 +278,7 @@ if (@$argVals[ARG_HELP])
 $cfg = @$argVals[ARG_CONFIG];
 $cfg = @file_get_contents($cfg);
 if ($cfg == false || ($cfg = json_decode($cfg, true)) == false)
-	throw new Exception('Config file could not be loaded.');
+	throw new GeneralException('Config file could not be loaded.');
 
 $api    = new RiotAPI($cfg);
 $result = $method->invokeArgs($api, $methodParams);
@@ -259,7 +289,7 @@ if ($outputPath)
 {
 	$f = fopen($outputPath, 'w');
 	if ($f == false)
-		throw new Exception("Requested data failed to be saved to output file '$outputPath'.");
+		throw new GeneralException("Requested data failed to be saved to output file '$outputPath'.");
 
 	fwrite($f, $data);
 	fclose($f);

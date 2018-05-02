@@ -580,7 +580,7 @@ class RiotAPI
 
 		//  Save result data as new DummyData if enabled and if data does not already exist
 		$this->afterCall[] = function () {
-			if ($this->getSetting(self::SET_SAVE_DUMMY_DATA, false) && file_exists($this->getDummyDataFileName()) == false)
+			if ($this->getSetting(self::SET_SAVE_DUMMY_DATA, false) && file_exists($this->_getDummyDataFileName()) == false)
 				$this->_saveDummyData();
 		};
 
@@ -949,7 +949,7 @@ class RiotAPI
 				//  loading failed, check whether an actual request should be made
 				if ($this->getSetting(self::SET_SAVE_DUMMY_DATA, false) == false)
 					//  saving is not allowed, dummydata does not exist
-					throw new RequestException("No DummyData available for call. " . $this->getDummyDataFileName());
+					throw new RequestException("No DummyData available for call. " . $this->_getDummyDataFileName());
 			}
 		}
 
@@ -1040,9 +1040,20 @@ class RiotAPI
 		curl_close($ch);
 	}
 
+	/**
+	 * @internal
+	 *
+	 *   Loads dummy response from file.
+	 *
+	 * @param $headers
+	 * @param $response
+	 * @param $response_code
+	 *
+	 * @throws RequestException
+	 */
 	protected function _loadDummyData( &$headers, &$response, &$response_code )
 	{
-		$data = @file_get_contents($this->getDummyDataFileName());
+		$data = @file_get_contents($this->_getDummyDataFileName());
 		$data = unserialize($data);
 
 		if (!$data || empty($data))
@@ -1053,15 +1064,30 @@ class RiotAPI
 		$response_code = $data['code'];
 	}
 
+	/**
+	 * @internal
+	 *
+	 *   Saves dummy response to file.
+	 */
 	protected function _saveDummyData()
 	{
-		file_put_contents($this->getDummyDataFileName(), serialize([
+		file_put_contents($this->_getDummyDataFileName(), serialize([
 			'headers'  => $this->result_headers,
 			'response' => $this->result_data_raw,
 			'code'     => $this->result_code,
 		]));
 	}
 
+	/**
+	 * @internal
+	 *
+	 *   Processes 'beforeCall' callbacks.
+	 *
+	 * @param string $url
+	 * @param string $requestHash
+	 *
+	 * @throws RequestException
+	 */
 	protected function _beforeCall( string $url, string $requestHash )
 	{
 		foreach ($this->beforeCall as $function)
@@ -1073,6 +1099,15 @@ class RiotAPI
 		}
 	}
 
+	/**
+	 * @internal
+	 *
+	 *   Processes 'afterCall' callbacks.
+	 *
+	 * @param string $url
+	 * @param string $requestHash
+	 * @param        $curlResource
+	 */
 	protected function _afterCall( string $url, string $requestHash, $curlResource )
 	{
 		foreach ($this->afterCall as $function)
@@ -1081,6 +1116,15 @@ class RiotAPI
 		}
 	}
 
+	/**
+	 * @internal
+	 *
+	 *   Builds API call URL based on current settings.
+	 *
+	 * @param array $curlHeaders
+	 *
+	 * @return string
+	 */
 	protected function _getCallUrl( &$curlHeaders = [] ): string
 	{
 		$curlHeaders = [];
@@ -1113,7 +1157,14 @@ class RiotAPI
 		return "https://" . $url_platformPart . $url_basePart . $this->endpoint . $url_keyPart . $url_queryPart;
 	}
 
-	protected function getDummyDataFileName(): string
+	/**
+	 * @internal
+	 *
+	 *   Returns dummy response filename based on current settings.
+	 *
+	 * @return string
+	 */
+	protected function _getDummyDataFileName(): string
 	{
 		$method = $this->used_method;
 		$endp = str_replace([ '/', '.' ], [ '-', '' ], substr($this->endpoint, 1));
@@ -1125,6 +1176,13 @@ class RiotAPI
 		return __DIR__ . "/../../tests/DummyData/{$method}_$endp$quer$data.json";
 	}
 
+	/**
+	 *   Parses HTTP headers from raw result.
+	 *
+	 * @param $requestHeaders
+	 *
+	 * @return array
+	 */
 	public static function parseHeaders( $requestHeaders ): array
 	{
 		$r = array();
@@ -1158,6 +1216,7 @@ class RiotAPI
 	 *
 	 * @return Objects\ChampionListDto
 	 *
+	 * @throws SettingsException
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
@@ -1181,6 +1240,7 @@ class RiotAPI
 	 *
 	 * @return Objects\ChampionDto
 	 *
+	 * @throws SettingsException
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
@@ -1215,6 +1275,7 @@ class RiotAPI
 	 *
 	 * @return Objects\ChampionMasteryDto
 	 *
+	 * @throws SettingsException
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
@@ -1238,6 +1299,7 @@ class RiotAPI
 	 *
 	 * @return Objects\ChampionMasteryDto[]
 	 *
+	 * @throws SettingsException
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
@@ -1265,6 +1327,7 @@ class RiotAPI
 	 *
 	 * @return int
 	 *
+	 * @throws SettingsException
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
@@ -1297,6 +1360,7 @@ class RiotAPI
 	 *
 	 * @return Objects\CurrentGameInfo
 	 *
+	 * @throws SettingsException
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
@@ -1317,6 +1381,7 @@ class RiotAPI
 	 *
 	 * @return Objects\FeaturedGames
 	 *
+	 * @throws SettingsException
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
@@ -1349,6 +1414,7 @@ class RiotAPI
 	 *
 	 * @return Objects\LeagueListDto
 	 *
+	 * @throws SettingsException
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
@@ -1371,6 +1437,7 @@ class RiotAPI
 	 *
 	 * @return Objects\LeagueListDto[]
 	 *
+	 * @throws SettingsException
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
@@ -1400,6 +1467,7 @@ class RiotAPI
 	 *
 	 * @return Objects\LeaguePositionDto[]
 	 *
+	 * @throws SettingsException
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
@@ -1426,6 +1494,7 @@ class RiotAPI
 	 *
 	 * @return Objects\LeagueListDto
 	 *
+	 * @throws SettingsException
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
@@ -1448,6 +1517,7 @@ class RiotAPI
 	 *
 	 * @return Objects\LeagueListDto
 	 *
+	 * @throws SettingsException
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
@@ -1483,6 +1553,7 @@ class RiotAPI
 	 *
 	 * @return StaticData\StaticChampionListDto
 	 *
+	 * @throws SettingsException
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
@@ -1512,6 +1583,7 @@ class RiotAPI
 	 *
 	 * @return StaticData\StaticChampionDto
 	 *
+	 * @throws SettingsException
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
@@ -1539,6 +1611,7 @@ class RiotAPI
 	 *
 	 * @return StaticData\StaticItemListDto
 	 *
+	 * @throws SettingsException
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
@@ -1567,6 +1640,7 @@ class RiotAPI
 	 *
 	 * @return StaticData\StaticItemDto
 	 *
+	 * @throws SettingsException
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
@@ -1593,6 +1667,7 @@ class RiotAPI
 	 *
 	 * @return StaticData\StaticLanguageStringsDto
 	 *
+	 * @throws SettingsException
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
@@ -1615,6 +1690,7 @@ class RiotAPI
 	 *
 	 * @return array
 	 *
+	 * @throws SettingsException
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
@@ -1638,6 +1714,7 @@ class RiotAPI
 	 *
 	 * @return StaticData\StaticMapDataDto
 	 *
+	 * @throws SettingsException
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
@@ -1664,6 +1741,7 @@ class RiotAPI
 	 *
 	 * @return StaticData\StaticMasteryListDto
 	 *
+	 * @throws SettingsException
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
@@ -1692,6 +1770,7 @@ class RiotAPI
 	 *
 	 * @return StaticData\StaticMasteryDto
 	 *
+	 * @throws SettingsException
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
@@ -1718,6 +1797,7 @@ class RiotAPI
 	 *
 	 * @return StaticData\StaticProfileIconDataDto
 	 *
+	 * @throws SettingsException
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
@@ -1740,6 +1820,7 @@ class RiotAPI
      *
      * @return StaticData\StaticRealmDto
      *
+     * @throws SettingsException
      * @throws RequestException
      * @throws ServerException
      * @throws ServerLimitException
@@ -1763,6 +1844,7 @@ class RiotAPI
      *
      * @return StaticData\StaticReforgedRunePathDto[]
      *
+     * @throws SettingsException
      * @throws RequestException
      * @throws ServerException
      * @throws ServerLimitException
@@ -1792,6 +1874,7 @@ class RiotAPI
      *
      * @return StaticData\StaticReforgedRunePathDto
      *
+     * @throws SettingsException
      * @throws RequestException
      * @throws ServerException
      * @throws ServerLimitException
@@ -1817,6 +1900,7 @@ class RiotAPI
      *
      * @return StaticData\StaticReforgedRuneDto[]
      *
+     * @throws SettingsException
      * @throws RequestException
      * @throws ServerException
      * @throws ServerLimitException
@@ -1846,6 +1930,7 @@ class RiotAPI
      *
      * @return StaticData\StaticReforgedRuneDto
      *
+     * @throws SettingsException
      * @throws RequestException
      * @throws ServerException
      * @throws ServerLimitException
@@ -1872,6 +1957,7 @@ class RiotAPI
 	 *
 	 * @return StaticData\StaticRuneListDto
 	 *
+	 * @throws SettingsException
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
@@ -1900,6 +1986,7 @@ class RiotAPI
 	 *
 	 * @return StaticData\StaticRuneDto
 	 *
+	 * @throws SettingsException
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
@@ -1928,6 +2015,7 @@ class RiotAPI
 	 *
 	 * @return StaticData\StaticSummonerSpellListDto
 	 *
+	 * @throws SettingsException
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
@@ -1957,6 +2045,7 @@ class RiotAPI
 	 *
 	 * @return StaticData\StaticSummonerSpellDto
 	 *
+	 * @throws SettingsException
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
@@ -1982,6 +2071,7 @@ class RiotAPI
      *
      * @return string
      *
+     * @throws SettingsException
      * @throws RequestException
      * @throws ServerException
      * @throws ServerLimitException
@@ -2003,6 +2093,7 @@ class RiotAPI
 	 *
 	 * @return array
 	 *
+	 * @throws SettingsException
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
@@ -2035,6 +2126,7 @@ class RiotAPI
 	 *
 	 * @return Objects\ShardStatus
 	 *
+	 * @throws SettingsException
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
@@ -2067,6 +2159,7 @@ class RiotAPI
 	 *
 	 * @return Objects\MatchDto
 	 *
+	 * @throws SettingsException
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
@@ -2090,6 +2183,7 @@ class RiotAPI
 	 *
 	 * @return Objects\MatchDto
 	 *
+	 * @throws SettingsException
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
@@ -2112,6 +2206,7 @@ class RiotAPI
 	 *
 	 * @return array
 	 *
+	 * @throws SettingsException
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
@@ -2141,6 +2236,7 @@ class RiotAPI
 	 *
 	 * @return Objects\MatchlistDto
 	 *
+	 * @throws SettingsException
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
@@ -2170,6 +2266,7 @@ class RiotAPI
 	 *
 	 * @return Objects\MatchlistDto
 	 *
+	 * @throws SettingsException
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
@@ -2192,6 +2289,7 @@ class RiotAPI
 	 *
 	 * @return Objects\MatchTimelineDto
 	 *
+	 * @throws SettingsException
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
@@ -2224,6 +2322,7 @@ class RiotAPI
 	 *
 	 * @return Objects\SummonerDto
 	 *
+	 * @throws SettingsException
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
@@ -2246,6 +2345,7 @@ class RiotAPI
 	 *
 	 * @return Objects\SummonerDto
 	 *
+	 * @throws SettingsException
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
@@ -2270,6 +2370,7 @@ class RiotAPI
 	 *
 	 * @return Objects\SummonerDto
 	 *
+	 * @throws SettingsException
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
@@ -2302,6 +2403,7 @@ class RiotAPI
 	 *
 	 * @return string
 	 *
+	 * @throws SettingsException
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
@@ -2336,6 +2438,7 @@ class RiotAPI
 	 *
 	 * @return array
 	 *
+	 * @throws SettingsException
 	 * @throws RequestException
 	 * @throws RequestParameterException
 	 * @throws ServerException
@@ -2390,6 +2493,7 @@ class RiotAPI
 	 *
 	 * @return Objects\LobbyEventDTOWrapper
 	 *
+	 * @throws SettingsException
 	 * @throws RequestException
 	 * @throws RequestParameterException
 	 * @throws ServerException
@@ -2429,6 +2533,7 @@ class RiotAPI
 	 *
 	 * @return Objects\TournamentCodeDto
 	 *
+	 * @throws SettingsException
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
@@ -2455,6 +2560,7 @@ class RiotAPI
 	 *
 	 * @return int
 	 *
+	 * @throws SettingsException
 	 * @throws RequestException
 	 * @throws RequestParameterException
 	 * @throws ServerException
@@ -2493,6 +2599,7 @@ class RiotAPI
 	 *
 	 * @return int
 	 *
+	 * @throws SettingsException
 	 * @throws RequestException
 	 * @throws RequestParameterException
 	 * @throws ServerException
@@ -2529,6 +2636,7 @@ class RiotAPI
 	 *
 	 * @return Objects\LobbyEventDtoWrapper
 	 *
+	 * @throws SettingsException
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
@@ -2567,6 +2675,7 @@ class RiotAPI
 	 *
 	 * @return array
 	 *
+	 * @throws SettingsException
 	 * @throws RequestException
 	 * @throws RequestParameterException
 	 * @throws ServerException
@@ -2619,6 +2728,7 @@ class RiotAPI
 	 *
 	 * @return int
 	 *
+	 * @throws SettingsException
 	 * @throws RequestException
 	 * @throws RequestParameterException
 	 * @throws ServerException
@@ -2656,6 +2766,7 @@ class RiotAPI
 	 *
 	 * @return int
 	 *
+	 * @throws SettingsException
 	 * @throws RequestException
 	 * @throws RequestParameterException
 	 * @throws ServerException
@@ -2691,6 +2802,7 @@ class RiotAPI
 	 *
 	 * @return Objects\LobbyEventDtoWrapper
 	 *
+	 * @throws SettingsException
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
@@ -2717,17 +2829,18 @@ class RiotAPI
 	 **/
 
 	/**
+	 * @internal
+	 *
 	 * @param             $specs
 	 * @param string|null $region
 	 * @param string|null $method
 	 *
 	 * @return mixed
 	 *
+	 * @throws SettingsException
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
-	 *
-	 * @internal
 	 */
 	public function makeTestEndpointCall( $specs, string $region = null, string $method = null )
 	{
