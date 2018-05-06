@@ -1,5 +1,6 @@
 .idea/
 vendor/
 tests/Coverage/
+tests/DummyData/GET_lol-test-endpoint-v0-save.json
 src/RiotAPI/cache/
 composer.lock

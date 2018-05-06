@@ -46,22 +46,6 @@ class LeagueEndpointTest extends RiotAPITestCase
 	 *
 	 * @param RiotAPI $api
 	 */
-	public function testGetLeaguesForSummoner( RiotAPI $api )
-	{
-		$this->markTestSkipped("This endpoint has been deprecated. And will be removed in later releases.");
-
-		//  Get library processed results
-		/** @var Objects\LeagueListDto[] $result */
-		$result = $api->getLeaguesForSummoner(30904166);
-
-		$this->assertTrue(true);
-	}
-
-	/**
-	 * @depends testInit
-	 *
-	 * @param RiotAPI $api
-	 */
 	public function testGetLeaguePositionsForSummoner( RiotAPI $api )
 	{
 		//  Get library processed results
@@ -83,6 +67,8 @@ class LeagueEndpointTest extends RiotAPITestCase
 		$result = $api->getLeagueChallenger('RANKED_SOLO_5x5');
 
 		$this->assertTrue(true);
+
+		return $result;
 	}
 
 	/**
@@ -95,6 +81,24 @@ class LeagueEndpointTest extends RiotAPITestCase
 		//  Get library processed results
 		/** @var Objects\LeagueListDto $result */
 		$result = $api->getLeagueMaster('RANKED_SOLO_5x5');
+
+		$this->assertTrue(true);
+
+		return $result;
+	}
+
+	/**
+	 * @depends testInit
+	 * @depends testGetLeagueChallenger
+	 *
+	 * @param RiotAPI $api
+	 * @param string  $league_id
+	 */
+	public function testGetLeagueById( RiotAPI $api, Objects\LeagueListDto $leagueListDto )
+	{
+		//  Get library processed results
+		/** @var Objects\LeagueListDto $result */
+		$result = $api->getLeagueById($leagueListDto->leagueId);
 
 		$this->assertTrue(true);
 	}

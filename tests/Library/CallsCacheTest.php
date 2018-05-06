@@ -34,6 +34,20 @@ use RiotAPI\Exceptions\SettingsException;
 
 class CallsCacheTest extends TestCase
 {
+	public function testInit_simple()
+	{
+		$api = new RiotAPI([
+			RiotAPI::SET_KEY            => getenv('API_KEY'),
+			RiotAPI::SET_REGION         => Region::EUROPE_EAST,
+			RiotAPI::SET_USE_DUMMY_DATA => true,
+			RiotAPI::SET_CACHE_CALLS    => true,
+		]);
+
+		$this->assertInstanceOf(RiotAPI::class, $api);
+
+		return $api;
+	}
+
 	public function testInit_numeric()
 	{
 		$api = new RiotAPI([

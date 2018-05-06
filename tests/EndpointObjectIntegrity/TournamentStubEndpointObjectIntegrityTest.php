@@ -50,16 +50,12 @@ class TournamentStubEndpointObjectIntegrityTest extends RiotAPITestCase
 	 */
 	public function testCreateTournamentCodes( RiotAPI $api )
 	{
-		$this->markTestSkipped('Not fixed yet.');
-
 		$params = new Objects\TournamentCodeParameters([
-			'allowedSummonerIds' => new Objects\SummonerIdParams([
-				'participants' => [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ],
-			]),
-			'mapType'       => 'SUMMONERS_RIFT',
-			'pickType'      => 'ALL_RANDOM',
-			'spectatorType' => 'ALL',
-			'teamSize'      => 5
+			'allowedSummonerIds' => [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ],
+			'mapType'            => 'SUMMONERS_RIFT',
+			'pickType'           => 'ALL_RANDOM',
+			'spectatorType'      => 'ALL',
+			'teamSize'           => 5
 		]);
 
 		//  Get library processed results

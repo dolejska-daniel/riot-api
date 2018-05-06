@@ -22,10 +22,10 @@ declare(strict_types=1);
 use PHPUnit\Framework\TestCase;
 
 use RiotAPI\Exceptions\GeneralException;
-use RiotAPI\Extensions\MasteryPagesDtoExtension;
+use RiotAPI\Extensions\ChampionListDtoExtension;
+use RiotAPI\Objects\ChampionDto;
+use RiotAPI\Objects\ChampionListDto;
 use RiotAPI\Objects\IApiObject;
-use RiotAPI\Objects\MasteryPageDto;
-use RiotAPI\Objects\MasteryPagesDto;
 use RiotAPI\RiotAPI;
 use RiotAPI\Definitions\Region;
 
@@ -47,7 +47,7 @@ class ExtensionsTest extends TestCase
 			RiotAPI::SET_REGION         => Region::EUROPE_EAST,
 			RiotAPI::SET_USE_DUMMY_DATA => true,
 			RiotAPI::SET_EXTENSIONS     => [
-				MasteryPagesDto::class => MasteryPagesDtoExtension::class,
+				ChampionListDto::class => ChampionListDtoExtension::class,
 			],
 		]);
 
@@ -92,7 +92,7 @@ class ExtensionsTest extends TestCase
 			RiotAPI::SET_REGION         => Region::EUROPE_EAST,
 			RiotAPI::SET_USE_DUMMY_DATA => true,
 			RiotAPI::SET_EXTENSIONS     => [
-				MasteryPagesDto::class => IApiObject::class,
+				ChampionListDto::class => IApiObject::class,
 			],
 		]);
 	}
@@ -107,7 +107,7 @@ class ExtensionsTest extends TestCase
 			RiotAPI::SET_REGION         => Region::EUROPE_EAST,
 			RiotAPI::SET_USE_DUMMY_DATA => true,
 			RiotAPI::SET_EXTENSIONS     => [
-				MasteryPagesDto::class => NoninstantiableExtension::class,
+				ChampionListDto::class => NoninstantiableExtension::class,
 			],
 		]);
 	}
@@ -122,7 +122,7 @@ class ExtensionsTest extends TestCase
 			RiotAPI::SET_REGION         => Region::EUROPE_EAST,
 			RiotAPI::SET_USE_DUMMY_DATA => true,
 			RiotAPI::SET_EXTENSIONS     => [
-				MasteryPagesDto::class => "InvalidClass",
+				ChampionListDto::class => "InvalidClass",
 			],
 		]);
 	}
@@ -134,15 +134,19 @@ class ExtensionsTest extends TestCase
 	 */
 	public function testCallExtensionFunction_Valid( RiotAPI $api )
 	{
-		$this->markTestSkipped("This endpoint has been deprecated. And will be removed in later releases.");
+		$champions = $api->getChampions();
 
-		$masteryPages = $api->getMasteriesBySummoner(30904166);
+		$this->assertTrue($champions->isActive(61));
+		$this->assertNull($champions->isActive(1347843));
 
-		$this->assertTrue($masteryPages->pageExists("- Modif -"));
-		$this->assertFalse($masteryPages->pageExists("NONEXISTENT_PAGE_NAME"));
+		$this->assertTrue($champions->isRankedEnabled(61));
+		$this->assertNull($champions->isRankedEnabled(42487643));
 
-		$this->assertInstanceOf(MasteryPageDto::class, $masteryPages->getPageByName("- Modif -"));
-		$this->assertNull($masteryPages->getPageByName("NONEXISTENT_PAGE_NAME"));
+		$this->assertFalse($champions->isFreeToPlay(61));
+		$this->assertNull($champions->isFreeToPlay(55645198));
+
+		$this->assertInstanceOf(ChampionDto::class, $champions->getById(61));
+		$this->assertNull($champions->getById(814684753));
 	}
 
 	/**
@@ -152,12 +156,10 @@ class ExtensionsTest extends TestCase
 	 */
 	public function testCallExtensionFunction_Invalid( RiotAPI $api )
 	{
-		$this->markTestSkipped("This endpoint has been deprecated. And will be removed in later releases.");
-
 		$this->expectException(GeneralException::class);
 		$this->expectExceptionMessage('failed to be executed');
 
-		$masteryPages = $api->getMasteriesBySummoner(30904166);
+		$masteryPages = $api->getChampions();
 		$masteryPages->invalidFunction();
 	}
 
@@ -168,12 +170,10 @@ class ExtensionsTest extends TestCase
 	 */
 	public function testCallExtensionFunction_NoExtension( RiotAPI $api )
 	{
-		$this->markTestSkipped("This endpoint has been deprecated. And will be removed in later releases.");
-
 		$this->expectException(GeneralException::class);
 		$this->expectExceptionMessage('no extension exists for this ApiObject');
 
-		$masteryPages = $api->getMasteriesBySummoner(30904166);
+		$masteryPages = $api->getChampions();
 		$masteryPages->invalidFunction();
 	}
 }

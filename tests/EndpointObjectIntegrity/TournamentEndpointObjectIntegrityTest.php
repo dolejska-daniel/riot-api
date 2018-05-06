@@ -65,16 +65,12 @@ class TournamentEndpointObjectIntegrityTest extends RiotAPITestCase
 	 */
 	public function testCreateTournamentCodes( RiotAPI $api )
 	{
-		$this->markTestSkipped('Not fixed yet.');
-
 		$params = new Objects\TournamentCodeParameters([
-			'allowedSummonerIds' => new Objects\SummonerIdParams([
-				'participants' => [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ],
-			]),
-			'mapType'       => 'SUMMONERS_RIFT',
-			'pickType'      => 'ALL_RANDOM',
-			'spectatorType' => 'ALL',
-			'teamSize'      => 5
+			'allowedSummonerIds' => [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ],
+			'mapType'            => 'SUMMONERS_RIFT',
+			'pickType'           => 'ALL_RANDOM',
+			'spectatorType'      => 'ALL',
+			'teamSize'           => 5
 		]);
 
 		//  Get library processed results
@@ -93,16 +89,12 @@ class TournamentEndpointObjectIntegrityTest extends RiotAPITestCase
 	 */
 	public function testCreateTournamentCodes_Interim( RiotAPI $api )
 	{
-		$this->markTestSkipped('Not fixed yet.');
-
 		$codeParams = new Objects\TournamentCodeParameters([
-			'allowedSummonerIds' => new Objects\SummonerIdParams([
-				'participants' => [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ],
-			]),
-			'mapType'       => 'SUMMONERS_RIFT',
-			'pickType'      => 'ALL_RANDOM',
-			'spectatorType' => 'ALL',
-			'teamSize'      => 5
+			'allowedSummonerIds' => [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ],
+			'mapType'            => 'SUMMONERS_RIFT',
+			'pickType'           => 'ALL_RANDOM',
+			'spectatorType'      => 'ALL',
+			'teamSize'           => 5
 		]);
 
 		//  Get library processed results
@@ -240,7 +232,7 @@ class TournamentEndpointObjectIntegrityTest extends RiotAPITestCase
 		$this->markTestIncomplete('No DummyData for this call yet.');
 
 		$codeParams = new Objects\TournamentCodeUpdateParameters([
-			'allowedParticipants' => implode(',', [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ]),
+			'allowedParticipants' => [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ],
 			'mapType'             => 'SUMMONERS_RIFT',
 			'pickType'            => 'ALL_RANDOM',
 			'spectatorType'       => 'ALL',
@@ -267,7 +259,7 @@ class TournamentEndpointObjectIntegrityTest extends RiotAPITestCase
 		$this->expectExceptionMessage("This endpoint is not available in interim mode.");
 
 		$codeParams = new Objects\TournamentCodeUpdateParameters([
-			'allowedParticipants' => implode(',', [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ]),
+			'allowedParticipants' => [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ],
 			'mapType'             => 'SUMMONERS_RIFT',
 			'pickType'            => 'ALL_RANDOM',
 			'spectatorType'       => 'ALL',

@@ -179,6 +179,71 @@ class StaticDataEndpointTest extends RiotAPITestCase
 		$this->assertTrue(true);
 	}
 
+
+	/**
+	 * @depends testInit
+	 *
+	 * @param RiotAPI $api
+	 */
+	public function testGetStaticReforgedRunePaths( RiotAPI $api )
+	{
+		//  Get library processed results
+		/** @var StaticData\StaticReforgedRunePathDto[] $result */
+		$result = $api->getStaticReforgedRunePaths();
+		//  Get raw result
+		$rawResult = $api->getResult();
+
+		$this->assertTrue(true);
+	}
+
+	/**
+	 * @depends testInit
+	 *
+	 * @param RiotAPI $api
+	 */
+	public function testGetStaticReforgedRunePathById( RiotAPI $api )
+	{
+		//  Get library processed results
+		/** @var StaticData\StaticReforgedRunePathDto $result */
+		$result = $api->getStaticReforgedRunePathById(8200);
+		//  Get raw result
+		$rawResult = $api->getResult();
+
+		$this->assertTrue(true);
+	}
+
+	/**
+	 * @depends testInit
+	 *
+	 * @param RiotAPI $api
+	 */
+	public function testGetStaticReforgedRunes( RiotAPI $api )
+	{
+		//  Get library processed results
+		/** @var StaticData\StaticReforgedRuneDto[] $result */
+		$result = $api->getStaticReforgedRunes();
+		//  Get raw result
+		$rawResult = $api->getResult();
+
+		$this->assertTrue(true);
+	}
+
+	/**
+	 * @depends testInit
+	 *
+	 * @param RiotAPI $api
+	 */
+	public function testGetStaticReforgedRuneById( RiotAPI $api )
+	{
+		//  Get library processed results
+		/** @var StaticData\StaticReforgedRuneDto $result */
+		$result = $api->getStaticReforgedRuneById(8229);
+		//  Get raw result
+		$rawResult = $api->getResult();
+
+		$this->assertTrue(true);
+	}
+
 	/**
 	 * @depends testInit
 	 *

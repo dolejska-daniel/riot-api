@@ -27,9 +27,11 @@ namespace RiotAPI\Objects;
  *   spectator (v3)
  *     @link https://developer.riotgames.com/api-methods/#spectator-v3/GET_getCurrentGameInfoBySummoner
  *
+ * @iterable $perkIds
+ *
  * @package RiotAPI\Objects
  */
-class Perks extends ApiObject
+class Perks extends ApiObjectIterable
 {
 	/**
 	 *   Primary runes path.

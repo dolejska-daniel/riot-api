@@ -27,9 +27,11 @@ namespace RiotAPI\Objects;
  *   spectator (v3)
  *     @link https://developer.riotgames.com/api-methods/#spectator-v3/GET_getFeaturedGames
  *
+ * @iterable $participants
+ *
  * @package RiotAPI\Objects
  */
-class FeaturedGameInfo extends ApiObject
+class FeaturedGameInfo extends ApiObjectIterable
 {
 	/**
 	 *   The ID of the game.

@@ -19,10 +19,10 @@
 
 namespace RiotAPI\Extensions;
 
+use RiotAPI\Objects\ChampionDto;
+use RiotAPI\Objects\ChampionListDto;
 use RiotAPI\Objects\IApiObject;
 use RiotAPI\Objects\IApiObjectExtension;
-use RiotAPI\Objects\MasteryPageDto;
-use RiotAPI\Objects\MasteryPagesDto;
 use RiotAPI\RiotAPI;
 
 
@@ -31,15 +31,15 @@ use RiotAPI\RiotAPI;
  *
  * @package RiotAPI\Exception
  */
-class MasteryPagesDtoExtension implements IApiObjectExtension
+class ChampionListDtoExtension implements IApiObjectExtension
 {
-	/** @var MasteryPagesDto $object */
+	/** @var ChampionListDto $object */
 	protected $object;
 
 	/**
 	 *   MasteryPagesDtoExtension constructor.
 	 *
-	 * @param IApiObject|MasteryPagesDto $apiObject
+	 * @param IApiObject|ChampionListDto $apiObject
 	 * @param RiotAPI                    $api
 	 */
 	public function __construct( IApiObject &$apiObject, RiotAPI &$api )
@@ -47,22 +47,42 @@ class MasteryPagesDtoExtension implements IApiObjectExtension
 		$this->object = $apiObject;
 	}
 
-	public function pageExists( string $pageName )
+	public function getById( int $champion_id )
 	{
-		/** @var MasteryPageDto $page */
-		foreach ($this->object->pages as $page)
-			if ($page->name == $pageName)
-				return true;
+		/** @var ChampionDto $page */
+		foreach ($this->object->champions as $champion)
+			if ($champion->id == $champion_id)
+				return $champion;
 
-		return false;
+		return null;
 	}
 
-	public function getPageByName( string $pageName )
+	public function isActive( int $champion_id )
 	{
-		/** @var MasteryPageDto $page */
-		foreach ($this->object->pages as $page)
-			if ($page->name == $pageName)
-				return $page;
+		/** @var ChampionDto $page */
+		foreach ($this->object->champions as $champion)
+			if ($champion->id == $champion_id)
+				return $champion->active;
+
+		return null;
+	}
+
+	public function isFreeToPlay( int $champion_id )
+	{
+		/** @var ChampionDto $page */
+		foreach ($this->object->champions as $champion)
+			if ($champion->id == $champion_id)
+				return $champion->freeToPlay;
+
+		return null;
+	}
+
+	public function isRankedEnabled( int $champion_id )
+	{
+		/** @var ChampionDto $page */
+		foreach ($this->object->champions as $champion)
+			if ($champion->id == $champion_id)
+				return $champion->rankedPlayEnabled;
 
 		return null;
 	}

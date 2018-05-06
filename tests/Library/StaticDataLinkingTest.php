@@ -22,7 +22,6 @@ declare(strict_types=1);
 use PHPUnit\Framework\TestCase;
 
 use RiotAPI\Exceptions\GeneralException;
-use RiotAPI\Exceptions\ServerLimitException;
 use RiotAPI\Extensions\MasteryPagesDtoExtension;
 use RiotAPI\Objects\IApiObject;
 use RiotAPI\Objects\MasteryPageDto;
@@ -33,20 +32,16 @@ use RiotAPI\Definitions\Region;
 use RiotAPI\Exceptions\SettingsException;
 
 
-class LiveTest extends TestCase
+class StaticDataLinkingTest extends TestCase
 {
 	public function testInit()
 	{
 		$api = new RiotAPI([
 			RiotAPI::SET_KEY                => getenv('API_KEY'),
-			RiotAPI::SET_TOURNAMENT_KEY     => getenv('API_TOURNAMENT_KEY'),
 			RiotAPI::SET_REGION             => Region::EUROPE_EAST,
-			RiotAPI::SET_VERIFY_SSL         => false,
-			RiotAPI::SET_CACHE_RATELIMIT    => true,
+			RiotAPI::SET_USE_DUMMY_DATA     => true,
+			RiotAPI::SET_STATICDATA_LINKING => true,
 			RiotAPI::SET_CACHE_CALLS        => true,
-			RiotAPI::SET_CACHE_CALLS_LENGTH => 600,
-			RiotAPI::SET_USE_DUMMY_DATA     => false,
-			RiotAPI::SET_SAVE_DUMMY_DATA    => true,
 		]);
 
 		$this->assertInstanceOf(RiotAPI::class, $api);
@@ -54,42 +49,16 @@ class LiveTest extends TestCase
 		return $api;
 	}
 
-	/**
-	 * @depends testInit
-	 *
-	 * @param RiotAPI $api
-	 *
-	 * @return RiotAPI
-	 */
-	public function testLiveCall( RiotAPI $api )
+	public function testInit_invalid()
 	{
-		$this->markAsRisky();
-
-		$summoner = $api->getSummonerByName("KuliS");
-		$this->assertSame("KuliS", $summoner->name);
-		$this->assertSame(32473526, $summoner->id);
-		$this->assertSame(35079181, $summoner->accountId);
-
-		return $api;
-	}
-
-	/**
-	 * @depends testLiveCall
-	 */
-	public function testLiveCall_cached()
-	{
-		$this->markAsRisky();
+		$this->expectException(SettingsException::class);
+		$this->expectExceptionMessage("Using STATICDATA LINKING feature requires enabled call caching on STATICDATA RESOURCE.");
 
 		$api = new RiotAPI([
-			RiotAPI::SET_KEY         => "INVALID_KEY",
-			RiotAPI::SET_REGION      => Region::EUROPE_EAST,
-			RiotAPI::SET_CACHE_CALLS => true,
-			RiotAPI::SET_CACHE_CALLS_LENGTH => 60,
+			RiotAPI::SET_KEY                => getenv('API_KEY'),
+			RiotAPI::SET_REGION             => Region::EUROPE_EAST,
+			RiotAPI::SET_USE_DUMMY_DATA     => true,
+			RiotAPI::SET_STATICDATA_LINKING => true,
 		]);
-
-		$summoner = $api->getSummonerByName("KuliS");
-		$this->assertSame("KuliS", $summoner->name);
-		$this->assertSame(32473526, $summoner->id);
-		$this->assertSame(35079181, $summoner->accountId);
 	}
 }

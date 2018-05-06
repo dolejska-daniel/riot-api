@@ -27,9 +27,11 @@ namespace RiotAPI\Objects;
  *   spectator (v3)
  *     @link https://developer.riotgames.com/api-methods/#spectator-v3/GET_getCurrentGameInfoBySummoner
  *
+ * @iterable $participants
+ *
  * @package RiotAPI\Objects
  */
-class CurrentGameInfo extends ApiObject
+class CurrentGameInfo extends ApiObjectIterable
 {
 	/**
 	 *   The ID of the game.

@@ -24,7 +24,7 @@ use RiotAPI\Objects;
 use RiotAPI\Definitions\Region;
 
 
-class RunesEndpointObjectIntegrityTest extends RiotAPITestCase
+class ThirdPartyCodeEndpointObjectIntegrityTest extends RiotAPITestCase
 {
 	public function testInit()
 	{
@@ -44,16 +44,14 @@ class RunesEndpointObjectIntegrityTest extends RiotAPITestCase
 	 *
 	 * @param RiotAPI $api
 	 */
-	public function testGetRunesBySummoner( RiotAPI $api )
+	public function testGetThirdPartyCodeBySummonerId( RiotAPI $api )
 	{
-		$this->markTestSkipped("This endpoint has been deprecated. And will be removed in later releases.");
-
 		//  Get library processed results
-		/** @var Objects\RunePagesDto $result */
-		$result = $api->getRunesBySummoner(30904166);
+		/** @var Objects\CurrentGameInfo $result */
+		$result = $api->getThirdPartyCodeBySummonerId(30904166);
 		//  Get raw result
 		$rawResult = $api->getResult();
 
-		$this->checkObjectPropertiesAndDataValidity($result, $rawResult, Objects\RunePagesDto::class);
+		$this->assertSame($rawResult, $result, "Third party code does not match original request result data!");
 	}
 }

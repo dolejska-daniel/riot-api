@@ -162,8 +162,6 @@ class LibraryTest extends RiotAPITestCase
 
 	/**
 	 * @depends testInit
-	 * @depends      testChangeRegion
-	 * @depends      testChangeSettings_single
 	 *
 	 * @param RiotAPI $api
 	 */
@@ -175,6 +173,19 @@ class LibraryTest extends RiotAPITestCase
 		]);
 		$this->assertSame(getenv('API_KEY'), $api->getSetting(RiotAPI::SET_KEY));
 		$this->assertSame(Region::EUROPE_EAST, $api->getSetting(RiotAPI::SET_REGION));
+	}
+
+	/**
+	 * @depends testInit
+	 *
+	 * @param RiotAPI $api
+	 */
+	public function testChangeSettings_initOnly( RiotAPI $api )
+	{
+		$this->expectException(SettingsException::class);
+		$this->expectExceptionMessage("can only be set on initialization of the library");
+
+		$api->setSetting(RiotAPI::SET_API_BASEURL, "http://google.com");
 	}
 
 	public function testParseHeaders()
@@ -440,6 +451,26 @@ class LibraryTest extends RiotAPITestCase
 		$this->expectExceptionMessage("No DummyData available for call.");
 
 		$api->makeTestEndpointCall("empty");
+	}
+
+	/**
+	 * @depends testInit
+	 *
+	 * @param RiotAPI $api
+	 */
+	public function testSaveDummyData( RiotAPI $api )
+	{
+		$api->setSetting(RiotAPI::SET_SAVE_DUMMY_DATA, false);
+
+		try
+		{
+			$api->makeTestEndpointCall("save");
+		}
+		catch (RequestException $ex) {}
+
+		$this->assertFileNotExists($api->_getDummyDataFileName());
+		$api->_saveDummyData();
+		$this->assertFileExists($api->_getDummyDataFileName(), "DummyData file was not created correctly.");
 	}
 
 	/**

@@ -64,6 +64,8 @@ class MatchEndpointObjectIntegrityTest extends RiotAPITestCase
 	 */
 	public function testGetTournamentMatch( RiotAPI $api )
 	{
+		$this->markTestIncomplete('No DummyData for this call yet.');
+
 		//  Get library processed results
 		/** @var Objects\MatchDto $result */
 		$result = $api->getMatchByTournamentCode(2641970449, '239d180f-fb8a-439e-85d9-95142e10b4f5');
@@ -80,6 +82,8 @@ class MatchEndpointObjectIntegrityTest extends RiotAPITestCase
 	 */
 	public function testGetTournamentMatchIds( RiotAPI $api )
 	{
+		$this->markTestIncomplete('No DummyData for this call yet.');
+
 		//  Get library processed results
 		/** @var array $result */
 		$result = $api->getMatchIdsByTournamentCode('239d180f-fb8a-439e-85d9-95142e10b4f5');
@@ -99,22 +103,6 @@ class MatchEndpointObjectIntegrityTest extends RiotAPITestCase
 		//  Get library processed results
 		/** @var Objects\MatchlistDto $result */
 		$result = $api->getMatchlistByAccount(35545652);
-		//  Get raw result
-		$rawResult = $api->getResult();
-
-		$this->checkObjectPropertiesAndDataValidity($result, $rawResult, Objects\MatchlistDto::class);
-	}
-
-	/**
-	 * @depends testInit
-	 *
-	 * @param RiotAPI $api
-	 */
-	public function testGetRecentMatchlist( RiotAPI $api )
-	{
-		//  Get library processed results
-		/** @var Objects\MatchlistDto $result */
-		$result = $api->getRecentMatchlistByAccount(35545652);
 		//  Get raw result
 		$rawResult = $api->getResult();
 

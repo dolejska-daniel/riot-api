@@ -220,6 +220,71 @@ class StaticDataEndpointObjectIntegrityTest extends RiotAPITestCase
 	 *
 	 * @param RiotAPI $api
 	 */
+	public function testGetStaticReforgedRunePaths( RiotAPI $api )
+	{
+		//  Get library processed results
+		/** @var StaticData\StaticReforgedRunePathDto[] $result */
+		$result = $api->getStaticReforgedRunePaths();
+		//  Get raw result
+		$rawResult = $api->getResult();
+
+		$this->checkObjectPropertiesAndDataValidityOfObjectList($result, $rawResult, StaticData\StaticReforgedRunePathDto::class);
+	}
+
+	/**
+	 * @depends testInit
+	 *
+	 * @param RiotAPI $api
+	 */
+	public function testGetStaticReforgedRunePathById( RiotAPI $api )
+	{
+		//  Get library processed results
+		/** @var StaticData\StaticReforgedRunePathDto $result */
+		$result = $api->getStaticReforgedRunePathById(8200);
+		//  Get raw result
+		$rawResult = $api->getResult();
+
+		$this->checkObjectPropertiesAndDataValidity($result, $rawResult, StaticData\StaticReforgedRunePathDto::class);
+	}
+
+	/**
+	 * @depends testInit
+	 *
+	 * @param RiotAPI $api
+	 */
+	public function testGetStaticReforgedRunes( RiotAPI $api )
+	{
+		//  Get library processed results
+		/** @var StaticData\StaticReforgedRuneDto[] $result */
+		$result = $api->getStaticReforgedRunes();
+		//  Get raw result
+		$rawResult = $api->getResult();
+
+		$this->checkObjectPropertiesAndDataValidityOfObjectList($result, $rawResult, StaticData\StaticReforgedRuneDto::class);
+	}
+
+	/**
+	 * @depends testInit
+	 *
+	 * @param RiotAPI $api
+	 */
+	public function testGetStaticReforgedRuneById( RiotAPI $api )
+	{
+		//  Get library processed results
+		/** @var StaticData\StaticReforgedRuneDto $result */
+		$result = $api->getStaticReforgedRuneById(8229);
+		//  Get raw result
+		$rawResult = $api->getResult();
+
+		$this->checkObjectPropertiesAndDataValidity($result, $rawResult, StaticData\StaticReforgedRuneDto::class);
+	}
+
+
+	/**
+	 * @depends testInit
+	 *
+	 * @param RiotAPI $api
+	 */
 	public function testGetStaticRunes( RiotAPI $api )
 	{
 		//  Get library processed results
@@ -277,6 +342,23 @@ class StaticDataEndpointObjectIntegrityTest extends RiotAPITestCase
 		$rawResult = $api->getResult();
 
 		$this->checkObjectPropertiesAndDataValidity($result, $rawResult, StaticData\StaticSummonerSpellDto::class);
+	}
+
+	/**
+	 * @depends testInit
+	 *
+	 * @param RiotAPI $api
+	 */
+	public function testGetFullTarballLink( RiotAPI $api )
+	{
+		//  Get library processed results
+		/** @var array $result */
+		$result = $api->getFullTarballLink();
+		//  Get raw result
+		$rawResult = $api->getResult();
+
+		$this->assertContains("leagueoflegends.com", $result);
+		$this->assertSame($rawResult, $result, "Tarball link does not match original request result data!");
 	}
 
 	/**

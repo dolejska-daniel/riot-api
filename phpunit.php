@@ -32,6 +32,8 @@ class RiotAPITestCase extends TestCase
 	 * @param array  $data
 	 * @param array  $originalData
 	 * @param string $objectsClass
+	 *
+	 * @throws ReflectionException
 	 */
 	public function checkObjectPropertiesAndDataValidityOfObjectList ( array $data, array $originalData, string $objectsClass )
 	{
@@ -56,6 +58,8 @@ class RiotAPITestCase extends TestCase
 	 * @param Objects\IApiObject $object
 	 * @param array              $originalData
 	 * @param string|null        $objectClass
+	 *
+	 * @throws ReflectionException
 	 */
 	public function checkObjectPropertiesAndDataValidity( Objects\IApiObject $object, array $originalData, string $objectClass = null )
 	{
@@ -150,6 +154,13 @@ class RiotAPITestCase extends TestCase
 		return $o;
 	}
 
+	/**
+	 *   Recursively removes directory and all its contents.
+	 *
+	 * @param $dir
+	 *
+	 * @return bool
+	 */
 	public static function deleteDir($dir)
 	{
 		if (!file_exists($dir))

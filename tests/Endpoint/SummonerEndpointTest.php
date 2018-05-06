@@ -67,7 +67,7 @@ class SummonerEndpointTest extends RiotAPITestCase
 		$this->assertSame(30904166, $result->id);
 		$this->assertSame($accountId, $result->accountId);
 		$this->assertSame('I am TheKronnY', $result->name);
-		$this->assertSame(30, $result->summonerLevel);
+		$this->assertInternalType('integer', $result->summonerLevel);
 	}
 
 	/**
@@ -86,7 +86,7 @@ class SummonerEndpointTest extends RiotAPITestCase
 		$this->assertSame(30904166, $result->id);
 		$this->assertSame(35545652, $result->accountId);
 		$this->assertSame($summonerName, $result->name);
-		$this->assertSame(30, $result->summonerLevel);
+		$this->assertInternalType('integer', $result->summonerLevel);
 	}
 
 	/**
@@ -105,6 +105,6 @@ class SummonerEndpointTest extends RiotAPITestCase
 		$this->assertSame($summonerId, $result->id);
 		$this->assertSame(35545652, $result->accountId);
 		$this->assertSame('I am TheKronnY', $result->name);
-		$this->assertSame(30, $result->summonerLevel);
+		$this->assertInternalType('integer', $result->summonerLevel);
 	}
 }

@@ -69,18 +69,18 @@ class RiotAPI
 	const
 		SET_REGION                = 'SET_REGION',
 		SET_ORIG_REGION           = 'SET_ORIG_REGION',
-		SET_PLATFORM              = 'SET_PLATFORM',              // Set internally by setting region
-		SET_VERIFY_SSL            = 'SET_VERIFY_SSL',            // Specifies whether or not to verify SSL (verification often fails on localhost)
-		SET_KEY                   = 'SET_KEY',                   // API key used by default
-		SET_KEY_INCLUDE_TYPE      = 'SET_KEY_INCLUDE_TYPE',      // API key used by default
-		SET_TOURNAMENT_KEY        = 'SET_TOURNAMENT_KEY',        // API key used when working with tournaments
-		SET_INTERIM               = 'SET_INTERIM',               // Used to set whether or not is your application in Interim mode (Tournament STUB endpoints)
-		SET_CACHE_PROVIDER        = 'SET_CACHE_PROVIDER',        // Specifies CacheProvider class name
-		SET_CACHE_PROVIDER_PARAMS = 'SET_CACHE_PROVIDER_PARAMS', // Specifies parameters passed to CacheProvider class when initializing
-		SET_CACHE_RATELIMIT       = 'SET_CACHE_RATELIMIT',       // Used to set whether or not to saveCallData and check API key's rate limit
-		SET_CACHE_CALLS           = 'SET_CACHE_CALLS',           // Used to set whether or not to temporary saveCallData API call's results
-		SET_CACHE_CALLS_LENGTH    = 'SET_CACHE_CALLS_LENGTH',    // Specifies for how long are call results saved
-		SET_EXTENSIONS            = 'SET_EXTENSIONS',            // Specifies ApiObject's extensions
+		SET_PLATFORM              = 'SET_PLATFORM',              /** Set internally by setting region **/
+		SET_VERIFY_SSL            = 'SET_VERIFY_SSL',            /** Specifies whether or not to verify SSL (verification often fails on localhost) **/
+		SET_KEY                   = 'SET_KEY',                   /** API key used by default **/
+		SET_KEY_INCLUDE_TYPE      = 'SET_KEY_INCLUDE_TYPE',      /** API key used by default **/
+		SET_TOURNAMENT_KEY        = 'SET_TOURNAMENT_KEY',        /** API key used when working with tournaments **/
+		SET_INTERIM               = 'SET_INTERIM',               /** Used to set whether or not is your application in Interim mode (Tournament STUB endpoints) **/
+		SET_CACHE_PROVIDER        = 'SET_CACHE_PROVIDER',        /** Specifies CacheProvider class name **/
+		SET_CACHE_PROVIDER_PARAMS = 'SET_CACHE_PROVIDER_PARAMS', /** Specifies parameters passed to CacheProvider class when initializing **/
+		SET_CACHE_RATELIMIT       = 'SET_CACHE_RATELIMIT',       /** Used to set whether or not to saveCallData and check API key's rate limit **/
+		SET_CACHE_CALLS           = 'SET_CACHE_CALLS',           /** Used to set whether or not to temporary saveCallData API call's results **/
+		SET_CACHE_CALLS_LENGTH    = 'SET_CACHE_CALLS_LENGTH',    /** Specifies for how long are call results saved **/
+		SET_EXTENSIONS            = 'SET_EXTENSIONS',            /** Specifies ApiObject's extensions **/
 		SET_STATICDATA_LINKING    = 'SET_STATICDATA_LINKING',
 		SET_STATICDATA_LOCALE     = 'SET_STATICDATA_LOCALE',
 		SET_STATICDATA_VERSION    = 'SET_STATICDATA_VERSION',
@@ -329,12 +329,14 @@ class RiotAPI
 			if (array_search($key, array_keys($settings), true) === false)
 				throw new SettingsException("Required settings parameter '$key' is missing!");
 
+		//  Checks SET_KEY_INCLUDE_TYPE value
 		if (isset($settings[self::SET_KEY_INCLUDE_TYPE])
 			&& in_array($settings[self::SET_KEY_INCLUDE_TYPE], [ self::KEY_AS_HEADER, self::KEY_AS_QUERY_PARAM ], true) == false)
 		{
 			throw new SettingsException("Value of settings parameter '" . self::SET_KEY_INCLUDE_TYPE . "' is not valid.");
 		}
 
+		//  Checks SET_EXTENSIONS value
 		if (isset($settings[self::SET_EXTENSIONS]))
 		{
 			if (!is_array($settings[self::SET_EXTENSIONS]))
@@ -362,56 +364,10 @@ class RiotAPI
 			}
 		}
 
-		if (isset($settings[self::SET_CACHE_CALLS]) && $settings[self::SET_CACHE_CALLS])
-		{
-			//  Call caching should be enabled
-			if (isset($settings[self::SET_CACHE_CALLS_LENGTH]))
-			{
-				//  Resource caching lengths are specified
-				if (is_array($settings[self::SET_CACHE_CALLS_LENGTH]))
-				{
-					array_walk($settings[self::SET_CACHE_CALLS_LENGTH], function ($value, $key) {
-						if ((!is_integer($value) && !is_null($value)) || strpos($key, ':') == false)
-							throw new SettingsException("Value of settings parameter '" . self::SET_CACHE_CALLS_LENGTH . "' is not valid.");
-					});
-				}
-				elseif (!is_integer($settings[self::SET_CACHE_CALLS_LENGTH]))
-					throw new SettingsException("Value of settings parameter '" . self::SET_CACHE_CALLS_LENGTH . "' is not valid.");
-			}
-			else
-			{
-				//  Use default resource caching lengths
-				$settings[self::SET_CACHE_CALLS_LENGTH] = [
-					self::RESOURCE_CHAMPION         => 60 * 10,
-					self::RESOURCE_CHAMPIONMASTERY  => 60 * 60,
-					self::RESOURCE_LEAGUE           => 60 * 10,
-					self::RESOURCE_MATCH            => 0,
-					self::RESOURCE_SPECTATOR        => 0,
-					self::RESOURCE_STATICDATA       => 60 * 60 * 24,
-					self::RESOURCE_STATUS           => 60,
-					self::RESOURCE_SUMMONER         => 60 * 60,
-					self::RESOURCE_THIRD_PARTY_CODE => 0,
-					self::RESOURCE_TOURNAMENT       => 0,
-					self::RESOURCE_TOURNAMENT_STUB  => 0,
-				];
-			}
-		}
-
 		//  Assigns allowed settings
 		foreach (self::SETTINGS_ALLOWED as $key)
 			if (isset($settings[$key]))
 				$this->settings[$key] = $settings[$key];
-
-		if ($this->getSetting(self::SET_STATICDATA_LINKING) == true)
-		{
-			$calls_caching_settings = $this->getSetting(self::SET_CACHE_CALLS_LENGTH, []);
-			if ($this->getSetting(self::SET_CACHE_CALLS) == false
-				|| (is_array($calls_caching_settings) && (isset($calls_caching_settings[self::RESOURCE_STATICDATA]) == false || $calls_caching_settings[self::RESOURCE_STATICDATA] <= 0))
-				|| $calls_caching_settings <= 0)
-			{
-				throw new SettingsException('Using STATICDATA LINKING feature requires enabled call caching on STATICDATA RESOURCE.');
-			}
-		}
 
 		$this->regions = $custom_regionDataProvider
 			? $custom_regionDataProvider
@@ -429,6 +385,18 @@ class RiotAPI
 		if ($this->getSetting(self::SET_CACHE_CALLS))
 			$this->_setupCacheCalls();
 
+		if ($this->getSetting(self::SET_STATICDATA_LINKING) == true)
+		{
+			$calls_caching_settings = $this->getSetting(self::SET_CACHE_CALLS_LENGTH, []);
+			if ($this->getSetting(self::SET_CACHE_CALLS) == false
+				|| (is_array($calls_caching_settings) && (isset($calls_caching_settings[self::RESOURCE_STATICDATA]) == false || $calls_caching_settings[self::RESOURCE_STATICDATA] <= 0))
+				|| $calls_caching_settings <= 0)
+			{
+				throw new SettingsException('Using STATICDATA LINKING feature requires enabled call caching on STATICDATA RESOURCE.');
+			}
+		}
+
+
 		//  Set up before calls callbacks
 		$this->_setupBeforeCalls();
 
@@ -439,6 +407,11 @@ class RiotAPI
 		$this->setSetting(self::SET_PLATFORM, $this->platforms->getPlatformName($this->getSetting(self::SET_REGION)));
 	}
 
+	/**
+	 *   Initializes library cache provider.
+	 *
+	 * @throws SettingsException
+	 */
 	protected function _setupCacheProvider()
 	{
 		//  If something should be cached
@@ -482,34 +455,58 @@ class RiotAPI
 		$this->loadCache();
 	}
 
+	/**
+	 *   Initializes library call caching.
+	 *
+	 * @throws SettingsException
+	 */
 	public function _setupCacheCalls()
 	{
 		if ($this->isSettingSet(self::SET_CACHE_CALLS_LENGTH) == false)
 		{
-			//  Value is not set, setting default value of 60 seconds
-			$new_value = [];
-			$resources = $this->resources;
-			foreach ($resources as $resource)
-				$new_value[$resource] = 60;
-
-			$this->setSetting(self::SET_CACHE_CALLS_LENGTH, $new_value);
+			//  Value is not set, setting default values
+			$this->setSetting(self::SET_CACHE_CALLS_LENGTH, [
+				self::RESOURCE_CHAMPION         => 60 * 10,
+				self::RESOURCE_CHAMPIONMASTERY  => 60 * 60,
+				self::RESOURCE_LEAGUE           => 60 * 10,
+				self::RESOURCE_MATCH            => 0,
+				self::RESOURCE_SPECTATOR        => 0,
+				self::RESOURCE_STATICDATA       => 60 * 60 * 24,
+				self::RESOURCE_STATUS           => 60,
+				self::RESOURCE_SUMMONER         => 60 * 60,
+				self::RESOURCE_THIRD_PARTY_CODE => 0,
+				self::RESOURCE_TOURNAMENT       => 0,
+				self::RESOURCE_TOURNAMENT_STUB  => 0,
+			]);
 		}
 		else
 		{
-			$value = $this->getSetting(self::SET_CACHE_CALLS_LENGTH);
-			if (is_array($value))
+			$lengths = $this->getSetting(self::SET_CACHE_CALLS_LENGTH);
+
+			//  Resource caching lengths are specified
+			if (is_array($lengths))
+			{
+				array_walk($lengths, function ($value, $key) {
+					if ((!is_integer($value) && !is_null($value)) || strpos($key, ':') == false)
+						throw new SettingsException("Value of settings parameter '" . self::SET_CACHE_CALLS_LENGTH . "' is not valid.");
+				});
+			}
+			elseif (!is_integer($lengths))
+				throw new SettingsException("Value of settings parameter '" . self::SET_CACHE_CALLS_LENGTH . "' is not valid.");
+
+			if (is_array($lengths))
 			{
 				//  The value is array, let's check it
 				$new_value = [];
 				$resources = $this->resources;
 				foreach ($resources as $resource)
 				{
-					if (isset($value[$resource]))
+					if (isset($lengths[$resource]))
 					{
-						if ($value[$resource] > $this->ccc_savetime)
-							$this->ccc_savetime = $value[$resource];
+						if ($lengths[$resource] > $this->ccc_savetime)
+							$this->ccc_savetime = $lengths[$resource];
 
-						$new_value[$resource] = $value[$resource];
+						$new_value[$resource] = $lengths[$resource];
 					}
 					else
 						$new_value[$resource] = null;
@@ -522,16 +519,21 @@ class RiotAPI
 				//  The value is numeric, lets set the same limit to all resources
 				$new_value = [];
 				$resources = $this->resources;
-				$this->ccc_savetime = $value;
+				$this->ccc_savetime = $lengths;
 
 				foreach ($resources as $resource)
-					$new_value[$resource] = $value;
+					$new_value[$resource] = $lengths;
 
 				$this->setSetting(self::SET_CACHE_CALLS_LENGTH, $new_value);
 			}
 		}
 	}
 
+	/**
+	 *   Sets up internal callbacks - before the call is made.
+	 *
+	 * @throws SettingsException
+	 */
 	protected function _setupBeforeCalls()
 	{
 		//  API rate limit check before call is made
@@ -554,6 +556,11 @@ class RiotAPI
 		}
 	}
 
+	/**
+	 *   Sets up internal callbacks - after the call is made.
+	 *
+	 * @throws SettingsException
+	 */
 	protected function _setupAfterCalls()
 	{
 		//  Save ratelimits received with this request if RateLimit cache is enabled
@@ -1051,7 +1058,7 @@ class RiotAPI
 	 *
 	 * @throws RequestException
 	 */
-	protected function _loadDummyData( &$headers, &$response, &$response_code )
+	public function _loadDummyData( &$headers, &$response, &$response_code )
 	{
 		$data = @file_get_contents($this->_getDummyDataFileName());
 		$data = unserialize($data);
@@ -1065,11 +1072,11 @@ class RiotAPI
 	}
 
 	/**
-	 * @internal
-	 *
 	 *   Saves dummy response to file.
+	 *
+	 * @internal
 	 */
-	protected function _saveDummyData()
+	public function _saveDummyData()
 	{
 		file_put_contents($this->_getDummyDataFileName(), serialize([
 			'headers'  => $this->result_headers,
@@ -1079,14 +1086,14 @@ class RiotAPI
 	}
 
 	/**
-	 * @internal
-	 *
 	 *   Processes 'beforeCall' callbacks.
 	 *
 	 * @param string $url
 	 * @param string $requestHash
 	 *
 	 * @throws RequestException
+	 *
+	 * @internal
 	 */
 	protected function _beforeCall( string $url, string $requestHash )
 	{
@@ -1100,13 +1107,13 @@ class RiotAPI
 	}
 
 	/**
-	 * @internal
-	 *
 	 *   Processes 'afterCall' callbacks.
 	 *
 	 * @param string $url
 	 * @param string $requestHash
 	 * @param        $curlResource
+	 *
+	 * @internal
 	 */
 	protected function _afterCall( string $url, string $requestHash, $curlResource )
 	{
@@ -1117,15 +1124,15 @@ class RiotAPI
 	}
 
 	/**
-	 * @internal
-	 *
 	 *   Builds API call URL based on current settings.
 	 *
 	 * @param array $curlHeaders
 	 *
 	 * @return string
+	 *
+	 * @internal
 	 */
-	protected function _getCallUrl( &$curlHeaders = [] ): string
+	public function _getCallUrl( &$curlHeaders = [] ): string
 	{
 		$curlHeaders = [];
 		//  Platform against which will call be made
@@ -1158,13 +1165,13 @@ class RiotAPI
 	}
 
 	/**
-	 * @internal
-	 *
 	 *   Returns dummy response filename based on current settings.
 	 *
 	 * @return string
+	 *
+	 * @internal
 	 */
-	protected function _getDummyDataFileName(): string
+	public function _getDummyDataFileName(): string
 	{
 		$method = $this->used_method;
 		$endp = str_replace([ '/', '.' ], [ '-', '' ], substr($this->endpoint, 1));
@@ -1428,36 +1435,6 @@ class RiotAPI
 			->makeCall();
 
 		return new Objects\LeagueListDto($this->getResult(), $this);
-	}
-
-	/**
-	 *   Get leagues mapped by summoner ID for a given list of summoner IDs.
-	 *
-	 * @param int $summoner_id
-	 *
-	 * @return Objects\LeagueListDto[]
-	 *
-	 * @throws SettingsException
-	 * @throws RequestException
-	 * @throws ServerException
-	 * @throws ServerLimitException
-	 *
-	 * @link https://developer.riotgames.com/api-methods/#league-v3/GET_getAllLeaguesForSummoner
-	 * @deprecated
-	 */
-	public function getLeaguesForSummoner( int $summoner_id ): array
-	{
-		trigger_error("This endpoint has been deprecated. And will be removed in later releases.", E_USER_DEPRECATED);
-
-		$this->setEndpoint("/lol/league/" . self::RESOURCE_LEAGUE_V3 . "/leagues/by-summoner/{$summoner_id}")
-			->setResource(self::RESOURCE_LEAGUE, "/leagues/by-summoner/%i")
-			->makeCall();
-
-		$r = [];
-		foreach ($this->getResult() as $leagueListDtoData)
-			$r[] = new Objects\LeagueListDto($leagueListDtoData, $this);
-
-		return $r;
 	}
 
 	/**
@@ -1850,7 +1827,7 @@ class RiotAPI
      * @throws ServerLimitException
      * @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getReforgedRunePaths
      */
-    public function getReforgedRunePaths( string $locale = null, string $version = null ): array
+    public function getStaticReforgedRunePaths( string $locale = null, string $version = null ): array
     {
         $this->setEndpoint("/lol/static-data/" . self::RESOURCE_STATICDATA_V3 . "/reforged-rune-paths")
             ->setResource(self::RESOURCE_STATICDATA, "/reforged-rune-paths")
@@ -1881,7 +1858,7 @@ class RiotAPI
      *
      * @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getReforgedRunePathById
      */
-    public function getReforgedRunePathById( int $id = null, string $locale = null, string $version = null ): StaticData\StaticReforgedRunePathDto
+    public function getStaticReforgedRunePathById( int $id = null, string $locale = null, string $version = null ): StaticData\StaticReforgedRunePathDto
     {
         $this->setEndpoint("/lol/static-data/" . self::RESOURCE_STATICDATA_V3 . "/reforged-rune-paths/{$id}")
             ->setResource(self::RESOURCE_STATICDATA, "/reforged-rune-paths/%i")
@@ -1906,7 +1883,7 @@ class RiotAPI
      * @throws ServerLimitException
      * @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getReforgedRunes
      */
-    public function getReforgedRunes( string $locale = null, string $version = null ): array
+    public function getStaticReforgedRunes( string $locale = null, string $version = null ): array
     {
         $this->setEndpoint("/lol/static-data/" . self::RESOURCE_STATICDATA_V3 . "/reforged-runes")
             ->setResource(self::RESOURCE_STATICDATA, "/reforged-runes")
@@ -1937,7 +1914,7 @@ class RiotAPI
      *
      * @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getReforgedRuneById
      */
-    public function getReforgedRuneById( int $id = null, string $locale = null, string $version = null ): StaticData\StaticReforgedRuneDto
+    public function getStaticReforgedRuneById( int $id = null, string $locale = null, string $version = null ): StaticData\StaticReforgedRuneDto
     {
         $this->setEndpoint("/lol/static-data/" . self::RESOURCE_STATICDATA_V3 . "/reforged-runes/{$id}")
             ->setResource(self::RESOURCE_STATICDATA, "/reforged-runes/%i")
@@ -2254,29 +2231,6 @@ class RiotAPI
 			->addQuery('endTime', $endTime)
 			->addQuery('beginIndex', $beginIndex)
 			->addQuery('endIndex', $endIndex)
-			->makeCall();
-
-		return new Objects\MatchlistDto($this->getResult(), $this);
-	}
-
-	/**
-	 *   Retrieve recent matchlist by account ID. (20 latest games)
-	 *
-	 * @param int $account_id
-	 *
-	 * @return Objects\MatchlistDto
-	 *
-	 * @throws SettingsException
-	 * @throws RequestException
-	 * @throws ServerException
-	 * @throws ServerLimitException
-	 *
-	 * @link https://developer.riotgames.com/api-methods/#match-v3/GET_getRecentMatchlist
-	 */
-	public function getRecentMatchlistByAccount( int $account_id ): Objects\MatchlistDto
-	{
-		$this->setEndpoint("/lol/match/" . self::RESOURCE_MATCH_V3 . "/matchlists/by-account/{$account_id}/recent")
-			->setResource(self::RESOURCE_MATCH, "/matchlists/by-account/%i/recent")
 			->makeCall();
 
 		return new Objects\MatchlistDto($this->getResult(), $this);
@@ -2829,8 +2783,6 @@ class RiotAPI
 	 **/
 
 	/**
-	 * @internal
-	 *
 	 * @param             $specs
 	 * @param string|null $region
 	 * @param string|null $method
@@ -2841,6 +2793,8 @@ class RiotAPI
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
+	 *
+	 * @internal
 	 */
 	public function makeTestEndpointCall( $specs, string $region = null, string $method = null )
 	{

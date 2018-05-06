@@ -26,7 +26,6 @@ namespace RiotAPI\Objects;
  * Used in:
  *   match (v3)
  *     @link https://developer.riotgames.com/api-methods/#match-v3/GET_getMatchlist
- *     @link https://developer.riotgames.com/api-methods/#match-v3/GET_getRecentMatchlist
  *
  * @iterable $matches
  *
