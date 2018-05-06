@@ -12,22 +12,23 @@
          beStrictAboutOutputDuringTests="true"
 >
 	<testsuites>
-		<testsuite name="Library_Tests">
-			<directory>./tests/Library/</directory>
+		<testsuite name="RiotAPI:Library_Tests">
+			<directory>tests/RiotAPI/Library/</directory>
 		</testsuite>
-		<testsuite name="Definition_Tests">
-			<directory>./tests/Definition/</directory>
+		<testsuite name="RiotAPI:Definition_Tests">
+			<directory>tests/RiotAPI/Definition/</directory>
 		</testsuite>
-		<testsuite name="Endpoint_Object_Integrity_Tests">
-			<directory>./tests/EndpointObjectIntegrity/</directory>
+		<testsuite name="RiotAPI:Endpoint_Object_Integrity_Tests">
+			<directory>tests/RiotAPI/EndpointObjectIntegrity/</directory>
 		</testsuite>
-		<testsuite name="Endpoint_Tests">
-			<directory>./tests/Endpoint/</directory>
+		<testsuite name="RiotAPI:Endpoint_Tests">
+			<directory>tests/RiotAPI/Endpoint/</directory>
 		</testsuite>
 	</testsuites>
 
 	<filter>
 		<whitelist addUncoveredFilesFromWhitelist="false">
+			<directory suffix=".php">src/DataDragonAPI</directory>
 			<directory suffix=".php">src/RiotAPI</directory>
 			<exclude>
 				<directory suffix=".php">vendor</directory>
