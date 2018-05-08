@@ -21,30 +21,41 @@ $custom_api = new RiotAPI([
 
 	//  This enables static data linking
 	RiotAPI::SET_STATICDATA_LINKING => true,
+	RiotAPI::SET_CACHE_CALLS        => true,
 ]);
 
+$id = 61;
+
 //  Make a call to RiotAPI
-$ch = $custom_api->getChampionById(61);
+$ch = $custom_api->getChampionById($id);
 
 ?>
+<html>
+	<head>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	</head>
+	<body class="container">
+		<p class="lead">Fetching data for champion with ChampionID: <code><?=$id?></code>. Using <b>StaticData linking</b> feature.</p>
 
-<table>
-	<thead>
-	<tr>
-		<th>ID</th>
-		<th>Name & Title</th>
-		<th>Is active?</th>
-		<th>Is playable in rankeds?</th>
-		<th>Is F2P?</th>
-	</tr>
-	</thead>
-	<tbody>
-	<tr>
-		<td><?=$ch->id?></td>
-		<td><?=$ch->name . ", " . $ch->title?></td>
-		<td><?=$ch->active ? 'Yes' : 'No'?></td>
-		<td><?=$ch->rankedPlayEnabled ? 'Yes' : 'No'?></td>
-		<td><?=$ch->freeToPlay ? 'Yes' : 'No'?></td>
-	</tr>
-	</tbody>
-</table>
+		<table class="table">
+			<thead>
+			<tr>
+				<th>ID</th>
+				<th>Name & Title</th>
+				<th>Is active?</th>
+				<th>Is playable in rankeds?</th>
+				<th>Is F2P?</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr>
+				<td><?=$ch->id?></td>
+				<td><?=$ch->name . ", " . $ch->title?></td>
+				<td><?=$ch->active ? 'Yes' : 'No'?></td>
+				<td><?=$ch->rankedPlayEnabled ? 'Yes' : 'No'?></td>
+				<td><?=$ch->freeToPlay ? 'Yes' : 'No'?></td>
+			</tr>
+			</tbody>
+		</table>
+	</body>
+</html>

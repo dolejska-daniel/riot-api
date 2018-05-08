@@ -25,32 +25,43 @@ $custom_api = new RiotAPI([
 
 	//  This enables static data linking
 	RiotAPI::SET_STATICDATA_LINKING => true,
+	RiotAPI::SET_CACHE_CALLS        => true,
 ]);
 
+$summoner = 30904166;
+
 //  Make a call to RiotAPI
-$masteries = $custom_api->getChampionMasteries(30904166);
+$masteries = $custom_api->getChampionMasteries($summoner);
 
 ?>
+<html>
+	<head>
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+	</head>
+	<body class="container">
+		<p class="lead">Fetching mastery data for summoner with SummonerID: <code><?=$summoner?></code>. Using <b>StaticData linking</b> feature.</p>
 
-<table>
-	<thead>
-	<tr>
-		<th>Champion ID</th>
-		<th>Champion name</th>
-		<th>Mastery level</th>
-		<th>Mastery points</th>
-		<th>Chest granted?</th>
-	</tr>
-	</thead>
-	<tbody>
-	<?php foreach ($masteries as $m): ?>
-		<tr>
-			<td><?=$m->championId?></td>
-			<td><?=$m->name . ", " . $m->title?></td>
-			<td><?=$m->championLevel?></td>
-			<td><?=$m->championPoints?></td>
-			<td><?=$m->chestGranted ? 'Yes' : 'No'?></td>
-		</tr>
-	<?php endforeach; ?>
-	</tbody>
-</table>
+		<table class="table">
+			<thead>
+			<tr>
+				<th>Champion ID</th>
+				<th>Champion name</th>
+				<th>Mastery level</th>
+				<th>Mastery points</th>
+				<th>Chest granted?</th>
+			</tr>
+			</thead>
+			<tbody>
+			<?php foreach ($masteries as $m): ?>
+				<tr>
+					<td><?=$m->championId?></td>
+					<td><?=$m->name . ", " . $m->title?></td>
+					<td><?=$m->championLevel?></td>
+					<td><?=$m->championPoints?></td>
+					<td><?=$m->chestGranted ? 'Yes' : 'No'?></td>
+				</tr>
+			<?php endforeach; ?>
+			</tbody>
+		</table>
+	</body>
+</html>

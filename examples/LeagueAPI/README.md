@@ -1,6 +1,6 @@
 # Examples
 
-Here you can check out some usage examples for this library.
+Here you can check out some usage examples for League library.
 
 
 ## Champion resource
@@ -9,7 +9,8 @@ __getChampion__:
 
 - [Fetch data for all champions](https://github.com/dolejska-daniel/riot-api/blob/master/examples/LeagueAPI/Champion/getChampions_all.php)
 - [Fetch data for all champions (with StaticData linking)](https://github.com/dolejska-daniel/riot-api/blob/master/examples/LeagueAPI/Champion/getChampions_all_linking.php)
-- [Fetch data for F2P champions only](https://github.com/dolejska-daniel/riot-api/blob/master/examples/LeagueAPI/Champion/getChampions_f2p.php)
+- [Fetch data for free to play champions only](https://github.com/dolejska-daniel/riot-api/blob/master/examples/LeagueAPI/Champion/getChampions_f2p.php)
+- [Fetch data for free to play champions only (with StaticData linking)](https://github.com/dolejska-daniel/riot-api/blob/master/examples/LeagueAPI/Champion/getChampions_f2p_linking.php)
 
 __getChampionById__:
 
@@ -53,13 +54,6 @@ __getLeagueMaster__:
 _TBA_
 
 
-## Masteries resource
-
-__getMasteriesBySummoner__:
-
-_TBA_
-
-
 ## Match resource
 
 __getMatch__:
@@ -83,13 +77,6 @@ __getRecentMatchlistByAccount__:
 _TBA_
 
 __getMatchTimeline__:
-
-_TBA_
-
-
-## Runes resource
-
-__getRunesBySummoner__:
 
 _TBA_
 
@@ -122,15 +109,15 @@ __getStatusData__:
 
 __getSummoner__:
 
-_TBA_
+- [Fetch summoner data with SummonerID](https://github.com/dolejska-daniel/riot-api/blob/master/examples/LeagueAPI/Summoner/getSummoner.php)
 
 __getSummonerByName__:
 
-_TBA_
+- [Fetch summoner data with summoner name](https://github.com/dolejska-daniel/riot-api/blob/master/examples/LeagueAPI/Summoner/getSummonerByName.php)
 
 __getSummonerByAccount__:
 
-_TBA_
+- [Fetch summoner data with AccountID](https://github.com/dolejska-daniel/riot-api/blob/master/examples/LeagueAPI/Summoner/getSummonerByAccount.php)
 
 
 ## Tournament & Tournament STUB resource

@@ -10,9 +10,9 @@ use RiotAPI\RiotAPI;
 use RiotAPI\Definitions\Region;
 
 
-/********************************d*d**
- *  Default configuration
- *************************************/
+// ==============================d=d==
+//  Default configuration
+// ==============================d=d==
 
 //  Your normal API key
 const CFG_API_KEY    = "YOUR_API_KEY";
@@ -27,9 +27,12 @@ const CFG_REGION     = Region::EUROPE_EAST;
 const CFG_VERIFY_SSL = false;
 
 
-/********************************d*d**
- *  Default configuration
- *************************************/
+// ==============================d=d==
+//  Library initialization.
+// ==============================d=d==
+
+if (CFG_API_KEY == "YOUR_API_KEY")
+	die("Please change API key in the configuration file (_init.php) to your own.");
 
 $api = new RiotAPI([
 	RiotAPI::SET_KEY            => CFG_API_KEY,

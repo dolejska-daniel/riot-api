@@ -1,14 +1,14 @@
 <?php
 /**
  *  This example shows how to fetch current champion information
- *    for all champions.
+ *    for currently free to play champions.
  */
 
 //  Include init file
 require __DIR__ . "/../_init.php";
 
 //  Make a call to RiotAPI
-$champs = $api->getChampions();
+$champs = $api->getChampions(true);
 
 ?>
 <html>
@@ -16,7 +16,7 @@ $champs = $api->getChampions();
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 	</head>
 	<body class="container">
-		<p class="lead">Fetching champion data.</p>
+		<p class="lead">Fetching free to play champion data. Using <b>StaticData linking</b> feature.</p>
 
 		<table class="table">
 			<thead>
