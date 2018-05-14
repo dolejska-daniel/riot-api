@@ -95,7 +95,7 @@ class TournamentStubEndpointTest extends RiotAPITestCase
 	public function testCreateTournamentCodes_participants_empty( RiotAPI $api )
 	{
 		$this->expectException(RequestParameterException::class);
-		$this->expectExceptionMessage("List of participants (allowedSummonerIds->participants) may not be empty.");
+		$this->expectExceptionMessage("List of participants (allowedSummonerIds) may not be empty.");
 
 		$params = new Objects\TournamentCodeParameters([
 			'allowedSummonerIds' => [],
