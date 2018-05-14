@@ -21,6 +21,8 @@ namespace DataDragonAPI;
 
 use Nette\Utils\Html;
 
+use RiotAPI\Objects\StaticData\StaticReforgedRuneDto;
+use RiotAPI\Objects\StaticData\StaticReforgedRunePathDto;
 use RiotAPI\RiotAPI;
 use RiotAPI\Objects\SummonerDto;
 use RiotAPI\Objects\StaticData\StaticImageDto;
@@ -41,21 +43,22 @@ class DataDragonAPI
 {
 	/** Settings constants. */
 	const
-		SET_ENDPOINT            = 'datadragon-cdn',
-		SET_VERSION             = 'version',
-		SET_CUSTOM_IMG_ATTRS    = 'custom-attrs',
-		SET_DEFAULT_CLASS       = 'class-default',
-		SET_PROFILE_ICON_CLASS  = 'class-profile',
-		SET_MASTERY_ICON_CLASS  = 'class-mastery',
-		SET_RUNE_ICON_CLASS     = 'class-rune',
-		SET_CHAMP_SPLASH_CLASS  = 'class-champ_splash',
-		SET_CHAMP_LOADING_CLASS = 'class-champ_loading',
-		SET_CHAMP_ICON_CLASS    = 'class-champ_icon',
-		SET_SPRITE_CLASS        = 'class-champ_icon_sprite',
-		SET_SPELL_ICON_CLASS    = 'class-spell',
-		SET_ITEM_ICON_CLASS     = 'class-item',
-		SET_UI_ICON_CLASS       = 'class-scoreboard',
-		SET_MINIMAP_CLASS       = 'class-minimap';
+		SET_ENDPOINT                    = 'datadragon-cdn',
+		SET_VERSION                     = 'version',
+		SET_CUSTOM_IMG_ATTRS            = 'custom-attrs',
+		SET_DEFAULT_CLASS               = 'class-default',
+		SET_PROFILE_ICON_CLASS          = 'class-profile',
+		SET_MASTERY_ICON_CLASS          = 'class-mastery',
+		SET_RUNE_ICON_CLASS             = 'class-rune',
+		SET_REFORGED_RUNE_ICON_CLASS    = 'class-reforged-rune',
+		SET_CHAMP_SPLASH_CLASS          = 'class-champ_splash',
+		SET_CHAMP_LOADING_CLASS         = 'class-champ_loading',
+		SET_CHAMP_ICON_CLASS            = 'class-champ_icon',
+		SET_SPRITE_CLASS                = 'class-champ_icon_sprite',
+		SET_SPELL_ICON_CLASS            = 'class-spell',
+		SET_ITEM_ICON_CLASS             = 'class-item',
+		SET_UI_ICON_CLASS               = 'class-scoreboard',
+		SET_MINIMAP_CLASS               = 'class-minimap';
 
 
 	/**
@@ -64,19 +67,20 @@ class DataDragonAPI
 	 * @var $settings array
 	 */
 	static protected $settings = array(
-		self::SET_ENDPOINT            => 'https://ddragon.leagueoflegends.com/cdn/',
-		self::SET_DEFAULT_CLASS       => 'dd-icon',
-		self::SET_PROFILE_ICON_CLASS  => 'dd-icon-profile',
-		self::SET_MASTERY_ICON_CLASS  => 'dd-icon-mastery',
-		self::SET_RUNE_ICON_CLASS     => 'dd-icon-rune',
-		self::SET_CHAMP_SPLASH_CLASS  => 'dd-splash',
-		self::SET_CHAMP_LOADING_CLASS => 'dd-loading',
-		self::SET_CHAMP_ICON_CLASS    => 'dd-icon-champ',
-		self::SET_SPRITE_CLASS        => 'dd-sprite',
-		self::SET_SPELL_ICON_CLASS    => 'dd-icon-spell',
-		self::SET_ITEM_ICON_CLASS     => 'dd-icon-item',
-		self::SET_UI_ICON_CLASS       => 'dd-icon-ui',
-		self::SET_MINIMAP_CLASS       => 'dd-minimap',
+		self::SET_ENDPOINT                  => 'https://ddragon.leagueoflegends.com/cdn/',
+		self::SET_DEFAULT_CLASS             => 'dd-icon',
+		self::SET_PROFILE_ICON_CLASS        => 'dd-icon-profile',
+		self::SET_MASTERY_ICON_CLASS        => 'dd-icon-mastery',
+		self::SET_RUNE_ICON_CLASS           => 'dd-icon-rune',
+		self::SET_REFORGED_RUNE_ICON_CLASS  => 'dd-icon-reforged-rune',
+		self::SET_CHAMP_SPLASH_CLASS        => 'dd-splash',
+		self::SET_CHAMP_LOADING_CLASS       => 'dd-loading',
+		self::SET_CHAMP_ICON_CLASS          => 'dd-icon-champ',
+		self::SET_SPRITE_CLASS              => 'dd-sprite',
+		self::SET_SPELL_ICON_CLASS          => 'dd-icon-spell',
+		self::SET_ITEM_ICON_CLASS           => 'dd-icon-item',
+		self::SET_UI_ICON_CLASS             => 'dd-icon-ui',
+		self::SET_MINIMAP_CLASS             => 'dd-minimap',
 	);
 
 	/**
@@ -177,6 +181,7 @@ class DataDragonAPI
 	 * @throws \RiotAPI\Exceptions\RequestException
 	 * @throws \RiotAPI\Exceptions\ServerException
 	 * @throws \RiotAPI\Exceptions\ServerLimitException
+	 * @throws \RiotAPI\Exceptions\SettingsException
 	 */
 	public static function initByApi( RiotAPI $api, array $customSettings = [] )
 	{
@@ -861,6 +866,81 @@ class DataDragonAPI
 	public static function getRuneIconO( StaticRuneDto $rune, array $attributes = [] ): Html
 	{
 		return self::getRuneIcon($rune->id, $attributes);
+	}
+
+
+	// ---------------------------------------------d-d-
+	//  Runes Reforged
+	// ---------------------------------------------d-d-
+
+	/**
+	 *   Returns reforged rune icon URL.
+	 *
+	 * @param StaticReforgedRuneDto $rune
+	 *
+	 * @return string
+	 */
+	public static function getReforgedRuneIconUrlO( StaticReforgedRuneDto $rune ): string
+	{
+		return self::getSetting(self::SET_ENDPOINT) . "/img/" . $rune->icon;
+	}
+
+	/**
+	 *   Returns reforged rune icon from API static-data ReforgedRune object in
+	 * img HTML TAG.
+	 *
+	 * @param StaticReforgedRuneDto $rune
+	 * @param array                 $attributes
+	 *
+	 * @return Html
+	 */
+	public static function getReforgedRuneIconO( StaticReforgedRuneDto $rune, array $attributes = [] ): Html
+	{
+		$attrs = array_merge([ 'alt'   => $rune->name ], self::getSetting(self::SET_CUSTOM_IMG_ATTRS, []), $attributes);
+		$attrs['class'] = implode(' ', [
+			self::getSetting(self::SET_DEFAULT_CLASS),
+			self::getSetting(self::SET_REFORGED_RUNE_ICON_CLASS),
+			@self::getSetting(self::SET_CUSTOM_IMG_ATTRS, [])['class'],
+			@$attributes['class'],
+		]);
+		$attrs['src'] = self::getReforgedRuneIconUrlO($rune);
+
+		return Html::el('img', $attrs);
+	}
+
+	/**
+	 *   Returns reforged rune path icon URL.
+	 *
+	 * @param StaticReforgedRunePathDto $runePath
+	 *
+	 * @return string
+	 */
+	public static function getReforgedRunePathIconUrlO( StaticReforgedRunePathDto $runePath ): string
+	{
+		return self::getSetting(self::SET_ENDPOINT) . "/img/" . $runePath->icon;
+	}
+
+	/**
+	 *   Returns reforged rune path from API static-data ReforgedRunePath
+	 * object in img HTML TAG.
+	 *
+	 * @param StaticReforgedRunePathDto $runePath
+	 * @param array                     $attributes
+	 *
+	 * @return Html
+	 */
+	public static function getReforgedRunePathIconO( StaticReforgedRunePathDto $runePath, array $attributes = [] ): Html
+	{
+		$attrs = array_merge([ 'alt'   => $runePath->name ], self::getSetting(self::SET_CUSTOM_IMG_ATTRS, []), $attributes);
+		$attrs['class'] = implode(' ', [
+			self::getSetting(self::SET_DEFAULT_CLASS),
+			self::getSetting(self::SET_REFORGED_RUNE_ICON_CLASS),
+			@self::getSetting(self::SET_CUSTOM_IMG_ATTRS, [])['class'],
+			@$attributes['class'],
+		]);
+		$attrs['src'] = self::getReforgedRunePathIconUrlO($runePath);
+
+		return Html::el('img', $attrs);
 	}
 
 

@@ -2412,7 +2412,7 @@ class RiotAPI
 			throw new RequestParameterException('Team size (teamSize) must be less than or equal to 5.');
 
 		if (empty($parameters->allowedSummonerIds))
-			throw new RequestParameterException('List of participants (allowedSummonerIds->participants) may not be empty. If you wish to allow anyone, fill it with 0, 1, 2, 3, etc.');
+			throw new RequestParameterException('List of participants (allowedSummonerIds) may not be empty. If you wish to allow anyone, fill it with 0, 1, 2, 3, etc.');
 
 		if ($parameters->teamSize * 2 > count($parameters->allowedSummonerIds))
 			throw new RequestParameterException('Not enough players to fill teams (more participants required).');
@@ -2648,7 +2648,7 @@ class RiotAPI
 			throw new RequestParameterException('Team size (teamSize) must be less than or equal to 5.');
 
 		if (empty($parameters->allowedSummonerIds))
-			throw new RequestParameterException('List of participants (allowedSummonerIds->participants) may not be empty. If you wish to allow anyone, fill it with 0, 1, 2, 3, etc.');
+			throw new RequestParameterException('List of participants (allowedSummonerIds) may not be empty. If you wish to allow anyone, fill it with 0, 1, 2, 3, etc.');
 
 		if ($parameters->teamSize * 2 > count($parameters->allowedSummonerIds))
 			throw new RequestParameterException('Not enough players to fill teams (more participants required).');
