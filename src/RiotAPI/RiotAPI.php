@@ -804,6 +804,16 @@ class RiotAPI
 		return $this;
 	}
 
+    /**
+     *   Returns call target for script.
+     *
+     * @return string
+     */
+    protected function getEndpoint(): string
+    {
+        return $this->endpoint;
+    }
+
 	/**
 	 *   Sets call resource for target endpoint.
 	 *
@@ -1161,7 +1171,7 @@ class RiotAPI
 			$url_keyPart = (!empty($this->query_data) ? '?' : '');
 		}
 
-		return "https://" . $url_platformPart . $url_basePart . $this->endpoint . $url_keyPart . $url_queryPart;
+		return "https://" . $url_platformPart . $url_basePart . $this->getEndpoint() . $url_keyPart . $url_queryPart;
 	}
 
 	/**
@@ -1174,7 +1184,7 @@ class RiotAPI
 	public function _getDummyDataFileName(): string
 	{
 		$method = $this->used_method;
-		$endp = str_replace([ '/', '.' ], [ '-', '' ], substr($this->endpoint, 1));
+		$endp = str_replace([ '/', '.' ], [ '-', '' ], substr($this->getEndpoint(), 1));
 		$quer = str_replace([ '&', '%26', '=', '%3D' ], [ '_', '_', '-', '-' ], http_build_query($this->query_data));
 		$data = !empty($this->post_data) ? '_' . md5(http_build_query($this->query_data)) : '';
 		if (strlen($quer))
