@@ -2143,7 +2143,7 @@ class RiotAPI
 	 *
 	 * @link https://developer.riotgames.com/api-methods/#match-v3/GET_getMatch
 	 */
-	public function getMatch( int $match_id ): Objects\MatchDto
+	public function getMatch( $match_id ): Objects\MatchDto
 	{
 		$this->setEndpoint("/lol/match/" . self::RESOURCE_MATCH_V3 . "/matches/{$match_id}")
 			->setResource(self::RESOURCE_MATCH, "/matches/%i")
@@ -2167,7 +2167,7 @@ class RiotAPI
 	 *
 	 * @link https://developer.riotgames.com/api-methods/#match-v3/GET_getMatchByTournamentCode
 	 */
-	public function getMatchByTournamentCode( int $match_id, string $tournament_code ): Objects\MatchDto
+	public function getMatchByTournamentCode( $match_id, string $tournament_code ): Objects\MatchDto
 	{
 		$this->setEndpoint("/lol/match/" . self::RESOURCE_MATCH_V3 . "/matches/{$match_id}/by-tournament-code/{$tournament_code}")
 			->setResource(self::RESOURCE_MATCH, "/matches/%i/by-tournament-code/%s")
@@ -2250,7 +2250,7 @@ class RiotAPI
 	 *
 	 * @link https://developer.riotgames.com/api-methods/#match-v3/GET_getMatchTimeline
 	 */
-	public function getMatchTimeline( int $match_id ): Objects\MatchTimelineDto
+	public function getMatchTimeline( $match_id ): Objects\MatchTimelineDto
 	{
 		$this->setEndpoint("/lol/match/" . self::RESOURCE_MATCH_V3 . "/timelines/by-match/{$match_id}")
 			->setResource(self::RESOURCE_MATCH, "/timelines/by-match/%i")
