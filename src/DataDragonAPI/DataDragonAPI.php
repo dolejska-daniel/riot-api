@@ -21,8 +21,6 @@ namespace DataDragonAPI;
 
 use Nette\Utils\Html;
 
-use RiotAPI\Objects\StaticData\StaticReforgedRuneDto;
-use RiotAPI\Objects\StaticData\StaticReforgedRunePathDto;
 use RiotAPI\RiotAPI;
 use RiotAPI\Objects\SummonerDto;
 use RiotAPI\Objects\StaticData\StaticImageDto;
@@ -34,9 +32,12 @@ use RiotAPI\Objects\StaticData\StaticMasteryDto;
 use RiotAPI\Objects\StaticData\StaticRuneDto;
 use RiotAPI\Objects\StaticData\StaticChampionSpellDto;
 use RiotAPI\Objects\StaticData\StaticSummonerSpellDto;
+use RiotAPI\Objects\StaticData\StaticReforgedRuneDto;
+use RiotAPI\Objects\StaticData\StaticReforgedRunePathDto;
 
 use DataDragonAPI\Exception\RequestException;
 use DataDragonAPI\Exception\SettingsException;
+use DataDragonAPI\Exception\ArgumentException;
 
 
 class DataDragonAPI
@@ -60,13 +61,12 @@ class DataDragonAPI
 		SET_UI_ICON_CLASS               = 'class-scoreboard',
 		SET_MINIMAP_CLASS               = 'class-minimap';
 
-
 	/**
 	 *   Contains library settings.
 	 * 
 	 * @var $settings array
 	 */
-	static protected $settings = array(
+	static protected $settings = [
 		self::SET_ENDPOINT                  => 'https://ddragon.leagueoflegends.com/cdn/',
 		self::SET_DEFAULT_CLASS             => 'dd-icon',
 		self::SET_PROFILE_ICON_CLASS        => 'dd-icon-profile',
@@ -81,7 +81,43 @@ class DataDragonAPI
 		self::SET_ITEM_ICON_CLASS           => 'dd-icon-item',
 		self::SET_UI_ICON_CLASS             => 'dd-icon-ui',
 		self::SET_MINIMAP_CLASS             => 'dd-minimap',
-	);
+	];
+
+	/** Static-data file constants. */
+	const
+		STATIC_PROFILEICONS     = 'profileicon',
+		STATIC_CHAMPIONS        = 'champion',
+		STATIC_CHAMPION         = 'champion/',
+		STATIC_ITEMS            = 'item',
+		STATIC_MASTERIES        = 'mastery',
+		STATIC_RUNES            = 'rune',
+		STATIC_SUMMONERSPELLS   = 'summoner',
+		STATIC_LANGUAGESTRINGS  = 'language',
+		STATIC_MAPS             = 'map',
+		STATIC_RUNESREFORGED    = 'runesReforged';
+
+	/**
+	 *   Contains library settings.
+	 *
+	 * @var $settings array
+	 */
+	static protected $staticFileTypes = [
+		self::STATIC_PROFILEICONS,
+		self::STATIC_CHAMPIONS,
+		self::STATIC_ITEMS,
+		self::STATIC_MASTERIES,
+		self::STATIC_RUNES,
+		self::STATIC_SUMMONERSPELLS,
+		self::STATIC_LANGUAGESTRINGS,
+		self::STATIC_MAPS,
+	];
+
+	/**
+	 *   Contains library settings.
+	 *
+	 * @var $settings array
+	 */
+	static protected $staticData = [];
 
 	/**
 	 *   Indicates, whether the library has been initialized or not.
@@ -301,6 +337,63 @@ class DataDragonAPI
 	public static function getCdnUrl(): string
 	{
 		return self::getDataDragonUrl() . "/cdn/";
+	}
+
+	/**
+	 *   Returns static-data file URL based on given type.
+	 *
+	 * @param string $dataType
+	 * @param string $key
+	 * @param string $locale
+	 * @param null $version
+	 *
+	 * @return string
+	 * @throws SettingsException
+	 */
+	public static function getStaticDataFileUrl( string $dataType, string $key = null, $locale = 'en_US', $version = null ): string
+	{
+		if (is_null($version))
+			self::checkInit();
+
+		return self::getCdnUrl() . ($version ?: self::getSetting(self::SET_VERSION)) . "/data/$locale/$dataType$key.json";
+	}
+
+	/**
+	 *   Loads static-data for given URL. First from cache, if it doesnt exist,
+	 * try to fetch up-to date from web.
+	 *
+	 * @param string $url
+	 *
+	 * @return array
+	 * @throws ArgumentException
+	 */
+	public static function loadStaticData( string $url ): array
+	{
+		$urlHash = md5($url);
+		$dir = __DIR__ . "/cache";
+
+		//  First try memory
+		if (isset(self::$staticData[$urlHash]))
+			return self::$staticData[$urlHash];
+
+		//  Then try file cache
+		$data = @file_get_contents("$dir/$urlHash");
+		if ($data)
+			return unserialize($data);
+
+		//  Lastly try loading from web
+		$data = @file_get_contents($url);
+		if ($data == false)
+			throw new ArgumentException("Failed to load static-data for URL: '$url'.");
+
+		$data = json_decode($data, true);
+		//  Save to memory
+		self::$staticData[$urlHash] = $data;
+
+		//  Save to file
+		@mkdir($dir);
+		file_put_contents("$dir/$urlHash", serialize($data));
+		return $data;
 	}
 
 
@@ -1043,5 +1136,255 @@ class DataDragonAPI
 		$attrs['src'] = self::getScoreboardIconUrl($name);
 
 		return Html::el('img', $attrs);
+	}
+
+	// ---------------------------------------------d-d-
+	//  Static-data
+	// ---------------------------------------------d-d-
+
+	/**
+	 * @param string      $locale
+	 * @param string|null $version
+	 *
+	 * @return array
+	 * @throws ArgumentException
+	 * @throws SettingsException
+	 */
+	public static function getStaticChampions( string $locale = 'en_US', string $version = null ) : array
+	{
+		$url = self::getStaticDataFileUrl(self::STATIC_CHAMPIONS, null, $locale, $version);
+		return self::loadStaticData($url);
+	}
+
+	/**
+	 * @param string      $champion_key
+	 * @param string      $locale
+	 * @param string|null $version
+	 *
+	 * @return array
+	 * @throws ArgumentException
+	 * @throws SettingsException
+	 */
+	public static function getStaticChampion( string $champion_key, string $locale = 'en_US', string $version = null ) : array
+	{
+		$url = self::getStaticDataFileUrl(self::STATIC_CHAMPION, $champion_key, $locale, $version);
+		return self::loadStaticData($url);
+	}
+
+	/**
+	 * @param string      $locale
+	 * @param string|null $version
+	 *
+	 * @return array
+	 * @throws ArgumentException
+	 * @throws SettingsException
+	 */
+	public static function getStaticItems( string $locale = 'en_US', string $version = null ) : array
+	{
+		$url = self::getStaticDataFileUrl(self::STATIC_ITEMS, null, $locale, $version);
+		return self::loadStaticData($url);
+	}
+
+	/**
+	 * @param int         $item_id
+	 * @param string      $locale
+	 * @param string|null $version
+	 *
+	 * @return array
+	 * @throws ArgumentException
+	 * @throws SettingsException
+	 */
+	public static function getStaticItem( int $item_id, string $locale = 'en_US', string $version = null ) : array
+	{
+		$data = self::getStaticItems($locale, $version);
+		if (isset($data['data'][$item_id]) == false)
+			throw new ArgumentException('Item with given ID was not found.');
+
+		return $data['data'][$item_id];
+	}
+
+	/**
+	 * @param string      $locale
+	 * @param string|null $version
+	 *
+	 * @return array
+	 * @throws ArgumentException
+	 * @throws SettingsException
+	 */
+	public static function getStaticLanguageStrings( string $locale = 'en_US', string $version = null ) : array
+	{
+		$url = self::getStaticDataFileUrl(self::STATIC_LANGUAGESTRINGS, null, $locale, $version);
+		return self::loadStaticData($url);
+	}
+
+	/**
+	 * @return array
+	 * @throws ArgumentException
+	 */
+	public static function getStaticLanguages() : array
+	{
+		$url = self::getCdnUrl() . "/languages.json";
+		return self::loadStaticData($url);
+	}
+
+	/**
+	 * @param string      $locale
+	 * @param string|null $version
+	 *
+	 * @return array
+	 * @throws ArgumentException
+	 * @throws SettingsException
+	 */
+	public static function getStaticMaps( string $locale = 'en_US', string $version = null ) : array
+	{
+		$url = self::getStaticDataFileUrl(self::STATIC_MAPS, null, $locale, $version);
+		return self::loadStaticData($url);
+	}
+
+	/**
+	 * @param string      $locale
+	 * @param string|null $version
+	 *
+	 * @return array
+	 * @throws ArgumentException
+	 * @throws SettingsException
+	 */
+	public static function getStaticMasteries( string $locale = 'en_US', string $version = null ) : array
+	{
+		$url = self::getStaticDataFileUrl(self::STATIC_MASTERIES, null, $locale, $version);
+		return self::loadStaticData($url);
+	}
+
+	/**
+	 * @param int         $mastery_id
+	 * @param string      $locale
+	 * @param string|null $version
+	 *
+	 * @return array
+	 * @throws ArgumentException
+	 * @throws SettingsException
+	 */
+	public static function getStaticMastery( int $mastery_id, string $locale = 'en_US', string $version = null ) : array
+	{
+		$data = self::getStaticMasteries($locale, $version);
+		if (isset($data['data'][$mastery_id]) == false)
+			throw new ArgumentException('Mastery with given ID was not found.');
+
+		return $data['data'][$mastery_id];
+	}
+
+	/**
+	 * @param string      $locale
+	 * @param string|null $version
+	 *
+	 * @return array
+	 * @throws ArgumentException
+	 * @throws SettingsException
+	 */
+	public static function getStaticRunes( string $locale = 'en_US', string $version = null ) : array
+	{
+		$url = self::getStaticDataFileUrl(self::STATIC_RUNES, null, $locale, $version);
+		return self::loadStaticData($url);
+	}
+
+	/**
+	 * @param int         $rune_id
+	 * @param string      $locale
+	 * @param string|null $version
+	 *
+	 * @return array
+	 * @throws ArgumentException
+	 * @throws SettingsException
+	 */
+	public static function getStaticRune( int $rune_id, string $locale = 'en_US', string $version = null) : array
+	{
+		$data = self::getStaticMasteries($locale, $version);
+		if (isset($data['data'][$rune_id]) == false)
+			throw new ArgumentException('Mastery with given ID was not found.');
+
+		return $data['data'][$rune_id];
+	}
+
+	/**
+	 * @param string      $locale
+	 * @param string|null $version
+	 *
+	 * @return array
+	 * @throws ArgumentException
+	 * @throws SettingsException
+	 */
+	public static function getStaticProfileIcons( string $locale = 'en_US', string $version = null ) : array
+	{
+		$url = self::getStaticDataFileUrl(self::STATIC_PROFILEICONS, null, $locale, $version);
+		return self::loadStaticData($url);
+	}
+
+	/**
+	 * @param string $region
+	 *
+	 * @return array
+	 * @throws ArgumentException
+	 */
+	public static function getStaticRealms( string $region ) : array
+	{
+		$region = strtolower($region);
+		$url = self::getDataDragonUrl() . "/realms/$region.json";
+		return self::loadStaticData($url);
+	}
+
+	/**
+	 * @param string      $locale
+	 * @param string|null $version
+	 *
+	 * @return array
+	 * @throws ArgumentException
+	 * @throws SettingsException
+	 */
+	public static function getStaticReforgedRunes( string $locale = 'en_US', string $version = null ) : array
+	{
+		$url = self::getStaticDataFileUrl(self::STATIC_RUNESREFORGED, null, $locale, $version);
+		return self::loadStaticData($url);
+	}
+
+	/**
+	 * @param string      $locale
+	 * @param string|null $version
+	 *
+	 * @return array
+	 * @throws ArgumentException
+	 * @throws SettingsException
+	 */
+	public static function getStaticSummonerSpells( string $locale = 'en_US', string $version = null ) : array
+	{
+		$url = self::getStaticDataFileUrl(self::STATIC_SUMMONERSPELLS, null, $locale, $version);
+		return self::loadStaticData($url);
+	}
+
+	/**
+	 * @param string      $summonerspell_key
+	 * @param string      $locale
+	 * @param string|null $version
+	 *
+	 * @return array
+	 * @throws ArgumentException
+	 * @throws SettingsException
+	 */
+	public static function getStaticSummonerSpell( string $summonerspell_key, string $locale = 'en_US', string $version = null ) : array
+	{
+		$data = self::getStaticSummonerSpells($locale, $version);
+		if (isset($data['data'][$summonerspell_key]) == false)
+			throw new ArgumentException('Summoner spell with given key was not found.');
+
+		return $data['data'][$summonerspell_key];
+	}
+
+	/**
+	 * @return array
+	 * @throws ArgumentException
+	 */
+	public static function getStaticVersions() : array
+	{
+		$url = self::getDataDragonUrl() . "/api/versions.json";
+		return self::loadStaticData($url);
 	}
 }
