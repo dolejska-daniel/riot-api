@@ -2,12 +2,10 @@
 
 # Composer files
 vendor/
-composer.lock
 
 # Testing data
 tests/Coverage/
-tests/DummyData/GET_lol-test-endpoint-v0-save.json
-/tests/RiotAPI/Definition/cache-fcp/ 
+tests/RiotAPI/Definition/cache-fcp/
 
 # Cache
 src/RiotAPI/cache/
