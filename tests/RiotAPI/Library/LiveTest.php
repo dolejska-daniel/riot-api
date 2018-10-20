@@ -37,6 +37,9 @@ class LiveTest extends TestCase
 {
 	public function testInit()
 	{
+		if (getenv("BUILD_IS_PULL_REQUEST"))
+			$this->markTestSkipped("Skipping live tests in PRs.");
+
 		$api = new RiotAPI([
 			RiotAPI::SET_KEY                => getenv('API_KEY'),
 			RiotAPI::SET_TOURNAMENT_KEY     => getenv('API_TOURNAMENT_KEY'),

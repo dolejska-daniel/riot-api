@@ -27,6 +27,14 @@ cache:
 install:
     - composer install
 
+# Jobs specifications
+jobs:
+    include:
+    - # identify pull requests by environment variable
+        if: type = pull_request
+        env:
+            - BUILD_IS_PULL_REQUEST=1
+
 # Start tests
 script:
     - vendor/bin/phpunit -v --bootstrap phpunit.php --configuration phpunit.xml --coverage-text --coverage-clover $TRAVIS_BUILD_DIR/build/logs/clover.xml --colors=never

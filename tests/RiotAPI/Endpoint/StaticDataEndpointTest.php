@@ -28,6 +28,8 @@ class StaticDataEndpointTest extends RiotAPITestCase
 {
 	public function testInit()
 	{
+		$this->markTestSkipped("Static-data API endpoint has been deprecated.");
+
 		$api = new RiotAPI([
 			RiotAPI::SET_KEY            => getenv('API_KEY'),
 			RiotAPI::SET_REGION         => Region::EUROPE_EAST,

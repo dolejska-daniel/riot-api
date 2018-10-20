@@ -28,6 +28,8 @@ class StaticDataEndpointObjectIntegrityTest extends RiotAPITestCase
 {
 	public function testInit()
 	{
+		$this->markTestSkipped("Static-data API endpoint has been deprecated.");
+
 		$api = new RiotAPI([
 			RiotAPI::SET_KEY            => getenv('API_KEY'),
 			RiotAPI::SET_REGION         => Region::NORTH_AMERICA,
@@ -342,23 +344,6 @@ class StaticDataEndpointObjectIntegrityTest extends RiotAPITestCase
 		$rawResult = $api->getResult();
 
 		$this->checkObjectPropertiesAndDataValidity($result, $rawResult, StaticData\StaticSummonerSpellDto::class);
-	}
-
-	/**
-	 * @depends testInit
-	 *
-	 * @param RiotAPI $api
-	 */
-	public function testGetFullTarballLink( RiotAPI $api )
-	{
-		//  Get library processed results
-		/** @var array $result */
-		$result = $api->getFullTarballLink();
-		//  Get raw result
-		$rawResult = $api->getResult();
-
-		$this->assertContains("leagueoflegends.com", $result);
-		$this->assertSame($rawResult, $result, "Tarball link does not match original request result data!");
 	}
 
 	/**
