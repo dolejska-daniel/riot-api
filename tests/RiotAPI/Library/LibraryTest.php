@@ -473,7 +473,7 @@ class LibraryTest extends RiotAPITestCase
 		$this->assertFileExists($api->_getDummyDataFileName(), "DummyData file was not created correctly.");
 
 		// Removes the dummy data file on subsequent runs
-		if (\file_exists($api->_getDummyDataFileName()))
+		if (file_exists($api->_getDummyDataFileName()))
 			unlink($api->_getDummyDataFileName());
 	}
 
