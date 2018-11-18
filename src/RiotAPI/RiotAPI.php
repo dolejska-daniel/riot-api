@@ -1003,39 +1003,39 @@ class RiotAPI
 
 		if ($response_code == 503)
 		{
-			throw new ServerException('RiotAPI: Service is unavailable.');
+			throw new ServerException('RiotAPI: Service is unavailable.', $response_code);
 		}
 		elseif ($response_code == 500)
 		{
-			throw new ServerException('RiotAPI: Internal server error occured.');
+			throw new ServerException('RiotAPI: Internal server error occured.', $response_code);
 		}
 		elseif ($response_code == 429)
 		{
-			throw new ServerLimitException('RiotAPI: Rate limit for this API key was exceeded.' . $errMessage);
+			throw new ServerLimitException('RiotAPI: Rate limit for this API key was exceeded.' . $errMessage, $response_code);
 		}
 		elseif ($response_code == 415)
 		{
-			throw new RequestException('Request: Unsupported media type.' . $errMessage);
+			throw new RequestException('Request: Unsupported media type.' . $errMessage, $response_code);
 		}
 		elseif ($response_code == 404)
 		{
-			throw new RequestException('Request: Not found.' . $errMessage);
+			throw new RequestException('Request: Not found.' . $errMessage, $response_code);
 		}
 		elseif ($response_code == 403)
 		{
-			throw new RequestException('Request: Forbidden.' . $errMessage);
+			throw new RequestException('Request: Forbidden.' . $errMessage, $response_code);
 		}
 		elseif ($response_code == 401)
 		{
-			throw new RequestException('Request: Unauthorized.' . $errMessage);
+			throw new RequestException('Request: Unauthorized.' . $errMessage, $response_code);
 		}
 		elseif ($response_code == 400)
 		{
-			throw new RequestException('Request: Invalid request.' . $errMessage);
+			throw new RequestException('Request: Invalid request.' . $errMessage, $response_code);
 		}
 		elseif ($response_code > 400)
 		{
-			throw new RequestException("RiotAPI: Unknown error occured. [CODE $response_code]" . $errMessage);
+			throw new RequestException("RiotAPI: Unknown error occured. [CODE $response_code]" . $errMessage, $response_code);
 		}
 
 		$this->_afterCall($url, $requestHash, $ch);
