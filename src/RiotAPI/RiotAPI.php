@@ -47,6 +47,10 @@ use RiotAPI\Exceptions\ServerLimitException;
 use RiotAPI\Exceptions\SettingsException;
 
 
+use DataDragonAPI\DataDragonAPI;
+use DataDragonAPI\Exception as DataDragonException;
+
+
 /**
  *   Class RiotAPI
  *
@@ -72,7 +76,7 @@ class RiotAPI
 		SET_PLATFORM              = 'SET_PLATFORM',              /** Set internally by setting region **/
 		SET_VERIFY_SSL            = 'SET_VERIFY_SSL',            /** Specifies whether or not to verify SSL (verification often fails on localhost) **/
 		SET_KEY                   = 'SET_KEY',                   /** API key used by default **/
-		SET_KEY_INCLUDE_TYPE      = 'SET_KEY_INCLUDE_TYPE',      /** API key used by default **/
+		SET_KEY_INCLUDE_TYPE      = 'SET_KEY_INCLUDE_TYPE',      /** API key request include type (header, query) **/
 		SET_TOURNAMENT_KEY        = 'SET_TOURNAMENT_KEY',        /** API key used when working with tournaments **/
 		SET_INTERIM               = 'SET_INTERIM',               /** Used to set whether or not is your application in Interim mode (Tournament STUB endpoints) **/
 		SET_CACHE_PROVIDER        = 'SET_CACHE_PROVIDER',        /** Specifies CacheProvider class name **/
@@ -81,6 +85,8 @@ class RiotAPI
 		SET_CACHE_CALLS           = 'SET_CACHE_CALLS',           /** Used to set whether or not to temporary saveCallData API call's results **/
 		SET_CACHE_CALLS_LENGTH    = 'SET_CACHE_CALLS_LENGTH',    /** Specifies for how long are call results saved **/
 		SET_EXTENSIONS            = 'SET_EXTENSIONS',            /** Specifies ApiObject's extensions **/
+		SET_DATADRAGON_INIT       = 'SET_DATADRAGON_INIT',       /** Specifies whether or not should DataDragonAPI be initialized by this library **/
+		SET_DATADRAGON_PARAMS     = 'SET_DATADRAGON_PARAMS',     /** Specifies parameters passed to DataDragonAPI when initialized **/
 		SET_STATICDATA_LINKING    = 'SET_STATICDATA_LINKING',
 		SET_STATICDATA_LOCALE     = 'SET_STATICDATA_LOCALE',
 		SET_STATICDATA_VERSION    = 'SET_STATICDATA_VERSION',
@@ -322,6 +328,7 @@ class RiotAPI
 	 *
 	 * @throws SettingsException
 	 * @throws GeneralException
+	 * @throws DataDragonException\RequestException
 	 */
 	public function __construct( array $settings, IRegion $custom_regionDataProvider = null, IPlatform $custom_platformDataProvider = null )
 	{
@@ -364,6 +371,9 @@ class RiotAPI
 				}
 			}
 		}
+
+		if ($this->getSetting(self::SET_DATADRAGON_INIT))
+			DataDragonAPI::initByCdn($this->getSetting(self::SET_DATADRAGON_PARAMS, []));
 
 		//  Assigns allowed settings
 		foreach (self::SETTINGS_ALLOWED as $key)
@@ -1524,7 +1534,6 @@ class RiotAPI
 	/**
 	 * ==================================================================d=d=
 	 *     Static Data Endpoint Methods
-	 *     @link https://developer.riotgames.com/api-methods/#lol-static-data-v3
 	 * ==================================================================d=d=
 	 **/
 	const RESOURCE_STATICDATA = '1351:lol-static-data';
@@ -1533,31 +1542,23 @@ class RiotAPI
 	/**
 	 *   Retrieves champion list.
 	 *
-	 * @param string       $locale
-	 * @param string       $version
-	 * @param bool         $data_by_id
+	 * @param string $locale
+	 * @param string $version
+	 * @param bool $data_by_id
 	 * @param string|array $tags
 	 *
 	 * @return StaticData\StaticChampionListDto
 	 *
-	 * @throws SettingsException
-	 * @throws RequestException
-	 * @throws ServerException
-	 * @throws ServerLimitException
-	 *
-	 * @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getChampionList
+	 * @throws DataDragonException\ArgumentException
+	 * @throws DataDragonException\SettingsException
 	 */
-	public function getStaticChampions( string $locale = null, string $version = null, bool $data_by_id = null, $tags = null ): StaticData\StaticChampionListDto
+	public function getStaticChampions( string $locale = 'en_US', string $version = null, bool $data_by_id = null, $tags = null ): StaticData\StaticChampionListDto
 	{
-		$this->setEndpoint("/lol/static-data/" . self::RESOURCE_STATICDATA_V3 . "/champions")
-			->setResource(self::RESOURCE_STATICDATA, "/champions")
-			->addQuery("locale", $locale)
-			->addQuery("version", $version)
-			->addQuery("dataById", $data_by_id ? 'true' : 'false')
-			->addQuery("tags", $tags)
-			->makeCall();
+		if ($data_by_id) trigger_error("Parameter 'data_by_id' is not currently implemented.", E_NOTICE);
+		if ($tags) trigger_error("Parameter 'tags' is no longer supported.", E_USER_DEPRECATED);
 
-		return new StaticData\StaticChampionListDto($this->getResult(), $this);
+		$result = DataDragonAPI::getStaticChampions($locale, $version);
+		return new StaticData\StaticChampionListDto($result, $this);
 	}
 
 	/**
@@ -1569,23 +1570,11 @@ class RiotAPI
 	 * @param string|array $tags
 	 *
 	 * @return StaticData\StaticChampionDto
-	 *
-	 * @throws SettingsException
-	 * @throws RequestException
-	 * @throws ServerException
-	 * @throws ServerLimitException
-	 *
-	 * @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getChampionById
 	 */
-	public function getStaticChampion( int $champion_id, string $locale = null, string $version = null, $tags = null ): StaticData\StaticChampionDto
+	public function getStaticChampion( int $champion_id, string $locale = 'en_US', string $version = null, $tags = null ): StaticData\StaticChampionDto
 	{
-		$this->setEndpoint("/lol/static-data/" . self::RESOURCE_STATICDATA_V3 . "/champions/{$champion_id}")
-			->setResource(self::RESOURCE_STATICDATA, "/champions/%i")
-			->addQuery("locale", $locale)
-			->addQuery("version", $version)
-			->addQuery("tags", $tags)
-			->makeCall();
-
+		if ($tags) trigger_error("Parameter 'tags' is no longer supported.", E_USER_DEPRECATED);
+		trigger_error("Call not yet bridged to DataDragonAPI.", E_ERROR);
 		return new StaticData\StaticChampionDto($this->getResult(), $this);
 	}
 
@@ -1597,23 +1586,11 @@ class RiotAPI
 	 * @param string|array $tags
 	 *
 	 * @return StaticData\StaticItemListDto
-	 *
-	 * @throws SettingsException
-	 * @throws RequestException
-	 * @throws ServerException
-	 * @throws ServerLimitException
-	 *
-	 * @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getItemList
 	 */
-	public function getStaticItems( string $locale = null, string $version = null, $tags = null ): StaticData\StaticItemListDto
+	public function getStaticItems( string $locale = 'en_US', string $version = null, $tags = null ): StaticData\StaticItemListDto
 	{
-		$this->setEndpoint("/lol/static-data/" . self::RESOURCE_STATICDATA_V3 . "/items")
-			->setResource(self::RESOURCE_STATICDATA, "/items")
-			->addQuery("locale", $locale)
-			->addQuery("version", $version)
-			->addQuery("tags", $tags)
-			->makeCall();
-
+		if ($tags) trigger_error("Parameter 'tags' is no longer supported.", E_USER_DEPRECATED);
+		trigger_error("Call not yet bridged to DataDragonAPI.", E_ERROR);
 		return new StaticData\StaticItemListDto($this->getResult(), $this);
 	}
 
@@ -1626,23 +1603,11 @@ class RiotAPI
 	 * @param string|array $tags
 	 *
 	 * @return StaticData\StaticItemDto
-	 *
-	 * @throws SettingsException
-	 * @throws RequestException
-	 * @throws ServerException
-	 * @throws ServerLimitException
-	 *
-	 * @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getItemById
 	 */
-	public function getStaticItem( int $item_id, string $locale = null, string $version = null, $tags = null ): StaticData\StaticItemDto
+	public function getStaticItem( int $item_id, string $locale = 'en_US', string $version = null, $tags = null ): StaticData\StaticItemDto
 	{
-		$this->setEndpoint("/lol/static-data/" . self::RESOURCE_STATICDATA_V3 . "/items/{$item_id}")
-			->setResource(self::RESOURCE_STATICDATA, "/items/%i")
-			->addQuery("locale", $locale)
-			->addQuery("version", $version)
-			->addQuery("tags", $tags)
-			->makeCall();
-
+		if ($tags) trigger_error("Parameter 'tags' is no longer supported.", E_USER_DEPRECATED);
+		trigger_error("Call not yet bridged to DataDragonAPI.", E_ERROR);
 		return new StaticData\StaticItemDto($this->getResult(), $this);
 	}
 
@@ -1653,22 +1618,10 @@ class RiotAPI
 	 * @param string $version
 	 *
 	 * @return StaticData\StaticLanguageStringsDto
-	 *
-	 * @throws SettingsException
-	 * @throws RequestException
-	 * @throws ServerException
-	 * @throws ServerLimitException
-	 *
-	 * @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getLanguageStrings
 	 */
-	public function getStaticLanguageStrings( string $locale = null, string $version = null ): StaticData\StaticLanguageStringsDto
+	public function getStaticLanguageStrings( string $locale = 'en_US', string $version = null ): StaticData\StaticLanguageStringsDto
 	{
-		$this->setEndpoint("/lol/static-data/" . self::RESOURCE_STATICDATA_V3 . "/language-strings")
-			->setResource(self::RESOURCE_STATICDATA, "/language-strings")
-			->addQuery("locale", $locale)
-			->addQuery("version", $version)
-			->makeCall();
-
+		trigger_error("Call not yet bridged to DataDragonAPI.", E_ERROR);
 		return new StaticData\StaticLanguageStringsDto($this->getResult(), $this);
 	}
 
@@ -1676,21 +1629,10 @@ class RiotAPI
 	 *   Retrieve supported languages data.
 	 *
 	 * @return array
-	 *
-	 * @throws SettingsException
-	 * @throws RequestException
-	 * @throws ServerException
-	 * @throws ServerLimitException
-	 *
-	 * @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getLanguages
 	 */
 	public function getStaticLanguages(): array
 	{
-		$this->setEndpoint("/lol/static-data/" . self::RESOURCE_STATICDATA_V3 . "/languages")
-			->setResource(self::RESOURCE_STATICDATA, "/languages")
-			->makeCall();
-
-		return $this->getResult();
+		return DataDragonAPI::getStaticLanguages();
 	}
 
 	/**
@@ -1700,22 +1642,10 @@ class RiotAPI
 	 * @param string $version
 	 *
 	 * @return StaticData\StaticMapDataDto
-	 *
-	 * @throws SettingsException
-	 * @throws RequestException
-	 * @throws ServerException
-	 * @throws ServerLimitException
-	 *
-	 * @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getMapData
 	 */
-	public function getStaticMaps( string $locale = null, string $version = null ): StaticData\StaticMapDataDto
+	public function getStaticMaps( string $locale = 'en_US', string $version = null ): StaticData\StaticMapDataDto
 	{
-		$this->setEndpoint("/lol/static-data/" . self::RESOURCE_STATICDATA_V3 . "/maps")
-			->setResource(self::RESOURCE_STATICDATA, "/maps")
-			->addQuery("locale", $locale)
-			->addQuery("version", $version)
-			->makeCall();
-
+		trigger_error("Call not yet bridged to DataDragonAPI.", E_ERROR);
 		return new StaticData\StaticMapDataDto($this->getResult(), $this);
 	}
 
@@ -1727,23 +1657,11 @@ class RiotAPI
 	 * @param string|array $tags
 	 *
 	 * @return StaticData\StaticMasteryListDto
-	 *
-	 * @throws SettingsException
-	 * @throws RequestException
-	 * @throws ServerException
-	 * @throws ServerLimitException
-	 *
-	 * @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getMasteryList
 	 */
-	public function getStaticMasteries( string $locale = null, string $version = null, $tags = null ): StaticData\StaticMasteryListDto
+	public function getStaticMasteries( string $locale = 'en_US', string $version = null, $tags = null ): StaticData\StaticMasteryListDto
 	{
-		$this->setEndpoint("/lol/static-data/" . self::RESOURCE_STATICDATA_V3 . "/masteries")
-			->setResource(self::RESOURCE_STATICDATA, "/masteries")
-			->addQuery("locale", $locale)
-			->addQuery("version", $version)
-			->addQuery("tags", $tags)
-			->makeCall();
-
+		if ($tags) trigger_error("Parameter 'tags' is no longer supported.", E_USER_DEPRECATED);
+		trigger_error("Call not yet bridged to DataDragonAPI.", E_ERROR);
 		return new StaticData\StaticMasteryListDto($this->getResult(), $this);
 	}
 
@@ -1756,23 +1674,11 @@ class RiotAPI
 	 * @param string|array $tags
 	 *
 	 * @return StaticData\StaticMasteryDto
-	 *
-	 * @throws SettingsException
-	 * @throws RequestException
-	 * @throws ServerException
-	 * @throws ServerLimitException
-	 *
-	 * @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getMasteryById
 	 */
-	public function getStaticMastery( int $mastery_id, string $locale = null, string $version = null, $tags = null ): StaticData\StaticMasteryDto
+	public function getStaticMastery( int $mastery_id, string $locale = 'en_US', string $version = null, $tags = null ): StaticData\StaticMasteryDto
 	{
-		$this->setEndpoint("/lol/static-data/" . self::RESOURCE_STATICDATA_V3 . "/masteries/{$mastery_id}")
-			->setResource(self::RESOURCE_STATICDATA, "/masteries/%i")
-			->addQuery("locale", $locale)
-			->addQuery("version", $version)
-			->addQuery("tags", $tags)
-			->makeCall();
-
+		if ($tags) trigger_error("Parameter 'tags' is no longer supported.", E_USER_DEPRECATED);
+		trigger_error("Call not yet bridged to DataDragonAPI.", E_ERROR);
 		return new StaticData\StaticMasteryDto($this->getResult(), $this);
 	}
 
@@ -1783,22 +1689,10 @@ class RiotAPI
 	 * @param string $version
 	 *
 	 * @return StaticData\StaticProfileIconDataDto
-	 *
-	 * @throws SettingsException
-	 * @throws RequestException
-	 * @throws ServerException
-	 * @throws ServerLimitException
-	 *
-	 * @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getProfileIcons
 	 */
-	public function getStaticProfileIcons( string $locale = null, string $version = null ): StaticData\StaticProfileIconDataDto
+	public function getStaticProfileIcons( string $locale = 'en_US', string $version = null ): StaticData\StaticProfileIconDataDto
 	{
-		$this->setEndpoint("/lol/static-data/" . self::RESOURCE_STATICDATA_V3 . "/profile-icons")
-			->setResource(self::RESOURCE_STATICDATA, "/profile-icons")
-			->addQuery("locale", $locale)
-			->addQuery("version", $version)
-			->makeCall();
-
+		trigger_error("Call not yet bridged to DataDragonAPI.", E_ERROR);
 		return new StaticData\StaticProfileIconDataDto($this->getResult(), $this);
 	}
 
@@ -1806,20 +1700,10 @@ class RiotAPI
      *   Retrieve realm data. (Region versions)
      *
      * @return StaticData\StaticRealmDto
-     *
-     * @throws SettingsException
-     * @throws RequestException
-     * @throws ServerException
-     * @throws ServerLimitException
-     *
-     * @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getRealm
      */
     public function getStaticRealm(): StaticData\StaticRealmDto
     {
-        $this->setEndpoint("/lol/static-data/" . self::RESOURCE_STATICDATA_V3 . "/realms")
-            ->setResource(self::RESOURCE_STATICDATA, "/realms")
-            ->makeCall();
-
+	    trigger_error("Call not yet bridged to DataDragonAPI.", E_ERROR);
         return new StaticData\StaticRealmDto($this->getResult(), $this);
     }
 
@@ -1830,20 +1714,10 @@ class RiotAPI
      * @param string|null $version
      *
      * @return StaticData\StaticReforgedRunePathDto[]
-     *
-     * @throws SettingsException
-     * @throws RequestException
-     * @throws ServerException
-     * @throws ServerLimitException
-     * @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getReforgedRunePaths
      */
-    public function getStaticReforgedRunePaths( string $locale = null, string $version = null ): array
+    public function getStaticReforgedRunePaths( string $locale = 'en_US', string $version = null ): array
     {
-        $this->setEndpoint("/lol/static-data/" . self::RESOURCE_STATICDATA_V3 . "/reforged-rune-paths")
-            ->setResource(self::RESOURCE_STATICDATA, "/reforged-rune-paths")
-            ->addQuery("locale", $locale)
-            ->addQuery("version", $version)
-            ->makeCall();
+	    trigger_error("Call not yet bridged to DataDragonAPI.", E_ERROR);
 
         $r = [];
         foreach ($this->getResult() as $item)
@@ -1860,22 +1734,10 @@ class RiotAPI
      * @param string|null $version
      *
      * @return StaticData\StaticReforgedRunePathDto
-     *
-     * @throws SettingsException
-     * @throws RequestException
-     * @throws ServerException
-     * @throws ServerLimitException
-     *
-     * @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getReforgedRunePathById
      */
-    public function getStaticReforgedRunePathById( int $id = null, string $locale = null, string $version = null ): StaticData\StaticReforgedRunePathDto
+    public function getStaticReforgedRunePathById( int $id = null, string $locale = 'en_US', string $version = null ): StaticData\StaticReforgedRunePathDto
     {
-        $this->setEndpoint("/lol/static-data/" . self::RESOURCE_STATICDATA_V3 . "/reforged-rune-paths/{$id}")
-            ->setResource(self::RESOURCE_STATICDATA, "/reforged-rune-paths/%i")
-            ->addQuery("locale", $locale)
-            ->addQuery("version", $version)
-            ->makeCall();
-
+	    trigger_error("Call not yet bridged to DataDragonAPI.", E_ERROR);
         return new StaticData\StaticReforgedRunePathDto($this->getResult(), $this);
     }
 
@@ -1886,20 +1748,10 @@ class RiotAPI
      * @param string|null $version
      *
      * @return StaticData\StaticReforgedRuneDto[]
-     *
-     * @throws SettingsException
-     * @throws RequestException
-     * @throws ServerException
-     * @throws ServerLimitException
-     * @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getReforgedRunes
      */
-    public function getStaticReforgedRunes( string $locale = null, string $version = null ): array
+    public function getStaticReforgedRunes( string $locale = 'en_US', string $version = null ): array
     {
-        $this->setEndpoint("/lol/static-data/" . self::RESOURCE_STATICDATA_V3 . "/reforged-runes")
-            ->setResource(self::RESOURCE_STATICDATA, "/reforged-runes")
-            ->addQuery("locale", $locale)
-            ->addQuery("version", $version)
-            ->makeCall();
+	    trigger_error("Call not yet bridged to DataDragonAPI.", E_ERROR);
 
         $r = [];
         foreach ($this->getResult() as $item)
@@ -1916,22 +1768,10 @@ class RiotAPI
      * @param string|null $version
      *
      * @return StaticData\StaticReforgedRuneDto
-     *
-     * @throws SettingsException
-     * @throws RequestException
-     * @throws ServerException
-     * @throws ServerLimitException
-     *
-     * @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getReforgedRuneById
      */
-    public function getStaticReforgedRuneById( int $id = null, string $locale = null, string $version = null ): StaticData\StaticReforgedRuneDto
+    public function getStaticReforgedRuneById( int $id = null, string $locale = 'en_US', string $version = null ): StaticData\StaticReforgedRuneDto
     {
-        $this->setEndpoint("/lol/static-data/" . self::RESOURCE_STATICDATA_V3 . "/reforged-runes/{$id}")
-            ->setResource(self::RESOURCE_STATICDATA, "/reforged-runes/%i")
-            ->addQuery("locale", $locale)
-            ->addQuery("version", $version)
-            ->makeCall();
-
+	    trigger_error("Call not yet bridged to DataDragonAPI.", E_ERROR);
         return new StaticData\StaticReforgedRuneDto($this->getResult(), $this);
     }
 
@@ -1943,23 +1783,11 @@ class RiotAPI
 	 * @param string|array $tags
 	 *
 	 * @return StaticData\StaticRuneListDto
-	 *
-	 * @throws SettingsException
-	 * @throws RequestException
-	 * @throws ServerException
-	 * @throws ServerLimitException
-	 *
-	 * @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getRuneList
 	 */
-	public function getStaticRunes( string $locale = null, string $version = null, $tags = null ): StaticData\StaticRuneListDto
+	public function getStaticRunes( string $locale = 'en_US', string $version = null, $tags = null ): StaticData\StaticRuneListDto
 	{
-		$this->setEndpoint("/lol/static-data/" . self::RESOURCE_STATICDATA_V3 . "/runes")
-			->setResource(self::RESOURCE_STATICDATA, "/runes")
-			->addQuery("locale", $locale)
-			->addQuery("version", $version)
-			->addQuery("tags", $tags)
-			->makeCall();
-
+		if ($tags) trigger_error("Parameter 'tags' is no longer supported.", E_USER_DEPRECATED);
+		trigger_error("Call not yet bridged to DataDragonAPI.", E_ERROR);
 		return new StaticData\StaticRuneListDto($this->getResult(), $this);
 	}
 
@@ -1972,23 +1800,11 @@ class RiotAPI
 	 * @param string|array $tags
 	 *
 	 * @return StaticData\StaticRuneDto
-	 *
-	 * @throws SettingsException
-	 * @throws RequestException
-	 * @throws ServerException
-	 * @throws ServerLimitException
-	 *
-	 * @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getRuneById
 	 */
-	public function getStaticRune( int $rune_id, string $locale = null, string $version = null, $tags = null ): StaticData\StaticRuneDto
+	public function getStaticRune( int $rune_id, string $locale = 'en_US', string $version = null, $tags = null ): StaticData\StaticRuneDto
 	{
-		$this->setEndpoint("/lol/static-data/" . self::RESOURCE_STATICDATA_V3 . "/runes/{$rune_id}")
-			->setResource(self::RESOURCE_STATICDATA, "/runes/%i")
-			->addQuery("locale", $locale)
-			->addQuery("version", $version)
-			->addQuery("tags", $tags)
-			->makeCall();
-
+		if ($tags) trigger_error("Parameter 'tags' is no longer supported.", E_USER_DEPRECATED);
+		trigger_error("Call not yet bridged to DataDragonAPI.", E_ERROR);
 		return new StaticData\StaticRuneDto($this->getResult(), $this);
 	}
 
@@ -2001,99 +1817,66 @@ class RiotAPI
 	 * @param string|array $tags
 	 *
 	 * @return StaticData\StaticSummonerSpellListDto
-	 *
-	 * @throws SettingsException
-	 * @throws RequestException
-	 * @throws ServerException
-	 * @throws ServerLimitException
-	 *
-	 * @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getSummonerSpellList
 	 */
-	public function getStaticSummonerSpells( string $locale = null, string $version = null, bool $data_by_id = false, $tags = null ): StaticData\StaticSummonerSpellListDto
+	public function getStaticSummonerSpells( string $locale = 'en_US', string $version = null, bool $data_by_id = false, $tags = null ): StaticData\StaticSummonerSpellListDto
 	{
-		$this->setEndpoint("/lol/static-data/" . self::RESOURCE_STATICDATA_V3 . "/summoner-spells")
-			->setResource(self::RESOURCE_STATICDATA, "/summoner-spells")
-			->addQuery("locale", $locale)
-			->addQuery("version", $version)
-			->addQuery("dataById", $data_by_id ? 'true' : 'false')
-			->addQuery("tags", $tags)
-			->makeCall();
-
+		if ($data_by_id) trigger_error("Parameter 'data_by_id' is not currently implemented.", E_NOTICE);
+		if ($tags) trigger_error("Parameter 'tags' is no longer supported.", E_USER_DEPRECATED);
+		trigger_error("Call not yet bridged to DataDragonAPI.", E_ERROR);
 		return new StaticData\StaticSummonerSpellListDto($this->getResult(), $this);
+	}
+
+	/**
+	 *   Retrieves summoner spell by its unique numeric key.
+	 *
+	 * @param int $summoner_spell_key
+	 * @param string $locale
+	 * @param string $version
+	 * @param string|array $tags
+	 *
+	 * @return StaticData\StaticSummonerSpellDto
+	 *
+	 * @throws \DataDragonAPI\Exception\ArgumentException
+	 * @throws \DataDragonAPI\Exception\SettingsException
+	 */
+	public function getStaticSummonerSpell( int $summoner_spell_key, string $locale = 'en_US', string $version = null, $tags = null ): StaticData\StaticSummonerSpellDto
+	{
+		if ($tags) trigger_error("Parameter 'tags' is no longer supported.", E_USER_DEPRECATED);
+
+		$result = DataDragonAPI::getStaticSummonerSpell($summoner_spell_key, $locale, $version);
+		return new StaticData\StaticSummonerSpellDto($result, $this);
 	}
 
 	/**
 	 *   Retrieves summoner spell by its unique ID.
 	 *
-	 * @param int          $summoner_spell_id
-	 * @param string       $locale
-	 * @param string       $version
+	 * @param string $summoner_spell_id
+	 * @param string $locale
+	 * @param string $version
 	 * @param string|array $tags
 	 *
 	 * @return StaticData\StaticSummonerSpellDto
 	 *
-	 * @throws SettingsException
-	 * @throws RequestException
-	 * @throws ServerException
-	 * @throws ServerLimitException
-	 *
-	 * @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getSummonerSpellById
+	 * @throws \DataDragonAPI\Exception\ArgumentException
+	 * @throws \DataDragonAPI\Exception\SettingsException
 	 */
-	public function getStaticSummonerSpell( int $summoner_spell_id, string $locale = null, string $version = null, $tags = null ): StaticData\StaticSummonerSpellDto
+	public function getStaticSummonerSpellById( string $summoner_spell_id, string $locale = 'en_US', string $version = null, $tags = null ): StaticData\StaticSummonerSpellDto
 	{
-		$this->setEndpoint("/lol/static-data/" . self::RESOURCE_STATICDATA_V3 . "/summoner-spells/{$summoner_spell_id}")
-			->setResource(self::RESOURCE_STATICDATA, "/summoner-spells/%i")
-			->addQuery("locale", $locale)
-			->addQuery("version", $version)
-			->addQuery("tags", $tags)
-			->makeCall();
+		if ($tags) trigger_error("Parameter 'tags' is no longer supported.", E_USER_DEPRECATED);
 
-		return new StaticData\StaticSummonerSpellDto($this->getResult(), $this);
+		$result = DataDragonAPI::getStaticSummonerSpell($summoner_spell_id, $locale, $version);
+		return new StaticData\StaticSummonerSpellDto($result, $this);
 	}
-
-    /**
-     *   Retrieves full tarball link.
-     *
-     * @param string $version
-     *
-     * @return string
-     *
-     * @throws SettingsException
-     * @throws RequestException
-     * @throws ServerException
-     * @throws ServerLimitException
-     *
-     * @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getFullTarballLink
-     */
-    public function getFullTarballLink( string $version = null ): string
-    {
-        $this->setEndpoint("/lol/static-data/" . self::RESOURCE_STATICDATA_V3 . "/tarball-links")
-            ->setResource(self::RESOURCE_STATICDATA, "/tarball-links")
-            ->addQuery("version", $version)
-            ->makeCall();
-
-        return $this->getResult();
-    }
 
 	/**
 	 *   Retrieve version data.
 	 *
 	 * @return array
-	 *
-	 * @throws SettingsException
-	 * @throws RequestException
-	 * @throws ServerException
-	 * @throws ServerLimitException
-	 *
-	 * @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getVersions
+	 * @throws \DataDragonAPI\Exception\ArgumentException
 	 */
 	public function getStaticVersions(): array
 	{
-		$this->setEndpoint("/lol/static-data/" . self::RESOURCE_STATICDATA_V3 . "/versions")
-			->setResource(self::RESOURCE_STATICDATA, "/versions")
-			->makeCall();
-
-		return $this->getResult();
+		return DataDragonAPI::getStaticVersions();
 	}
 
 

@@ -213,20 +213,10 @@ class DataDragonAPI
 	 *
 	 * @param RiotAPI $api
 	 * @param array   $customSettings
-	 *
-	 * @throws \RiotAPI\Exceptions\RequestException
-	 * @throws \RiotAPI\Exceptions\ServerException
-	 * @throws \RiotAPI\Exceptions\ServerLimitException
-	 * @throws \RiotAPI\Exceptions\SettingsException
 	 */
 	public static function initByApi( RiotAPI $api, array $customSettings = [] )
 	{
-		self::initByRealmObject($api->getStaticRealm());
-
-		if (!empty($customSettings))
-			self::setSettings($customSettings);
-
-		self::$initialized = true;
+		trigger_error("Initialization by API is not currently available.", E_USER_DEPRECATED);
 	}
 
 	/**
