@@ -44,30 +44,14 @@ class ChampionEndpointObjectIntegrityTest extends RiotAPITestCase
 	 *
 	 * @param RiotAPI $api
 	 */
-	public function testGetChampions( RiotAPI $api )
+	public function testGetChampionRotations( RiotAPI $api )
 	{
 		//  Get library processed results
-		/** @var Objects\ChampionListDto $result */
-		$result = $api->getChampions();
+		/** @var Objects\ChampionInfo $result */
+		$result = $api->getChampionRotations();
 		//  Get raw result
 		$rawResult = $api->getResult();
 
-		$this->checkObjectPropertiesAndDataValidity($result, $rawResult, Objects\ChampionListDto::class);
-	}
-
-	/**
-	 * @depends testInit
-	 *
-	 * @param RiotAPI $api
-	 */
-	public function testGetChampion( RiotAPI $api )
-	{
-		//  Get library processed results
-		/** @var Objects\ChampionDto $result */
-		$result = $api->getChampionById(61); //  Orianna <3
-		//  Get raw result
-		$rawResult = $api->getResult();
-
-		$this->checkObjectPropertiesAndDataValidity($result, $rawResult, Objects\ChampionDto::class);
+		$this->checkObjectPropertiesAndDataValidity($result, $rawResult, Objects\ChampionInfo::class);
 	}
 }

@@ -24,7 +24,7 @@ use RiotAPI\Objects;
 use RiotAPI\Definitions\Region;
 
 
-class ThirdPartyCodeEndpointObjectIntegrityTest extends RiotAPITestCase
+class ChampionEndpointTest extends RiotAPITestCase
 {
 	public function testInit()
 	{
@@ -44,16 +44,14 @@ class ThirdPartyCodeEndpointObjectIntegrityTest extends RiotAPITestCase
 	 *
 	 * @param RiotAPI $api
 	 */
-	public function testGetThirdPartyCodeBySummonerId( RiotAPI $api )
+	public function testGetChampionRotations( RiotAPI $api )
 	{
-		$summonerId = "KnNZNuEVZ5rZry3IyWwYSVuikRe0y3qTWSkr1wxcmV5CLJ8";
 		//  Get library processed results
-		/** @var Objects\CurrentGameInfo $result */
-		$result = $api->getThirdPartyCodeBySummonerId($summonerId);
-		//  Get raw result
-		$rawResult = $api->getResult();
+		/** @var Objects\ChampionInfo $result */
+		$result = $api->getChampionRotations();
 
-		$this->assertSame($rawResult, $result, "Third party code does not match original request result data!");
-		$this->assertSame("88e08eca5f614816f5db9b0329e9ddf0", $result);
+		$this->assertEquals([16, 45, 50, 62, 64, 78, 89, 90, 127, 131, 154, 203, 222, 223], $result->freeChampionIds);
+		$this->assertEquals([18, 81, 92, 141, 37, 238, 19, 45, 25, 64], $result->freeChampionIdsForNewPlayers);
+		$this->assertEquals(10, $result->maxNewPlayerLevel);
 	}
 }

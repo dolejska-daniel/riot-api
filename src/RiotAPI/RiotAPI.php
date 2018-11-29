@@ -252,7 +252,7 @@ class RiotAPI
 	protected $settings = array(
 		self::SET_API_BASEURL      => '.api.riotgames.com',
 		self::SET_KEY_INCLUDE_TYPE => self::KEY_AS_HEADER,
-		self::SET_VERIFY_SSL       => false,
+		self::SET_VERIFY_SSL       => true,
 		self::SET_USE_DUMMY_DATA   => false,
 		self::SET_SAVE_DUMMY_DATA  => false,
 		self::SET_STATICDATA_TAGS  => [ 'info' ],
@@ -962,6 +962,10 @@ class RiotAPI
 
 		$this->_beforeCall($url, $requestHash);
 
+		$response       = null;
+		$headers        = null;
+		$response_code  = null;
+
 		if ($this->getSetting(self::SET_USE_DUMMY_DATA, false))
 		{
 			//  DummyData are supposed to be used
@@ -978,10 +982,6 @@ class RiotAPI
 					throw new RequestException("No DummyData available for call. " . $this->_getDummyDataFileName());
 			}
 		}
-
-		$response       = null;
-		$headers        = null;
-		$response_code  = null;
 
 		//  was response already fetched?
 		if (isset($response) == false)

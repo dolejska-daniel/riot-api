@@ -75,7 +75,7 @@ class TournamentEndpointObjectIntegrityTest extends RiotAPITestCase
 
 		//  Get library processed results
 		/** @var array $result */
-		$result = $api->createTournamentCodes(1111, 10, $params);
+		$result = $api->createTournamentCodes(465010, 1, $params);
 		//  Get raw result
 		$rawResult = $api->getResult();
 
@@ -115,7 +115,7 @@ class TournamentEndpointObjectIntegrityTest extends RiotAPITestCase
 	{
 		$providerParams = new Objects\ProviderRegistrationParameters([
 			'region' => Region::EUROPE_EAST,
-			'url'    => 'http://callbackurl.com'
+			'url'    => 'https://github.com/dolejska-daniel/riot-api'
 		]);
 
 		//  Get library processed results
@@ -136,7 +136,7 @@ class TournamentEndpointObjectIntegrityTest extends RiotAPITestCase
 	{
 		$providerParams = new Objects\ProviderRegistrationParameters([
 			'region' => Region::EUROPE_EAST,
-			'url'    => 'http://callbackurl.com'
+			'url'    => 'https://github.com/dolejska-daniel/riot-api'
 		]);
 
 		//  Get library processed results
@@ -156,7 +156,7 @@ class TournamentEndpointObjectIntegrityTest extends RiotAPITestCase
 	public function testCreateTournament( RiotAPI $api )
 	{
 		$tournamentParams = new Objects\TournamentRegistrationParameters([
-			'providerId' => 672,
+			'providerId' => 3339,
 			'name'       => 'TestTournament',
 		]);
 
@@ -199,7 +199,7 @@ class TournamentEndpointObjectIntegrityTest extends RiotAPITestCase
 	{
 		//  Get library processed results
 		/** @var Objects\LobbyEventDtoWrapper $result */
-		$result = $api->getTournamentLobbyEvents('239d180f-fb8a-439e-85d9-95142e10b4f5');
+		$result = $api->getTournamentLobbyEvents('EUNE045c8-8f1f371e-dbc3-494c-8dd5-c5a3acf89506');
 		//  Get raw result
 		$rawResult = $api->getResult();
 
@@ -229,8 +229,6 @@ class TournamentEndpointObjectIntegrityTest extends RiotAPITestCase
 	 */
 	public function testEditTournamentCode( RiotAPI $api )
 	{
-		$this->markTestIncomplete('No DummyData for this call yet.');
-
 		$codeParams = new Objects\TournamentCodeUpdateParameters([
 			'allowedParticipants' => [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ],
 			'mapType'             => 'SUMMONERS_RIFT',
@@ -241,7 +239,7 @@ class TournamentEndpointObjectIntegrityTest extends RiotAPITestCase
 
 		//  Get library processed results
 		/** @var array $result */
-		$result = $api->editTournamentCode('239d180f-fb8a-439e-85d9-95142e10b4f5', $codeParams);
+		$result = $api->editTournamentCode('EUNE045c8-8f1f371e-dbc3-494c-8dd5-c5a3acf89506', $codeParams);
 		//  Get raw result
 		$rawResult = $api->getResult();
 
@@ -267,7 +265,7 @@ class TournamentEndpointObjectIntegrityTest extends RiotAPITestCase
 		]);
 
 		//  Get library processed results
-		$api->editTournamentCode('239d180f-fb8a-439e-85d9-95142e10b4f5', $codeParams);
+		$api->editTournamentCode('EUNE045c8-8f1f371e-dbc3-494c-8dd5-c5a3acf89506', $codeParams);
 	}
 
 	/**
@@ -277,15 +275,13 @@ class TournamentEndpointObjectIntegrityTest extends RiotAPITestCase
 	 */
 	public function testGetTournamentCodeData( RiotAPI $api )
 	{
-		$this->markTestIncomplete('No DummyData for this call yet.');
-
 		//  Get library processed results
-		/** @var array $result */
-		$result = $api->getTournamentCodeData('239d180f-fb8a-439e-85d9-95142e10b4f5');
+		/** @var Objects\TournamentCodeDto $result */
+		$result = $api->getTournamentCodeData('EUNE045c8-8f1f371e-dbc3-494c-8dd5-c5a3acf89506');
 		//  Get raw result
 		$rawResult = $api->getResult();
 
-		$this->assertSame($result, $rawResult);
+		$this->checkObjectPropertiesAndDataValidity($result, $rawResult, Objects\TournamentCodeDto::class);
 	}
 
 	/**
@@ -299,6 +295,6 @@ class TournamentEndpointObjectIntegrityTest extends RiotAPITestCase
 		$this->expectExceptionMessage("This endpoint is not available in interim mode.");
 
 		//  Get library processed results
-		$api->getTournamentCodeData('239d180f-fb8a-439e-85d9-95142e10b4f5');
+		$api->getTournamentCodeData('EUNE045c8-8f1f371e-dbc3-494c-8dd5-c5a3acf89506');
 	}
 }

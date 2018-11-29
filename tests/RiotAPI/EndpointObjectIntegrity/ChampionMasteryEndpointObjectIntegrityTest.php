@@ -46,9 +46,10 @@ class ChampionMasteryEndpointObjectIntegrityTest extends RiotAPITestCase
 	 */
 	public function testGetChampionMastery( RiotAPI $api )
 	{
+		$summonerId = "KnNZNuEVZ5rZry3IyWwYSVuikRe0y3qTWSkr1wxcmV5CLJ8";
 		//  Get library processed results
 		/** @var Objects\ChampionMasteryDto $result */
-		$result = $api->getChampionMastery(30904166, 61);
+		$result = $api->getChampionMastery($summonerId, 61);
 		//  Get raw result
 		$rawResult = $api->getResult();
 
@@ -62,9 +63,10 @@ class ChampionMasteryEndpointObjectIntegrityTest extends RiotAPITestCase
 	 */
 	public function testGetChampionMasteries( RiotAPI $api )
 	{
+		$summonerId = "KnNZNuEVZ5rZry3IyWwYSVuikRe0y3qTWSkr1wxcmV5CLJ8";
 		//  Get library processed results
 		/** @var Objects\ChampionMasteryDto[] $result */
-		$result = $api->getChampionMasteries(30904166);
+		$result = $api->getChampionMasteries($summonerId);
 		//  Get raw result
 		$rawResult = $api->getResult();
 
@@ -78,9 +80,10 @@ class ChampionMasteryEndpointObjectIntegrityTest extends RiotAPITestCase
 	 */
 	public function testGetChampionMasteryScore( RiotAPI $api )
 	{
+		$summonerId = "KnNZNuEVZ5rZry3IyWwYSVuikRe0y3qTWSkr1wxcmV5CLJ8";
 		//  Get library processed results
 		/** @var Objects\ChampionMasteryDto $result */
-		$result = $api->getChampionMasteryScore(30904166);
+		$result = $api->getChampionMasteryScore($summonerId);
 		//  Get raw result
 		$rawResult = $api->getResult();
 

@@ -134,6 +134,8 @@ class ExtensionsTest extends TestCase
 	 */
 	public function testCallExtensionFunction_Valid( RiotAPI $api )
 	{
+		$this->markTestIncomplete("This test has not been re-implemented yet.");
+
 		$champions = $api->getChampions();
 
 		$this->assertTrue($champions->isActive(61));
@@ -156,6 +158,8 @@ class ExtensionsTest extends TestCase
 	 */
 	public function testCallExtensionFunction_Invalid( RiotAPI $api )
 	{
+		$this->markTestIncomplete("This test has not been re-implemented yet.");
+
 		$this->expectException(GeneralException::class);
 		$this->expectExceptionMessage('failed to be executed');
 
@@ -170,6 +174,8 @@ class ExtensionsTest extends TestCase
 	 */
 	public function testCallExtensionFunction_NoExtension( RiotAPI $api )
 	{
+		$this->markTestIncomplete("This test has not been re-implemented yet.");
+
 		$this->expectException(GeneralException::class);
 		$this->expectExceptionMessage('no extension exists for this ApiObject');
 
