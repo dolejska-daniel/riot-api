@@ -24,8 +24,8 @@ namespace RiotAPI\Objects;
  *   Class MatchReferenceDto
  *
  * Used in:
- *   match (v3)
- *     @link https://developer.riotgames.com/api-methods/#match-v3/GET_getMatchlist
+ *   match (v4)
+ *     @link https://developer.riotgames.com/api-methods/#match-v4/GET_getMatchlist
  *
  * @linkable $champion (getStaticChampions)
  *

@@ -24,9 +24,9 @@ namespace RiotAPI\Objects;
  *   Class TeamBansDto
  *
  * Used in:
- *   match (v3)
- *     @link https://developer.riotgames.com/api-methods/#match-v3/GET_getMatchIdsByTournamentCode
- *     @link https://developer.riotgames.com/api-methods/#match-v3/GET_getMatchByTournamentCode
+ *   match (v4)
+ *     @link https://developer.riotgames.com/api-methods/#match-v4/GET_getMatchIdsByTournamentCode
+ *     @link https://developer.riotgames.com/api-methods/#match-v4/GET_getMatchByTournamentCode
  *
  * @linkable $championId (getStaticChampions)
  *
@@ -34,9 +34,17 @@ namespace RiotAPI\Objects;
  */
 class TeamBansDto extends ApiObjectLinkable
 {
-	/** @var int $pickTurn */
+	/**
+	 *   Turn during which the champion was banned.
+	 *
+	 * @var int $pickTurn
+	 */
 	public $pickTurn;
 
-	/** @var int $championId */
+	/**
+	 *   Banned championId.
+	 *
+	 * @var int $championId
+	 */
 	public $championId;
 }

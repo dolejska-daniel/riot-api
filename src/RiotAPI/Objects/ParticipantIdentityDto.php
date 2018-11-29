@@ -24,15 +24,19 @@ namespace RiotAPI\Objects;
  *   Class ParticipantIdentityDto
  *
  * Used in:
- *   match (v3)
- *     @link https://developer.riotgames.com/api-methods/#match-v3/GET_getMatchIdsByTournamentCode
- *     @link https://developer.riotgames.com/api-methods/#match-v3/GET_getMatchByTournamentCode
+ *   match (v4)
+ *     @link https://developer.riotgames.com/api-methods/#match-v4/GET_getMatchIdsByTournamentCode
+ *     @link https://developer.riotgames.com/api-methods/#match-v4/GET_getMatchByTournamentCode
  *
  * @package RiotAPI\Objects
  */
 class ParticipantIdentityDto extends ApiObject
 {
-	/** @var PlayerDto $player */
+	/**
+	 *   Player information.
+	 *
+	 * @var PlayerDto $player
+	 */
 	public $player;
 
 	/** @var int $participantId */

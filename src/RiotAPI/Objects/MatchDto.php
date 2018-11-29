@@ -24,50 +24,100 @@ namespace RiotAPI\Objects;
  *   Class MatchDto
  *
  * Used in:
- *   match (v3)
- *     @link https://developer.riotgames.com/api-methods/#match-v3/GET_getMatchIdsByTournamentCode
- *     @link https://developer.riotgames.com/api-methods/#match-v3/GET_getMatchByTournamentCode
+ *   match (v4)
+ *     @link https://developer.riotgames.com/api-methods/#match-v4/GET_getMatchIdsByTournamentCode
+ *     @link https://developer.riotgames.com/api-methods/#match-v4/GET_getMatchByTournamentCode
  *
  * @package RiotAPI\Objects
  */
 class MatchDto extends ApiObject
 {
-	/** @var int $seasonId */
+	/**
+	 *   Please refer to the Game Constants documentation.
+	 *
+	 * @var int $seasonId
+	 */
 	public $seasonId;
 
-	/** @var int $queueId */
+	/**
+	 *   Please refer to the Game Constants documentation.
+	 *
+	 * @var int $queueId
+	 */
 	public $queueId;
 
 	/** @var int $gameId */
 	public $gameId;
 
-	/** @var ParticipantIdentityDto[] $participantIdentities */
+	/**
+	 *   Participant identity information.
+	 *
+	 * @var ParticipantIdentityDto[] $participantIdentities
+	 */
 	public $participantIdentities;
 
-	/** @var string $gameVersion */
+	/**
+	 *   The major.minor version typically indicates the patch the match was played 
+	 * on.
+	 *
+	 * @var string $gameVersion
+	 */
 	public $gameVersion;
 
-	/** @var string $platformId */
+	/**
+	 *   Platform where the match was played.
+	 *
+	 * @var string $platformId
+	 */
 	public $platformId;
 
-	/** @var string $gameMode */
+	/**
+	 *   Please refer to the Game Constants documentation.
+	 *
+	 * @var string $gameMode
+	 */
 	public $gameMode;
 
-	/** @var int $mapId */
+	/**
+	 *   Please refer to the Game Constants documentation.
+	 *
+	 * @var int $mapId
+	 */
 	public $mapId;
 
-	/** @var string $gameType */
+	/**
+	 *   Please refer to the Game Constants documentation.
+	 *
+	 * @var string $gameType
+	 */
 	public $gameType;
 
-	/** @var TeamStatsDto[] $teams */
+	/**
+	 *   Team information.
+	 *
+	 * @var TeamStatsDto[] $teams
+	 */
 	public $teams;
 
-	/** @var ParticipantDto[] $participants */
+	/**
+	 *   Participant information.
+	 *
+	 * @var ParticipantDto[] $participants
+	 */
 	public $participants;
 
-	/** @var int $gameDuration */
+	/**
+	 *   Match duration in seconds.
+	 *
+	 * @var int $gameDuration
+	 */
 	public $gameDuration;
 
-	/** @var int $gameCreation */
+	/**
+	 *   Designates the timestamp when champion select ended and the loading screen 
+	 * appeared, NOT when the game timer was at 0:00.
+	 *
+	 * @var int $gameCreation
+	 */
 	public $gameCreation;
 }

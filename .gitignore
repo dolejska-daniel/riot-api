@@ -9,3 +9,4 @@ tests/RiotAPI/Definition/cache-fcp/
 
 # Cache
 src/RiotAPI/cache/
+src/DataDragonAPI/cache/

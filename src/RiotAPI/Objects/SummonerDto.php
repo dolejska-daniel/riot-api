@@ -25,10 +25,11 @@ namespace RiotAPI\Objects;
  * represents a summoner
  *
  * Used in:
- *   summoner (v3)
- *     @link https://developer.riotgames.com/api-methods/#summoner-v3/GET_getByAccountId
- *     @link https://developer.riotgames.com/api-methods/#summoner-v3/GET_getBySummonerName
- *     @link https://developer.riotgames.com/api-methods/#summoner-v3/GET_getBySummonerId
+ *   summoner (v4)
+ *     @link https://developer.riotgames.com/api-methods/#summoner-v4/GET_getByAccountId
+ *     @link https://developer.riotgames.com/api-methods/#summoner-v4/GET_getBySummonerName
+ *     @link https://developer.riotgames.com/api-methods/#summoner-v4/GET_getByPUUID
+ *     @link https://developer.riotgames.com/api-methods/#summoner-v4/GET_getBySummonerId
  *
  * @package RiotAPI\Objects
  */
@@ -49,6 +50,13 @@ class SummonerDto extends ApiObject
 	public $name;
 
 	/**
+	 *   PUUID.
+	 *
+	 * @var string $puuid
+	 */
+	public $puuid;
+
+	/**
 	 *   Summoner level associated with the summoner.
 	 *
 	 * @var int $summonerLevel
@@ -67,14 +75,14 @@ class SummonerDto extends ApiObject
 	/**
 	 *   Summoner ID.
 	 *
-	 * @var int $id
+	 * @var string $id
 	 */
 	public $id;
 
 	/**
 	 *   Account ID.
 	 *
-	 * @var int $accountId
+	 * @var string $accountId
 	 */
 	public $accountId;
 }

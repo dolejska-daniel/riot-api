@@ -24,9 +24,9 @@ namespace RiotAPI\Objects;
  *   Class ParticipantDto
  *
  * Used in:
- *   match (v3)
- *     @link https://developer.riotgames.com/api-methods/#match-v3/GET_getMatchIdsByTournamentCode
- *     @link https://developer.riotgames.com/api-methods/#match-v3/GET_getMatchByTournamentCode
+ *   match (v4)
+ *     @link https://developer.riotgames.com/api-methods/#match-v4/GET_getMatchIdsByTournamentCode
+ *     @link https://developer.riotgames.com/api-methods/#match-v4/GET_getMatchByTournamentCode
  *
  * @linkable $championId (getStaticChampions)
  *
@@ -34,31 +34,68 @@ namespace RiotAPI\Objects;
  */
 class ParticipantDto extends ApiObjectLinkable
 {
-	/** @var ParticipantStatsDto $stats */
+	/**
+	 *   Participant statistics.
+	 *
+	 * @var ParticipantStatsDto $stats
+	 */
 	public $stats;
 
 	/** @var int $participantId */
 	public $participantId;
 
-	/** @var RuneDto[] $runes */
+	/**
+	 *   List of legacy Rune information. Not included for matches played with 
+	 * Runes Reforged.
+	 *
+	 * @var RuneDto[] $runes
+	 */
 	public $runes;
 
-	/** @var ParticipantTimelineDto $timeline */
+	/**
+	 *   Participant timeline data.
+	 *
+	 * @var ParticipantTimelineDto $timeline
+	 */
 	public $timeline;
 
-	/** @var int $teamId */
+	/**
+	 *   100 for blue side. 200 for red side.
+	 *
+	 * @var int $teamId
+	 */
 	public $teamId;
 
-	/** @var int $spell2Id */
+	/**
+	 *   Second Summoner Spell id.
+	 *
+	 * @var int $spell2Id
+	 */
 	public $spell2Id;
 
-	/** @var MasteryDto[] $masteries */
+	/**
+	 *   List of legacy Mastery information. Not included for matches played with 
+	 * Runes Reforged.
+	 *
+	 * @var MasteryDto[] $masteries
+	 */
 	public $masteries;
 
-	/** @var string $highestAchievedSeasonTier */
+	/**
+	 *   Highest ranked tier achieved for the previous season in a specific subset 
+	 * of queueIds, if any, otherwise null. Used to display border in game loading 
+	 * screen. Please refer to the Ranked Info documentation. (Legal values: CHALLENGER, 
+	 * MASTER, DIAMOND, PLATINUM, GOLD, SILVER, BRONZE, UNRANKED).
+	 *
+	 * @var string $highestAchievedSeasonTier
+	 */
 	public $highestAchievedSeasonTier;
 
-	/** @var int $spell1Id */
+	/**
+	 *   First Summoner Spell id.
+	 *
+	 * @var int $spell1Id
+	 */
 	public $spell1Id;
 
 	/** @var int $championId */

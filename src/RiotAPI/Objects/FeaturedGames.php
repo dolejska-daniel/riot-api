@@ -24,8 +24,8 @@ namespace RiotAPI\Objects;
  *   Class FeaturedGames
  *
  * Used in:
- *   spectator (v3)
- *     @link https://developer.riotgames.com/api-methods/#spectator-v3/GET_getFeaturedGames
+ *   spectator (v4)
+ *     @link https://developer.riotgames.com/api-methods/#spectator-v4/GET_getFeaturedGames
  *
  * @iterable $gameList
  *

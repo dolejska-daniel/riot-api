@@ -24,9 +24,9 @@ namespace RiotAPI\Objects;
  *   Class PlayerDto
  *
  * Used in:
- *   match (v3)
- *     @link https://developer.riotgames.com/api-methods/#match-v3/GET_getMatchIdsByTournamentCode
- *     @link https://developer.riotgames.com/api-methods/#match-v3/GET_getMatchByTournamentCode
+ *   match (v4)
+ *     @link https://developer.riotgames.com/api-methods/#match-v4/GET_getMatchIdsByTournamentCode
+ *     @link https://developer.riotgames.com/api-methods/#match-v4/GET_getMatchByTournamentCode
  *
  * @package RiotAPI\Objects
  */
@@ -41,7 +41,11 @@ class PlayerDto extends ApiObject
 	/** @var string $matchHistoryUri */
 	public $matchHistoryUri;
 
-	/** @var string $platformId */
+	/**
+	 *   Original platformId.
+	 *
+	 * @var string $platformId
+	 */
 	public $platformId;
 
 	/** @var int $currentAccountId */
@@ -53,6 +57,10 @@ class PlayerDto extends ApiObject
 	/** @var int $summonerId */
 	public $summonerId;
 
-	/** @var int $accountId */
+	/**
+	 *   Original accountId.
+	 *
+	 * @var int $accountId
+	 */
 	public $accountId;
 }

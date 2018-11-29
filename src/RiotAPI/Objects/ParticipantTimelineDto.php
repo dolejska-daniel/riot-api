@@ -24,41 +24,82 @@ namespace RiotAPI\Objects;
  *   Class ParticipantTimelineDto
  *
  * Used in:
- *   match (v3)
- *     @link https://developer.riotgames.com/api-methods/#match-v3/GET_getMatchIdsByTournamentCode
- *     @link https://developer.riotgames.com/api-methods/#match-v3/GET_getMatchByTournamentCode
+ *   match (v4)
+ *     @link https://developer.riotgames.com/api-methods/#match-v4/GET_getMatchIdsByTournamentCode
+ *     @link https://developer.riotgames.com/api-methods/#match-v4/GET_getMatchByTournamentCode
  *
  * @package RiotAPI\Objects
  */
 class ParticipantTimelineDto extends ApiObject
 {
-	/** @var string $lane */
+	/**
+	 *   Participant's calculated lane. MID and BOT are legacy values. (Legal 
+	 * values: MID, MIDDLE, TOP, JUNGLE, BOT, BOTTOM).
+	 *
+	 * @var string $lane
+	 */
 	public $lane;
 
 	/** @var int $participantId */
 	public $participantId;
 
-	/** @var double[] $csDiffPerMinDeltas */
+	/**
+	 *   Creep score difference versus the calculated lane opponent(s) for a 
+	 * specified period.
+	 *
+	 * @var  double[] $csDiffPerMinDeltas
+	 */
 	public $csDiffPerMinDeltas;
 
-	/** @var double[] $goldPerMinDeltas */
+	/**
+	 *   Gold for a specified period.
+	 *
+	 * @var  double[] $goldPerMinDeltas
+	 */
 	public $goldPerMinDeltas;
 
-	/** @var double[] $xpDiffPerMinDeltas */
+	/**
+	 *   Experience difference versus the calculated lane opponent(s) for a 
+	 * specified period.
+	 *
+	 * @var  double[] $xpDiffPerMinDeltas
+	 */
 	public $xpDiffPerMinDeltas;
 
-	/** @var double[] $creepsPerMinDeltas */
+	/**
+	 *   Creeps for a specified period.
+	 *
+	 * @var  double[] $creepsPerMinDeltas
+	 */
 	public $creepsPerMinDeltas;
 
-	/** @var double[] $xpPerMinDeltas */
+	/**
+	 *   Experience change for a specified period.
+	 *
+	 * @var  double[] $xpPerMinDeltas
+	 */
 	public $xpPerMinDeltas;
 
-	/** @var string $role */
+	/**
+	 *   Participant's calculated role. (Legal values: DUO, NONE, SOLO, DUO_CARRY, 
+	 * DUO_SUPPORT).
+	 *
+	 * @var string $role
+	 */
 	public $role;
 
-	/** @var double[] $damageTakenDiffPerMinDeltas */
+	/**
+	 *   Damage taken difference versus the calculated lane opponent(s) for a 
+	 * specified period.
+	 *
+	 * @var  double[] $damageTakenDiffPerMinDeltas
+	 */
 	public $damageTakenDiffPerMinDeltas;
 
-	/** @var double[] $damageTakenPerMinDeltas */
+	/**
+	 *   Damage taken for a specified period.
+	 *
+	 * @var  double[] $damageTakenPerMinDeltas
+	 */
 	public $damageTakenPerMinDeltas;
 }

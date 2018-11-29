@@ -21,22 +21,22 @@ namespace RiotAPI\Objects;
 
 
 /**
- *   Class MatchFrameDto
+ *   Class ChampionInfo
  *
  * Used in:
- *   match (v4)
- *     @link https://developer.riotgames.com/api-methods/#match-v4/GET_getMatchTimeline
+ *   champion (v3)
+ *     @link https://developer.riotgames.com/api-methods/#champion-v3/GET_getChampionInfo
  *
  * @package RiotAPI\Objects
  */
-class MatchFrameDto extends ApiObject
+class ChampionInfo extends ApiObject
 {
-	/** @var int $timestamp */
-	public $timestamp;
+	/** @var int[] $freeChampionIdsForNewPlayers */
+	public $freeChampionIdsForNewPlayers;
 
-	/** @var  MatchParticipantFrameDto[] $participantFrames */
-	public $participantFrames;
+	/** @var int[] $freeChampionIds */
+	public $freeChampionIds;
 
-	/** @var MatchEventDto[] $events */
-	public $events;
+	/** @var int $maxNewPlayerLevel */
+	public $maxNewPlayerLevel;
 }

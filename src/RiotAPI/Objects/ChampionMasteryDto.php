@@ -25,9 +25,9 @@ namespace RiotAPI\Objects;
  * This object contains single Champion Mastery information for player and champion combination.
  *
  * Used in:
- *   champion-mastery (v3)
- *     @link https://developer.riotgames.com/api-methods/#champion-mastery-v3/GET_getAllChampionMasteries
- *     @link https://developer.riotgames.com/api-methods/#champion-mastery-v3/GET_getChampionMastery
+ *   champion-mastery (v4)
+ *     @link https://developer.riotgames.com/api-methods/#champion-mastery-v4/GET_getAllChampionMasteries
+ *     @link https://developer.riotgames.com/api-methods/#champion-mastery-v4/GET_getChampionMastery
  *
  * @linkable $championId (getStaticChampions)
  *
@@ -65,19 +65,20 @@ class ChampionMasteryDto extends ApiObjectLinkable
 	public $championId;
 
 	/**
-	 *   Player ID for this entry.
-	 *
-	 * @var int $playerId
-	 */
-	public $playerId;
-
-	/**
 	 *   Number of points needed to achieve next level. Zero if player reached 
 	 * maximum champion level for this champion.
 	 *
 	 * @var int $championPointsUntilNextLevel
 	 */
 	public $championPointsUntilNextLevel;
+
+	/**
+	 *   Last time this champion was played by this player - in Unix milliseconds 
+	 * time format.
+	 *
+	 * @var int $lastPlayTime
+	 */
+	public $lastPlayTime;
 
 	/**
 	 *   The token earned for this champion to levelup.
@@ -94,10 +95,9 @@ class ChampionMasteryDto extends ApiObjectLinkable
 	public $championPointsSinceLastLevel;
 
 	/**
-	 *   Last time this champion was played by this player - in Unix milliseconds 
-	 * time format.
+	 *   Summoner ID for this entry.
 	 *
-	 * @var int $lastPlayTime
+	 * @var string $summonerId
 	 */
-	public $lastPlayTime;
+	public $summonerId;
 }

@@ -24,8 +24,8 @@ namespace RiotAPI\Objects;
  *   Class Perks
  *
  * Used in:
- *   spectator (v3)
- *     @link https://developer.riotgames.com/api-methods/#spectator-v3/GET_getCurrentGameInfoBySummoner
+ *   spectator (v4)
+ *     @link https://developer.riotgames.com/api-methods/#spectator-v4/GET_getCurrentGameInfoBySummoner
  *
  * @iterable $perkIds
  *
