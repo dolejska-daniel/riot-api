@@ -9,12 +9,15 @@
 [![Packagist](https://img.shields.io/packagist/v/dolejska-daniel/riot-api.svg)](https://packagist.org/packages/dolejska-daniel/riot-api)
 [![Packagist](https://img.shields.io/packagist/dm/dolejska-daniel/riot-api.svg)](https://packagist.org/packages/dolejska-daniel/riot-api)
 [![Packagist](https://img.shields.io/packagist/l/dolejska-daniel/riot-api.svg)](https://packagist.org/packages/dolejska-daniel/riot-api)
+[![Support Project](https://img.shields.io/badge/Support_Project-PayPal-blue.svg)](https://www.paypal.me/dolejskad)
 
 # Table of Contents
 
 1. [Introduction](#introduction)
 2. [Downloading](#downloading)
 3. [BUGs and TODOs](#bugs-and-todos)
+	1. [BUGs](#bugs)
+	2. [TODOs](#todos)
 4. [League of Legends API](#league-of-legends-api)
 	1. [Resource versions](#resource-versions)
 	2. [Initializing the library](#initializing-the-library)
@@ -30,24 +33,19 @@
 
 # [Introduction](https://github.com/dolejska-daniel/riot-api/wiki/Home#introduction)
 
-Welcome to the RiotAPI PHP7 library repo! The goal of this library is to create easy-to-use
-library for anyone who might need one. This is fully object oriented API wrapper for
-League of Legends' API. A small DataDragon API is also included.
+Welcome to the RiotAPI PHP7 library repo!
+The goal of this library is to create easy-to-use library for anyone who might need one.
+This is fully object oriented API wrapper for League of Legends' API.
+A small DataDragon API is also included.
 
 Here are some handy features:
 
 - **Rate limit caching** and limit exceeding prevention - fully automatic.
-- **Call caching** - this enables the library to re-use already fetched data within short
-timespan - saving time and API rate limit.
-- **StaticData linking** - library can automatically link Static Data related to your
-request right into the returned object.
-- **Custom callbacks** - you can set custom function which will be called before
-or after the request is processed.
-- **Object extensions** - you can implement own methods to the fetched API objects itself
-and enable yourself to use them later to ease of your work.
-- **Interim mode** support, you are going to be able to use the API the same way
- whether your key is in `interim mode` or not (meaning you won't need to change anything
- when you jump to production).
+- **Call caching** - this enables the library to re-use already fetched data within short timespan - saving time and API rate limit.
+- **StaticData linking** - library can automatically link Static Data related to your request right into the returned object.
+- **Custom callbacks** - you can set custom function which will be called before or after the request is processed.
+- **Object extensions** - you can implement own methods to the fetched API objects itself and enable yourself to use them later to ease of your work.
+- **Interim mode** support, you are going to be able to use the API the same way whether your key is in `interim mode` or not (meaning you won't need to change anything when you jump to production).
 - **CLI supported**! You can use the library easily even in PHP CLI mode.
 - **Objects everywhere**! API calls return data in special objects.
 
@@ -55,25 +53,26 @@ Please, refer mainly to the [wiki pages](https://github.com/dolejska-daniel/riot
 
 # [Downloading](https://github.com/dolejska-daniel/riot-api/wiki/Home#downloading)
 
-The easiest way to get this library is to use [Composer](https://getcomposer.org/). While
-having Composer installed it takes only `composer require dolejska-daniel/riot-api` and `composer install` to
-get the library ready to roll!
+The easiest way to get this library is to use [Composer](https://getcomposer.org/).
+
+While having Composer installed it takes only `composer require dolejska-daniel/riot-api` and `composer install` to get the library ready to roll!
 
 # BUGs and TODOs
 
 ## BUGs
+- [ ] ... 
 
 ## TODOs
 - [ ] [Update endpoint calls to v4 (#24)](https://github.com/dolejska-daniel/riot-api/issues/24)
 - [ ] [Bridge calls for StaticData from RiotAPI to DataDragon and create class instances (#25)](https://github.com/dolejska-daniel/riot-api/issues/25)
+- [ ] [Fix tests (#26)](https://github.com/dolejska-daniel/riot-api/issues/26)
 
 # League of Legends API
 
 ## [Resource versions](](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Resources-and-endpoints))
 
-Below you can find table of implemented API resources and the version in which they are
-currently implemented. Please refer to [wiki pages](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Resources-and-endpoints)
-for more information about endpoints and resources.
+Below you can find table of implemented API resources and the version in which they are currently implemented.
+Please refer to [wiki pages](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Resources-and-endpoints) for more information about endpoints and resources.
 
 | Resource         | Status |
 | ---------------- | ------ |
@@ -115,14 +114,12 @@ $api = new RiotAPI([
 $ch = $api->getStaticChampion(61); // Orianna <3
 ```
 
-And there is a lot more what you can set when initializing the library - mainly to enable
-special features or to amend behaviour of the library. Please see [the wiki pages](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-How-to-begin)
-for complete list of library's settings.
+And there is a lot more what you can set when initializing the library - mainly to enable special features or to amend behaviour of the library.
+Please see [the wiki pages](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-How-to-begin) for complete list of library's settings.
 
 ## [Usage example](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-How-to-begin#usage-example)
 
-Working with RiotAPI can not be easier, just watch how to fetch summoner information
-based on summoner's name:
+Working with RiotAPI can not be easier, just watch how to fetch summoner information based on summoner's name:
 
 ```php
 //  ...initialization...
