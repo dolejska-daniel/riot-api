@@ -32,8 +32,7 @@ jobs:
     include:
     - # identify pull requests by environment variable
         if: type = pull_request
-        env:
-            - BUILD_IS_PULL_REQUEST=1
+        env: BUILD_IS_PULL_REQUEST=1
 
 # Start tests
 script:
