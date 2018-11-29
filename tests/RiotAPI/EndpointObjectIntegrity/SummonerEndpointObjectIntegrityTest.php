@@ -48,7 +48,7 @@ class SummonerEndpointObjectIntegrityTest extends RiotAPITestCase
 	{
 		//  Get library processed results
 		/** @var Objects\SummonerDto $result */
-		$result = $api->getSummonerByAccount(35545652);
+		$result = $api->getSummonerByAccount("R6fx3_ynno6O06vJb2N1EmfsIIIdJsAFctOSkzsvId5QHA");
 		//  Get raw result
 		$rawResult = $api->getResult();
 
@@ -82,7 +82,7 @@ class SummonerEndpointObjectIntegrityTest extends RiotAPITestCase
 	{
 		//  Get library processed results
 		/** @var Objects\SummonerDto $result */
-		$result = $api->getSummoner(30904166);
+		$result = $api->getSummoner("Tl4pOlcp2vxCpPp9wVNjTuoMzpb8N6gLgMZiJwOL2JCkdlY");
 		//  Get raw result
 		$rawResult = $api->getResult();
 

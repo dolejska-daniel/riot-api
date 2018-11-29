@@ -70,8 +70,8 @@ class LiveTest extends TestCase
 
 		$summoner = $api->getSummonerByName("KuliS");
 		$this->assertSame("KuliS", $summoner->name);
-		$this->assertSame(32473526, $summoner->id);
-		$this->assertSame(35079181, $summoner->accountId);
+		$this->assertSame("Tl4pOlcp2vxCpPp9wVNjTuoMzpb8N6gLgMZiJwOL2JCkdlY", $summoner->id);
+		$this->assertSame("R6fx3_ynno6O06vJb2N1EmfsIIIdJsAFctOSkzsvId5QHA", $summoner->accountId);
 
 		return $api;
 	}
@@ -92,7 +92,7 @@ class LiveTest extends TestCase
 
 		$summoner = $api->getSummonerByName("KuliS");
 		$this->assertSame("KuliS", $summoner->name);
-		$this->assertSame(32473526, $summoner->id);
-		$this->assertSame(35079181, $summoner->accountId);
+		$this->assertSame("Tl4pOlcp2vxCpPp9wVNjTuoMzpb8N6gLgMZiJwOL2JCkdlY", $summoner->id);
+		$this->assertSame("R6fx3_ynno6O06vJb2N1EmfsIIIdJsAFctOSkzsvId5QHA", $summoner->accountId);
 	}
 }
