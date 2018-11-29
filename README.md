@@ -64,8 +64,8 @@ get the library ready to roll!
 ## BUGs
 
 ## TODOs
--[ ] [Update endpoint calls to v4 (#24)](https://github.com/dolejska-daniel/riot-api/issues/24)
--[ ] [Bridge calls for StaticData from RiotAPI to DataDragon and create class instances (#25)](https://github.com/dolejska-daniel/riot-api/issues/25)
+- [ ] [Update endpoint calls to v4 (#24)](https://github.com/dolejska-daniel/riot-api/issues/24)
+- [ ] [Bridge calls for StaticData from RiotAPI to DataDragon and create class instances (#25)](https://github.com/dolejska-daniel/riot-api/issues/25)
 
 # League of Legends API
 

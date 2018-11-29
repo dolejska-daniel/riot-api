@@ -316,11 +316,12 @@ class RiotAPI
 	/**
 	 *   RiotAPI constructor.
 	 *
-	 * @param array     $settings
-	 * @param IRegion   $custom_regionDataProvider
+	 * @param array $settings
+	 * @param IRegion $custom_regionDataProvider
 	 * @param IPlatform $custom_platformDataProvider
 	 *
 	 * @throws SettingsException
+	 * @throws GeneralException
 	 */
 	public function __construct( array $settings, IRegion $custom_regionDataProvider = null, IPlatform $custom_platformDataProvider = null )
 	{
@@ -740,6 +741,7 @@ class RiotAPI
 	 *
 	 * @return RiotAPI
 	 * @throws SettingsException
+	 * @throws GeneralException
 	 */
 	public function setRegion( string $region ): self
 	{
@@ -755,6 +757,7 @@ class RiotAPI
 	 *
 	 * @return RiotAPI
 	 * @throws SettingsException
+	 * @throws GeneralException
 	 */
 	public function setTemporaryRegion( string $tempRegion ): self
 	{
@@ -769,6 +772,7 @@ class RiotAPI
 	 *
 	 * @return RiotAPI
 	 * @throws SettingsException
+	 * @throws GeneralException
 	 */
 	public function unsetTemporaryRegion(): self
 	{
@@ -887,12 +891,13 @@ class RiotAPI
 	 *   Makes call to RiotAPI.
 	 *
 	 * @param string|null $overrideRegion
-	 * @param string      $method
+	 * @param string $method
 	 *
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
 	 * @throws SettingsException
+	 * @throws GeneralException
 	 *
 	 * @internal
 	 */
@@ -959,6 +964,10 @@ class RiotAPI
 					throw new RequestException("No DummyData available for call. " . $this->_getDummyDataFileName());
 			}
 		}
+
+		$response       = null;
+		$headers        = null;
+		$response_code  = null;
 
 		//  was response already fetched?
 		if (isset($response) == false)
@@ -1130,6 +1139,7 @@ class RiotAPI
 	 *
 	 * @return string
 	 *
+	 * @throws GeneralException
 	 * @internal
 	 */
 	public function _getCallUrl( &$curlHeaders = [] ): string
@@ -1266,18 +1276,18 @@ class RiotAPI
 	/**
 	 * ==================================================================d=d=
 	 *     Champion Mastery Endpoint Methods
-	 *     @link https://developer.riotgames.com/api-methods/#champion-mastery-v3
+	 *     @link https://developer.riotgames.com/api-methods/#champion-mastery-v4
 	 * ==================================================================d=d=
 	 **/
-	const RESOURCE_CHAMPIONMASTERY = '1240:champion-mastery';
-	const RESOURCE_CHAMPIONMASTERY_V3 = 'v3';
+	const RESOURCE_CHAMPIONMASTERY = '1418:champion-mastery';
+	const RESOURCE_CHAMPIONMASTERY_VERSION = 'v4';
 
 	/**
 	 *   Get a champion mastery by player id and champion id. Response code 204 means
 	 * there were no masteries found for given player id or player id and champion id
 	 * combination. (RPC)
 	 *
-	 * @param int $summoner_id
+	 * @param string $encrypted_summoner_id
 	 * @param int $champion_id
 	 *
 	 * @return Objects\ChampionMasteryDto
@@ -1289,9 +1299,9 @@ class RiotAPI
 	 *
 	 * @link https://developer.riotgames.com/api-methods/#champion-mastery-v3/GET_getChampionMastery
 	 */
-	public function getChampionMastery( int $summoner_id, int $champion_id ): Objects\ChampionMasteryDto
+	public function getChampionMastery( string $encrypted_summoner_id, int $champion_id ): Objects\ChampionMasteryDto
 	{
-		$this->setEndpoint("/lol/champion-mastery/" . self::RESOURCE_CHAMPION_V3 . "/champion-masteries/by-summoner/{$summoner_id}/by-champion/{$champion_id}")
+		$this->setEndpoint("/lol/champion-mastery/" . self::RESOURCE_CHAMPIONMASTERY_VERSION . "/champion-masteries/by-summoner/{$encrypted_summoner_id}/by-champion/{$champion_id}")
 			->setResource(self::RESOURCE_CHAMPIONMASTERY, "/champion-masteries/by-summoner/%s/by-champion/%i")
 			->makeCall();
 
@@ -1302,7 +1312,7 @@ class RiotAPI
 	 *   Get all champion mastery entries sorted by number of champion points descending
 	 * (RPC)
 	 *
-	 * @param int $summoner_id
+	 * @param string $encrypted_summoner_id
 	 *
 	 * @return Objects\ChampionMasteryDto[]
 	 *
@@ -1313,9 +1323,9 @@ class RiotAPI
 	 *
 	 * @link https://developer.riotgames.com/api-methods/#champion-mastery-v3/GET_getAllChampionMasteries
 	 */
-	public function getChampionMasteries( int $summoner_id ): array
+	public function getChampionMasteries( string $encrypted_summoner_id ): array
 	{
-		$this->setEndpoint("/lol/champion-mastery/" . self::RESOURCE_CHAMPION_V3 . "/champion-masteries/by-summoner/{$summoner_id}")
+		$this->setEndpoint("/lol/champion-mastery/" . self::RESOURCE_CHAMPIONMASTERY_VERSION . "/champion-masteries/by-summoner/{$encrypted_summoner_id}")
 			->setResource(self::RESOURCE_CHAMPIONMASTERY, "/champion-masteries/by-summoner/%i")
 			->makeCall();
 
@@ -1330,7 +1340,7 @@ class RiotAPI
 	 *   Get a player's total champion mastery score, which is sum of individual champion
 	 * mastery levels (RPC)
 	 *
-	 * @param int $summoner_id
+	 * @param string $encrypted_summoner_id
 	 *
 	 * @return int
 	 *
@@ -1341,9 +1351,9 @@ class RiotAPI
 	 *
 	 * @link https://developer.riotgames.com/api-methods/#champion-mastery-v3/GET_getChampionMasteryScore
 	 */
-	public function getChampionMasteryScore( int $summoner_id ): int
+	public function getChampionMasteryScore( string $encrypted_summoner_id ): int
 	{
-		$this->setEndpoint("/lol/champion-mastery/" . self::RESOURCE_CHAMPION_V3 . "/scores/by-summoner/{$summoner_id}")
+		$this->setEndpoint("/lol/champion-mastery/" . self::RESOURCE_CHAMPIONMASTERY_VERSION . "/scores/by-summoner/{$encrypted_summoner_id}")
 			->setResource(self::RESOURCE_CHAMPIONMASTERY, "/scores/by-summoner/%i")
 			->makeCall();
 
@@ -1354,16 +1364,16 @@ class RiotAPI
 	/**
 	 * ==================================================================d=d=
 	 *     Spectator Endpoint Methods
-	 *     @link https://developer.riotgames.com/api-methods/#spectator-v3
+	 *     @link https://developer.riotgames.com/api-methods/#spectator-v4
 	 * ==================================================================d=d=
 	 **/
-	const RESOURCE_SPECTATOR = '1238:spectator';
-	const RESOURCE_SPECTATOR_V3 = 'v3';
+	const RESOURCE_SPECTATOR = '1419:spectator';
+	const RESOURCE_SPECTATOR_VERSION = 'v4';
 
 	/**
 	 *   Get current game information for the given summoner ID.
 	 *
-	 * @param int $summoner_id
+	 * @param string $encrypted_summoner_id
 	 *
 	 * @return Objects\CurrentGameInfo
 	 *
@@ -1374,9 +1384,9 @@ class RiotAPI
 	 *
 	 * @link https://developer.riotgames.com/api-methods/#spectator-v3/GET_getCurrentGameInfoBySummoner
 	 */
-	public function getCurrentGameInfo( int $summoner_id ): Objects\CurrentGameInfo
+	public function getCurrentGameInfo( string $encrypted_summoner_id ): Objects\CurrentGameInfo
 	{
-		$this->setEndpoint("/lol/spectator/" . self::RESOURCE_SPECTATOR_V3 . "/active-games/by-summoner/{$summoner_id}")
+		$this->setEndpoint("/lol/spectator/" . self::RESOURCE_SPECTATOR_VERSION . "/active-games/by-summoner/{$encrypted_summoner_id}")
 			->setResource(self::RESOURCE_SPECTATOR, "/active-games/by-summoner/%i")
 			->makeCall();
 
@@ -1397,7 +1407,7 @@ class RiotAPI
 	 */
 	public function getFeaturedGames(): Objects\FeaturedGames
 	{
-		$this->setEndpoint("/lol/spectator/" . self::RESOURCE_SPECTATOR_V3 . "/featured-games")
+		$this->setEndpoint("/lol/spectator/" . self::RESOURCE_SPECTATOR_VERSION . "/featured-games")
 			->setResource(self::RESOURCE_SPECTATOR, "/featured-games")
 			->makeCall();
 
@@ -1408,11 +1418,11 @@ class RiotAPI
 	/**
 	 * ==================================================================d=d=
 	 *     League Endpoint Methods
-	 *     @link https://developer.riotgames.com/api-methods/#league-v3
+	 *     @link https://developer.riotgames.com/api-methods/#league-v4
 	 * ==================================================================d=d=
 	 **/
-	const RESOURCE_LEAGUE = '1342:league';
-	const RESOURCE_LEAGUE_V3 = 'v3';
+	const RESOURCE_LEAGUE = '1424:league';
+	const RESOURCE_LEAGUE_VERSION = 'v4';
 
 	/**
 	 *   Get league by its UUID.
@@ -1430,7 +1440,7 @@ class RiotAPI
 	 */
 	public function getLeagueById( string $league_id ): Objects\LeagueListDto
 	{
-		$this->setEndpoint("/lol/league/" . self::RESOURCE_LEAGUE_V3 . "/leagues/{$league_id}")
+		$this->setEndpoint("/lol/league/" . self::RESOURCE_LEAGUE_VERSION . "/leagues/{$league_id}")
 			->setResource(self::RESOURCE_LEAGUE, "/leagues/%s")
 			->makeCall();
 
@@ -1440,7 +1450,7 @@ class RiotAPI
 	/**
 	 *   Get leagues mapped by summoner ID for a given list of summoner IDs.
 	 *
-	 * @param int $summoner_id
+	 * @param string $encrypted_summoner_id
 	 *
 	 * @return Objects\LeaguePositionDto[]
 	 *
@@ -1451,9 +1461,9 @@ class RiotAPI
 	 *
 	 * @link https://developer.riotgames.com/api-methods/#league-v3/GET_getAllLeaguePositionsForSummoner
 	 */
-	public function getLeaguePositionsForSummoner( int $summoner_id ): array
+	public function getLeaguePositionsForSummoner( string $encrypted_summoner_id ): array
 	{
-		$this->setEndpoint("/lol/league/" . self::RESOURCE_LEAGUE_V3 . "/positions/by-summoner/{$summoner_id}")
+		$this->setEndpoint("/lol/league/" . self::RESOURCE_LEAGUE_VERSION . "/positions/by-summoner/{$encrypted_summoner_id}")
 			->setResource(self::RESOURCE_LEAGUE, "/positions/by-summoner/%i")
 			->makeCall();
 
@@ -1480,7 +1490,7 @@ class RiotAPI
 	 */
 	public function getLeagueChallenger( string $game_queue_type ): Objects\LeagueListDto
 	{
-		$this->setEndpoint("/lol/league/" . self::RESOURCE_LEAGUE_V3 . "/challengerleagues/by-queue/{$game_queue_type}")
+		$this->setEndpoint("/lol/league/" . self::RESOURCE_LEAGUE_VERSION . "/challengerleagues/by-queue/{$game_queue_type}")
 			->setResource(self::RESOURCE_LEAGUE, "/challengerleagues/by-queue/%s")
 			->makeCall();
 
@@ -1503,7 +1513,7 @@ class RiotAPI
 	 */
 	public function getLeagueMaster( string $game_queue_type ): Objects\LeagueListDto
 	{
-		$this->setEndpoint("/lol/league/" . self::RESOURCE_LEAGUE_V3 . "/masterleagues/by-queue/{$game_queue_type}")
+		$this->setEndpoint("/lol/league/" . self::RESOURCE_LEAGUE_VERSION . "/masterleagues/by-queue/{$game_queue_type}")
 			->setResource(self::RESOURCE_LEAGUE, "/masterleagues/by-queue/%s")
 			->makeCall();
 
@@ -2094,7 +2104,7 @@ class RiotAPI
 	 * ==================================================================d=d=
 	 **/
 	const RESOURCE_STATUS = '1246:lol-status';
-	const RESOURCE_STATUS_V3 = 'v3';
+	const RESOURCE_STATUS_VERSION = 'v3';
 
 	/**
 	 *   Get status data - shard list.
@@ -2112,7 +2122,7 @@ class RiotAPI
 	 */
 	public function getStatusData( string $override_region = null ): Objects\ShardStatus
 	{
-		$this->setEndpoint("/lol/status/" . self::RESOURCE_STATUS_V3 . "/shard-data")
+		$this->setEndpoint("/lol/status/" . self::RESOURCE_STATUS_VERSION . "/shard-data")
 			->setResource(self::RESOURCE_STATICDATA, "/shard-data")
 			->makeCall($override_region);
 
@@ -2123,11 +2133,11 @@ class RiotAPI
 	/**
 	 * ==================================================================d=d=
 	 *     Match Endpoint Methods
-	 *     @link https://developer.riotgames.com/api-methods/#match-v3
+	 *     @link https://developer.riotgames.com/api-methods/#match-v4
 	 * ==================================================================d=d=
 	 **/
-	const RESOURCE_MATCH = '1338:match';
-	const RESOURCE_MATCH_V3 = 'v3';
+	const RESOURCE_MATCH = '1420:match';
+	const RESOURCE_MATCH_VERSION = 'v4';
 
 	/**
 	 *   Retrieve match by match ID.
@@ -2141,11 +2151,11 @@ class RiotAPI
 	 * @throws ServerException
 	 * @throws ServerLimitException
 	 *
-	 * @link https://developer.riotgames.com/api-methods/#match-v3/GET_getMatch
+	 * @link https://developer.riotgames.com/api-methods/#match-v4/GET_getMatch
 	 */
 	public function getMatch( $match_id ): Objects\MatchDto
 	{
-		$this->setEndpoint("/lol/match/" . self::RESOURCE_MATCH_V3 . "/matches/{$match_id}")
+		$this->setEndpoint("/lol/match/" . self::RESOURCE_MATCH_VERSION . "/matches/{$match_id}")
 			->setResource(self::RESOURCE_MATCH, "/matches/%i")
 			->makeCall();
 
@@ -2165,11 +2175,11 @@ class RiotAPI
 	 * @throws ServerException
 	 * @throws ServerLimitException
 	 *
-	 * @link https://developer.riotgames.com/api-methods/#match-v3/GET_getMatchByTournamentCode
+	 * @link https://developer.riotgames.com/api-methods/#match-v4/GET_getMatchByTournamentCode
 	 */
 	public function getMatchByTournamentCode( $match_id, string $tournament_code ): Objects\MatchDto
 	{
-		$this->setEndpoint("/lol/match/" . self::RESOURCE_MATCH_V3 . "/matches/{$match_id}/by-tournament-code/{$tournament_code}")
+		$this->setEndpoint("/lol/match/" . self::RESOURCE_MATCH_VERSION . "/matches/{$match_id}/by-tournament-code/{$tournament_code}")
 			->setResource(self::RESOURCE_MATCH, "/matches/%i/by-tournament-code/%s")
 			->makeCall();
 
@@ -2188,11 +2198,11 @@ class RiotAPI
 	 * @throws ServerException
 	 * @throws ServerLimitException
 	 *
-	 * @link https://developer.riotgames.com/api-methods/#match-v3/GET_getMatchIdsByTournamentCode
+	 * @link https://developer.riotgames.com/api-methods/#match-v4/GET_getMatchIdsByTournamentCode
 	 */
 	public function getMatchIdsByTournamentCode( string $tournament_code ): array
 	{
-		$this->setEndpoint("/lol/match/" . self::RESOURCE_MATCH_V3 . "/matches/by-tournament-code/{$tournament_code}/ids")
+		$this->setEndpoint("/lol/match/" . self::RESOURCE_MATCH_VERSION . "/matches/by-tournament-code/{$tournament_code}/ids")
 			->setResource(self::RESOURCE_MATCH, "/matches/by-tournament-code/%s/ids")
 			->makeCall();
 
@@ -2202,27 +2212,27 @@ class RiotAPI
 	/**
 	 *   Retrieve matchlist by account ID.
 	 *
-	 * @param int       $account_id
+	 * @param string $encrypted_account_id
 	 * @param int|array $queue
 	 * @param int|array $season
 	 * @param int|array $champion
-	 * @param int       $beginTime
-	 * @param int       $endTime
-	 * @param int       $beginIndex
-	 * @param int       $endIndex
+	 * @param int $beginTime
+	 * @param int $endTime
+	 * @param int $beginIndex
+	 * @param int $endIndex
 	 *
 	 * @return Objects\MatchlistDto
 	 *
-	 * @throws SettingsException
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
+	 * @throws SettingsException
 	 *
-	 * @link https://developer.riotgames.com/api-methods/#match-v3/GET_getMatchlist
+	 * @link https://developer.riotgames.com/api-methods/#match-v4/GET_getMatchlist
 	 */
-	public function getMatchlistByAccount( int $account_id, $queue = null, $season = null, $champion = null, int $beginTime = null, int $endTime = null, int $beginIndex = null, int $endIndex = null ): Objects\MatchlistDto
+	public function getMatchlistByAccount( string $encrypted_account_id, $queue = null, $season = null, $champion = null, int $beginTime = null, int $endTime = null, int $beginIndex = null, int $endIndex = null ): Objects\MatchlistDto
 	{
-		$this->setEndpoint("/lol/match/" . self::RESOURCE_MATCH_V3 . "/matchlists/by-account/{$account_id}")
+		$this->setEndpoint("/lol/match/" . self::RESOURCE_MATCH_VERSION . "/matchlists/by-account/{$encrypted_account_id}")
 			->setResource(self::RESOURCE_MATCH, "/matchlists/by-account/%i")
 			->addQuery('queue', $queue)
 			->addQuery('season', $season)
@@ -2248,11 +2258,11 @@ class RiotAPI
 	 * @throws ServerException
 	 * @throws ServerLimitException
 	 *
-	 * @link https://developer.riotgames.com/api-methods/#match-v3/GET_getMatchTimeline
+	 * @link https://developer.riotgames.com/api-methods/#match-v4/GET_getMatchTimeline
 	 */
 	public function getMatchTimeline( $match_id ): Objects\MatchTimelineDto
 	{
-		$this->setEndpoint("/lol/match/" . self::RESOURCE_MATCH_V3 . "/timelines/by-match/{$match_id}")
+		$this->setEndpoint("/lol/match/" . self::RESOURCE_MATCH_VERSION . "/timelines/by-match/{$match_id}")
 			->setResource(self::RESOURCE_MATCH, "/timelines/by-match/%i")
 			->makeCall();
 
@@ -2263,16 +2273,16 @@ class RiotAPI
 	/**
 	 * ==================================================================d=d=
 	 *     Summoner Endpoint Methods
-	 *     @link https://developer.riotgames.com/api-methods/#summoner-v3
+	 *     @link https://developer.riotgames.com/api-methods/#summoner-v4
 	 * ==================================================================d=d=
 	 **/
-	const RESOURCE_SUMMONER = '1235:summoner';
-	const RESOURCE_SUMMONER_V3 = 'v3';
+	const RESOURCE_SUMMONER = '1416:summoner';
+	const RESOURCE_SUMMONER_VERSION = 'v4';
 
 	/**
 	 *   Get single summoner object for a given summoner ID.
 	 *
-	 * @param int $summoner_id
+	 * @param string $encrypted_summoner_id
 	 *
 	 * @return Objects\SummonerDto
 	 *
@@ -2281,11 +2291,11 @@ class RiotAPI
 	 * @throws ServerException
 	 * @throws ServerLimitException
 	 *
-	 * @link https://developer.riotgames.com/api-methods/#summoner-v3/GET_getBySummonerId
+	 * @link https://developer.riotgames.com/api-methods/#summoner-v4/GET_getBySummonerId
 	 */
-	public function getSummoner( int $summoner_id ): Objects\SummonerDto
+	public function getSummoner( string $encrypted_summoner_id ): Objects\SummonerDto
 	{
-		$this->setEndpoint("/lol/summoner/" . self::RESOURCE_SUMMONER_V3 . "/summoners/{$summoner_id}")
+		$this->setEndpoint("/lol/summoner/" . self::RESOURCE_SUMMONER_VERSION . "/summoners/{$encrypted_summoner_id}")
 			->setResource(self::RESOURCE_SUMMONER, "/summoners/%i")
 			->makeCall();
 
@@ -2304,13 +2314,13 @@ class RiotAPI
 	 * @throws ServerException
 	 * @throws ServerLimitException
 	 *
-	 * @link https://developer.riotgames.com/api-methods/#summoner-v3/GET_getBySummonerName
+	 * @link https://developer.riotgames.com/api-methods/#summoner-v4/GET_getBySummonerName
 	 */
 	public function getSummonerByName( string $summoner_name ): Objects\SummonerDto
 	{
 		$summoner_name = str_replace(' ', '', $summoner_name);
 
-		$this->setEndpoint("/lol/summoner/" . self::RESOURCE_SUMMONER_V3 . "/summoners/by-name/{$summoner_name}")
+		$this->setEndpoint("/lol/summoner/" . self::RESOURCE_SUMMONER_VERSION . "/summoners/by-name/{$summoner_name}")
 			->setResource(self::RESOURCE_SUMMONER, "/summoners/by-name/%s")
 			->makeCall();
 
@@ -2320,7 +2330,7 @@ class RiotAPI
 	/**
 	 *   Get single summoner object for a given summoner's account ID.
 	 *
-	 * @param int $account_id
+	 * @param string $encrypted_account_id
 	 *
 	 * @return Objects\SummonerDto
 	 *
@@ -2329,11 +2339,11 @@ class RiotAPI
 	 * @throws ServerException
 	 * @throws ServerLimitException
 	 *
-	 * @link https://developer.riotgames.com/api-methods/#summoner-v3/GET_getByAccountId
+	 * @link https://developer.riotgames.com/api-methods/#summoner-v4/GET_getByAccountId
 	 */
-	public function getSummonerByAccount( int $account_id ): Objects\SummonerDto
+	public function getSummonerByAccount( string $encrypted_account_id ): Objects\SummonerDto
 	{
-		$this->setEndpoint("/lol/summoner/" . self::RESOURCE_SUMMONER_V3 . "/summoners/by-account/{$account_id}")
+		$this->setEndpoint("/lol/summoner/" . self::RESOURCE_SUMMONER_VERSION . "/summoners/by-account/{$encrypted_account_id}")
 			->setResource(self::RESOURCE_SUMMONER, "/summoners/by-account/%i")
 			->makeCall();
 
@@ -2344,16 +2354,16 @@ class RiotAPI
 	/**
 	 * ==================================================================d=d=
 	 *     Third Party Code Endpoint Methods
-	 *     @link https://developer.riotgames.com/api-methods/#third-party-code-v3
+	 *     @link https://developer.riotgames.com/api-methods/#third-party-code-v4
 	 * ==================================================================d=d=
 	 **/
-	const RESOURCE_THIRD_PARTY_CODE = '1388:third-party-code';
-	const RESOURCE_THIRD_PARTY_CODE_V3 = 'v3';
+	const RESOURCE_THIRD_PARTY_CODE = '1426:third-party-code';
+	const RESOURCE_THIRD_PARTY_CODE_VERSION = 'v4';
 
 	/**
 	 *   Get third party code for given summoner ID.
 	 *
-	 * @param int $summoner_id
+	 * @param string $encrypted_summoner_id
 	 *
 	 * @return string
 	 *
@@ -2362,11 +2372,11 @@ class RiotAPI
 	 * @throws ServerException
 	 * @throws ServerLimitException
 	 *
-	 * @link https://developer.riotgames.com/api-methods/#third-party-code-v3/GET_getThirdPartyCodeBySummonerId
+	 * @link https://developer.riotgames.com/api-methods/#third-party-code-v4/GET_getThirdPartyCodeBySummonerId
 	 */
-	public function getThirdPartyCodeBySummonerId( int $summoner_id ): string
+	public function getThirdPartyCodeBySummonerId( string $encrypted_summoner_id ): string
 	{
-		$this->setEndpoint("/lol/platform/" . self::RESOURCE_THIRD_PARTY_CODE_V3 . "/third-party-code/by-summoner/{$summoner_id}")
+		$this->setEndpoint("/lol/platform/" . self::RESOURCE_THIRD_PARTY_CODE_VERSION . "/third-party-code/by-summoner/{$encrypted_summoner_id}")
 			->setResource(self::RESOURCE_THIRD_PARTY_CODE, "/third-party-code/by-summoner/%i")
 			->makeCall();
 
