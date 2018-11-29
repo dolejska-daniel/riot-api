@@ -209,6 +209,8 @@ class RiotAPI
 			self::SET_USE_DUMMY_DATA,
 			self::SET_SAVE_DUMMY_DATA,
 			self::SET_EXTENSIONS,
+			self::SET_DATADRAGON_INIT,
+			self::SET_DATADRAGON_PARAMS,
 			self::SET_STATICDATA_LINKING,
 			self::SET_STATICDATA_LOCALE,
 			self::SET_STATICDATA_VERSION,
@@ -219,6 +221,8 @@ class RiotAPI
 		],
 		SETTINGS_INIT_ONLY = [
 			self::SET_API_BASEURL,
+			self::SET_DATADRAGON_INIT,
+			self::SET_DATADRAGON_PARAMS,
 		];
 
 	/**
@@ -1236,51 +1240,34 @@ class RiotAPI
 	const RESOURCE_CHAMPION = '1237:champion';
 	const RESOURCE_CHAMPION_V3 = 'v3';
 
+
 	/**
-	 *   Retrieve all champions.
+	 *   Retrieve current champion rotations.
 	 *
-	 * @param bool|false $only_free_to_play
+	 * @return Objects\ChampionInfo
 	 *
-	 * @return Objects\ChampionListDto
-	 *
-	 * @throws SettingsException
+	 * @throws GeneralException
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
-	 *
-	 * @link https://developer.riotgames.com/api-methods/#champion-v3/GET_getChampions
+	 * @throws SettingsException
 	 */
-	public function getChampions( bool $only_free_to_play = false ): Objects\ChampionListDto
+	public function getChampionRotations(): Objects\ChampionInfo
 	{
-		$this->setEndpoint("/lol/platform/" . self::RESOURCE_CHAMPION_V3 . "/champions")
-			->setResource(self::RESOURCE_CHAMPION, "/champions")
-			->addQuery("freeToPlay", $only_free_to_play ? 'true' : 'false')
+		$this->setEndpoint("/lol/platform/" . self::RESOURCE_CHAMPION_V3 . "/champion-rotations")
 			->makeCall();
 
-		return new Objects\ChampionListDto($this->getResult(), $this);
+		return new Objects\ChampionInfo($this->getResult(), $this);
 	}
 
-	/**
-	 *   Retrieve champion by ID.
-	 *
-	 * @param int $champion_id
-	 *
-	 * @return Objects\ChampionDto
-	 *
-	 * @throws SettingsException
-	 * @throws RequestException
-	 * @throws ServerException
-	 * @throws ServerLimitException
-	 *
-	 * @link https://developer.riotgames.com/api-methods/#champion-v3/GET_getChampionsById
-	 */
+	public function getChampions( bool $only_free_to_play = false ): Objects\ChampionListDto
+	{
+		trigger_error("This call hasa been deprecated.", E_USER_DEPRECATED);
+	}
+
 	public function getChampionById( int $champion_id ): Objects\ChampionDto
 	{
-		$this->setEndpoint("/lol/platform/" . self::RESOURCE_CHAMPION_V3 . "/champions/{$champion_id}")
-			->setResource(self::RESOURCE_CHAMPION, "/champions/%i")
-			->makeCall();
-
-		return new Objects\ChampionDto($this->getResult(), $this);
+		trigger_error("This call hasa been deprecated.", E_USER_DEPRECATED);
 	}
 
 	/**
