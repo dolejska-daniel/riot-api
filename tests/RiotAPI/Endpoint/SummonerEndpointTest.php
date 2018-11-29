@@ -58,16 +58,19 @@ class SummonerEndpointTest extends RiotAPITestCase
 	 */
 	public function testGetSummonerByAccount( RiotAPI $api )
 	{
-		$accountId = 35545652;
+		$accountId = "tGSPHbasiCOgRM_MuovMKfXw7oh6pfXmGiPDnXcxJDohrQ";
 
 		//  Get library processed results
 		/** @var Objects\SummonerDto $result */
 		$result = $api->getSummonerByAccount($accountId);
 
-		$this->assertSame(30904166, $result->id);
+		$this->assertSame("KnNZNuEVZ5rZry3IyWwYSVuikRe0y3qTWSkr1wxcmV5CLJ8", $result->id);
 		$this->assertSame($accountId, $result->accountId);
+		$this->assertSame("rNmb6Rq8CQUqOHzMsFihMCUy4Pd201vDaRW9djAoJ9se7myXrDprvng9neCanq7yGNmz7B3Wri4Elw", $result->puuid);
 		$this->assertSame('I am TheKronnY', $result->name);
 		$this->assertInternalType('integer', $result->summonerLevel);
+		$this->assertInternalType('integer', $result->profileIconId);
+		$this->assertInternalType('integer', $result->revisionDate);
 	}
 
 	/**
@@ -83,10 +86,13 @@ class SummonerEndpointTest extends RiotAPITestCase
 		/** @var Objects\SummonerDto $result */
 		$result = $api->getSummonerByName($summonerName);
 
-		$this->assertSame(30904166, $result->id);
-		$this->assertSame(35545652, $result->accountId);
+		$this->assertSame("KnNZNuEVZ5rZry3IyWwYSVuikRe0y3qTWSkr1wxcmV5CLJ8", $result->id);
+		$this->assertSame("tGSPHbasiCOgRM_MuovMKfXw7oh6pfXmGiPDnXcxJDohrQ", $result->accountId);
+		$this->assertSame("rNmb6Rq8CQUqOHzMsFihMCUy4Pd201vDaRW9djAoJ9se7myXrDprvng9neCanq7yGNmz7B3Wri4Elw", $result->puuid);
 		$this->assertSame($summonerName, $result->name);
 		$this->assertInternalType('integer', $result->summonerLevel);
+		$this->assertInternalType('integer', $result->profileIconId);
+		$this->assertInternalType('integer', $result->revisionDate);
 	}
 
 	/**
@@ -96,15 +102,18 @@ class SummonerEndpointTest extends RiotAPITestCase
 	 */
 	public function testGetSummoner( RiotAPI $api )
 	{
-		$summonerId = 30904166;
+		$summonerId = "KnNZNuEVZ5rZry3IyWwYSVuikRe0y3qTWSkr1wxcmV5CLJ8";
 
 		//  Get library processed results
 		/** @var Objects\SummonerDto $result */
 		$result = $api->getSummoner($summonerId);
 
 		$this->assertSame($summonerId, $result->id);
-		$this->assertSame(35545652, $result->accountId);
+		$this->assertSame("tGSPHbasiCOgRM_MuovMKfXw7oh6pfXmGiPDnXcxJDohrQ", $result->accountId);
+		$this->assertSame("rNmb6Rq8CQUqOHzMsFihMCUy4Pd201vDaRW9djAoJ9se7myXrDprvng9neCanq7yGNmz7B3Wri4Elw", $result->puuid);
 		$this->assertSame('I am TheKronnY', $result->name);
 		$this->assertInternalType('integer', $result->summonerLevel);
+		$this->assertInternalType('integer', $result->profileIconId);
+		$this->assertInternalType('integer', $result->revisionDate);
 	}
 }

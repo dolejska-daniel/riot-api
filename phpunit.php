@@ -143,7 +143,7 @@ class RiotAPITestCase extends TestCase
 	{
 		$o = new \stdClass();
 
-		preg_match('/@var\s(\w+)(\[\])?/', $phpDocComment, $matches);
+		preg_match('/@var\s+(\w+)(\[\])?/', $phpDocComment, $matches);
 
 		$o->class = $matches[1];
 		$o->isArray = isset($matches[2]);

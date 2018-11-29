@@ -46,9 +46,10 @@ class ThirdPartyCodeEndpointObjectIntegrityTest extends RiotAPITestCase
 	 */
 	public function testGetThirdPartyCodeBySummonerId( RiotAPI $api )
 	{
+		$summonerId = "KnNZNuEVZ5rZry3IyWwYSVuikRe0y3qTWSkr1wxcmV5CLJ8";
 		//  Get library processed results
 		/** @var Objects\CurrentGameInfo $result */
-		$result = $api->getThirdPartyCodeBySummonerId(30904166);
+		$result = $api->getThirdPartyCodeBySummonerId($summonerId);
 		//  Get raw result
 		$rawResult = $api->getResult();
 

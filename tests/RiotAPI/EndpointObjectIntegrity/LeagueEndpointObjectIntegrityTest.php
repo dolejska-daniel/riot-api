@@ -46,9 +46,10 @@ class LeagueEndpointObjectIntegrityTest extends RiotAPITestCase
 	 */
 	public function testGetLeaguePositionsForSummoner( RiotAPI $api )
 	{
+		$summonerId = "KnNZNuEVZ5rZry3IyWwYSVuikRe0y3qTWSkr1wxcmV5CLJ8";
 		//  Get library processed results
 		/** @var Objects\LeaguePositionDto[] $result */
-		$result = $api->getLeaguePositionsForSummoner(30904166);
+		$result = $api->getLeaguePositionsForSummoner($summonerId);
 		//  Get raw result
 		$rawResult = $api->getResult();
 

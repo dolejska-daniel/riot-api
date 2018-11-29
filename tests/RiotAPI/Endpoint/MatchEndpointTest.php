@@ -46,11 +46,12 @@ class MatchEndpointTest extends RiotAPITestCase
 	 */
 	public function testGetMatch( RiotAPI $api )
 	{
+		$match_id = 1730730260;
 		//  Get library processed results
 		/** @var Objects\MatchDto $result */
-		$result = $api->getMatch(1730730260);
+		$result = $api->getMatch($match_id);
 
-		$this->assertTrue(true);
+		$this->assertEquals($match_id, $result->gameId);
 	}
 
 	/**
@@ -94,7 +95,7 @@ class MatchEndpointTest extends RiotAPITestCase
 	{
 		//  Get library processed results
 		/** @var Objects\MatchlistDto $result */
-		$result = $api->getMatchlistByAccount(35545652);
+		$result = $api->getMatchlistByAccount("tGSPHbasiCOgRM_MuovMKfXw7oh6pfXmGiPDnXcxJDohrQ");
 
 		$this->assertTrue(true);
 	}
@@ -106,9 +107,10 @@ class MatchEndpointTest extends RiotAPITestCase
 	 */
 	public function testGetMatchTimeline( RiotAPI $api )
 	{
+		$match_id = 1730730260;
 		//  Get library processed results
 		/** @var Objects\MatchTimelineDto $result */
-		$result = $api->getMatchTimeline(1730730260);
+		$result = $api->getMatchTimeline($match_id);
 
 		$this->assertTrue(true);
 	}

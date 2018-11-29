@@ -100,9 +100,10 @@ class MatchEndpointObjectIntegrityTest extends RiotAPITestCase
 	 */
 	public function testGetMatchlist( RiotAPI $api )
 	{
+		$accountId = "tGSPHbasiCOgRM_MuovMKfXw7oh6pfXmGiPDnXcxJDohrQ";
 		//  Get library processed results
 		/** @var Objects\MatchlistDto $result */
-		$result = $api->getMatchlistByAccount(35545652);
+		$result = $api->getMatchlistByAccount($accountId);
 		//  Get raw result
 		$rawResult = $api->getResult();
 

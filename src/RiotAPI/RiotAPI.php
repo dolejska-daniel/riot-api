@@ -252,7 +252,7 @@ class RiotAPI
 	protected $settings = array(
 		self::SET_API_BASEURL      => '.api.riotgames.com',
 		self::SET_KEY_INCLUDE_TYPE => self::KEY_AS_HEADER,
-		self::SET_VERIFY_SSL       => true,
+		self::SET_VERIFY_SSL       => false,
 		self::SET_USE_DUMMY_DATA   => false,
 		self::SET_SAVE_DUMMY_DATA  => false,
 		self::SET_STATICDATA_TAGS  => [ 'info' ],
@@ -1262,12 +1262,12 @@ class RiotAPI
 
 	public function getChampions( bool $only_free_to_play = false ): Objects\ChampionListDto
 	{
-		trigger_error("This call hasa been deprecated.", E_USER_DEPRECATED);
+		trigger_error("This call has been deprecated.", E_USER_DEPRECATED);
 	}
 
 	public function getChampionById( int $champion_id ): Objects\ChampionDto
 	{
-		trigger_error("This call hasa been deprecated.", E_USER_DEPRECATED);
+		trigger_error("This call has been deprecated.", E_USER_DEPRECATED);
 	}
 
 	/**

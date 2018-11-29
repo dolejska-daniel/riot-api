@@ -46,9 +46,10 @@ class SpectatorEndpointObjectIntegrityTest extends RiotAPITestCase
 	 */
 	public function testGetCurrentGame( RiotAPI $api )
 	{
+		$summonerId = "KnNZNuEVZ5rZry3IyWwYSVuikRe0y3qTWSkr1wxcmV5CLJ8";
 		//  Get library processed results
 		/** @var Objects\CurrentGameInfo $result */
-		$result = $api->getCurrentGameInfo(30904166);
+		$result = $api->getCurrentGameInfo($summonerId);
 		//  Get raw result
 		$rawResult = $api->getResult();
 
