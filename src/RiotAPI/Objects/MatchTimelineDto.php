@@ -36,6 +36,6 @@ class MatchTimelineDto extends ApiObjectIterable
 	/** @var MatchFrameDto[] $frames */
 	public $frames;
 
-	/** @var int $frameInterval */
+	/** @var float $frameInterval */
 	public $frameInterval;
 }

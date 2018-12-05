@@ -2394,17 +2394,17 @@ class RiotAPI
 	/**
 	 * ==================================================================d=d=
 	 *     Tournament Stub Endpoint Methods
-	 *     @link https://developer.riotgames.com/api-methods/#tournament-stub-v3
+	 *     @link https://developer.riotgames.com/api-methods/#tournament-stub-v4
 	 * ==================================================================d=d=
 	 **/
-	const RESOURCE_TOURNAMENT_STUB = '1242:tournament-stub';
-	const RESOURCE_TOURNAMENT_STUB_V3 = 'v3';
+	const RESOURCE_TOURNAMENT_STUB = '1435:tournament-stub';
+	const RESOURCE_TOURNAMENT_STUB_VERSION = 'v4';
 
 	/**
 	 *   Create a mock tournament code for the given tournament.
 	 *
-	 * @param int                      $tournament_id
-	 * @param int                      $count
+	 * @param int $tournament_id
+	 * @param int $count
 	 * @param TournamentCodeParameters $parameters
 	 *
 	 * @return array
@@ -2414,8 +2414,9 @@ class RiotAPI
 	 * @throws RequestParameterException
 	 * @throws ServerException
 	 * @throws ServerLimitException
+	 * @throws GeneralException
 	 *
-	 * @link https://developer.riotgames.com/api-methods/#tournament-stub-v3/POST_createTournamentCode
+	 * @link https://developer.riotgames.com/api-methods/#tournament-stub-v4/POST_createTournamentCode
 	 *
 	 * @internal
 	 */
@@ -2444,7 +2445,7 @@ class RiotAPI
 
 		$data = json_encode($parameters);
 
-		$this->setEndpoint("/lol/tournament-stub/" . self::RESOURCE_TOURNAMENT_STUB_V3 . "/codes")
+		$this->setEndpoint("/lol/tournament-stub/" . self::RESOURCE_TOURNAMENT_STUB_VERSION . "/codes")
 			->setResource(self::RESOURCE_TOURNAMENT, "/codes")
 			->addQuery('tournamentId', $tournament_id)
 			->addQuery('count', $count)
@@ -2467,8 +2468,9 @@ class RiotAPI
 	 * @throws RequestParameterException
 	 * @throws ServerException
 	 * @throws ServerLimitException
+	 * @throws GeneralException
 	 *
-	 * @link https://developer.riotgames.com/api-methods/#tournament-stub-v3/POST_registerProviderData
+	 * @link https://developer.riotgames.com/api-methods/#tournament-stub-v4/POST_registerProviderData
 	 *
 	 * @internal
 	 */
@@ -2484,7 +2486,7 @@ class RiotAPI
 
 		$data = json_encode($parameters, JSON_UNESCAPED_SLASHES);
 
-		$this->setEndpoint("/lol/tournament-stub/" . self::RESOURCE_TOURNAMENT_STUB_V3 . "/providers")
+		$this->setEndpoint("/lol/tournament-stub/" . self::RESOURCE_TOURNAMENT_STUB_VERSION . "/providers")
 			->setResource(self::RESOURCE_TOURNAMENT_STUB, "/providers")
 			->setData($data)
 			->useKey(self::SET_TOURNAMENT_KEY)
@@ -2505,8 +2507,9 @@ class RiotAPI
 	 * @throws RequestParameterException
 	 * @throws ServerException
 	 * @throws ServerLimitException
+	 * @throws GeneralException
 	 *
-	 * @link https://developer.riotgames.com/api-methods/#tournament-stub-v3/POST_registerTournament
+	 * @link https://developer.riotgames.com/api-methods/#tournament-stub-v4/POST_registerTournament
 	 *
 	 * @internal
 	 */
@@ -2520,7 +2523,7 @@ class RiotAPI
 
 		$data = json_encode($parameters, JSON_UNESCAPED_SLASHES);
 
-		$this->setEndpoint("/lol/tournament-stub/" . self::RESOURCE_TOURNAMENT_STUB_V3 . "/tournaments")
+		$this->setEndpoint("/lol/tournament-stub/" . self::RESOURCE_TOURNAMENT_STUB_VERSION . "/tournaments")
 			->setResource(self::RESOURCE_TOURNAMENT_STUB, "/tournaments")
 			->setData($data)
 			->useKey(self::SET_TOURNAMENT_KEY)
@@ -2540,14 +2543,15 @@ class RiotAPI
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
+	 * @throws GeneralException
 	 *
-	 * @link https://developer.riotgames.com/api-methods/#tournament-stub-v3/GET_getLobbyEventsByCode
+	 * @link https://developer.riotgames.com/api-methods/#tournament-stub-v4/GET_getLobbyEventsByCode
 	 *
 	 * @internal
 	 */
 	public function getTournamentLobbyEvents_STUB( string $tournament_code ): Objects\LobbyEventDtoWrapper
 	{
-		$this->setEndpoint("/lol/tournament-stub/" . self::RESOURCE_TOURNAMENT_STUB_V3 . "/lobby-events/by-code/{$tournament_code}")
+		$this->setEndpoint("/lol/tournament-stub/" . self::RESOURCE_TOURNAMENT_STUB_VERSION . "/lobby-events/by-code/{$tournament_code}")
 			->setResource(self::RESOURCE_TOURNAMENT_STUB, "/lobby-events/by-code/%s")
 			->useKey(self::SET_TOURNAMENT_KEY)
 			->makeCall(Region::AMERICAS);

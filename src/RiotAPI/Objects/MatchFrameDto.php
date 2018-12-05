@@ -31,7 +31,7 @@ namespace RiotAPI\Objects;
  */
 class MatchFrameDto extends ApiObject
 {
-	/** @var int $timestamp */
+	/** @var float $timestamp */
 	public $timestamp;
 
 	/** @var  MatchParticipantFrameDto[] $participantFrames */

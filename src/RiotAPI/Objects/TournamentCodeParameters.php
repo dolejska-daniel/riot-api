@@ -24,10 +24,8 @@ namespace RiotAPI\Objects;
  *   Class TournamentCodeParameters
  *
  * Used in:
- *   tournament-stub (v3)
- *     @link https://developer.riotgames.com/api-methods/#tournament-stub-v3/POST_createTournamentCode
- *   tournament (v3)
- *     @link https://developer.riotgames.com/api-methods/#tournament-v3/POST_createTournamentCode
+ *   tournament-stub (v4)
+ *     @link https://developer.riotgames.com/api-methods/#tournament-stub-v4/POST_createTournamentCode
  *
  * @package RiotAPI\Objects
  */
@@ -61,7 +59,7 @@ class TournamentCodeParameters extends ApiObject
 	 * level, but rather the aggregate of teamOne and teamTwo. We may add the ability to 
 	 * enforce at the team level in the future.
 	 *
-	 * @var int[] $allowedSummonerIds
+	 * @var string[] $allowedSummonerIds
 	 */
 	public $allowedSummonerIds;
 

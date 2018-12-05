@@ -48,19 +48,27 @@ class PlayerDto extends ApiObject
 	 */
 	public $platformId;
 
-	/** @var int $currentAccountId */
+	/**
+	 *   Player's current accountId (Encrypted).
+	 *
+	 * @var string $currentAccountId
+	 */
 	public $currentAccountId;
 
 	/** @var int $profileIcon */
 	public $profileIcon;
 
-	/** @var int $summonerId */
+	/**
+	 *   Player's summonerId (Encrypted).
+	 *
+	 * @var string $summonerId
+	 */
 	public $summonerId;
 
 	/**
-	 *   Original accountId.
+	 *   Player's original accountId (Encrypted).
 	 *
-	 * @var int $accountId
+	 * @var string $accountId
 	 */
 	public $accountId;
 }

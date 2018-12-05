@@ -60,7 +60,7 @@ class ChampionMasteryDto extends ApiObjectLinkable
 	/**
 	 *   Champion ID for this entry.
 	 *
-	 * @var int $championId
+	 * @var float $championId
 	 */
 	public $championId;
 
@@ -68,7 +68,7 @@ class ChampionMasteryDto extends ApiObjectLinkable
 	 *   Number of points needed to achieve next level. Zero if player reached 
 	 * maximum champion level for this champion.
 	 *
-	 * @var int $championPointsUntilNextLevel
+	 * @var float $championPointsUntilNextLevel
 	 */
 	public $championPointsUntilNextLevel;
 
@@ -76,7 +76,7 @@ class ChampionMasteryDto extends ApiObjectLinkable
 	 *   Last time this champion was played by this player - in Unix milliseconds 
 	 * time format.
 	 *
-	 * @var int $lastPlayTime
+	 * @var float $lastPlayTime
 	 */
 	public $lastPlayTime;
 
@@ -90,7 +90,7 @@ class ChampionMasteryDto extends ApiObjectLinkable
 	/**
 	 *   Number of points earned since current level has been achieved.
 	 *
-	 * @var int $championPointsSinceLastLevel
+	 * @var float $championPointsSinceLastLevel
 	 */
 	public $championPointsSinceLastLevel;
 

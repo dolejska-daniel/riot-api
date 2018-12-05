@@ -44,14 +44,14 @@ class BannedChampion extends ApiObjectLinkable
 	/**
 	 *   The ID of the banned champion.
 	 *
-	 * @var int $championId
+	 * @var float $championId
 	 */
 	public $championId;
 
 	/**
 	 *   The ID of the team that banned the champion.
 	 *
-	 * @var int $teamId
+	 * @var float $teamId
 	 */
 	public $teamId;
 }

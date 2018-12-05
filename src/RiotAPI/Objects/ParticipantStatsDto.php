@@ -35,13 +35,13 @@ class ParticipantStatsDto extends ApiObject
 	/** @var bool $firstBloodAssist */
 	public $firstBloodAssist;
 
-	/** @var int $visionScore */
+	/** @var float $visionScore */
 	public $visionScore;
 
-	/** @var int $magicDamageDealtToChampions */
+	/** @var float $magicDamageDealtToChampions */
 	public $magicDamageDealtToChampions;
 
-	/** @var int $damageDealtToObjectives */
+	/** @var float $damageDealtToObjectives */
 	public $damageDealtToObjectives;
 
 	/** @var int $totalTimeCrowdControlDealt */
@@ -151,10 +151,10 @@ class ParticipantStatsDto extends ApiObject
 	/** @var int $neutralMinionsKilled */
 	public $neutralMinionsKilled;
 
-	/** @var int $damageDealtToTurrets */
+	/** @var float $damageDealtToTurrets */
 	public $damageDealtToTurrets;
 
-	/** @var int $physicalDamageDealtToChampions */
+	/** @var float $physicalDamageDealtToChampions */
 	public $physicalDamageDealtToChampions;
 
 	/** @var int $nodeCapture */
@@ -223,7 +223,7 @@ class ParticipantStatsDto extends ApiObject
 	/** @var int $teamObjective */
 	public $teamObjective;
 
-	/** @var int $magicDamageDealt */
+	/** @var float $magicDamageDealt */
 	public $magicDamageDealt;
 
 	/** @var int $item2 */
@@ -296,16 +296,16 @@ class ParticipantStatsDto extends ApiObject
 	 */
 	public $perk3Var1;
 
-	/** @var int $damageSelfMitigated */
+	/** @var float $damageSelfMitigated */
 	public $damageSelfMitigated;
 
-	/** @var int $magicalDamageTaken */
+	/** @var float $magicalDamageTaken */
 	public $magicalDamageTaken;
 
 	/** @var bool $firstInhibitorKill */
 	public $firstInhibitorKill;
 
-	/** @var int $trueDamageTaken */
+	/** @var float $trueDamageTaken */
 	public $trueDamageTaken;
 
 	/** @var int $nodeNeutralize */
@@ -327,25 +327,25 @@ class ParticipantStatsDto extends ApiObject
 	/** @var int $goldSpent */
 	public $goldSpent;
 
-	/** @var int $trueDamageDealt */
+	/** @var float $trueDamageDealt */
 	public $trueDamageDealt;
 
 	/** @var int $participantId */
 	public $participantId;
 
-	/** @var int $totalDamageTaken */
+	/** @var float $totalDamageTaken */
 	public $totalDamageTaken;
 
-	/** @var int $physicalDamageDealt */
+	/** @var float $physicalDamageDealt */
 	public $physicalDamageDealt;
 
 	/** @var int $sightWardsBoughtInGame */
 	public $sightWardsBoughtInGame;
 
-	/** @var int $totalDamageDealtToChampions */
+	/** @var float $totalDamageDealtToChampions */
 	public $totalDamageDealtToChampions;
 
-	/** @var int $physicalDamageTaken */
+	/** @var float $physicalDamageTaken */
 	public $physicalDamageTaken;
 
 	/** @var int $totalPlayerScore */
@@ -357,7 +357,7 @@ class ParticipantStatsDto extends ApiObject
 	/** @var int $objectivePlayerScore */
 	public $objectivePlayerScore;
 
-	/** @var int $totalDamageDealt */
+	/** @var float $totalDamageDealt */
 	public $totalDamageDealt;
 
 	/** @var int $item1 */
@@ -385,7 +385,7 @@ class ParticipantStatsDto extends ApiObject
 	/** @var bool $firstBloodKill */
 	public $firstBloodKill;
 
-	/** @var int $trueDamageDealtToChampions */
+	/** @var float $trueDamageDealtToChampions */
 	public $trueDamageDealtToChampions;
 
 	/** @var int $goldEarned */
@@ -451,12 +451,12 @@ class ParticipantStatsDto extends ApiObject
 	/** @var int $pentaKills */
 	public $pentaKills;
 
-	/** @var int $totalHeal */
+	/** @var float $totalHeal */
 	public $totalHeal;
 
 	/** @var int $totalMinionsKilled */
 	public $totalMinionsKilled;
 
-	/** @var int $timeCCingOthers */
+	/** @var float $timeCCingOthers */
 	public $timeCCingOthers;
 }

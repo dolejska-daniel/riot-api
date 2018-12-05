@@ -24,10 +24,8 @@ namespace RiotAPI\Objects;
  *   Class LobbyEventDtoWrapper
  *
  * Used in:
- *   tournament-stub (v3)
- *     @link https://developer.riotgames.com/api-methods/#tournament-stub-v3/GET_getLobbyEventsByCode
- *   tournament (v3)
- *     @link https://developer.riotgames.com/api-methods/#tournament-v3/GET_getLobbyEventsByCode
+ *   tournament-stub (v4)
+ *     @link https://developer.riotgames.com/api-methods/#tournament-stub-v4/GET_getLobbyEventsByCode
  *
  * @iterable $eventList
  *

@@ -24,10 +24,8 @@ namespace RiotAPI\Objects;
  *   Class TournamentRegistrationParameters
  *
  * Used in:
- *   tournament-stub (v3)
- *     @link https://developer.riotgames.com/api-methods/#tournament-stub-v3/POST_registerTournament
- *   tournament (v3)
- *     @link https://developer.riotgames.com/api-methods/#tournament-v3/POST_registerTournament
+ *   tournament-stub (v4)
+ *     @link https://developer.riotgames.com/api-methods/#tournament-stub-v4/POST_registerTournament
  *
  * @package RiotAPI\Objects
  */

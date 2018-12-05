@@ -36,7 +36,7 @@ class MatchReferenceDto extends ApiObjectLinkable
 	/** @var string $lane */
 	public $lane;
 
-	/** @var int $gameId */
+	/** @var float $gameId */
 	public $gameId;
 
 	/** @var int $champion */
@@ -54,6 +54,6 @@ class MatchReferenceDto extends ApiObjectLinkable
 	/** @var string $role */
 	public $role;
 
-	/** @var int $timestamp */
+	/** @var float $timestamp */
 	public $timestamp;
 }

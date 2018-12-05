@@ -36,14 +36,14 @@ class CurrentGameInfo extends ApiObjectIterable
 	/**
 	 *   The ID of the game.
 	 *
-	 * @var int $gameId
+	 * @var float $gameId
 	 */
 	public $gameId;
 
 	/**
 	 *   The game start time represented in epoch milliseconds.
 	 *
-	 * @var int $gameStartTime
+	 * @var float $gameStartTime
 	 */
 	public $gameStartTime;
 
@@ -64,7 +64,7 @@ class CurrentGameInfo extends ApiObjectIterable
 	/**
 	 *   The ID of the map.
 	 *
-	 * @var int $mapId
+	 * @var float $mapId
 	 */
 	public $mapId;
 
@@ -99,14 +99,14 @@ class CurrentGameInfo extends ApiObjectIterable
 	/**
 	 *   The amount of time in seconds that has passed since the game started.
 	 *
-	 * @var int $gameLength
+	 * @var float $gameLength
 	 */
 	public $gameLength;
 
 	/**
 	 *   The queue type (queue types are documented on the Game Constants page).
 	 *
-	 * @var int $gameQueueConfigId
+	 * @var float $gameQueueConfigId
 	 */
 	public $gameQueueConfigId;
 }

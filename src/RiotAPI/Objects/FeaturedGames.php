@@ -36,7 +36,7 @@ class FeaturedGames extends ApiObjectIterable
 	/**
 	 *   The suggested interval to wait before requesting FeaturedGames again.
 	 *
-	 * @var int $clientRefreshInterval
+	 * @var float $clientRefreshInterval
 	 */
 	public $clientRefreshInterval;
 
