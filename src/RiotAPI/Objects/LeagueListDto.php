@@ -41,7 +41,7 @@ class LeagueListDto extends ApiObjectIterable
 	/** @var string $tier */
 	public $tier;
 
-	/** @var LeagueItemDTO[] $entries */
+	/** @var LeagueItemDto[] $entries */
 	public $entries;
 
 	/** @var string $queue */

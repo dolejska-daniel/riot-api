@@ -2225,7 +2225,7 @@ class RiotAPI
 	 * @param string                                 $tournament_code
 	 * @param Objects\TournamentCodeUpdateParameters $parameters
 	 *
-	 * @return Objects\LobbyEventDTOWrapper
+	 * @return Objects\LobbyEventDtoWrapper
 	 *
 	 * @throws SettingsException
 	 * @throws RequestException

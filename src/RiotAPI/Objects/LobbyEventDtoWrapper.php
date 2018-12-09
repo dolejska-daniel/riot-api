@@ -33,6 +33,6 @@ namespace RiotAPI\Objects;
  */
 class LobbyEventDtoWrapper extends ApiObjectIterable
 {
-	/** @var LobbyEventDTO[] $eventList */
+	/** @var LobbyEventDto[] $eventList */
 	public $eventList;
 }
