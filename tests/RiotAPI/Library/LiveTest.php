@@ -37,6 +37,8 @@ class LiveTest extends TestCase
 {
 	public function testInit()
 	{
+		$this->markTestSkipped("Skipping live tests.");
+
 		if (getenv("BUILD_IS_PULL_REQUEST"))
 			$this->markTestSkipped("Skipping live tests in PRs.");
 
