@@ -39,7 +39,7 @@ class LeagueItemDto extends ApiObject
 	/** @var bool $hotStreak */
 	public $hotStreak;
 
-	/** @var MiniSeriesDTO $miniSeries */
+	/** @var MiniSeriesDto $miniSeries */
 	public $miniSeries;
 
 	/** @var int $wins */
