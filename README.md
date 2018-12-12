@@ -8,8 +8,8 @@
 [![Packagist](https://img.shields.io/packagist/l/dolejska-daniel/riot-api.svg)](https://packagist.org/packages/dolejska-daniel/riot-api)
 [![Support Project](https://img.shields.io/badge/Support_Project-PayPal-blue.svg)](https://www.paypal.me/dolejskad)
 
-# Table of Contents
 
+# Table of Contents
 1. [Introduction](#introduction)
 2. [Downloading](#downloading)
 3. [BUGs and TODOs](#bugs-and-todos)
@@ -28,8 +28,8 @@
 	10. [CLI support](#cli-support)
 5. [DataDragon API](#datadragon-api)
 
-# [Introduction](https://github.com/dolejska-daniel/riot-api/wiki/Home#introduction)
 
+# [Introduction](https://github.com/dolejska-daniel/riot-api/wiki/Home#introduction)
 Welcome to the RiotAPI PHP7 library repo!
 The goal of this library is to create easy-to-use library for anyone who might need one.
 This is fully object oriented API wrapper for League of Legends' API.
@@ -48,26 +48,20 @@ Here are some handy features:
 
 Please, refer mainly to the [wiki pages](https://github.com/dolejska-daniel/riot-api/wiki).
 
-# [Downloading](https://github.com/dolejska-daniel/riot-api/wiki/Home#downloading)
 
+# [Downloading](https://github.com/dolejska-daniel/riot-api/wiki/Home#downloading)
 The easiest way to get this library is to use [Composer](https://getcomposer.org/).
 
 While having Composer installed it takes only `composer require dolejska-daniel/riot-api` and `composer install` to get the library ready to roll!
 
+
 # BUGs and TODOs
+_TBA_
 
-## BUGs
-- [ ] ... 
-
-## TODOs
-- [ ] [Update endpoint calls to v4 (#24)](https://github.com/dolejska-daniel/riot-api/issues/24)
-- [ ] [Bridge calls for StaticData from RiotAPI to DataDragon and create class instances (#25)](https://github.com/dolejska-daniel/riot-api/issues/25)
-- [ ] [Fix tests (#26)](https://github.com/dolejska-daniel/riot-api/issues/26)
 
 # League of Legends API
 
 ## [Resource versions](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Resources-and-endpoints)
-
 Below you can find table of implemented API resources and the version in which they are currently implemented.
 Please refer to [wiki pages](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Resources-and-endpoints) for more information about endpoints and resources.
 
@@ -85,11 +79,10 @@ Please refer to [wiki pages](https://github.com/dolejska-daniel/riot-api/wiki/Le
 | [Status](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Resources-and-endpoints#status-) | ![Status resource implemented version](https://img.shields.io/badge/implemented_version-v3-brightgreen.svg) |
 | [Summoner](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Resources-and-endpoints#summoner-) | ![Summoner resource implemented version](https://img.shields.io/badge/implemented_version-v4-brightgreen.svg) |
 | [Third Party Code](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI%3A-Resources-and-endpoints#third-party-code-) | ![Third Party Code endpoint implemented version](https://img.shields.io/badge/implemented_version-v4-brightgreen.svg) |
-| [Tournament](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Resources-and-endpoints#tournament---tournament-stub-) | ![Tournament resource implemented version](https://img.shields.io/badge/implemented_version-v3-brightgreen.svg) |
+| [Tournament](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Resources-and-endpoints#tournament---tournament-stub-) | ![Tournament resource implemented version](https://img.shields.io/badge/implemented_version-v4-brightgreen.svg) |
 | [Tournament Stub](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Resources-and-endpoints#tournament---tournament-stub-) | ![Tournament Stub resource implemented version](https://img.shields.io/badge/implemented_version-v4-brightgreen.svg) |
 
 ## [Initializing the library](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-How-to-begin)
-
 How to begin?
 
 ```php
@@ -115,7 +108,6 @@ And there is a lot more what you can set when initializing the library - mainly 
 Please see [the wiki pages](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-How-to-begin) for complete list of library's settings.
 
 ## [Usage example](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-How-to-begin#usage-example)
-
 Working with RiotAPI can not be easier, just watch how to fetch summoner information based on summoner's name:
 
 ```php
@@ -163,7 +155,6 @@ print_r($champion->getData());  //  Or array of all the data
 ```
 
 ## [Cache providers](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Cache-providers)
-
 Cache providers are responsible for keeping data of [rate limiting](#rate-limiting)
 and [call caching](#call-caching) within instances of the library. This feature
 is automatically enabled, when any of previously mentioned features is used.
@@ -176,7 +167,6 @@ variables to the cache provider.
 For more, please see [the wiki pages](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Cache-providers).
 
 ## [Rate limiting](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Rate-limiting)
-
 This clever feature will easily prevent exceeding your per key 
 call limits & method limits. In order to enable this feature, you have to set
 `RiotAPI::SET_CACHE_RATELIMIT` to `true`. Everything is completly automatic,
@@ -185,7 +175,6 @@ so all you need to do is to enable this feature.
 For more, please see [the wiki pages](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Rate-limiting).
 
 ## [Call caching](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Call-caching)
-
 This feature can prevent unnecessary calls to API within short timespan
 by temporarily saving fetched data from API and using them as the result data.
 In order to enable this feature, you have to set `RiotAPI::SET_CACHE_CALLS` to `true`.
@@ -195,7 +184,6 @@ time interval of `60 seconds` will be used.
 For more, please see [the wiki pages](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Call-caching).
 
 ## [StaticData linking](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-StaticData-linking)
-
 This feature allows you to automatically link static data related to your request.
 This action __is time consuming__ (works well when caching call data for
 `StaticData resource`), but calls to `StaticData resource` are not counted
@@ -204,7 +192,6 @@ to your rate limit so there is no problem in using it.
 For more, please see [the wiki pages](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-StaticData-linking).
 
 ## [Extensions](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Extensions)
-
 Using extensions for ApiObjects is useful tool, allowing implementation
 of your own methods into the ApiObjects itself. Extensions are enabled by
 using settings option `RiotAPI::SET_EXTENSIONS` when initializing the library.
@@ -216,7 +203,6 @@ when object is being initialized.
 For more, please see [the wiki pages](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Extensions).
 
 ## [Callback functions](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Callback-functions)
-
 Custom function callback before and after the call is made.
 
 Before request callbacks have ability to cancel upcomming request - when `false` is returned
@@ -226,7 +212,6 @@ request is cancelled.
 For more, please see [the wiki pages](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Callback-functions).
 
 ## [CLI support](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-CLI-support).
-
 You can easily get API results even in CLI:
 
 ```shell
@@ -235,8 +220,8 @@ root@localhost:~/src/RiotAPI# php7.0 RiotAPICLI.php getChampions --config ~/Riot
 
 For more information about CLI support, please see [the wiki pages](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-CLI-support).
 
-# [DataDragon API](https://github.com/dolejska-daniel/riot-api/wiki/DataDragonAPI:-How-to-begin)
 
+# [DataDragon API](https://github.com/dolejska-daniel/riot-api/wiki/DataDragonAPI:-How-to-begin)
 How easy is it to work with static images? For instance, to get loading screen art of Orianna?
 
 **Source**:
