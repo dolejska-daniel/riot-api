@@ -24,8 +24,8 @@ namespace RiotAPI\Objects;
  *   Class TournamentCodeDto
  *
  * Used in:
- *   tournament (v3)
- *     @link https://developer.riotgames.com/api-methods/#tournament-v3/GET_getTournamentCode
+ *   tournament (v4)
+ *     @link https://developer.riotgames.com/api-methods/#tournament-v4/GET_getTournamentCode
  *
  * @package RiotAPI\Objects
  */
@@ -74,7 +74,7 @@ class TournamentCodeDto extends ApiObject
 	 */
 	public $teamSize;
 
-	/** @var int[] $participants */
+	/** @var string[] $participants */
 	public $participants;
 
 	/**

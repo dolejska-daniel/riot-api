@@ -26,6 +26,8 @@ namespace RiotAPI\Objects;
  * Used in:
  *   tournament-stub (v4)
  *     @link https://developer.riotgames.com/api-methods/#tournament-stub-v4/POST_registerTournament
+ *   tournament (v4)
+ *     @link https://developer.riotgames.com/api-methods/#tournament-v4/POST_registerTournament
  *
  * @package RiotAPI\Objects
  */

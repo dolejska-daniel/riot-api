@@ -47,14 +47,14 @@ class ParticipantTimelineDto extends ApiObject
 	 *   Creep score difference versus the calculated lane opponent(s) for a 
 	 * specified period.
 	 *
-	 * @var  double[] $csDiffPerMinDeltas
+	 * @var double[] $csDiffPerMinDeltas
 	 */
 	public $csDiffPerMinDeltas;
 
 	/**
 	 *   Gold for a specified period.
 	 *
-	 * @var  double[] $goldPerMinDeltas
+	 * @var double[] $goldPerMinDeltas
 	 */
 	public $goldPerMinDeltas;
 
@@ -62,21 +62,21 @@ class ParticipantTimelineDto extends ApiObject
 	 *   Experience difference versus the calculated lane opponent(s) for a 
 	 * specified period.
 	 *
-	 * @var  double[] $xpDiffPerMinDeltas
+	 * @var double[] $xpDiffPerMinDeltas
 	 */
 	public $xpDiffPerMinDeltas;
 
 	/**
 	 *   Creeps for a specified period.
 	 *
-	 * @var  double[] $creepsPerMinDeltas
+	 * @var double[] $creepsPerMinDeltas
 	 */
 	public $creepsPerMinDeltas;
 
 	/**
 	 *   Experience change for a specified period.
 	 *
-	 * @var  double[] $xpPerMinDeltas
+	 * @var double[] $xpPerMinDeltas
 	 */
 	public $xpPerMinDeltas;
 
@@ -92,14 +92,14 @@ class ParticipantTimelineDto extends ApiObject
 	 *   Damage taken difference versus the calculated lane opponent(s) for a 
 	 * specified period.
 	 *
-	 * @var  double[] $damageTakenDiffPerMinDeltas
+	 * @var double[] $damageTakenDiffPerMinDeltas
 	 */
 	public $damageTakenDiffPerMinDeltas;
 
 	/**
 	 *   Damage taken for a specified period.
 	 *
-	 * @var  double[] $damageTakenPerMinDeltas
+	 * @var double[] $damageTakenPerMinDeltas
 	 */
 	public $damageTakenPerMinDeltas;
 }

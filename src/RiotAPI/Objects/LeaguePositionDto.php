@@ -24,18 +24,18 @@ namespace RiotAPI\Objects;
  *   Class LeaguePositionDto
  *
  * Used in:
- *   league (v3)
- *     @link https://developer.riotgames.com/api-methods/#league-v3/GET_getAllLeaguePositionsForSummoner
+ *   league (v4)
+ *     @link https://developer.riotgames.com/api-methods/#league-v4/GET_getAllLeaguePositionsForSummoner
  *
  * @package RiotAPI\Objects
  */
 class LeaguePositionDto extends ApiObject
 {
-	/** @var string $rank */
-	public $rank;
-
 	/** @var string $queueType */
 	public $queueType;
+
+	/** @var string $summonerName */
+	public $summonerName;
 
 	/** @var bool $hotStreak */
 	public $hotStreak;
@@ -58,20 +58,20 @@ class LeaguePositionDto extends ApiObject
 	/** @var string $leagueId */
 	public $leagueId;
 
-	/** @var string $playerOrTeamName */
-	public $playerOrTeamName;
-
 	/** @var bool $inactive */
 	public $inactive;
 
-	/** @var string $playerOrTeamId */
-	public $playerOrTeamId;
+	/** @var string $rank */
+	public $rank;
 
 	/** @var string $leagueName */
 	public $leagueName;
 
 	/** @var string $tier */
 	public $tier;
+
+	/** @var string $summonerId */
+	public $summonerId;
 
 	/** @var int $leaguePoints */
 	public $leaguePoints;

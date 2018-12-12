@@ -24,8 +24,8 @@ namespace RiotAPI\Objects;
  *   Class MatchParticipantFrameDto
  *
  * Used in:
- *   match (v3)
- *     @link https://developer.riotgames.com/api-methods/#match-v3/GET_getMatchTimeline
+ *   match (v4)
+ *     @link https://developer.riotgames.com/api-methods/#match-v4/GET_getMatchTimeline
  *
  * @package RiotAPI\Objects
  */

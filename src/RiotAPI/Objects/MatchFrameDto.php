@@ -34,7 +34,7 @@ class MatchFrameDto extends ApiObject
 	/** @var float $timestamp */
 	public $timestamp;
 
-	/** @var  MatchParticipantFrameDto[] $participantFrames */
+	/** @var MatchParticipantFrameDto[] $participantFrames */
 	public $participantFrames;
 
 	/** @var MatchEventDto[] $events */

@@ -2157,11 +2157,11 @@ class RiotAPI
 	/**
 	 * ==================================================================d=d=
 	 *     Tournament Endpoint Methods
-	 *     @link https://developer.riotgames.com/api-methods/#tournament-v3
+	 *     @link https://developer.riotgames.com/api-methods/#tournament-v4
 	 * ==================================================================d=d=
 	 **/
-	const RESOURCE_TOURNAMENT = '1231:tournament';
-	const RESOURCE_TOURNAMENT_V3 = 'v3';
+	const RESOURCE_TOURNAMENT = '1436:tournament';
+	const RESOURCE_TOURNAMENT_VERSION = 'v4';
 
 	/**
 	 *   Creates set of tournament codes for given tournament.
@@ -2178,7 +2178,7 @@ class RiotAPI
 	 * @throws ServerException
 	 * @throws ServerLimitException
 	 *
-	 * @link https://developer.riotgames.com/api-methods/#tournament-v3/POST_createTournamentCode
+	 * @link https://developer.riotgames.com/api-methods/#tournament-v4/POST_createTournamentCode
 	 */
 	public function createTournamentCodes( int $tournament_id, int $count, TournamentCodeParameters $parameters ): array
 	{
@@ -2208,7 +2208,7 @@ class RiotAPI
 
 		$data = json_encode($parameters);
 
-		$this->setEndpoint("/lol/tournament/" . self::RESOURCE_TOURNAMENT_V3 . "/codes")
+		$this->setEndpoint("/lol/tournament/" . self::RESOURCE_TOURNAMENT_VERSION . "/codes")
 			->setResource(self::RESOURCE_TOURNAMENT, "/codes")
 			->addQuery('tournamentId', $tournament_id)
 			->addQuery('count', $count)
@@ -2233,7 +2233,7 @@ class RiotAPI
 	 * @throws ServerException
 	 * @throws ServerLimitException
 	 *
-	 * @link https://developer.riotgames.com/api-methods/#tournament-v3/PUT_updateCode
+	 * @link https://developer.riotgames.com/api-methods/#tournament-v4/PUT_updateCode
 	 */
 	public function editTournamentCode( string $tournament_code, TournamentCodeUpdateParameters $parameters )
 	{
@@ -2251,7 +2251,7 @@ class RiotAPI
 
 		$data = json_encode($parameters);
 
-		$this->setEndpoint("/lol/tournament/" . self::RESOURCE_TOURNAMENT_V3 . "/codes/{$tournament_code}")
+		$this->setEndpoint("/lol/tournament/" . self::RESOURCE_TOURNAMENT_VERSION . "/codes/{$tournament_code}")
 			->setResource(self::RESOURCE_TOURNAMENT, "/codes/%s")
 			->setData($data)
 			->useKey(self::SET_TOURNAMENT_KEY)
@@ -2272,14 +2272,14 @@ class RiotAPI
 	 * @throws ServerException
 	 * @throws ServerLimitException
 	 *
-	 * @link https://developer.riotgames.com/api-methods/#tournament-v3/GET_getTournamentCode
+	 * @link https://developer.riotgames.com/api-methods/#tournament-v4/GET_getTournamentCode
 	 */
 	public function getTournamentCodeData( string $tournament_code ): Objects\TournamentCodeDto
 	{
 		if ($this->getSetting(self::SET_INTERIM, false))
 			throw new RequestException('This endpoint is not available in interim mode.');
 
-		$this->setEndpoint("/lol/tournament/" . self::RESOURCE_TOURNAMENT_V3 . "/codes/{$tournament_code}")
+		$this->setEndpoint("/lol/tournament/" . self::RESOURCE_TOURNAMENT_VERSION . "/codes/{$tournament_code}")
 			->setResource(self::RESOURCE_TOURNAMENT, "/codes/%s")
 			->useKey(self::SET_TOURNAMENT_KEY)
 			->makeCall(Region::AMERICAS);
@@ -2300,7 +2300,7 @@ class RiotAPI
 	 * @throws ServerException
 	 * @throws ServerLimitException
 	 *
-	 * @link https://developer.riotgames.com/api-methods/#tournament-v3/POST_registerProviderData
+	 * @link https://developer.riotgames.com/api-methods/#tournament-v4/POST_registerProviderData
 	 */
 	public function createTournamentProvider( ProviderRegistrationParameters $parameters ): int
 	{
@@ -2317,7 +2317,7 @@ class RiotAPI
 
 		$data = json_encode($parameters, JSON_UNESCAPED_SLASHES);
 
-		$this->setEndpoint("/lol/tournament/" . self::RESOURCE_TOURNAMENT_V3 . "/providers")
+		$this->setEndpoint("/lol/tournament/" . self::RESOURCE_TOURNAMENT_VERSION . "/providers")
 			->setResource(self::RESOURCE_TOURNAMENT, "/providers")
 			->setData($data)
 			->useKey(self::SET_TOURNAMENT_KEY)
@@ -2339,7 +2339,7 @@ class RiotAPI
 	 * @throws ServerException
 	 * @throws ServerLimitException
 	 *
-	 * @link https://developer.riotgames.com/api-methods/#tournament-v3/POST_registerTournament
+	 * @link https://developer.riotgames.com/api-methods/#tournament-v4/POST_registerTournament
 	 */
 	public function createTournament( TournamentRegistrationParameters $parameters ): int
 	{
@@ -2354,7 +2354,7 @@ class RiotAPI
 
 		$data = json_encode($parameters, JSON_UNESCAPED_SLASHES);
 
-		$this->setEndpoint("/lol/tournament/" . self::RESOURCE_TOURNAMENT_V3 . "/tournaments")
+		$this->setEndpoint("/lol/tournament/" . self::RESOURCE_TOURNAMENT_VERSION . "/tournaments")
 			->setResource(self::RESOURCE_TOURNAMENT, "/tournaments")
 			->setData($data)
 			->useKey(self::SET_TOURNAMENT_KEY)
@@ -2375,14 +2375,14 @@ class RiotAPI
 	 * @throws ServerException
 	 * @throws ServerLimitException
 	 *
-	 * @link https://developer.riotgames.com/api-methods/#tournament-v3/GET_getLobbyEventsByCode
+	 * @link https://developer.riotgames.com/api-methods/#tournament-v4/GET_getLobbyEventsByCode
 	 */
 	public function getTournamentLobbyEvents( string $tournament_code ): Objects\LobbyEventDtoWrapper
 	{
 		if ($this->getSetting(self::SET_INTERIM, false))
 			return $this->getTournamentLobbyEvents_STUB($tournament_code);
 
-		$this->setEndpoint("/lol/tournament/" . self::RESOURCE_TOURNAMENT_V3 . "/lobby-events/by-code/{$tournament_code}")
+		$this->setEndpoint("/lol/tournament/" . self::RESOURCE_TOURNAMENT_VERSION . "/lobby-events/by-code/{$tournament_code}")
 			->setResource(self::RESOURCE_TOURNAMENT, "/lobby-events/by-code/%s")
 			->useKey(self::SET_TOURNAMENT_KEY)
 			->makeCall(Region::AMERICAS);
