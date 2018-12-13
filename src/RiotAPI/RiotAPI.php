@@ -376,9 +376,6 @@ class RiotAPI
 			}
 		}
 
-		if ($this->getSetting(self::SET_DATADRAGON_INIT))
-			DataDragonAPI::initByCdn($this->getSetting(self::SET_DATADRAGON_PARAMS, []));
-
 		//  Assigns allowed settings
 		foreach (self::SETTINGS_ALLOWED as $key)
 			if (isset($settings[$key]))
@@ -420,6 +417,9 @@ class RiotAPI
 
 		//  Sets platform based on current region
 		$this->setSetting(self::SET_PLATFORM, $this->platforms->getPlatformName($this->getSetting(self::SET_REGION)));
+
+		if ($this->getSetting(self::SET_DATADRAGON_INIT))
+			DataDragonAPI::initByRealmObject($this->getStaticRealm(), $this->getSetting(self::SET_DATADRAGON_PARAMS, []));
 	}
 
 	/**
@@ -1579,6 +1579,18 @@ class RiotAPI
 				$result = DataDragonAPI::getStaticChampionsWithKeys($locale, $version);
 			else
 				$result = DataDragonAPI::getStaticChampions($locale, $version);
+
+			if (!$result) throw new ServerException("StaticData failed to be loaded.");
+
+			// Create missing data
+			$result['keys'] = array_map(function($d) use ($data_by_key) {
+				return $data_by_key
+					? $d['id']
+					: $d['key'];
+			}, $result['data']);
+			$result['keys'] = array_flip($result['keys']);
+
+			$this->result_data = $result;
 		}
 		catch (DataDragonException\SettingsException $ex)
 		{
@@ -1590,16 +1602,6 @@ class RiotAPI
 		}
 		finally
 		{
-			if (!$result) throw new ServerException("StaticData failed to be loaded.");
-
-			// Create missing data
-			$result['keys'] = array_map(function($d) use ($data_by_key) {
-				return $data_by_key
-					? $d['id']
-					: $d['key'];
-			}, $result['data']);
-			$result['keys'] = array_flip($result['keys']);
-
 			// Parse array and create instances
 			return new StaticData\StaticChampionListDto($result, $this);
 		}
@@ -1629,6 +1631,9 @@ class RiotAPI
 			$result = DataDragonAPI::getStaticChampionByKey($champion_id, $locale, $version);
 			if ($extended && $result)
 				$result = @DataDragonAPI::getStaticChampionDetails($result['id'], $locale, $version)['data'][$result['id']];
+			if (!$result) throw new ServerException("StaticData failed to be loaded.");
+
+			$this->result_data = $result;
 		}
 		catch (DataDragonException\SettingsException $ex)
 		{
@@ -1640,8 +1645,6 @@ class RiotAPI
 		}
 		finally
 		{
-			if (!$result) throw new ServerException("StaticData failed to be loaded.");
-
 			// Parse array and create instances
 			return new StaticData\StaticChampionDto($result, $this);
 		}
@@ -1667,6 +1670,14 @@ class RiotAPI
 		{
 			// Fetch StaticData from JSON files
 			$result = DataDragonAPI::getStaticItems($locale, $version);
+			if (!$result) throw new ServerException("StaticData failed to be loaded.");
+
+			// Create missing data
+			array_walk($result['data'], function (&$d, $k) {
+				$d['id'] = $k;
+			});
+
+			$this->result_data = $result;
 		}
 		catch (DataDragonException\SettingsException $ex)
 		{
@@ -1678,13 +1689,6 @@ class RiotAPI
 		}
 		finally
 		{
-			if (!$result) throw new ServerException("StaticData failed to be loaded.");
-
-			// Create missing data
-			array_walk($result['data'], function (&$d, $k) {
-				$d['id'] = $k;
-			});
-
 			// Parse array and create instances
 			return new StaticData\StaticItemListDto($result, $this);
 		}
@@ -1711,6 +1715,12 @@ class RiotAPI
 		{
 			// Fetch StaticData from JSON files
 			$result = DataDragonAPI::getStaticItem($item_id, $locale, $version);
+			if (!$result) throw new ServerException("StaticData failed to be loaded.");
+
+			// Create missing data
+			$result['id'] = $item_id;
+
+			$this->result_data = $result;
 		}
 		catch (DataDragonException\SettingsException $ex)
 		{
@@ -1722,11 +1732,6 @@ class RiotAPI
 		}
 		finally
 		{
-			if (!$result) throw new ServerException("StaticData failed to be loaded.");
-
-			// Create missing data
-			$result['id'] = $item_id;
-
 			// Parse array and create instances
 			return new StaticData\StaticItemDto($result, $this);
 		}
@@ -1750,6 +1755,9 @@ class RiotAPI
 		{
 			// Fetch StaticData from JSON files
 			$result = DataDragonAPI::getStaticLanguageStrings($locale, $version);
+			if (!$result) throw new ServerException("StaticData failed to be loaded.");
+
+			$this->result_data = $result;
 		}
 		catch (DataDragonException\SettingsException $ex)
 		{
@@ -1761,8 +1769,6 @@ class RiotAPI
 		}
 		finally
 		{
-			if (!$result) throw new ServerException("StaticData failed to be loaded.");
-
 			// Parse array and create instances
 			return new StaticData\StaticLanguageStringsDto($result, $this);
 		}
@@ -1782,6 +1788,9 @@ class RiotAPI
 		{
 			// Fetch StaticData from JSON files
 			$result = DataDragonAPI::getStaticLanguages();
+			if (!$result) throw new ServerException("StaticData failed to be loaded.");
+
+			$this->result_data = $result;
 		}
 		catch (DataDragonException\ArgumentException $ex)
 		{
@@ -1789,8 +1798,6 @@ class RiotAPI
 		}
 		finally
 		{
-			if (!$result) throw new ServerException("StaticData failed to be loaded.");
-
 			return $result;
 		}
 	}
@@ -1813,6 +1820,9 @@ class RiotAPI
 		{
 			// Fetch StaticData from JSON files
 			$result = DataDragonAPI::getStaticMaps($locale, $version);
+			if (!$result) throw new ServerException("StaticData failed to be loaded.");
+
+			$this->result_data = $result;
 		}
 		catch (DataDragonException\SettingsException $ex)
 		{
@@ -1824,8 +1834,6 @@ class RiotAPI
 		}
 		finally
 		{
-			if (!$result) throw new ServerException("StaticData failed to be loaded.");
-
 			// Parse array and create instances
 			return new StaticData\StaticMapDataDto($result, $this);
 		}
@@ -1851,6 +1859,9 @@ class RiotAPI
 		{
 			// Fetch StaticData from JSON files
 			$result = DataDragonAPI::getStaticMasteries($locale, $version);
+			if (!$result) throw new ServerException("StaticData failed to be loaded.");
+
+			$this->result_data = $result;
 		}
 		catch (DataDragonException\SettingsException $ex)
 		{
@@ -1862,8 +1873,6 @@ class RiotAPI
 		}
 		finally
 		{
-			if (!$result) throw new ServerException("StaticData failed to be loaded.");
-
 			// Parse array and create instances
 			return new StaticData\StaticMasteryListDto($result, $this);
 		}
@@ -1890,6 +1899,9 @@ class RiotAPI
 		{
 			// Fetch StaticData from JSON files
 			$result = DataDragonAPI::getStaticMastery($mastery_id, $locale, $version);
+			if (!$result) throw new ServerException("StaticData failed to be loaded.");
+
+			$this->result_data = $result;
 		}
 		catch (DataDragonException\SettingsException $ex)
 		{
@@ -1901,8 +1913,6 @@ class RiotAPI
 		}
 		finally
 		{
-			if (!$result) throw new ServerException("StaticData failed to be loaded.");
-
 			// Parse array and create instances
 			return new StaticData\StaticMasteryDto($result, $this);
 		}
@@ -1926,6 +1936,9 @@ class RiotAPI
 		{
 			// Fetch StaticData from JSON files
 			$result = DataDragonAPI::getStaticProfileIcons($locale, $version);
+			if (!$result) throw new ServerException("StaticData failed to be loaded.");
+
+			$this->result_data = $result;
 		}
 		catch (DataDragonException\SettingsException $ex)
 		{
@@ -1937,8 +1950,6 @@ class RiotAPI
 		}
 		finally
 		{
-			if (!$result) throw new ServerException("StaticData failed to be loaded.");
-
 			// Parse array and create instances
 			return new StaticData\StaticProfileIconDataDto($result, $this);
 		}
@@ -1958,6 +1969,9 @@ class RiotAPI
 	    {
 		    // Fetch StaticData from JSON files
 		    $result = DataDragonAPI::getStaticRealms($this->getSetting(self::SET_REGION));
+		    if (!$result) throw new ServerException("StaticData failed to be loaded.");
+
+		    $this->result_data = $result;
 	    }
 	    catch (DataDragonException\ArgumentException $ex)
 	    {
@@ -1965,8 +1979,6 @@ class RiotAPI
 	    }
 	    finally
 	    {
-		    if (!$result) throw new ServerException("StaticData failed to be loaded.");
-
 		    // Parse array and create instances
 		    return new StaticData\StaticRealmDto($result, $this);
 	    }
@@ -1990,6 +2002,15 @@ class RiotAPI
 	    {
 		    // Fetch StaticData from JSON files
 		    $result = DataDragonAPI::getStaticReforgedRunes($locale, $version);
+		    if (!$result) throw new ServerException("StaticData failed to be loaded.");
+
+		    // Create missing data
+		    $r = [];
+		    foreach ($result as $path)
+		    	$r[$path['id']] = $path;
+		    $result = $r;
+
+		    $this->result_data = $result;
 	    }
 	    catch (DataDragonException\SettingsException $ex)
 	    {
@@ -2001,13 +2022,11 @@ class RiotAPI
 	    }
 	    finally
 	    {
-		    if (!$result) throw new ServerException("StaticData failed to be loaded.");
-
 		    $r = [];
 		    foreach ($result as $item)
 		    {
-			    $rune = new StaticData\StaticReforgedRunePathDto($item, $this);
-			    $r[$rune->id] = $rune;
+			    $i = new StaticData\StaticReforgedRunePathDto($item, $this);
+			    $r[$i->id] = $i;
 		    }
 
 		    return $r;
@@ -2032,6 +2051,23 @@ class RiotAPI
 	    {
 		    // Fetch StaticData from JSON files
 		    $result = DataDragonAPI::getStaticReforgedRunes($locale, $version);
+		    if (!$result) throw new ServerException("StaticData failed to be loaded.");
+
+		    // Create missing data
+		    $r = [];
+		    foreach ($result as $path)
+		    {
+			    foreach ($path['slots'] as $slot)
+			    {
+				    foreach ($slot['runes'] as $item)
+				    {
+					    $r[$item['id']] = $item;
+				    }
+			    }
+		    }
+		    $result = $r;
+
+		    $this->result_data = $result;
 	    }
 	    catch (DataDragonException\SettingsException $ex)
 	    {
@@ -2043,19 +2079,11 @@ class RiotAPI
 	    }
 	    finally
 	    {
-		    if (!$result) throw new ServerException("StaticData failed to be loaded.");
-
 		    $r = [];
-		    foreach ($result as $path)
+		    foreach ($result as $item)
 		    {
-		    	foreach ($path['slots'] as $slot)
-			    {
-			    	foreach ($slot['runes'] as $item)
-				    {
-					    $rune = new StaticData\StaticReforgedRuneDto($item, $this);
-					    $r[$rune->id] = $rune;
-				    }
-			    }
+			    $i = new StaticData\StaticReforgedRuneDto($item, $this);
+			    $r[$i->id] = $i;
 		    }
 
 		    return $r;
@@ -2082,6 +2110,9 @@ class RiotAPI
 		{
 			// Fetch StaticData from JSON files
 			$result = DataDragonAPI::getStaticRunes($locale, $version);
+			if (!$result) throw new ServerException("StaticData failed to be loaded.");
+
+			$this->result_data = $result;
 		}
 		catch (DataDragonException\SettingsException $ex)
 		{
@@ -2093,8 +2124,6 @@ class RiotAPI
 		}
 		finally
 		{
-			if (!$result) throw new ServerException("StaticData failed to be loaded.");
-
 			// Parse array and create instances
 			return new StaticData\StaticRuneListDto($result, $this);
 		}
@@ -2121,6 +2150,9 @@ class RiotAPI
 		{
 			// Fetch StaticData from JSON files
 			$result = DataDragonAPI::getStaticRune($rune_id, $locale, $version);
+			if (!$result) throw new ServerException("StaticData failed to be loaded.");
+
+			$this->result_data = $result;
 		}
 		catch (DataDragonException\SettingsException $ex)
 		{
@@ -2132,8 +2164,6 @@ class RiotAPI
 		}
 		finally
 		{
-			if (!$result) throw new ServerException("StaticData failed to be loaded.");
-
 			// Parse array and create instances
 			return new StaticData\StaticRuneDto($result, $this);
 		}
@@ -2163,6 +2193,9 @@ class RiotAPI
 				$result = DataDragonAPI::getStaticSummonerSpellsWithKeys($locale, $version);
 			else
 				$result = DataDragonAPI::getStaticSummonerSpells($locale, $version);
+			if (!$result) throw new ServerException("StaticData failed to be loaded.");
+
+			$this->result_data = $result;
 		}
 		catch (DataDragonException\SettingsException $ex)
 		{
@@ -2174,8 +2207,6 @@ class RiotAPI
 		}
 		finally
 		{
-			if (!$result) throw new ServerException("StaticData failed to be loaded.");
-
 			// Parse array and create instances
 			return new StaticData\StaticSummonerSpellListDto($result, $this);
 		}
@@ -2202,6 +2233,9 @@ class RiotAPI
 		{
 			// Fetch StaticData from JSON files
 			$result = DataDragonAPI::getStaticSummonerSpellByKey($summoner_spell_key, $locale, $version);
+			if (!$result) throw new ServerException("StaticData failed to be loaded.");
+
+			$this->result_data = $result;
 		}
 		catch (DataDragonException\SettingsException $ex)
 		{
@@ -2213,8 +2247,6 @@ class RiotAPI
 		}
 		finally
 		{
-			if (!$result) throw new ServerException("StaticData failed to be loaded.");
-
 			// Parse array and create instances
 			return new StaticData\StaticSummonerSpellDto($result, $this);
 		}
@@ -2241,6 +2273,9 @@ class RiotAPI
 		{
 			// Fetch StaticData from JSON files
 			$result = DataDragonAPI::getStaticSummonerSpellById($summoner_spell_id, $locale, $version);
+			if (!$result) throw new ServerException("StaticData failed to be loaded.");
+
+			$this->result_data = $result;
 		}
 		catch (DataDragonException\SettingsException $ex)
 		{
@@ -2252,8 +2287,6 @@ class RiotAPI
 		}
 		finally
 		{
-			if (!$result) throw new ServerException("StaticData failed to be loaded.");
-
 			// Parse array and create instances
 			return new StaticData\StaticSummonerSpellDto($result, $this);
 		}
@@ -2273,6 +2306,9 @@ class RiotAPI
 		{
 			// Fetch StaticData from JSON files
 			$result = DataDragonAPI::getStaticVersions();
+			if (!$result) throw new ServerException("StaticData failed to be loaded.");
+
+			$this->result_data = $result;
 		}
 		catch (DataDragonException\ArgumentException $ex)
 		{
@@ -2280,8 +2316,6 @@ class RiotAPI
 		}
 		finally
 		{
-			if (!$result) throw new ServerException("StaticData failed to be loaded.");
-
 			// Return data
 			return $result;
 		}

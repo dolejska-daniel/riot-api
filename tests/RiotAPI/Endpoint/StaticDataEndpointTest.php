@@ -28,12 +28,11 @@ class StaticDataEndpointTest extends RiotAPITestCase
 {
 	public function testInit()
 	{
-		$this->markTestSkipped("Static-data API endpoint has been deprecated.");
-
 		$api = new RiotAPI([
-			RiotAPI::SET_KEY            => getenv('API_KEY'),
-			RiotAPI::SET_REGION         => Region::EUROPE_EAST,
-			RiotAPI::SET_USE_DUMMY_DATA => true,
+			RiotAPI::SET_KEY             => getenv('API_KEY'),
+			RiotAPI::SET_REGION          => Region::EUROPE_EAST,
+			RiotAPI::SET_USE_DUMMY_DATA  => true,
+			RiotAPI::SET_DATADRAGON_INIT => true,
 		]);
 
 		$this->assertInstanceOf(RiotAPI::class, $api);
@@ -46,13 +45,18 @@ class StaticDataEndpointTest extends RiotAPITestCase
 	 *
 	 * @param RiotAPI $api
 	 */
-	public function testGetStaticChampions_ChampionData( RiotAPI $api )
+	public function testGetStaticChampions_ById( RiotAPI $api )
 	{
 		//  Get library processed results
 		/** @var StaticData\StaticChampionListDto $result */
-		$result = $api->getStaticChampions(null, null, null, ['skins', 'image']);
+		$result = $api->getStaticChampions();
 
-		$this->assertTrue(true);
+		$this->assertSameSize($api->getResult()['data'], $result->data);
+		$this->assertSame(array_keys($result->data), array_values($result->keys));
+
+		$this->assertArrayHasKey("Orianna", $result->data);
+		$this->assertSame("Orianna", $result->data["Orianna"]->id);
+		$this->assertSame("61", $result->data["Orianna"]->key);
 	}
 
 	/**
@@ -60,13 +64,58 @@ class StaticDataEndpointTest extends RiotAPITestCase
 	 *
 	 * @param RiotAPI $api
 	 */
-	public function testGetStaticChampion_ChampionData( RiotAPI $api )
+	public function testGetStaticChampions_ByKey( RiotAPI $api )
+	{
+		//  Get library processed results
+		/** @var StaticData\StaticChampionListDto $result */
+		$result = $api->getStaticChampions(true);
+
+		$this->assertSameSize($api->getResult()['data'], $result->data);
+		$this->assertSame(array_keys($result->data), array_values($result->keys));
+
+		$this->assertArrayHasKey(61, $result->data);
+		$this->assertSame("Orianna", $result->data[61]->id);
+		$this->assertSame("61", $result->data[61]->key);
+		$this->assertArrayNotHasKey('skins', $api->getResult()['data'][61]);
+		$this->assertArrayNotHasKey('spells', $api->getResult()['data'][61]);
+	}
+
+	/**
+	 * @depends testInit
+	 *
+	 * @param RiotAPI $api
+	 */
+	public function testGetStaticChampion( RiotAPI $api )
 	{
 		//  Get library processed results
 		/** @var StaticData\StaticChampionDto $result */
-		$result = $api->getStaticChampion(61, null, null, ['skins', 'image']);
+		$result = $api->getStaticChampion(61);
 
-		$this->assertTrue(true);
+		$this->assertSame("Orianna", $result->id);
+		$this->assertSame("61", $result->key);
+		$this->assertSame("the Lady of Clockwork", $result->title);
+		$this->assertArrayNotHasKey('skins', $api->getResult());
+		$this->assertNull($result->skins);
+		$this->assertArrayNotHasKey('spells', $api->getResult());
+		$this->assertNull($result->spells);
+	}
+
+	/**
+	 * @depends testInit
+	 *
+	 * @param RiotAPI $api
+	 */
+	public function testGetStaticChampion_extended( RiotAPI $api )
+	{
+		//  Get library processed results
+		/** @var StaticData\StaticChampionDto $result */
+		$result = $api->getStaticChampion(61, true);
+
+		$this->assertSame("Orianna", $result->id);
+		$this->assertSame("61", $result->key);
+		$this->assertSame("the Lady of Clockwork", $result->title);
+		$this->assertSameSize($api->getResult()['skins'], $result->skins);
+		$this->assertSameSize($api->getResult()['spells'], $result->spells);
 	}
 
 	/**
@@ -78,9 +127,13 @@ class StaticDataEndpointTest extends RiotAPITestCase
 	{
 		//  Get library processed results
 		/** @var StaticData\StaticItemListDto $result */
-		$result = $api->getStaticItems(null, null, ['gold', 'image']);
+		$result = $api->getStaticItems();
 
-		$this->assertTrue(true);
+		$this->assertSameSize($api->getResult()['data'], $result->data);
+
+		$this->assertArrayHasKey(3089, $result->data);
+		$this->assertSame("Rabadon's Deathcap", $result->data[3089]->name);
+		$this->assertSame(3089, $result->data[3089]->id);
 	}
 
 	/**
@@ -92,9 +145,10 @@ class StaticDataEndpointTest extends RiotAPITestCase
 	{
 		//  Get library processed results
 		/** @var StaticData\StaticItemDto $result */
-		$result = $api->getStaticItem(3089, null, null, ['gold', 'image']); //  RABADON YAY
+		$result = $api->getStaticItem(3089); //  RABADON YAY
 
-		$this->assertTrue(true);
+		$this->assertSame("Rabadon's Deathcap", $result->name);
+		$this->assertSame(3089, $result->id);
 	}
 
 	/**
@@ -108,7 +162,7 @@ class StaticDataEndpointTest extends RiotAPITestCase
 		/** @var StaticData\StaticLanguageStringsDto $result */
 		$result = $api->getStaticLanguageStrings('cs_CZ', null);
 
-		$this->assertTrue(true);
+		$this->assertSameSize($api->getResult()['data'], $result->data);
 	}
 
 	/**
@@ -122,7 +176,7 @@ class StaticDataEndpointTest extends RiotAPITestCase
 		/** @var array $result */
 		$result = $api->getStaticLanguages();
 
-		$this->assertTrue(true);
+		$this->assertSame($api->getResult(), $result);
 	}
 
 	/**
@@ -134,9 +188,11 @@ class StaticDataEndpointTest extends RiotAPITestCase
 	{
 		//  Get library processed results
 		/** @var StaticData\StaticMapDataDto $result */
-		$result = $api->getStaticMaps(null, null);
+		$result = $api->getStaticMaps();
 
-		$this->assertTrue(true);
+		$this->assertSameSize($api->getResult()['data'], $result->data);
+		$this->assertArrayHasKey(10, $result->data, "Twisted Treeline map not found.");
+		$this->assertArrayHasKey(11, $result->data, "Summoner's Rift map not found.");
 	}
 
 	/**
@@ -148,9 +204,13 @@ class StaticDataEndpointTest extends RiotAPITestCase
 	{
 		//  Get library processed results
 		/** @var StaticData\StaticMasteryListDto $result */
-		$result = $api->getStaticMasteries(null, null, ['masteryTree', 'image']);
+		$result = $api->getStaticMasteries('en_US', "6.24.1");
 
-		$this->assertTrue(true);
+		$this->assertSameSize($api->getResult()['data'], $result->data);
+
+		$this->assertArrayHasKey(6362, $result->data);
+		$this->assertSame("Thunderlord's Decree", $result->data[6362]->name);
+		$this->assertSame(6362, $result->data[6362]->id);
 	}
 
 	/**
@@ -162,9 +222,10 @@ class StaticDataEndpointTest extends RiotAPITestCase
 	{
 		//  Get library processed results
 		/** @var StaticData\StaticMasteryDto $result */
-		$result = $api->getStaticMastery(6362, null, null, ['masteryTree', 'image']); //  THE LORD OF THUNDER
+		$result = $api->getStaticMastery(6362, 'en_US', "6.24.1"); //  THE LORD OF THUNDER
 
-		$this->assertTrue(true);
+		$this->assertSame("Thunderlord's Decree", $result->name);
+		$this->assertSame(6362, $result->id);
 	}
 
 	/**
@@ -178,7 +239,7 @@ class StaticDataEndpointTest extends RiotAPITestCase
 		/** @var StaticData\StaticRealmDto $result */
 		$result = $api->getStaticRealm();
 
-		$this->assertTrue(true);
+		$this->assertSame($api->getResult()['n'], $result->n);
 	}
 
 
@@ -192,26 +253,13 @@ class StaticDataEndpointTest extends RiotAPITestCase
 		//  Get library processed results
 		/** @var StaticData\StaticReforgedRunePathDto[] $result */
 		$result = $api->getStaticReforgedRunePaths();
-		//  Get raw result
-		$rawResult = $api->getResult();
 
-		$this->assertTrue(true);
-	}
+		$this->assertSameSize($api->getResult(), $result);
 
-	/**
-	 * @depends testInit
-	 *
-	 * @param RiotAPI $api
-	 */
-	public function testGetStaticReforgedRunePathById( RiotAPI $api )
-	{
-		//  Get library processed results
-		/** @var StaticData\StaticReforgedRunePathDto $result */
-		$result = $api->getStaticReforgedRunePathById(8200);
-		//  Get raw result
-		$rawResult = $api->getResult();
-
-		$this->assertTrue(true);
+		$this->assertArrayHasKey(8200, $result);
+		$this->assertSame(8200, $result[8200]->id);
+		$this->assertSame("Sorcery", $result[8200]->key);
+		$this->assertSame("Sorcery", $result[8200]->name);
 	}
 
 	/**
@@ -224,26 +272,10 @@ class StaticDataEndpointTest extends RiotAPITestCase
 		//  Get library processed results
 		/** @var StaticData\StaticReforgedRuneDto[] $result */
 		$result = $api->getStaticReforgedRunes();
-		//  Get raw result
-		$rawResult = $api->getResult();
 
-		$this->assertTrue(true);
-	}
-
-	/**
-	 * @depends testInit
-	 *
-	 * @param RiotAPI $api
-	 */
-	public function testGetStaticReforgedRuneById( RiotAPI $api )
-	{
-		//  Get library processed results
-		/** @var StaticData\StaticReforgedRuneDto $result */
-		$result = $api->getStaticReforgedRuneById(8229);
-		//  Get raw result
-		$rawResult = $api->getResult();
-
-		$this->assertTrue(true);
+		$this->assertSame(8229, $result[8229]->id);
+		$this->assertSame("ArcaneComet", $result[8229]->key);
+		$this->assertSame("Arcane Comet", $result[8229]->name);
 	}
 
 	/**
@@ -255,9 +287,13 @@ class StaticDataEndpointTest extends RiotAPITestCase
 	{
 		//  Get library processed results
 		/** @var StaticData\StaticRuneListDto $result */
-		$result = $api->getStaticRunes(null, null, ['stats', 'image']);
+		$result = $api->getStaticRunes('en_US', "6.24.1");
 
-		$this->assertTrue(true);
+		$this->assertSameSize($api->getResult()['data'], $result->data);
+
+		$this->assertArrayHasKey(5357, $result->data);
+		$this->assertSame("Greater Quintessence of Ability Power", $result->data[5357]->name);
+		//$this->assertSame(5357, $result->data[5357]->id);
 	}
 
 	/**
@@ -269,9 +305,10 @@ class StaticDataEndpointTest extends RiotAPITestCase
 	{
 		//  Get library processed results
 		/** @var StaticData\StaticRuneDto $result */
-		$result = $api->getStaticRune(5357, null, null, ['stats', 'image']); //  GIMME MOAR AP
+		$result = $api->getStaticRune(5357, 'en_US', "6.24.1"); //  GIMME MOAR AP
 
-		$this->assertTrue(true);
+		$this->assertSame("Greater Quintessence of Ability Power", $result->name);
+		//$this->assertSame(5357, $result->id);
 	}
 
 	/**
@@ -279,18 +316,44 @@ class StaticDataEndpointTest extends RiotAPITestCase
 	 *
 	 * @param RiotAPI $api
 	 */
-	public function testGetStaticSummonerSpells_SpellListData( RiotAPI $api )
+	public function testGetStaticSummonerSpells_ById( RiotAPI $api )
 	{
 		//  Get library processed results
 		/** @var StaticData\StaticSummonerSpellListDto $result */
-		$result = $api->getStaticSummonerSpells(null, null, true, ['vars', 'image']);
+		$result = $api->getStaticSummonerSpells();
+
+		$this->assertArrayHasKey('SummonerExhaust', $result->data);
+		$this->assertSame('Exhaust', $result->data['SummonerExhaust']->name);
+		$this->assertSame('SummonerExhaust', $result->data['SummonerExhaust']->id);
+		$this->assertSame('3', $result->data['SummonerExhaust']->key);
+		$this->assertSame('Exhausts target enemy champion, reducing their Movement Speed by 30%, and their damage dealt by 40% for 2.5 seconds.', $result->data['SummonerExhaust']->description);
+
+		$this->assertArrayHasKey('SummonerFlash', $result->data);
+		$this->assertSame('Flash', $result->data['SummonerFlash']->name);
+		$this->assertSame('SummonerFlash', $result->data['SummonerFlash']->id);
+		$this->assertSame('4', $result->data['SummonerFlash']->key);
+		$this->assertSame('Teleports your champion a short distance toward your cursor\'s location.', $result->data['SummonerFlash']->description);
+	}
+
+	/**
+	 * @depends testInit
+	 *
+	 * @param RiotAPI $api
+	 */
+	public function testGetStaticSummonerSpells_ByKey( RiotAPI $api )
+	{
+		//  Get library processed results
+		/** @var StaticData\StaticSummonerSpellListDto $result */
+		$result = $api->getStaticSummonerSpells(true);
 
 		$this->assertSame('Exhaust', $result->data[3]->name);
-		$this->assertSame('SummonerExhaust', $result->data[3]->key);
+		$this->assertSame('SummonerExhaust', $result->data[3]->id);
+		$this->assertSame('3', $result->data[3]->key);
 		$this->assertSame('Exhausts target enemy champion, reducing their Movement Speed by 30%, and their damage dealt by 40% for 2.5 seconds.', $result->data[3]->description);
 
 		$this->assertSame('Flash', $result->data[4]->name);
-		$this->assertSame('SummonerFlash', $result->data[4]->key);
+		$this->assertSame('SummonerFlash', $result->data[4]->id);
+		$this->assertSame('4', $result->data[4]->key);
 		$this->assertSame('Teleports your champion a short distance toward your cursor\'s location.', $result->data[4]->description);
 	}
 
@@ -303,10 +366,11 @@ class StaticDataEndpointTest extends RiotAPITestCase
 	{
 		//  Get library processed results
 		/** @var StaticData\StaticSummonerSpellDto $result */
-		$result = $api->getStaticSummonerSpell(4, null, null, ['vars', 'image']); //  JUST IN CASE?
+		$result = $api->getStaticSummonerSpell(4); //  JUST IN CASE?
 
 		$this->assertSame('Flash', $result->name);
-		$this->assertSame('SummonerFlash', $result->key);
+		$this->assertSame('SummonerFlash', $result->id);
+		$this->assertSame('4', $result->key);
 		$this->assertSame('Teleports your champion a short distance toward your cursor\'s location.', $result->description);
 	}
 
@@ -321,6 +385,6 @@ class StaticDataEndpointTest extends RiotAPITestCase
 		/** @var array $result */
 		$result = $api->getStaticVersions();
 
-		$this->assertTrue(true);
+		$this->assertSame($api->getResult(), $result);
 	}
 }

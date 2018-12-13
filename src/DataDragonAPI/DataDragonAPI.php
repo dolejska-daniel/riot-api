@@ -1301,7 +1301,7 @@ class DataDragonAPI
 	 */
 	public static function getStaticLanguages() : array
 	{
-		$url = self::getCdnUrl() . "/languages.json";
+		$url = self::getCdnUrl() . "languages.json";
 		return self::loadStaticData($url);
 	}
 

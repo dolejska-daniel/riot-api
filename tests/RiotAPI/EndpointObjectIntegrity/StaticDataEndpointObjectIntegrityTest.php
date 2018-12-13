@@ -28,12 +28,11 @@ class StaticDataEndpointObjectIntegrityTest extends RiotAPITestCase
 {
 	public function testInit()
 	{
-		$this->markTestSkipped("Static-data API endpoint has been deprecated.");
-
 		$api = new RiotAPI([
-			RiotAPI::SET_KEY            => getenv('API_KEY'),
-			RiotAPI::SET_REGION         => Region::NORTH_AMERICA,
-			RiotAPI::SET_USE_DUMMY_DATA => true,
+			RiotAPI::SET_KEY             => getenv('API_KEY'),
+			RiotAPI::SET_REGION          => Region::NORTH_AMERICA,
+			RiotAPI::SET_USE_DUMMY_DATA  => true,
+			RiotAPI::SET_DATADRAGON_INIT => true,
 		]);
 
 		$this->assertInstanceOf(RiotAPI::class, $api);
@@ -46,11 +45,27 @@ class StaticDataEndpointObjectIntegrityTest extends RiotAPITestCase
 	 *
 	 * @param RiotAPI $api
 	 */
-	public function testGetStaticChampions( RiotAPI $api )
+	public function testGetStaticChampions_ById( RiotAPI $api )
 	{
 		//  Get library processed results
 		/** @var StaticData\StaticChampionListDto $result */
-		$result = $api->getStaticChampions(null, null, null, 'all');
+		$result = $api->getStaticChampions();
+		//  Get raw result
+		$rawResult = $api->getResult();
+
+		$this->checkObjectPropertiesAndDataValidity($result, $rawResult, StaticData\StaticChampionListDto::class);
+	}
+
+	/**
+	 * @depends testInit
+	 *
+	 * @param RiotAPI $api
+	 */
+	public function testGetStaticChampions_ByKey( RiotAPI $api )
+	{
+		//  Get library processed results
+		/** @var StaticData\StaticChampionListDto $result */
+		$result = $api->getStaticChampions(true);
 		//  Get raw result
 		$rawResult = $api->getResult();
 
@@ -66,7 +81,23 @@ class StaticDataEndpointObjectIntegrityTest extends RiotAPITestCase
 	{
 		//  Get library processed results
 		/** @var StaticData\StaticChampionDto $result */
-		$result = $api->getStaticChampion(61, null, null, 'all'); //  Orianna <3
+		$result = $api->getStaticChampion(61); //  Orianna <3
+		//  Get raw result
+		$rawResult = $api->getResult();
+
+		$this->checkObjectPropertiesAndDataValidity($result, $rawResult, StaticData\StaticChampionDto::class);
+	}
+
+	/**
+	 * @depends testInit
+	 *
+	 * @param RiotAPI $api
+	 */
+	public function testGetStaticChampion_extended( RiotAPI $api )
+	{
+		//  Get library processed results
+		/** @var StaticData\StaticChampionDto $result */
+		$result = $api->getStaticChampion(61, true); //  Orianna <3
 		//  Get raw result
 		$rawResult = $api->getResult();
 
@@ -82,7 +113,7 @@ class StaticDataEndpointObjectIntegrityTest extends RiotAPITestCase
 	{
 		//  Get library processed results
 		/** @var StaticData\StaticItemListDto $result */
-		$result = $api->getStaticItems(null, null, 'all');
+		$result = $api->getStaticItems();
 		//  Get raw result
 		$rawResult = $api->getResult();
 
@@ -98,7 +129,7 @@ class StaticDataEndpointObjectIntegrityTest extends RiotAPITestCase
 	{
 		//  Get library processed results
 		/** @var StaticData\StaticItemDto $result */
-		$result = $api->getStaticItem(3089, null, null, 'all'); //  RABADON YAY
+		$result = $api->getStaticItem(3089); //  RABADON YAY
 		//  Get raw result
 		$rawResult = $api->getResult();
 
@@ -162,7 +193,7 @@ class StaticDataEndpointObjectIntegrityTest extends RiotAPITestCase
 	{
 		//  Get library processed results
 		/** @var StaticData\StaticMasteryListDto $result */
-		$result = $api->getStaticMasteries(null, null, 'all');
+		$result = $api->getStaticMasteries('en_US', "6.24.1");
 		//  Get raw result
 		$rawResult = $api->getResult();
 
@@ -178,7 +209,7 @@ class StaticDataEndpointObjectIntegrityTest extends RiotAPITestCase
 	{
 		//  Get library processed results
 		/** @var StaticData\StaticMasteryDto $result */
-		$result = $api->getStaticMastery(6362, null, null, 'all'); //  THE LORD OF THUNDER
+		$result = $api->getStaticMastery(6362, 'en_US', "6.24.1"); //  THE LORD OF THUNDER
 		//  Get raw result
 		$rawResult = $api->getResult();
 
@@ -238,22 +269,6 @@ class StaticDataEndpointObjectIntegrityTest extends RiotAPITestCase
 	 *
 	 * @param RiotAPI $api
 	 */
-	public function testGetStaticReforgedRunePathById( RiotAPI $api )
-	{
-		//  Get library processed results
-		/** @var StaticData\StaticReforgedRunePathDto $result */
-		$result = $api->getStaticReforgedRunePathById(8200);
-		//  Get raw result
-		$rawResult = $api->getResult();
-
-		$this->checkObjectPropertiesAndDataValidity($result, $rawResult, StaticData\StaticReforgedRunePathDto::class);
-	}
-
-	/**
-	 * @depends testInit
-	 *
-	 * @param RiotAPI $api
-	 */
 	public function testGetStaticReforgedRunes( RiotAPI $api )
 	{
 		//  Get library processed results
@@ -263,22 +278,6 @@ class StaticDataEndpointObjectIntegrityTest extends RiotAPITestCase
 		$rawResult = $api->getResult();
 
 		$this->checkObjectPropertiesAndDataValidityOfObjectList($result, $rawResult, StaticData\StaticReforgedRuneDto::class);
-	}
-
-	/**
-	 * @depends testInit
-	 *
-	 * @param RiotAPI $api
-	 */
-	public function testGetStaticReforgedRuneById( RiotAPI $api )
-	{
-		//  Get library processed results
-		/** @var StaticData\StaticReforgedRuneDto $result */
-		$result = $api->getStaticReforgedRuneById(8229);
-		//  Get raw result
-		$rawResult = $api->getResult();
-
-		$this->checkObjectPropertiesAndDataValidity($result, $rawResult, StaticData\StaticReforgedRuneDto::class);
 	}
 
 
@@ -291,7 +290,7 @@ class StaticDataEndpointObjectIntegrityTest extends RiotAPITestCase
 	{
 		//  Get library processed results
 		/** @var StaticData\StaticRuneListDto $result */
-		$result = $api->getStaticRunes(null, null, 'all');
+		$result = $api->getStaticRunes('en_US', "6.24.1");
 		//  Get raw result
 		$rawResult = $api->getResult();
 
@@ -307,7 +306,7 @@ class StaticDataEndpointObjectIntegrityTest extends RiotAPITestCase
 	{
 		//  Get library processed results
 		/** @var StaticData\StaticRuneDto $result */
-		$result = $api->getStaticRune(5357, null, null, 'all'); //  GIMME MOAR AP
+		$result = $api->getStaticRune(5357, 'en_US', "6.24.1"); //  GIMME MOAR AP
 		//  Get raw result
 		$rawResult = $api->getResult();
 
@@ -319,11 +318,27 @@ class StaticDataEndpointObjectIntegrityTest extends RiotAPITestCase
 	 *
 	 * @param RiotAPI $api
 	 */
-	public function testGetStaticSummonerSpells( RiotAPI $api )
+	public function testGetStaticSummonerSpells_ById( RiotAPI $api )
 	{
 		//  Get library processed results
 		/** @var StaticData\StaticSummonerSpellListDto $result */
-		$result = $api->getStaticSummonerSpells(null, null, false, 'all');
+		$result = $api->getStaticSummonerSpells();
+		//  Get raw result
+		$rawResult = $api->getResult();
+
+		$this->checkObjectPropertiesAndDataValidity($result, $rawResult, StaticData\StaticSummonerSpellListDto::class);
+	}
+
+	/**
+	 * @depends testInit
+	 *
+	 * @param RiotAPI $api
+	 */
+	public function testGetStaticSummonerSpells_ByKey( RiotAPI $api )
+	{
+		//  Get library processed results
+		/** @var StaticData\StaticSummonerSpellListDto $result */
+		$result = $api->getStaticSummonerSpells(true);
 		//  Get raw result
 		$rawResult = $api->getResult();
 
@@ -339,7 +354,7 @@ class StaticDataEndpointObjectIntegrityTest extends RiotAPITestCase
 	{
 		//  Get library processed results
 		/** @var StaticData\StaticSummonerSpellDto $result */
-		$result = $api->getStaticSummonerSpell(4, null, null, 'all'); //  JUST IN CASE?
+		$result = $api->getStaticSummonerSpell(4); //  JUST IN CASE?
 		//  Get raw result
 		$rawResult = $api->getResult();
 

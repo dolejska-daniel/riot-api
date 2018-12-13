@@ -119,6 +119,7 @@ class RiotAPITestCase extends TestCase
 			else
 			{
 				//  This property is of standard data type (int, string, bool, etc.)
+				$this->assertArrayHasKey($propRef->getName(), $originalData, "Original request result data do not contain key '{$propRef->getName()}'.");
 				$this->assertSame(
 					$originalData[$propRef->getName()],
 					$prop,
