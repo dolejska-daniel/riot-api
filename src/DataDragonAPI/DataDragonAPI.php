@@ -17,27 +17,29 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace DataDragonAPI;
+namespace RiotAPI\DataDragonAPI;
 
 use Nette\Utils\Html;
 
-use RiotAPI\RiotAPI;
-use RiotAPI\Objects\SummonerDto;
-use RiotAPI\Objects\StaticData\StaticImageDto;
-use RiotAPI\Objects\StaticData\StaticRealmDto;
-use RiotAPI\Objects\StaticData\StaticChampionDto;
-use RiotAPI\Objects\StaticData\StaticItemDto;
-use RiotAPI\Objects\StaticData\StaticMapDetailsDto;
-use RiotAPI\Objects\StaticData\StaticMasteryDto;
-use RiotAPI\Objects\StaticData\StaticRuneDto;
-use RiotAPI\Objects\StaticData\StaticChampionSpellDto;
-use RiotAPI\Objects\StaticData\StaticSummonerSpellDto;
-use RiotAPI\Objects\StaticData\StaticReforgedRuneDto;
-use RiotAPI\Objects\StaticData\StaticReforgedRunePathDto;
+use RiotAPI\LeagueAPI\LeagueAPI;
+use RiotAPI\LeagueAPI\Objects\SummonerDto;
+use RiotAPI\LeagueAPI\Objects\StaticData\StaticImageDto;
+use RiotAPI\LeagueAPI\Objects\StaticData\StaticRealmDto;
+use RiotAPI\LeagueAPI\Objects\StaticData\StaticChampionDto;
+use RiotAPI\LeagueAPI\Objects\StaticData\StaticItemDto;
+use RiotAPI\LeagueAPI\Objects\StaticData\StaticMapDetailsDto;
+use RiotAPI\LeagueAPI\Objects\StaticData\StaticMasteryDto;
+use RiotAPI\LeagueAPI\Objects\StaticData\StaticRuneDto;
+use RiotAPI\LeagueAPI\Objects\StaticData\StaticChampionSpellDto;
+use RiotAPI\LeagueAPI\Objects\StaticData\StaticSummonerSpellDto;
+use RiotAPI\LeagueAPI\Objects\StaticData\StaticReforgedRuneDto;
+use RiotAPI\LeagueAPI\Objects\StaticData\StaticReforgedRunePathDto;
 
-use DataDragonAPI\Exception\RequestException;
-use DataDragonAPI\Exception\SettingsException;
-use DataDragonAPI\Exception\ArgumentException;
+use RiotAPI\LeagueAPI\Exceptions as LeagueExceptions;
+
+use RiotAPI\DataDragonAPI\Exceptions\RequestException;
+use RiotAPI\DataDragonAPI\Exceptions\SettingsException;
+use RiotAPI\DataDragonAPI\Exceptions\ArgumentException;
 
 
 class DataDragonAPI
@@ -218,12 +220,14 @@ class DataDragonAPI
 	 *   Creates new instance by fetching latest Realm info by API static-data endpoint
 	 * request.
 	 *
-	 * @param RiotAPI $api
-	 * @param array   $customSettings
+	 * @param LeagueAPI $api
+	 * @param array $customSettings
+	 * @throws LeagueExceptions\RequestException
+	 * @throws LeagueExceptions\ServerException
 	 */
-	public static function initByApi( RiotAPI $api, array $customSettings = [] )
+	public static function initByApi(LeagueAPI $api, array $customSettings = [] )
 	{
-		trigger_error("Initialization by API is not currently available.", E_USER_DEPRECATED);
+		self::initByRealmObject($api->getStaticRealm(), $customSettings);
 	}
 
 	/**
@@ -565,7 +569,7 @@ class DataDragonAPI
 	 */
 	public static function getChampionSplashO( StaticChampionDto $champion, int $skin = 0, array $attributes = [] ): Html
 	{
-		return self::getChampionSplash($champion->key, $skin, $attributes);
+		return self::getChampionSplash($champion->id, $skin, $attributes);
 	}
 
 
@@ -621,7 +625,7 @@ class DataDragonAPI
 	 */
 	public static function getChampionLoadingO( StaticChampionDto $champion, int $skin = 0, array $attributes = [] ): Html
 	{
-		return self::getChampionLoading($champion->key, $skin, $attributes);
+		return self::getChampionLoading($champion->id, $skin, $attributes);
 	}
 
 
@@ -679,7 +683,7 @@ class DataDragonAPI
 	 */
 	public static function getChampionIconO( StaticChampionDto $champion, array $attributes = [] ): Html
 	{
-		return self::getChampionIcon($champion->key, $attributes);
+		return self::getChampionIcon($champion->id, $attributes);
 	}
 
 
@@ -802,7 +806,7 @@ class DataDragonAPI
 	 */
 	public static function getChampionSpellIconO(StaticChampionSpellDto $championSpell, array $attributes = [] ): Html
 	{
-		return self::getSpellIcon($championSpell->key, $attributes);
+		return self::getSpellIcon($championSpell->id, $attributes);
 	}
 
 
@@ -991,7 +995,7 @@ class DataDragonAPI
 	 *
 	 * @return string
 	 */
-	protected static function getReforgedRuneIconUrlO( StaticReforgedRuneDto $rune ): string
+	public static function getReforgedRuneIconUrlO( StaticReforgedRuneDto $rune ): string
 	{
 		return self::getSetting(self::SET_ENDPOINT) . "img/$rune->icon";
 	}
@@ -1026,7 +1030,7 @@ class DataDragonAPI
 	 *
 	 * @return string
 	 */
-	protected static function getReforgedRunePathIconUrlO( StaticReforgedRunePathDto $runePath ): string
+	public static function getReforgedRunePathIconUrlO( StaticReforgedRunePathDto $runePath ): string
 	{
 		return self::getSetting(self::SET_ENDPOINT) . "img/$runePath->icon";
 	}

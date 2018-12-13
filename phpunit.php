@@ -18,7 +18,7 @@
  */
 
 use PHPUnit\Framework\TestCase;
-use RiotAPI\Objects;
+use RiotAPI\LeagueAPI\Objects;
 
 /**
  *   Class RiotAPITestCase

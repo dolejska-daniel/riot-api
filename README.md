@@ -1,12 +1,49 @@
 # RiotAPI PHP7 wrapper [![GitHub release](https://img.shields.io/github/release/dolejska-daniel/riot-api.svg)](https://github.com/dolejska-daniel/riot-api) [![Packagist](https://img.shields.io/packagist/v/dolejska-daniel/riot-api.svg)](https://packagist.org/packages/dolejska-daniel/riot-api)
 
-> Version v3.0.0-alpha
+> Version v3.0.0-rc.1
 
 [![Build Status](https://travis-ci.org/dolejska-daniel/riot-api.svg?branch=master)](https://travis-ci.org/dolejska-daniel/riot-api)
 [![Test Coverage](https://codeclimate.com/github/dolejska-daniel/riot-api/badges/coverage.svg)](https://codeclimate.com/github/dolejska-daniel/riot-api/coverage)
 [![Packagist](https://img.shields.io/packagist/dm/dolejska-daniel/riot-api.svg)](https://packagist.org/packages/dolejska-daniel/riot-api)
 [![Packagist](https://img.shields.io/packagist/l/dolejska-daniel/riot-api.svg)](https://packagist.org/packages/dolejska-daniel/riot-api)
-[![Support Project](https://img.shields.io/badge/Support_Project-PayPal-blue.svg)](https://www.paypal.me/dolejskad)
+[![Support Project](https://img.shields.io/badge/support_project-PayPal-blue.svg)](https://www.paypal.me/dolejskad)
+
+
+# RiotAPI v3 CHANGES WARNING!
+Update [`v3.0.0-rc.1`](https://github.com/dolejska-daniel/riot-api/releases/tag/v3.0.0-rc.1) came with big changes to the library!
+If you've been using this library and just updated - READ THIS.
+
+**OLD DEPRECATED USAGE**:
+```php
+use RiotAPI\RiotAPI;
+
+$api = new RiotAPI([...]);
+```
+```php
+use RiotAPI\DataDragonAPI;
+
+DataDragonAPI::initByCdn([...]);
+```
+
+**NEW USAGE**:
+
+Main API class `RiotAPI` has been renamed to `LeagueAPI` and has been moved to `RiotAPI\LeagueAPI` namespace.
+Also all related objects (`Objects`, `Definitions`, ...) has been moved to `RiotAPI\LeagueAPI` (`RiotAPI\LeagueAPI\Objects`, `RiotAPI\LeagueAPI\Definitions` respectively...).
+
+```php
+use RiotAPI\LeagueAPI\LeagueAPI;
+
+$api = new LeagueAPI([...]);
+```
+
+`DataDragonAPI` class has been moved to `RiotAPI\DataDragonAPI` namespace.
+Also all related objects (`Definitions`, ...) has been moved to `RiotAPI\DataDragonAPI` (`RiotAPI\DataDragonAPI\Definitions` respectively...).
+
+```php
+use RiotAPI\DataDragonAPI\DataDragonAPI;
+
+DataDragonAPI::initByCdn([...]);
+```
 
 
 # Table of Contents
@@ -39,11 +76,12 @@ Here are some handy features:
 
 - **Rate limit caching** and limit exceeding prevention - fully automatic.
 - **Call caching** - this enables the library to re-use already fetched data within short timespan - saving time and API rate limit.
-- **StaticData linking** - library can automatically link Static Data related to your request right into the returned object.
+- **StaticData endpoints** - you can work with StaticData endpoints as if they were never deprecated.
+- **StaticData linking** - library can automatically link StaticData related to your request right into the returned object.
 - **Custom callbacks** - you can set custom function which will be called before or after the request is processed.
 - **Object extensions** - you can implement own methods to the fetched API objects itself and enable yourself to use them later to ease of your work.
-- **Interim mode** support, you are going to be able to use the API the same way whether your key is in `interim mode` or not (meaning you won't need to change anything when you jump to production).
 - **CLI supported**! You can use the library easily even in PHP CLI mode.
+- **Interim mode** support, you are going to be able to use the API the same way whether your key is in `interim mode` or not (meaning you won't need to change anything when you jump to production).
 - **Objects everywhere**! API calls return data in special objects.
 
 Please, refer mainly to the [wiki pages](https://github.com/dolejska-daniel/riot-api/wiki).
@@ -53,10 +91,6 @@ Please, refer mainly to the [wiki pages](https://github.com/dolejska-daniel/riot
 The easiest way to get this library is to use [Composer](https://getcomposer.org/).
 
 While having Composer installed it takes only `composer require dolejska-daniel/riot-api` and `composer install` to get the library ready to roll!
-
-
-# BUGs and TODOs
-_TBA_
 
 
 # League of Legends API
@@ -74,7 +108,7 @@ Please refer to [wiki pages](https://github.com/dolejska-daniel/riot-api/wiki/Le
 | [Match](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Resources-and-endpoints#match-) | ![Match resource implemented version](https://img.shields.io/badge/implemented_version-v4-brightgreen.svg) |
 | Runes | ![Runes resource implemented version](https://img.shields.io/badge/implemented_version-deprecated-red.svg) |
 | [Spectator](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Resources-and-endpoints#spectator-) | ![Spectator resource implemented version](https://img.shields.io/badge/implemented_version-v4-brightgreen.svg) |
-| [Static Data](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Resources-and-endpoints#static-data-) | ![Static Data resource implemented version](https://img.shields.io/badge/implemented_version-_broken-red.svg) |
+| [Static Data](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Resources-and-endpoints#static-data-) | ![Static Data resource implemented version](https://img.shields.io/badge/implemented_version-_working-brightgreen.svg) |
 | Stats | ![Stats endpoint implemented version](https://img.shields.io/badge/implemented_version-deprecated-red.svg) |
 | [Status](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Resources-and-endpoints#status-) | ![Status resource implemented version](https://img.shields.io/badge/implemented_version-v3-brightgreen.svg) |
 | [Summoner](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Resources-and-endpoints#summoner-) | ![Summoner resource implemented version](https://img.shields.io/badge/implemented_version-v4-brightgreen.svg) |
@@ -89,15 +123,15 @@ How to begin?
 //  Include all required files
 require_once __DIR__  . "/vendor/autoload.php";
 
-use RiotAPI\RiotAPI;
-use RiotAPI\Definitions\Region;
+use RiotAPI\LeagueAPI\LeagueAPI;
+use RiotAPI\LeagueAPI\Definitions\Region;
 
 //  Initialize the library
-$api = new RiotAPI([
+$api = new LeagueAPI([
 	//  Your API key, you can get one at https://developer.riotgames.com/
-	RiotAPI::SET_KEY    => 'YOUR_RIOT_API_KEY',
+	LeagueAPI::SET_KEY    => 'YOUR_RIOT_API_KEY',
 	//  Target region (you can change it during lifetime of the library instance)
-	RiotAPI::SET_REGION => Region::EUROPE_EAST,
+	LeagueAPI::SET_REGION => Region::EUROPE_EAST,
 ]);
 
 //  And now you are ready to rock!
@@ -108,7 +142,7 @@ And there is a lot more what you can set when initializing the library - mainly 
 Please see [the wiki pages](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-How-to-begin) for complete list of library's settings.
 
 ## [Usage example](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-How-to-begin#usage-example)
-Working with RiotAPI can not be easier, just watch how to fetch summoner information based on summoner's name:
+Working with LeagueAPI can not be easier, just watch how to fetch summoner information based on summoner's name:
 
 ```php
 //  ...initialization...
@@ -159,9 +193,9 @@ Cache providers are responsible for keeping data of [rate limiting](#rate-limiti
 and [call caching](#call-caching) within instances of the library. This feature
 is automatically enabled, when any of previously mentioned features is used.
 
-When using this feature, you can set `RiotAPI::SET_CACHE_PROVIDER` to any class,
+When using this feature, you can set `LeagueAPI::SET_CACHE_PROVIDER` to any class,
 thought it has to implement `Objects\ICacheProvider` interface.
-By using `RiotAPI::SET_CACHE_PROVIDER_PARAMS` option, you can pass any
+By using `LeagueAPI::SET_CACHE_PROVIDER_PARAMS` option, you can pass any
 variables to the cache provider.
 
 For more, please see [the wiki pages](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Cache-providers).
@@ -169,7 +203,7 @@ For more, please see [the wiki pages](https://github.com/dolejska-daniel/riot-ap
 ## [Rate limiting](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Rate-limiting)
 This clever feature will easily prevent exceeding your per key 
 call limits & method limits. In order to enable this feature, you have to set
-`RiotAPI::SET_CACHE_RATELIMIT` to `true`. Everything is completly automatic,
+`LeagueAPI::SET_CACHE_RATELIMIT` to `true`. Everything is completly automatic,
 so all you need to do is to enable this feature.
 
 For more, please see [the wiki pages](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Rate-limiting).
@@ -177,8 +211,8 @@ For more, please see [the wiki pages](https://github.com/dolejska-daniel/riot-ap
 ## [Call caching](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Call-caching)
 This feature can prevent unnecessary calls to API within short timespan
 by temporarily saving fetched data from API and using them as the result data.
-In order to enable this feature, you have to set `RiotAPI::SET_CACHE_CALLS` to `true`.
-You should also provide `RiotAPI::SET_CACHE_CALLS_LENGTH` option or else default
+In order to enable this feature, you have to set `LeagueAPI::SET_CACHE_CALLS` to `true`.
+You should also provide `LeagueAPI::SET_CACHE_CALLS_LENGTH` option or else default
 time interval of `60 seconds` will be used.
 
 For more, please see [the wiki pages](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Call-caching).
@@ -194,7 +228,7 @@ For more, please see [the wiki pages](https://github.com/dolejska-daniel/riot-ap
 ## [Extensions](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Extensions)
 Using extensions for ApiObjects is useful tool, allowing implementation
 of your own methods into the ApiObjects itself. Extensions are enabled by
-using settings option `RiotAPI::SET_EXTENSIONS` when initializing the library.
+using settings option `LeagueAPI::SET_EXTENSIONS` when initializing the library.
 
 Any extending class must implement `Objects\IApiObjectExtension`. Only class names
 are provided, no instances required. Extension will be initialized (instantiated)
@@ -215,7 +249,7 @@ For more, please see [the wiki pages](https://github.com/dolejska-daniel/riot-ap
 You can easily get API results even in CLI:
 
 ```shell
-root@localhost:~/src/RiotAPI# php7.0 RiotAPICLI.php getChampions --config ~/RiotAPI_Config.json
+root@localhost:~/src/LeagueAPI# php7.0 LeagueAPICLI.php getChampions --config ~/LeagueAPI_Config.json
 ```
 
 For more information about CLI support, please see [the wiki pages](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-CLI-support).
@@ -241,6 +275,7 @@ echo DataDragonAPI::getChampionLoading('Orianna', 7);
 ![Orianna](http://ddragon.leagueoflegends.com/cdn/img/champion/loading/Orianna_0.jpg)
 ![Dark Star Orianna](http://ddragon.leagueoflegends.com/cdn/img/champion/loading/Orianna_7.jpg)
 
+
 ...a bit of nostalgia?
 
 **Source**:
@@ -263,5 +298,37 @@ echo DataDragonAPI::getItemIcon(3138);
 ![Heart of Gold](http://ddragon.leagueoflegends.com/cdn/0.151.2/img/item/3132.png)
 ![Madred's Bloodrazor](http://ddragon.leagueoflegends.com/cdn/0.151.2/img/item/3126.png)
 ![Leviathan](http://ddragon.leagueoflegends.com/cdn/0.151.2/img/item/3138.png)
+
+
+...or to display icon of champion and its spells based on its object from API?
+
+**Source**:
+```php
+// ...
+
+$orianna = $api->getStaticChampion(61, true);
+echo DataDragonAPI::getChampionSplashO($orianna);
+
+foreach($orianna->spells as $spell)
+    echo DataDragonAPI::getChampionSpellIconO($spell);
+```
+
+**Output**:
+```html
+<img alt="Orianna" class="dd-icon dd-icon-champ  " src="https://ddragon.leagueoflegends.com/cdn/8.24.1/img/champion/Orianna.png">
+
+<img src="http://ddragon.leagueoflegends.com/cdn/8.24.1/img/spell/OrianaIzunaCommand.png" class="dd-icon dd-spell" alt="OrianaIzunaCommand">
+<img src="http://ddragon.leagueoflegends.com/cdn/8.24.1/img/spell/OrianaDissonanceCommand.png" class="dd-icon dd-spell" alt="OrianaDissonanceCommand">
+<img src="http://ddragon.leagueoflegends.com/cdn/8.24.1/img/spell/OrianaRedactCommand.png" class="dd-icon dd-spell" alt="OrianaRedactCommand">
+<img src="http://ddragon.leagueoflegends.com/cdn/8.24.1/img/spell/OrianaDetonateCommand.png" class="dd-icon dd-spell" alt="OrianaDetonateCommand">
+```
+
+**Render**:
+
+![Orianna](https://ddragon.leagueoflegends.com/cdn/8.24.1/img/champion/Orianna.png)
+![OrianaIzunaCommand](http://ddragon.leagueoflegends.com/cdn/8.24.1/img/spell/OrianaIzunaCommand.png)
+![OrianaDissonanceCommand](http://ddragon.leagueoflegends.com/cdn/8.24.1/img/spell/OrianaDissonanceCommand.png)
+![OrianaRedactCommand](http://ddragon.leagueoflegends.com/cdn/8.24.1/img/spell/OrianaRedactCommand.png)
+![OrianaDetonateCommand](http://ddragon.leagueoflegends.com/cdn/8.24.1/img/spell/OrianaDetonateCommand.png)
 
 For more, please see [the wiki pages](https://github.com/dolejska-daniel/riot-api/wiki/DataDragonAPI:-How-to-begin).

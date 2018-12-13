@@ -7,9 +7,9 @@
 //  Include init file
 require __DIR__ . "/../_init.php";
 
-use RiotAPI\Definitions\Region;
+use RiotAPI\LeagueAPI\Definitions\Region;
 
-//  Make a call to RiotAPI
+//  Make a call to LeagueAPI
 $status = $api->getStatusData(Region::NORTH_AMERICA);
 
 ?>

@@ -15,20 +15,20 @@
 //  Include init file
 require __DIR__ . "/../_init.php";
 
-use RiotAPI\RiotAPI;
+use RiotAPI\LeagueAPI\LeagueAPI;
 
-$custom_api = new RiotAPI([
-	RiotAPI::SET_KEY                => CFG_API_KEY,
-	RiotAPI::SET_TOURNAMENT_KEY     => CFG_TAPI_KEY,
-	RiotAPI::SET_REGION             => CFG_REGION,
-	RiotAPI::SET_VERIFY_SSL         => CFG_VERIFY_SSL,
+$custom_api = new LeagueAPI([
+	LeagueAPI::SET_KEY                => CFG_API_KEY,
+	LeagueAPI::SET_TOURNAMENT_KEY     => CFG_TAPI_KEY,
+	LeagueAPI::SET_REGION             => CFG_REGION,
+	LeagueAPI::SET_VERIFY_SSL         => CFG_VERIFY_SSL,
 
 	//  This enables static data linking
-	RiotAPI::SET_STATICDATA_LINKING => true,
-	RiotAPI::SET_CACHE_CALLS        => true,
+	LeagueAPI::SET_STATICDATA_LINKING => true,
+	LeagueAPI::SET_CACHE_CALLS        => true,
 ]);
 
-//  Make a call to RiotAPI
+//  Make a call to LeagueAPI
 $champs = $custom_api->getChampions();
 
 ?>

@@ -8,7 +8,7 @@ require __DIR__ . "/../_init.php";
 
 $id = "I am TheKronnY";
 
-//  Make a call to RiotAPI
+//  Make a call to LeagueAPI
 try
 {
 	$s = $api->getSummonerByName($id);

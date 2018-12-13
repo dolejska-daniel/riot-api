@@ -9,7 +9,7 @@ require __DIR__ . "/../_init.php";
 
 $id = 61;
 
-//  Make a call to RiotAPI
+//  Make a call to LeagueAPI
 $ch = $api->getChampionById($id);
 
 ?>

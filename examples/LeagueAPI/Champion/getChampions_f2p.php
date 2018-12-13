@@ -7,7 +7,7 @@
 //  Include init file
 require __DIR__ . "/../_init.php";
 
-//  Make a call to RiotAPI
+//  Make a call to LeagueAPI
 $champs = $api->getChampions(true);
 
 ?>

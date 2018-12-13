@@ -9,7 +9,7 @@ require __DIR__ . "/../_init.php";
 
 $summoner = 30904166;
 
-//  Make a call to RiotAPI
+//  Make a call to LeagueAPI
 $score = $api->getChampionMasteryScore($summoner);
 
 ?>

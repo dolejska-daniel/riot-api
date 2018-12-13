@@ -5,8 +5,8 @@ vendor/
 
 # Testing data
 tests/Coverage/
-tests/RiotAPI/Definition/cache-fcp/
+tests/LeagueAPI/Definition/cache-fcp/
 
 # Cache
-src/RiotAPI/cache/
+src/LeagueAPI/cache/
 src/DataDragonAPI/cache/

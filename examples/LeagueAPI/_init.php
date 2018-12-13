@@ -6,8 +6,8 @@
 
 require __DIR__ . "/../../vendor/autoload.php";
 
-use RiotAPI\RiotAPI;
-use RiotAPI\Definitions\Region;
+use RiotAPI\LeagueAPI\LeagueAPI;
+use RiotAPI\LeagueAPI\Definitions\Region;
 
 
 // ==============================d=d==
@@ -34,9 +34,9 @@ const CFG_VERIFY_SSL = false;
 if (CFG_API_KEY == "YOUR_API_KEY")
 	die("Please change API key in the configuration file (_init.php) to your own.");
 
-$api = new RiotAPI([
-	RiotAPI::SET_KEY            => CFG_API_KEY,
-	RiotAPI::SET_TOURNAMENT_KEY => CFG_TAPI_KEY,
-	RiotAPI::SET_REGION         => CFG_REGION,
-	RiotAPI::SET_VERIFY_SSL     => CFG_VERIFY_SSL,
+$api = new LeagueAPI([
+	LeagueAPI::SET_KEY            => CFG_API_KEY,
+	LeagueAPI::SET_TOURNAMENT_KEY => CFG_TAPI_KEY,
+	LeagueAPI::SET_REGION         => CFG_REGION,
+	LeagueAPI::SET_VERIFY_SSL     => CFG_VERIFY_SSL,
 ]);

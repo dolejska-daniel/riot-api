@@ -2,7 +2,7 @@
 
 require __DIR__ . "/../../../vendor/autoload.php";
 
-use DataDragonAPI\DataDragonAPI;
+use RiotAPI\DataDragonAPI\DataDragonAPI;
 
 DataDragonAPI::initByCdn();
 
