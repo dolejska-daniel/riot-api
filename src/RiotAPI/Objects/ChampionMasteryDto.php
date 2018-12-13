@@ -24,12 +24,7 @@ namespace RiotAPI\Objects;
  *   Class ChampionMasteryDto
  * This object contains single Champion Mastery information for player and champion combination.
  *
- * Used in:
- *   champion-mastery (v4)
- *     @link https://developer.riotgames.com/api-methods/#champion-mastery-v4/GET_getAllChampionMasteries
- *     @link https://developer.riotgames.com/api-methods/#champion-mastery-v4/GET_getChampionMastery
- *
- * @linkable $championId (getStaticChampions)
+ * @linkable getStaticChampion($championId)
  *
  * @package RiotAPI\Objects
  */

@@ -29,7 +29,7 @@ namespace RiotAPI\Objects;
  *     @link https://developer.riotgames.com/api-methods/#champion-v3/GET_getChampions
  *     @link https://developer.riotgames.com/api-methods/#champion-v3/GET_getChampionsById
  *
- * @linkable $id (getStaticChampions)
+ * @linkable getStaticChampion($id)
  *
  * @package RiotAPI\Objects
  */

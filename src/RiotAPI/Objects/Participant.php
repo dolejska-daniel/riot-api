@@ -27,7 +27,7 @@ namespace RiotAPI\Objects;
  *   spectator (v4)
  *     @link https://developer.riotgames.com/api-methods/#spectator-v4/GET_getFeaturedGames
  *
- * @linkable $championId (getStaticChampions)
+ * @linkable getStaticChampion($championId)
  *
  * @package RiotAPI\Objects
  */

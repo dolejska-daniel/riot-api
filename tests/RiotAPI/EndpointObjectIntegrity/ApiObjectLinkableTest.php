@@ -21,6 +21,7 @@ declare(strict_types=1);
 
 use RiotAPI\Definitions\Region;
 use RiotAPI\Objects\ApiObjectLinkable;
+use RiotAPI\Objects\ChampionMasteryDto;
 use RiotAPI\RiotAPI;
 
 
@@ -28,12 +29,11 @@ class ApiObjectLinkableTest extends RiotAPITestCase
 {
 	public function testInit()
 	{
-		$this->markTestSkipped("Static-data API endpoint has been deprecated.");
-
 		$api = new RiotAPI([
 			RiotAPI::SET_KEY                => getenv('API_KEY'),
 			RiotAPI::SET_REGION             => Region::EUROPE_EAST,
 			RiotAPI::SET_USE_DUMMY_DATA     => true,
+			RiotAPI::SET_DATADRAGON_INIT    => true,
 			RiotAPI::SET_STATICDATA_LINKING => true,
 			RiotAPI::SET_CACHE_CALLS        => true,
 		]);
@@ -48,14 +48,16 @@ class ApiObjectLinkableTest extends RiotAPITestCase
 	 *
 	 * @param RiotAPI $api
 	 */
-	public function testStaticDataLinking( RiotAPI $api )
+	public function testStaticDataLinking_ChampionMastery( RiotAPI $api )
 	{
-		$data = $api->getChampionMastery(30904166, 61);
+		/** @var ChampionMasteryDto $data */
+		$data = $api->getChampionMastery("KnNZNuEVZ5rZry3IyWwYSVuikRe0y3qTWSkr1wxcmV5CLJ8", 61);
 
 		$this->assertSame(61, $data->championId);
-		$this->assertSame($data->championId, $data->id);
+		$this->assertSame("61", $data->key);
+		$this->assertSame($data->key, $data->staticData->key);
 		$this->assertSame("Orianna", $data->name);
-		$this->assertSame("Orianna", $data->staticData->name);
+		$this->assertSame($data->name, $data->staticData->name);
 	}
 
 	public function testInvalidLinkableProperty()

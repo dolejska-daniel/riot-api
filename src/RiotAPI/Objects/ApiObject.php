@@ -48,7 +48,7 @@ abstract class ApiObject implements IApiObject
 			: false;
 		$linkableProp = $selfRef->hasProperty('staticData')
 			? self::getLinkablePropertyData($selfRef->getDocComment())
-			: [ 'name' => false, 'function' => false];
+			: [ 'function' => false, 'parameter' => false ];
 
 		foreach ($data as $property => $value)
 		{
@@ -88,20 +88,42 @@ abstract class ApiObject implements IApiObject
 				if ($api)
 				{
 					//  Should this property be linked and is it allowed?
-					if ($linkableProp['name'] == $property && $api->getSetting(RiotAPI::SET_STATICDATA_LINKING, false))
+					if ($linkableProp['parameter'] == $property && $api->getSetting(RiotAPI::SET_STATICDATA_LINKING, false))
 					{
-						$params = [];
-						//  Request locale
-						$params[] = $api->getSetting(RiotAPI::SET_STATICDATA_LOCALE, null);
-						//  Static data version
-						$params[] = $api->getSetting(RiotAPI::SET_STATICDATA_VERSION, null);
-						//  Data by ID?
-						$params[] = true;
-						//  Included tags
-						$params[] = $api->getSetting(RiotAPI::SET_STATICDATA_TAGS, 'info');
+						$apiRef = new \ReflectionClass(RiotAPI::class);
+						$linkingFunctionRef = $apiRef->getMethod($linkableProp['function']);
 
-						$data = call_user_func_array(array($api, $linkableProp['function']), $params);
-						$this->staticData = $data->data[$value];
+						$params = [ $value ];
+						foreach ($linkingFunctionRef->getParameters() as $parameter)
+						{
+							switch ($parameter->getName())
+							{
+								// Extended data fetch?
+								case "extended":
+									$params[] = true;
+									break;
+
+								// Data by key?
+								case "data_by_key":
+									$params[] = true;
+									break;
+
+								// Request locale
+								case "locale":
+									$params[] = $api->getSetting(RiotAPI::SET_STATICDATA_LOCALE, $parameter->getDefaultValue());
+									break;
+
+								// Static data version
+								case "version":
+									$params[] = $api->getSetting(RiotAPI::SET_STATICDATA_VERSION, $parameter->getDefaultValue());
+									break;
+
+								default:
+									break;
+							}
+						}
+
+						$this->staticData = $linkingFunctionRef->invokeArgs($api, $params);
 					}
 				}
 			}
@@ -150,9 +172,12 @@ abstract class ApiObject implements IApiObject
 	 */
 	public static function getLinkablePropertyData( string $phpDocComment )
 	{
-		preg_match('/@linkable\s\$([\w]+)\s\(([\w\$]+)\)/', $phpDocComment, $matches);
-		if (isset($matches[1]) && isset($matches[2]))
-			return [ 'name' => $matches[1], 'function' => $matches[2]];
+		preg_match('/@linkable\s(?<function>[\w]+)(?:\(\$(?<parameter>[\w]+)+?\))?/', $phpDocComment, $matches);
+
+		// Filter only named capture groups
+		$matches = array_filter($matches, function ($v, $k) { return is_string($k); }, ARRAY_FILTER_USE_BOTH);
+		if (@$matches['function'] && @$matches['parameter'])
+			return $matches;
 
 		return false;
 	}

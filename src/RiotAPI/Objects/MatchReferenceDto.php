@@ -27,7 +27,7 @@ namespace RiotAPI\Objects;
  *   match (v4)
  *     @link https://developer.riotgames.com/api-methods/#match-v4/GET_getMatchlist
  *
- * @linkable $champion (getStaticChampions)
+ * @linkable getStaticChampion($champion)
  *
  * @package RiotAPI\Objects
  */

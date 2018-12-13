@@ -28,7 +28,7 @@ namespace RiotAPI\Objects;
  *     @link https://developer.riotgames.com/api-methods/#match-v4/GET_getMatchIdsByTournamentCode
  *     @link https://developer.riotgames.com/api-methods/#match-v4/GET_getMatchByTournamentCode
  *
- * @linkable $championId (getStaticChampions)
+ * @linkable getStaticChampion($championId)
  *
  * @package RiotAPI\Objects
  */
