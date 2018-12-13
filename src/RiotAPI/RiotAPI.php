@@ -2005,44 +2005,61 @@ class RiotAPI
 
 		    $r = [];
 		    foreach ($result as $item)
-			    $r[] = new StaticData\StaticReforgedRunePathDto($item, $this);
+		    {
+			    $rune = new StaticData\StaticReforgedRunePathDto($item, $this);
+			    $r[$rune->id] = $rune;
+		    }
 
 		    return $r;
 	    }
     }
 
-    /**
-     *   Retrieve reforged rune path.
-     *
-     * @param string|null $locale
-     * @param string|null $version
-     *
-     * @return StaticData\StaticReforgedRuneDto[]
-     */
+	/**
+	 *   Retrieve reforged rune path.
+	 *
+	 * @param string $locale
+	 * @param string|null $version
+	 *
+	 * @return StaticData\StaticReforgedRuneDto[]
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws SettingsException
+	 */
     public function getStaticReforgedRunes( string $locale = 'en_US', string $version = null ): array
     {
-	    trigger_error("Call not yet bridged to DataDragonAPI.", E_USER_ERROR);
+	    $result = false;
+	    try
+	    {
+		    // Fetch StaticData from JSON files
+		    $result = DataDragonAPI::getStaticReforgedRunes($locale, $version);
+	    }
+	    catch (DataDragonException\SettingsException $ex)
+	    {
+		    throw new SettingsException("DataDragon API was not initialized properly! StaticData endpoints cannot be used.");
+	    }
+	    catch (DataDragonException\ArgumentException $ex)
+	    {
+		    throw new RequestException($ex->getMessage(), $ex->getCode());
+	    }
+	    finally
+	    {
+		    if (!$result) throw new ServerException("StaticData failed to be loaded.");
 
-        $r = [];
-        foreach ($this->getResult() as $item)
-            $r[] = new StaticData\StaticReforgedRuneDto($item, $this);
+		    $r = [];
+		    foreach ($result as $path)
+		    {
+		    	foreach ($path['slots'] as $slot)
+			    {
+			    	foreach ($slot['runes'] as $item)
+				    {
+					    $rune = new StaticData\StaticReforgedRuneDto($item, $this);
+					    $r[$rune->id] = $rune;
+				    }
+			    }
+		    }
 
-        return $r;
-    }
-
-    /**
-     *   Retrieve reforged rune path by ID.
-     *
-     * @param int|null    $id
-     * @param string|null $locale
-     * @param string|null $version
-     *
-     * @return StaticData\StaticReforgedRuneDto
-     */
-    public function getStaticReforgedRuneById( int $id = null, string $locale = 'en_US', string $version = null ): StaticData\StaticReforgedRuneDto
-    {
-	    trigger_error("Call not yet bridged to DataDragonAPI.", E_USER_ERROR);
-        return new StaticData\StaticReforgedRuneDto($this->getResult(), $this);
+		    return $r;
+	    }
     }
 
 	/**
