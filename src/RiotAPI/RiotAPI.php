@@ -1432,8 +1432,9 @@ class RiotAPI
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
+	 * @throws GeneralException
 	 *
-	 * @link https://developer.riotgames.com/api-methods/#league-v3/GET_getLeagueById
+	 * @link https://developer.riotgames.com/api-methods/#league-v4/GET_getLeagueById
 	 */
 	public function getLeagueById( string $league_id ): Objects\LeagueListDto
 	{
@@ -1455,8 +1456,9 @@ class RiotAPI
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
+	 * @throws GeneralException
 	 *
-	 * @link https://developer.riotgames.com/api-methods/#league-v3/GET_getAllLeaguePositionsForSummoner
+	 * @link https://developer.riotgames.com/api-methods/#league-v4/GET_getAllLeaguePositionsForSummoner
 	 */
 	public function getLeaguePositionsForSummoner( string $encrypted_summoner_id ): array
 	{
@@ -1482,13 +1484,38 @@ class RiotAPI
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
+	 * @throws GeneralException
 	 *
-	 * @link https://developer.riotgames.com/api-methods/#league-v3/GET_getChallengerLeague
+	 * @link https://developer.riotgames.com/api-methods/#league-v4/GET_getChallengerLeague
 	 */
 	public function getLeagueChallenger( string $game_queue_type ): Objects\LeagueListDto
 	{
 		$this->setEndpoint("/lol/league/" . self::RESOURCE_LEAGUE_VERSION . "/challengerleagues/by-queue/{$game_queue_type}")
 			->setResource(self::RESOURCE_LEAGUE, "/challengerleagues/by-queue/%s")
+			->makeCall();
+
+		return new Objects\LeagueListDto($this->getResult(), $this);
+	}
+
+	/**
+	 *   Get grandmaster tier leagues.
+	 *
+	 * @param string $game_queue_type
+	 *
+	 * @return Objects\LeagueListDto
+	 *
+	 * @throws SettingsException
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 * @throws GeneralException
+	 *
+	 * @link https://developer.riotgames.com/api-methods/#league-v4/GET_getMasterLeague
+	 */
+	public function getLeagueGrandmaster( string $game_queue_type ): Objects\LeagueListDto
+	{
+		$this->setEndpoint("/lol/league/" . self::RESOURCE_LEAGUE_VERSION . "/grandmasterleagues/by-queue/{$game_queue_type}")
+			->setResource(self::RESOURCE_LEAGUE, "/grandmasterleagues/by-queue/%s")
 			->makeCall();
 
 		return new Objects\LeagueListDto($this->getResult(), $this);
@@ -1505,8 +1532,9 @@ class RiotAPI
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
+	 * @throws GeneralException
 	 *
-	 * @link https://developer.riotgames.com/api-methods/#league-v3/GET_getMasterLeague
+	 * @link https://developer.riotgames.com/api-methods/#league-v4/GET_getMasterLeague
 	 */
 	public function getLeagueMaster( string $game_queue_type ): Objects\LeagueListDto
 	{
