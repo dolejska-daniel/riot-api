@@ -34,6 +34,7 @@ class LeagueEndpointTest extends RiotAPITestCase
 			RiotAPI::SET_KEY            => getenv('API_KEY'),
 			RiotAPI::SET_REGION         => Region::EUROPE_EAST,
 			RiotAPI::SET_USE_DUMMY_DATA => true,
+			RiotAPI::SET_CACHE_RATELIMIT => true,
 		]);
 
 		$this->assertInstanceOf(RiotAPI::class, $api);

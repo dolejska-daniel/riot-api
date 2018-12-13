@@ -33,6 +33,7 @@ class StaticDataEndpointTest extends RiotAPITestCase
 			RiotAPI::SET_REGION          => Region::EUROPE_EAST,
 			RiotAPI::SET_USE_DUMMY_DATA  => true,
 			RiotAPI::SET_DATADRAGON_INIT => true,
+			RiotAPI::SET_CACHE_RATELIMIT => true,
 		]);
 
 		$this->assertInstanceOf(RiotAPI::class, $api);

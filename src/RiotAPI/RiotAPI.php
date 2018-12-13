@@ -1238,7 +1238,7 @@ class RiotAPI
 	 * ==================================================================d=d=
 	 **/
 	const RESOURCE_CHAMPION = '1237:champion';
-	const RESOURCE_CHAMPION_V3 = 'v3';
+	const RESOURCE_CHAMPION_VERSION = 'v3';
 
 
 	/**
@@ -1254,7 +1254,8 @@ class RiotAPI
 	 */
 	public function getChampionRotations(): Objects\ChampionInfo
 	{
-		$this->setEndpoint("/lol/platform/" . self::RESOURCE_CHAMPION_V3 . "/champion-rotations")
+		$this->setEndpoint("/lol/platform/" . self::RESOURCE_CHAMPION_VERSION . "/champion-rotations")
+			->setResource(self::RESOURCE_CHAMPION, "/champion-rotations")
 			->makeCall();
 
 		return new Objects\ChampionInfo($this->getResult(), $this);
