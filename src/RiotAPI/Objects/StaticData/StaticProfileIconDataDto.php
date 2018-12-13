@@ -26,10 +26,6 @@ use RiotAPI\Objects\ApiObjectIterable;
  *   Class StaticProfileIconDataDto
  * This object contains profile icon data.
  *
- * Used in:
- *   lol-static-data (v3)
- *     @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getProfileIcons
- *
  * @iterable $data
  *
  * @package RiotAPI\Objects\StaticData

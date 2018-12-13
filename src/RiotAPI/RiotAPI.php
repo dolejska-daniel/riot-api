@@ -1911,11 +1911,33 @@ class RiotAPI
 	 * @param string $version
 	 *
 	 * @return StaticData\StaticProfileIconDataDto
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws SettingsException
 	 */
 	public function getStaticProfileIcons( string $locale = 'en_US', string $version = null ): StaticData\StaticProfileIconDataDto
 	{
-		trigger_error("Call not yet bridged to DataDragonAPI.", E_USER_ERROR);
-		return new StaticData\StaticProfileIconDataDto($this->getResult(), $this);
+		$result = false;
+		try
+		{
+			// Fetch StaticData from JSON files
+			$result = DataDragonAPI::getStaticProfileIcons($locale, $version);
+		}
+		catch (DataDragonException\SettingsException $ex)
+		{
+			throw new SettingsException("DataDragon API was not initialized properly! StaticData endpoints cannot be used.");
+		}
+		catch (DataDragonException\ArgumentException $ex)
+		{
+			throw new RequestException($ex->getMessage(), $ex->getCode());
+		}
+		finally
+		{
+			if (!$result) throw new ServerException("StaticData failed to be loaded.");
+
+			// Parse array and create instances
+			return new StaticData\StaticProfileIconDataDto($result, $this);
+		}
 	}
 
     /**
