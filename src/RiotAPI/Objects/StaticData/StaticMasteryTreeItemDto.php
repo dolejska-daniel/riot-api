@@ -26,10 +26,6 @@ use RiotAPI\Objects\ApiObject;
  *   Class StaticMasteryTreeItemDto
  * This object contains mastery tree item data.
  *
- * Used in:
- *   lol-static-data (v3)
- *     @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getMasteryList
- *
  * @package RiotAPI\Objects\StaticData
  */
 class StaticMasteryTreeItemDto extends ApiObject

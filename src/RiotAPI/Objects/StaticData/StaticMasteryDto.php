@@ -26,11 +26,6 @@ use RiotAPI\Objects\ApiObject;
  *   Class StaticMasteryDto
  * This object contains mastery data.
  *
- * Used in:
- *   lol-static-data (v3)
- *     @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getMasteryList
- *     @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getMasteryById
- *
  * @package RiotAPI\Objects\StaticData
  */
 class StaticMasteryDto extends ApiObject

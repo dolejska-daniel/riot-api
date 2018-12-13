@@ -1772,10 +1772,23 @@ class RiotAPI
 	 *   Retrieve supported languages data.
 	 *
 	 * @return array
+	 * @throws RequestException
+	 * @throws ServerException
 	 */
 	public function getStaticLanguages(): array
 	{
-		return DataDragonAPI::getStaticLanguages();
+		try
+		{
+			// Fetch StaticData from JSON files
+			$result = DataDragonAPI::getStaticLanguages();
+			if (!$result) throw new ServerException("StaticData failed to be loaded.");
+
+			return $result;
+		}
+		catch (DataDragonException\ArgumentException $ex)
+		{
+			throw new RequestException($ex->getMessage(), $ex->getCode());
+		}
 	}
 
 	/**
@@ -1817,34 +1830,78 @@ class RiotAPI
 	/**
 	 *   Retrieves mastery list.
 	 *
-	 * @param string       $locale
-	 * @param string       $version
-	 * @param string|array $tags
+	 * @param string $locale
+	 * @param string $version
 	 *
 	 * @return StaticData\StaticMasteryListDto
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws SettingsException
 	 */
 	public function getStaticMasteries( string $locale = 'en_US', string $version = null, $tags = null ): StaticData\StaticMasteryListDto
 	{
 		if ($tags) trigger_error("Parameter 'tags' is no longer supported.", E_USER_DEPRECATED);
-		trigger_error("Call not yet bridged to DataDragonAPI.", E_USER_ERROR);
-		return new StaticData\StaticMasteryListDto($this->getResult(), $this);
+
+		$result = false;
+		try
+		{
+			// Fetch StaticData from JSON files
+			$result = DataDragonAPI::getStaticMasteries($locale, $version);
+		}
+		catch (DataDragonException\SettingsException $ex)
+		{
+			throw new SettingsException("DataDragon API was not initialized properly! StaticData endpoints cannot be used.");
+		}
+		catch (DataDragonException\ArgumentException $ex)
+		{
+			throw new RequestException($ex->getMessage(), $ex->getCode());
+		}
+		finally
+		{
+			if (!$result) throw new ServerException("StaticData failed to be loaded.");
+
+			// Parse array and create instances
+			return new StaticData\StaticMasteryListDto($result, $this);
+		}
 	}
 
 	/**
 	 *   Retrieves mastery by its unique ID.
 	 *
-	 * @param int          $mastery_id
-	 * @param string       $locale
-	 * @param string       $version
-	 * @param string|array $tags
+	 * @param int    $mastery_id
+	 * @param string $locale
+	 * @param string $version
 	 *
 	 * @return StaticData\StaticMasteryDto
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws SettingsException
 	 */
 	public function getStaticMastery( int $mastery_id, string $locale = 'en_US', string $version = null, $tags = null ): StaticData\StaticMasteryDto
 	{
 		if ($tags) trigger_error("Parameter 'tags' is no longer supported.", E_USER_DEPRECATED);
-		trigger_error("Call not yet bridged to DataDragonAPI.", E_USER_ERROR);
-		return new StaticData\StaticMasteryDto($this->getResult(), $this);
+
+		$result = false;
+		try
+		{
+			// Fetch StaticData from JSON files
+			$result = DataDragonAPI::getStaticMastery($mastery_id, $locale, $version);
+		}
+		catch (DataDragonException\SettingsException $ex)
+		{
+			throw new SettingsException("DataDragon API was not initialized properly! StaticData endpoints cannot be used.");
+		}
+		catch (DataDragonException\ArgumentException $ex)
+		{
+			throw new RequestException($ex->getMessage(), $ex->getCode());
+		}
+		finally
+		{
+			if (!$result) throw new ServerException("StaticData failed to be loaded.");
+
+			// Parse array and create instances
+			return new StaticData\StaticMasteryDto($result, $this);
+		}
 	}
 
 	/**
