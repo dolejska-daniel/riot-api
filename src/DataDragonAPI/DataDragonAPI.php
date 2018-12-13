@@ -96,6 +96,9 @@ class DataDragonAPI
 		STATIC_MAPS             = 'map',
 		STATIC_RUNESREFORGED    = 'runesReforged';
 
+	const
+		STATIC_SUMMONERSPELLS_BY_KEY = "#by-key";
+
 	/**
 	 *   Contains library settings.
 	 *
@@ -111,6 +114,9 @@ class DataDragonAPI
 		self::STATIC_LANGUAGESTRINGS,
 		self::STATIC_MAPS,
 	];
+
+	/** @var string */
+	const CACHE_DIR = __DIR__ . "/cache";
 
 	/**
 	 *   Contains library settings.
@@ -336,40 +342,35 @@ class DataDragonAPI
 	 * @param string $key
 	 * @param string $locale
 	 * @param null $version
+	 * @param string|null $fragment
 	 *
 	 * @return string
 	 * @throws SettingsException
 	 */
-	public static function getStaticDataFileUrl( string $dataType, string $key = null, $locale = 'en_US', $version = null ): string
+	public static function getStaticDataFileUrl( string $dataType, string $key = null, $locale = 'en_US', $version = null, string $fragment = null ): string
 	{
 		if (is_null($version))
 			self::checkInit();
 
-		return self::getCdnUrl() . ($version ?: self::getSetting(self::SET_VERSION)) . "/data/$locale/$dataType$key.json";
+		return self::getCdnUrl() . ($version ?: self::getSetting(self::SET_VERSION)) . "/data/$locale/$dataType$key.json$fragment";
 	}
 
 	/**
 	 *   Loads static-data for given URL. First from cache, if it doesnt exist,
 	 * try to fetch up-to date from web.
 	 *
-	 * @param string $url
+	 * @param string        $url
+	 * @param callable|null $processing  (string $url, array $data)
 	 *
 	 * @return array
 	 * @throws ArgumentException
 	 */
-	public static function loadStaticData( string $url ): array
+	protected static function loadStaticData( string $url, callable $processing = null ): array
 	{
 		$urlHash = md5($url);
-		$dir = __DIR__ . "/cache";
 
-		//  First try memory
-		if (isset(self::$staticData[$urlHash]))
-			return self::$staticData[$urlHash];
-
-		//  Then try file cache
-		$data = @file_get_contents("$dir/$urlHash");
-		if ($data)
-			return unserialize($data);
+		$data = self::loadCachedStaticData($urlHash);
+		if ($data) return $data;
 
 		//  Lastly try loading from web
 		$data = @file_get_contents($url);
@@ -380,16 +381,42 @@ class DataDragonAPI
 		//  Save to memory
 		self::$staticData[$urlHash] = $data;
 
-		//  Save to file
-		@mkdir($dir);
-		file_put_contents("$dir/$urlHash", serialize($data));
+		self::saveSataicData($urlHash, $data);
+		if ($processing) $processing($url, $data);
 		return $data;
+	}
+
+	/**
+	 * @param string $url
+	 * @return array
+	 */
+	protected static function loadCachedStaticData( string $url ): array
+	{
+		$urlHash = md5($url);
+
+		//  First try memory
+		if (isset(self::$staticData[$urlHash]))
+			return self::$staticData[$urlHash];
+
+		//  Then try file cache
+		$data = @file_get_contents(self::CACHE_DIR . "/$urlHash");
+		if ($data)
+			return unserialize($data);
+
+		return [];
+	}
+
+	protected static function saveSataicData( string $urlHash, array $data )
+	{
+		//  Save to file
+		@mkdir(self::CACHE_DIR);
+		file_put_contents(self::CACHE_DIR . "/$urlHash", serialize($data));
 	}
 
 
 	// ==================================================================d=d=
 	//     Available methods
-	//     @link https://developer.riotgames.com/docs/static-data
+	//     @link https://developer.riotgames.com/static-data.html
 	// ==================================================================d=d=
 
 	// ---------------------------------------------d-d-
@@ -1347,11 +1374,10 @@ class DataDragonAPI
 	public static function getStaticSummonerSpells( string $locale = 'en_US', string $version = null ) : array
 	{
 		$url = self::getStaticDataFileUrl(self::STATIC_SUMMONERSPELLS, null, $locale, $version);
-		return self::loadStaticData($url);
+		return self::loadStaticData($url, [DataDragonAPI::class, "_summonerSpell"]);
 	}
 
 	/**
-	 * @param string      $summonerspell_key
 	 * @param string      $locale
 	 * @param string|null $version
 	 *
@@ -1359,9 +1385,64 @@ class DataDragonAPI
 	 * @throws ArgumentException
 	 * @throws SettingsException
 	 */
-	public static function getStaticSummonerSpell( string $summonerspell_key, string $locale = 'en_US', string $version = null ) : array
+	public static function getStaticSummonerSpellsWithKeys( string $locale = 'en_US', string $version = null ) : array
+	{
+		$url = self::getStaticDataFileUrl(self::STATIC_SUMMONERSPELLS, null, $locale, $version, self::STATIC_SUMMONERSPELLS_BY_KEY);
+		$data = self::loadCachedStaticData($url);
+		if (!$data)
+		{
+			self::getStaticSummonerSpells($locale, $version);
+			$data = self::loadCachedStaticData($url);
+		}
+		return $data;
+	}
+
+	/**
+	 * @param string      $summonerspell_id
+	 * @param string      $locale
+	 * @param string|null $version
+	 *
+	 * @return array
+	 * @throws ArgumentException
+	 * @throws SettingsException
+	 */
+	public static function getStaticSummonerSpell( string $summonerspell_id, string $locale = 'en_US', string $version = null ) : array
 	{
 		$data = self::getStaticSummonerSpells($locale, $version);
+		if (isset($data['data'][$summonerspell_id]) == false)
+			throw new ArgumentException('Summoner spell with given id was not found.');
+
+		return $data['data'][$summonerspell_id];
+	}
+
+	/**
+	 * @param string      $summonerspell_id
+	 * @param string      $locale
+	 * @param string|null $version
+	 *
+	 * @return array
+	 * @throws ArgumentException
+	 * @throws SettingsException
+	 *
+	 * @see getStaticSummonerSpell
+	 */
+	public static function getStaticSummonerSpellById( string $summonerspell_id, string $locale = 'en_US', string $version = null ) : array
+	{
+		return self::getStaticSummonerSpell($summonerspell_id, $locale, $version);
+	}
+
+	/**
+	 * @param int         $summonerspell_key
+	 * @param string      $locale
+	 * @param string|null $version
+	 *
+	 * @return array
+	 * @throws ArgumentException
+	 * @throws SettingsException
+	 */
+	public static function getStaticSummonerSpellByKey( int $summonerspell_key, string $locale = 'en_US', string $version = null ) : array
+	{
+		$data = self::getStaticSummonerSpellsWithKeys($locale, $version);
 		if (isset($data['data'][$summonerspell_key]) == false)
 			throw new ArgumentException('Summoner spell with given key was not found.');
 
@@ -1376,5 +1457,28 @@ class DataDragonAPI
 	{
 		$url = self::getDataDragonUrl() . "/api/versions.json";
 		return self::loadStaticData($url);
+	}
+
+
+	// ---------------------------------------------d-d-
+	//  Static-data processing functions
+	// ---------------------------------------------d-d-
+
+	/**
+	 * @param string $url
+	 * @param array $data
+	 *
+	 * @internal
+	 */
+	protected static function _summonerSpell( string $url, array $data )
+	{
+		$url = $url . self::STATIC_SUMMONERSPELLS_BY_KEY;
+		$data_by_key = $data;
+		$data_by_key['data'] = [];
+
+		array_walk($data['data'], function( $d ) use (&$data_by_key) {
+			$data_by_key['data'][(int)$d['key']] = $d;
+		});
+		self::saveSataicData(md5($url), $data_by_key);
 	}
 }
