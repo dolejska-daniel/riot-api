@@ -1650,34 +1650,86 @@ class RiotAPI
 	/**
 	 *   Retrieves item list.
 	 *
-	 * @param string       $locale
-	 * @param string       $version
-	 * @param string|array $tags
+	 * @param string $locale
+	 * @param string $version
 	 *
 	 * @return StaticData\StaticItemListDto
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws SettingsException
 	 */
 	public function getStaticItems( string $locale = 'en_US', string $version = null, $tags = null ): StaticData\StaticItemListDto
 	{
 		if ($tags) trigger_error("Parameter 'tags' is no longer supported.", E_USER_DEPRECATED);
-		trigger_error("Call not yet bridged to DataDragonAPI.", E_ERROR);
-		return new StaticData\StaticItemListDto($this->getResult(), $this);
+
+		$result = false;
+		try
+		{
+			// Fetch StaticData from JSON files
+			$result = DataDragonAPI::getStaticItems($locale, $version);
+		}
+		catch (DataDragonException\SettingsException $ex)
+		{
+			throw new SettingsException("DataDragon API was not initialized properly! StaticData endpoints cannot be used.");
+		}
+		catch (DataDragonException\ArgumentException $ex)
+		{
+			throw new RequestException($ex->getMessage(), $ex->getCode());
+		}
+		finally
+		{
+			if (!$result) throw new ServerException("StaticData failed to be loaded.");
+
+			// Create missing data
+			array_walk($result['data'], function (&$d, $k) {
+				$d['id'] = $k;
+			});
+
+			// Parse array and create instances
+			return new StaticData\StaticItemListDto($result, $this);
+		}
 	}
 
 	/**
 	 *   Retrieves item by its unique ID.
 	 *
-	 * @param int          $item_id
-	 * @param string       $locale
-	 * @param string       $version
-	 * @param string|array $tags
+	 * @param int $item_id
+	 * @param string $locale
+	 * @param string $version
 	 *
 	 * @return StaticData\StaticItemDto
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws SettingsException
 	 */
 	public function getStaticItem( int $item_id, string $locale = 'en_US', string $version = null, $tags = null ): StaticData\StaticItemDto
 	{
 		if ($tags) trigger_error("Parameter 'tags' is no longer supported.", E_USER_DEPRECATED);
-		trigger_error("Call not yet bridged to DataDragonAPI.", E_ERROR);
-		return new StaticData\StaticItemDto($this->getResult(), $this);
+
+		$result = false;
+		try
+		{
+			// Fetch StaticData from JSON files
+			$result = DataDragonAPI::getStaticItem($item_id, $locale, $version);
+		}
+		catch (DataDragonException\SettingsException $ex)
+		{
+			throw new SettingsException("DataDragon API was not initialized properly! StaticData endpoints cannot be used.");
+		}
+		catch (DataDragonException\ArgumentException $ex)
+		{
+			throw new RequestException($ex->getMessage(), $ex->getCode());
+		}
+		finally
+		{
+			if (!$result) throw new ServerException("StaticData failed to be loaded.");
+
+			// Create missing data
+			$result['id'] = $item_id;
+
+			// Parse array and create instances
+			return new StaticData\StaticItemDto($result, $this);
+		}
 	}
 
 	/**
@@ -1690,7 +1742,7 @@ class RiotAPI
 	 */
 	public function getStaticLanguageStrings( string $locale = 'en_US', string $version = null ): StaticData\StaticLanguageStringsDto
 	{
-		trigger_error("Call not yet bridged to DataDragonAPI.", E_ERROR);
+		trigger_error("Call not yet bridged to DataDragonAPI.", E_USER_ERROR);
 		return new StaticData\StaticLanguageStringsDto($this->getResult(), $this);
 	}
 
@@ -1714,7 +1766,7 @@ class RiotAPI
 	 */
 	public function getStaticMaps( string $locale = 'en_US', string $version = null ): StaticData\StaticMapDataDto
 	{
-		trigger_error("Call not yet bridged to DataDragonAPI.", E_ERROR);
+		trigger_error("Call not yet bridged to DataDragonAPI.", E_USER_ERROR);
 		return new StaticData\StaticMapDataDto($this->getResult(), $this);
 	}
 
@@ -1730,7 +1782,7 @@ class RiotAPI
 	public function getStaticMasteries( string $locale = 'en_US', string $version = null, $tags = null ): StaticData\StaticMasteryListDto
 	{
 		if ($tags) trigger_error("Parameter 'tags' is no longer supported.", E_USER_DEPRECATED);
-		trigger_error("Call not yet bridged to DataDragonAPI.", E_ERROR);
+		trigger_error("Call not yet bridged to DataDragonAPI.", E_USER_ERROR);
 		return new StaticData\StaticMasteryListDto($this->getResult(), $this);
 	}
 
@@ -1747,7 +1799,7 @@ class RiotAPI
 	public function getStaticMastery( int $mastery_id, string $locale = 'en_US', string $version = null, $tags = null ): StaticData\StaticMasteryDto
 	{
 		if ($tags) trigger_error("Parameter 'tags' is no longer supported.", E_USER_DEPRECATED);
-		trigger_error("Call not yet bridged to DataDragonAPI.", E_ERROR);
+		trigger_error("Call not yet bridged to DataDragonAPI.", E_USER_ERROR);
 		return new StaticData\StaticMasteryDto($this->getResult(), $this);
 	}
 
@@ -1761,7 +1813,7 @@ class RiotAPI
 	 */
 	public function getStaticProfileIcons( string $locale = 'en_US', string $version = null ): StaticData\StaticProfileIconDataDto
 	{
-		trigger_error("Call not yet bridged to DataDragonAPI.", E_ERROR);
+		trigger_error("Call not yet bridged to DataDragonAPI.", E_USER_ERROR);
 		return new StaticData\StaticProfileIconDataDto($this->getResult(), $this);
 	}
 
@@ -1772,7 +1824,7 @@ class RiotAPI
      */
     public function getStaticRealm(): StaticData\StaticRealmDto
     {
-	    trigger_error("Call not yet bridged to DataDragonAPI.", E_ERROR);
+	    trigger_error("Call not yet bridged to DataDragonAPI.", E_USER_ERROR);
         return new StaticData\StaticRealmDto($this->getResult(), $this);
     }
 
@@ -1786,7 +1838,7 @@ class RiotAPI
      */
     public function getStaticReforgedRunePaths( string $locale = 'en_US', string $version = null ): array
     {
-	    trigger_error("Call not yet bridged to DataDragonAPI.", E_ERROR);
+	    trigger_error("Call not yet bridged to DataDragonAPI.", E_USER_ERROR);
 
         $r = [];
         foreach ($this->getResult() as $item)
@@ -1806,7 +1858,7 @@ class RiotAPI
      */
     public function getStaticReforgedRunePathById( int $id = null, string $locale = 'en_US', string $version = null ): StaticData\StaticReforgedRunePathDto
     {
-	    trigger_error("Call not yet bridged to DataDragonAPI.", E_ERROR);
+	    trigger_error("Call not yet bridged to DataDragonAPI.", E_USER_ERROR);
         return new StaticData\StaticReforgedRunePathDto($this->getResult(), $this);
     }
 
@@ -1820,7 +1872,7 @@ class RiotAPI
      */
     public function getStaticReforgedRunes( string $locale = 'en_US', string $version = null ): array
     {
-	    trigger_error("Call not yet bridged to DataDragonAPI.", E_ERROR);
+	    trigger_error("Call not yet bridged to DataDragonAPI.", E_USER_ERROR);
 
         $r = [];
         foreach ($this->getResult() as $item)
@@ -1840,7 +1892,7 @@ class RiotAPI
      */
     public function getStaticReforgedRuneById( int $id = null, string $locale = 'en_US', string $version = null ): StaticData\StaticReforgedRuneDto
     {
-	    trigger_error("Call not yet bridged to DataDragonAPI.", E_ERROR);
+	    trigger_error("Call not yet bridged to DataDragonAPI.", E_USER_ERROR);
         return new StaticData\StaticReforgedRuneDto($this->getResult(), $this);
     }
 
@@ -1856,7 +1908,7 @@ class RiotAPI
 	public function getStaticRunes( string $locale = 'en_US', string $version = null, $tags = null ): StaticData\StaticRuneListDto
 	{
 		if ($tags) trigger_error("Parameter 'tags' is no longer supported.", E_USER_DEPRECATED);
-		trigger_error("Call not yet bridged to DataDragonAPI.", E_ERROR);
+		trigger_error("Call not yet bridged to DataDragonAPI.", E_USER_ERROR);
 		return new StaticData\StaticRuneListDto($this->getResult(), $this);
 	}
 
@@ -1873,7 +1925,7 @@ class RiotAPI
 	public function getStaticRune( int $rune_id, string $locale = 'en_US', string $version = null, $tags = null ): StaticData\StaticRuneDto
 	{
 		if ($tags) trigger_error("Parameter 'tags' is no longer supported.", E_USER_DEPRECATED);
-		trigger_error("Call not yet bridged to DataDragonAPI.", E_ERROR);
+		trigger_error("Call not yet bridged to DataDragonAPI.", E_USER_ERROR);
 		return new StaticData\StaticRuneDto($this->getResult(), $this);
 	}
 
@@ -1891,7 +1943,7 @@ class RiotAPI
 	{
 		if ($data_by_id) trigger_error("Parameter 'data_by_id' is not currently implemented.", E_NOTICE);
 		if ($tags) trigger_error("Parameter 'tags' is no longer supported.", E_USER_DEPRECATED);
-		trigger_error("Call not yet bridged to DataDragonAPI.", E_ERROR);
+		trigger_error("Call not yet bridged to DataDragonAPI.", E_USER_ERROR);
 		return new StaticData\StaticSummonerSpellListDto($this->getResult(), $this);
 	}
 
