@@ -26,11 +26,6 @@ use RiotAPI\Objects\ApiObject;
  *   Class StaticRuneStatsDto
  * This object contains stats for runes.
  *
- * Used in:
- *   lol-static-data (v3)
- *     @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getRuneList
- *     @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getRuneById
- *
  * @package RiotAPI\Objects\StaticData
  */
 class StaticRuneStatsDto extends ApiObject

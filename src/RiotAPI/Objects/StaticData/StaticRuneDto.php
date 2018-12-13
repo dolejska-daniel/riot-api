@@ -26,11 +26,6 @@ use RiotAPI\Objects\ApiObject;
  *   Class StaticRuneDto
  * This object contains rune data.
  *
- * Used in:
- *   lol-static-data (v3)
- *     @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getRuneList
- *     @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getRuneById
- *
  * @package RiotAPI\Objects\StaticData
  */
 class StaticRuneDto extends ApiObject
@@ -58,4 +53,10 @@ class StaticRuneDto extends ApiObject
 
 	/** @var string $description */
 	public $description;
+
+	/** @var string $colloq */
+	public $colloq;
+
+	/** @var string $plaintext */
+	public $plaintext;
 }

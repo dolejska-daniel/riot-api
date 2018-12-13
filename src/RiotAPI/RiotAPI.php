@@ -2044,34 +2044,78 @@ class RiotAPI
 	/**
 	 *   Retrieves rune list.
 	 *
-	 * @param string       $locale
-	 * @param string       $version
-	 * @param string|array $tags
+	 * @param string $locale
+	 * @param string $version
 	 *
 	 * @return StaticData\StaticRuneListDto
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws SettingsException
 	 */
 	public function getStaticRunes( string $locale = 'en_US', string $version = null, $tags = null ): StaticData\StaticRuneListDto
 	{
 		if ($tags) trigger_error("Parameter 'tags' is no longer supported.", E_USER_DEPRECATED);
-		trigger_error("Call not yet bridged to DataDragonAPI.", E_USER_ERROR);
-		return new StaticData\StaticRuneListDto($this->getResult(), $this);
+
+		$result = false;
+		try
+		{
+			// Fetch StaticData from JSON files
+			$result = DataDragonAPI::getStaticRunes($locale, $version);
+		}
+		catch (DataDragonException\SettingsException $ex)
+		{
+			throw new SettingsException("DataDragon API was not initialized properly! StaticData endpoints cannot be used.");
+		}
+		catch (DataDragonException\ArgumentException $ex)
+		{
+			throw new RequestException($ex->getMessage(), $ex->getCode());
+		}
+		finally
+		{
+			if (!$result) throw new ServerException("StaticData failed to be loaded.");
+
+			// Parse array and create instances
+			return new StaticData\StaticRuneListDto($result, $this);
+		}
 	}
 
 	/**
 	 *   Retrieves rune by its unique ID.
 	 *
-	 * @param int          $rune_id
-	 * @param string       $locale
-	 * @param string       $version
-	 * @param string|array $tags
+	 * @param int    $rune_id
+	 * @param string $locale
+	 * @param string $version
 	 *
 	 * @return StaticData\StaticRuneDto
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws SettingsException
 	 */
 	public function getStaticRune( int $rune_id, string $locale = 'en_US', string $version = null, $tags = null ): StaticData\StaticRuneDto
 	{
 		if ($tags) trigger_error("Parameter 'tags' is no longer supported.", E_USER_DEPRECATED);
-		trigger_error("Call not yet bridged to DataDragonAPI.", E_USER_ERROR);
-		return new StaticData\StaticRuneDto($this->getResult(), $this);
+
+		$result = false;
+		try
+		{
+			// Fetch StaticData from JSON files
+			$result = DataDragonAPI::getStaticRune($rune_id, $locale, $version);
+		}
+		catch (DataDragonException\SettingsException $ex)
+		{
+			throw new SettingsException("DataDragon API was not initialized properly! StaticData endpoints cannot be used.");
+		}
+		catch (DataDragonException\ArgumentException $ex)
+		{
+			throw new RequestException($ex->getMessage(), $ex->getCode());
+		}
+		finally
+		{
+			if (!$result) throw new ServerException("StaticData failed to be loaded.");
+
+			// Parse array and create instances
+			return new StaticData\StaticRuneDto($result, $this);
+		}
 	}
 
 	/**

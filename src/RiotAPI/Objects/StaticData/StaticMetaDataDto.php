@@ -26,11 +26,6 @@ use RiotAPI\Objects\ApiObject;
  *   Class StaticMetaDataDto
  * This object contains meta data.
  *
- * Used in:
- *   lol-static-data (v3)
- *     @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getRuneList
- *     @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getRuneById
- *
  * @package RiotAPI\Objects\StaticData
  */
 class StaticMetaDataDto extends ApiObject
@@ -41,6 +36,6 @@ class StaticMetaDataDto extends ApiObject
 	/** @var string $type */
 	public $type;
 
-	/** @var bool $isRune */
-	public $isRune;
+	/** @var bool $isrune */
+	public $isrune;
 }

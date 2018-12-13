@@ -26,10 +26,6 @@ use RiotAPI\Objects\ApiObjectIterable;
  *   Class StaticRuneListDto
  * This object contains rune list data.
  *
- * Used in:
- *   lol-static-data (v3)
- *     @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getRuneList
- *
  * @iterable $data
  *
  * @package RiotAPI\Objects\StaticData

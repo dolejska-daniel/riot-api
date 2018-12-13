@@ -1376,9 +1376,9 @@ class DataDragonAPI
 	 */
 	public static function getStaticRune( int $rune_id, string $locale = 'en_US', string $version = null) : array
 	{
-		$data = self::getStaticMasteries($locale, $version);
+		$data = self::getStaticRunes($locale, $version);
 		if (isset($data['data'][$rune_id]) == false)
-			throw new ArgumentException('Mastery with given ID was not found.', 404);
+			throw new ArgumentException('Rune with given ID was not found.', 404);
 
 		return $data['data'][$rune_id];
 	}
