@@ -26,10 +26,6 @@ use RiotAPI\Objects\ApiObjectIterable;
  *   Class StaticChampionListDto
  * This object contains champion list data.
  *
- * Used in:
- *   lol-static-data (v3)
- *     @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getChampionList
- *
  * @iterable $data
  *
  * @package RiotAPI\Objects\StaticData

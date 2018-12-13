@@ -26,11 +26,6 @@ use RiotAPI\Objects\ApiObject;
  *   Class StaticBlockDto
  * This object contains champion recommended block data.
  *
- * Used in:
- *   lol-static-data (v3)
- *     @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getChampionList
- *     @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getChampionById
- *
  * @package RiotAPI\Objects\StaticData
  */
 class StaticBlockDto extends ApiObject

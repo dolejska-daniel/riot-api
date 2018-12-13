@@ -26,13 +26,6 @@ use RiotAPI\Objects\ApiObject;
  *   Class StaticSpellVarsDto
  * This object contains spell vars data.
  *
- * Used in:
- *   lol-static-data (v3)
- *     @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getChampionList
- *     @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getChampionById
- *     @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getSummonerSpellList
- *     @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getSummonerSpellById
- *
  * @package RiotAPI\Objects\StaticData
  */
 class StaticSpellVarsDto extends ApiObject

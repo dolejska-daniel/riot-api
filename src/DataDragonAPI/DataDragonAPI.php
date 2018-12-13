@@ -97,7 +97,8 @@ class DataDragonAPI
 		STATIC_RUNESREFORGED    = 'runesReforged';
 
 	const
-		STATIC_SUMMONERSPELLS_BY_KEY = "#by-key";
+		STATIC_SUMMONERSPELLS_BY_KEY = "#by-key",
+		STATIC_CHAMPION_BY_KEY       = "#by-key";
 
 	/**
 	 *   Contains library settings.
@@ -1170,11 +1171,10 @@ class DataDragonAPI
 	public static function getStaticChampions( string $locale = 'en_US', string $version = null ) : array
 	{
 		$url = self::getStaticDataFileUrl(self::STATIC_CHAMPIONS, null, $locale, $version);
-		return self::loadStaticData($url);
+		return self::loadStaticData($url, [DataDragonAPI::class, "_champion"]);
 	}
 
 	/**
-	 * @param string      $champion_key
 	 * @param string      $locale
 	 * @param string|null $version
 	 *
@@ -1182,10 +1182,71 @@ class DataDragonAPI
 	 * @throws ArgumentException
 	 * @throws SettingsException
 	 */
-	public static function getStaticChampion( string $champion_key, string $locale = 'en_US', string $version = null ) : array
+	public static function getStaticChampionsWithKeys( string $locale = 'en_US', string $version = null ) : array
 	{
-		$url = self::getStaticDataFileUrl(self::STATIC_CHAMPION, $champion_key, $locale, $version);
+		$url = self::getStaticDataFileUrl(self::STATIC_CHAMPIONS, null, $locale, $version, self::STATIC_CHAMPION_BY_KEY);
+		$data = self::loadCachedStaticData($url);
+		if (!$data)
+		{
+			self::getStaticChampions($locale, $version);
+			$data = self::loadCachedStaticData($url);
+		}
+		return $data;
+	}
+
+	/**
+	 * @param string      $champion_id
+	 * @param string      $locale
+	 * @param string|null $version
+	 *
+	 * @return array
+	 * @throws ArgumentException
+	 * @throws SettingsException
+	 */
+	public static function getStaticChampionDetails( string $champion_id, string $locale = 'en_US', string $version = null ) : array
+	{
+		$url = self::getStaticDataFileUrl(self::STATIC_CHAMPION, $champion_id, $locale, $version);
 		return self::loadStaticData($url);
+	}
+
+	/**
+	 * @param string      $champion_id
+	 * @param string      $locale
+	 * @param string|null $version
+	 *
+	 * @return array
+	 * @throws ArgumentException
+	 * @throws SettingsException
+	 *
+	 * @see getStaticChampion
+	 */
+	public static function getStaticChampionById( string $champion_id, string $locale = 'en_US', string $version = null ) : array
+	{
+		$data = self::getStaticChampions($locale, $version);
+		if (isset($data['data'][$champion_id]) == false)
+			throw new ArgumentException('Champion with given id was not found.', 404);
+
+		return $data['data'][$champion_id];
+	}
+
+	/**
+	 * @param int         $champion_key
+	 * @param string      $locale
+	 * @param string|null $version
+	 *
+	 * @return array
+	 * @throws ArgumentException
+	 * @throws SettingsException
+	 *
+	 * @see getStaticChampion
+	 */
+	public static function getStaticChampionByKey( int $champion_key, string $locale = 'en_US', string $version = null ) : array
+	{
+		$data = self::getStaticChampionsWithKeys($locale, $version);
+		if (isset($data['data'][$champion_key]) == false)
+			throw new ArgumentException('Champion with given key was not found.', 404);
+
+		return $data['data'][$champion_key];
 	}
 
 	/**
@@ -1215,7 +1276,7 @@ class DataDragonAPI
 	{
 		$data = self::getStaticItems($locale, $version);
 		if (isset($data['data'][$item_id]) == false)
-			throw new ArgumentException('Item with given ID was not found.');
+			throw new ArgumentException('Item with given ID was not found.', 404);
 
 		return $data['data'][$item_id];
 	}
@@ -1285,7 +1346,7 @@ class DataDragonAPI
 	{
 		$data = self::getStaticMasteries($locale, $version);
 		if (isset($data['data'][$mastery_id]) == false)
-			throw new ArgumentException('Mastery with given ID was not found.');
+			throw new ArgumentException('Mastery with given ID was not found.', 404);
 
 		return $data['data'][$mastery_id];
 	}
@@ -1317,7 +1378,7 @@ class DataDragonAPI
 	{
 		$data = self::getStaticMasteries($locale, $version);
 		if (isset($data['data'][$rune_id]) == false)
-			throw new ArgumentException('Mastery with given ID was not found.');
+			throw new ArgumentException('Mastery with given ID was not found.', 404);
 
 		return $data['data'][$rune_id];
 	}
@@ -1410,7 +1471,7 @@ class DataDragonAPI
 	{
 		$data = self::getStaticSummonerSpells($locale, $version);
 		if (isset($data['data'][$summonerspell_id]) == false)
-			throw new ArgumentException('Summoner spell with given id was not found.');
+			throw new ArgumentException('Summoner spell with given id was not found.', 404);
 
 		return $data['data'][$summonerspell_id];
 	}
@@ -1444,7 +1505,7 @@ class DataDragonAPI
 	{
 		$data = self::getStaticSummonerSpellsWithKeys($locale, $version);
 		if (isset($data['data'][$summonerspell_key]) == false)
-			throw new ArgumentException('Summoner spell with given key was not found.');
+			throw new ArgumentException('Summoner spell with given key was not found.', 404);
 
 		return $data['data'][$summonerspell_key];
 	}
@@ -1473,6 +1534,24 @@ class DataDragonAPI
 	protected static function _summonerSpell( string $url, array $data )
 	{
 		$url = $url . self::STATIC_SUMMONERSPELLS_BY_KEY;
+		$data_by_key = $data;
+		$data_by_key['data'] = [];
+
+		array_walk($data['data'], function( $d ) use (&$data_by_key) {
+			$data_by_key['data'][(int)$d['key']] = $d;
+		});
+		self::saveSataicData(md5($url), $data_by_key);
+	}
+
+	/**
+	 * @param string $url
+	 * @param array $data
+	 *
+	 * @internal
+	 */
+	protected static function _champion( string $url, array $data )
+	{
+		$url = $url . self::STATIC_CHAMPION_BY_KEY;
 		$data_by_key = $data;
 		$data_by_key['data'] = [];
 

@@ -26,13 +26,6 @@ use RiotAPI\Objects\ApiObject;
  *   Class StaticLevelTipDto
  * This object contains champion level tip data.
  *
- * Used in:
- *   lol-static-data (v3)
- *     @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getChampionList
- *     @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getChampionById
- *     @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getSummonerSpellList
- *     @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getSummonerSpellById
- *
  * @package RiotAPI\Objects\StaticData
  */
 class StaticLevelTipDto extends ApiObject

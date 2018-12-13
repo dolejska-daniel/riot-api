@@ -26,11 +26,6 @@ use RiotAPI\Objects\ApiObject;
  *   Class StaticSkinDto
  * This object contains champion skin data.
  *
- * Used in:
- *   lol-static-data (v3)
- *     @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getChampionList
- *     @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getChampionById
- *
  * @package RiotAPI\Objects\StaticData
  */
 class StaticSkinDto extends ApiObject

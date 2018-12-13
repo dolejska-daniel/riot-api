@@ -26,21 +26,6 @@ use RiotAPI\Objects\ApiObject;
  *   Class StaticImageDto
  * This object contains image data.
  *
- * Used in:
- *   lol-static-data (v3)
- *     @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getChampionList
- *     @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getChampionById
- *     @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getItemList
- *     @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getItemById
- *     @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getMapData
- *     @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getMasteryList
- *     @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getMasteryById
- *     @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getProfileIcons
- *     @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getRuneList
- *     @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getRuneById
- *     @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getSummonerSpellList
- *     @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getSummonerSpellById
- *
  * @package RiotAPI\Objects\StaticData
  */
 class StaticImageDto extends ApiObject

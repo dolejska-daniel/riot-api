@@ -26,11 +26,6 @@ use RiotAPI\Objects\ApiObject;
  *   Class StaticChampionSpellDto
  * This object contains champion spell data.
  *
- * Used in:
- *   lol-static-data (v3)
- *     @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getChampionList
- *     @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getChampionById
- *
  * @package RiotAPI\Objects\StaticData
  */
 class StaticChampionSpellDto extends ApiObject
@@ -62,7 +57,7 @@ class StaticChampionSpellDto extends ApiObject
 	/**
 	 *   This field is a List of List of Double.
 	 *
-	 * @var Staticobject[] $effect
+	 * @var int[][] $effect
 	 */
 	public $effect;
 
@@ -82,7 +77,7 @@ class StaticChampionSpellDto extends ApiObject
 	 *   This field is either a List of Integer or the String 'self' for spells 
 	 * that target one's own champion.
 	 *
-	 * @var Staticobject $range
+	 * @var int[] $range
 	 */
 	public $range;
 
@@ -92,17 +87,14 @@ class StaticChampionSpellDto extends ApiObject
 	/** @var int[] $cost */
 	public $cost;
 
-	/** @var string $key */
-	public $key;
+	/** @var string $id */
+	public $id;
 
 	/** @var string $description */
 	public $description;
 
 	/** @var string[] $effectBurn */
 	public $effectBurn;
-
-	/** @var StaticImageDto[] $altimages */
-	public $altimages;
 
 	/** @var string $name */
 	public $name;

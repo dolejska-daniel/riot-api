@@ -1557,40 +1557,94 @@ class RiotAPI
 	/**
 	 *   Retrieves champion list.
 	 *
+	 * @param bool $data_by_key
 	 * @param string $locale
 	 * @param string $version
-	 * @param bool $data_by_id
-	 * @param string|array $tags
 	 *
 	 * @return StaticData\StaticChampionListDto
 	 *
-	 * @throws DataDragonException\ArgumentException
-	 * @throws DataDragonException\SettingsException
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws SettingsException
 	 */
-	public function getStaticChampions( string $locale = 'en_US', string $version = null, bool $data_by_id = null, $tags = null ): StaticData\StaticChampionListDto
+	public function getStaticChampions( bool $data_by_key = null, string $locale = 'en_US', string $version = null, $tags = null ): StaticData\StaticChampionListDto
 	{
-		if ($data_by_id) trigger_error("Parameter 'data_by_id' is not currently implemented.", E_NOTICE);
 		if ($tags) trigger_error("Parameter 'tags' is no longer supported.", E_USER_DEPRECATED);
 
-		$result = DataDragonAPI::getStaticChampions($locale, $version);
-		return new StaticData\StaticChampionListDto($result, $this);
+		$result = false;
+		try
+		{
+			// Fetch StaticData from JSON files
+			if ($data_by_key)
+				$result = DataDragonAPI::getStaticChampionsWithKeys($locale, $version);
+			else
+				$result = DataDragonAPI::getStaticChampions($locale, $version);
+		}
+		catch (DataDragonException\SettingsException $ex)
+		{
+			throw new SettingsException("DataDragon API was not initialized properly! StaticData endpoints cannot be used.");
+		}
+		catch (DataDragonException\ArgumentException $ex)
+		{
+			throw new RequestException($ex->getMessage(), $ex->getCode());
+		}
+		finally
+		{
+			if (!$result) throw new ServerException("StaticData failed to be loaded.");
+
+			// Create missing data
+			$result['keys'] = array_map(function($d) use ($data_by_key) {
+				return $data_by_key
+					? $d['id']
+					: $d['key'];
+			}, $result['data']);
+			$result['keys'] = array_flip($result['keys']);
+
+			// Parse array and create instances
+			return new StaticData\StaticChampionListDto($result, $this);
+		}
 	}
 
 	/**
-	 *   Retrieves a champion by its ID.
+	 *   Retrieves a champion by its numeric key.
 	 *
-	 * @param int          $champion_id
-	 * @param string       $locale
-	 * @param string       $version
-	 * @param string|array $tags
+	 * @param int    $champion_id
+	 * @param bool   $extended
+	 * @param string $locale
+	 * @param string $version
 	 *
 	 * @return StaticData\StaticChampionDto
+	 * @throws RequestException
+	 * @throws SettingsException
+	 * @throws ServerException
 	 */
-	public function getStaticChampion( int $champion_id, string $locale = 'en_US', string $version = null, $tags = null ): StaticData\StaticChampionDto
+	public function getStaticChampion( int $champion_id, bool $extended = false, string $locale = 'en_US', string $version = null, $tags = null ): StaticData\StaticChampionDto
 	{
 		if ($tags) trigger_error("Parameter 'tags' is no longer supported.", E_USER_DEPRECATED);
-		trigger_error("Call not yet bridged to DataDragonAPI.", E_ERROR);
-		return new StaticData\StaticChampionDto($this->getResult(), $this);
+
+		$result = false;
+		try
+		{
+			// Fetch StaticData from JSON files
+			$result = DataDragonAPI::getStaticChampionByKey($champion_id, $locale, $version);
+			if ($extended && $result)
+				$result = @DataDragonAPI::getStaticChampionDetails($result['id'], $locale, $version)['data'][$result['id']];
+		}
+		catch (DataDragonException\SettingsException $ex)
+		{
+			throw new SettingsException("DataDragon API was not initialized properly! StaticData endpoints cannot be used.");
+		}
+		catch (DataDragonException\ArgumentException $ex)
+		{
+			throw new RequestException($ex->getMessage(), $ex->getCode());
+		}
+		finally
+		{
+			if (!$result) throw new ServerException("StaticData failed to be loaded.");
+
+			// Parse array and create instances
+			return new StaticData\StaticChampionDto($result, $this);
+		}
 	}
 
 	/**
