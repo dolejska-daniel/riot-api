@@ -252,7 +252,7 @@ class RiotAPI
 	protected $settings = array(
 		self::SET_API_BASEURL      => '.api.riotgames.com',
 		self::SET_KEY_INCLUDE_TYPE => self::KEY_AS_HEADER,
-		self::SET_VERIFY_SSL       => true,
+		self::SET_VERIFY_SSL       => false,
 		self::SET_USE_DUMMY_DATA   => false,
 		self::SET_SAVE_DUMMY_DATA  => false,
 		self::SET_STATICDATA_TAGS  => [ 'info' ],
@@ -984,7 +984,7 @@ class RiotAPI
 		}
 
 		//  was response already fetched?
-		if (isset($response) == false)
+		if ($response == false)
 		{
 			if ($this->getSetting(self::SET_CACHE_CALLS) && $this->ccc != false && $this->ccc->isCallCached($requestHash))
 			{
@@ -1260,16 +1260,6 @@ class RiotAPI
 		return new Objects\ChampionInfo($this->getResult(), $this);
 	}
 
-	public function getChampions( bool $only_free_to_play = false ): Objects\ChampionListDto
-	{
-		trigger_error("This call has been deprecated.", E_USER_DEPRECATED);
-	}
-
-	public function getChampionById( int $champion_id ): Objects\ChampionDto
-	{
-		trigger_error("This call has been deprecated.", E_USER_DEPRECATED);
-	}
-
 	/**
 	 * ==================================================================d=d=
 	 *     Champion Mastery Endpoint Methods
@@ -1293,8 +1283,9 @@ class RiotAPI
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
+	 * @throws GeneralException
 	 *
-	 * @link https://developer.riotgames.com/api-methods/#champion-mastery-v3/GET_getChampionMastery
+	 * @link https://developer.riotgames.com/api-methods/#champion-mastery-v4/GET_getChampionMastery
 	 */
 	public function getChampionMastery( string $encrypted_summoner_id, int $champion_id ): Objects\ChampionMasteryDto
 	{
@@ -1317,8 +1308,9 @@ class RiotAPI
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
+	 * @throws GeneralException
 	 *
-	 * @link https://developer.riotgames.com/api-methods/#champion-mastery-v3/GET_getAllChampionMasteries
+	 * @link https://developer.riotgames.com/api-methods/#champion-mastery-v4/GET_getAllChampionMasteries
 	 */
 	public function getChampionMasteries( string $encrypted_summoner_id ): array
 	{
@@ -1345,8 +1337,9 @@ class RiotAPI
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
+	 * @throws GeneralException
 	 *
-	 * @link https://developer.riotgames.com/api-methods/#champion-mastery-v3/GET_getChampionMasteryScore
+	 * @link https://developer.riotgames.com/api-methods/#champion-mastery-v4/GET_getChampionMasteryScore
 	 */
 	public function getChampionMasteryScore( string $encrypted_summoner_id ): int
 	{
@@ -1378,8 +1371,9 @@ class RiotAPI
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
+	 * @throws GeneralException
 	 *
-	 * @link https://developer.riotgames.com/api-methods/#spectator-v3/GET_getCurrentGameInfoBySummoner
+	 * @link https://developer.riotgames.com/api-methods/#spectator-v4/GET_getCurrentGameInfoBySummoner
 	 */
 	public function getCurrentGameInfo( string $encrypted_summoner_id ): Objects\CurrentGameInfo
 	{
@@ -1399,8 +1393,9 @@ class RiotAPI
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
+	 * @throws GeneralException
 	 *
-	 * @link https://developer.riotgames.com/api-methods/#spectator-v3/GET_getFeaturedGames
+	 * @link https://developer.riotgames.com/api-methods/#spectator-v4/GET_getFeaturedGames
 	 */
 	public function getFeaturedGames(): Objects\FeaturedGames
 	{

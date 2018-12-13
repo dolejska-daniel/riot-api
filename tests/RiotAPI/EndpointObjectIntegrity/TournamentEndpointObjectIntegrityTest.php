@@ -65,10 +65,19 @@ class TournamentEndpointObjectIntegrityTest extends RiotAPITestCase
 	 */
 	public function testCreateTournamentCodes( RiotAPI $api )
 	{
-		$this->markTestIncomplete("This test has not been updated to match v4 calls yet.");
-
 		$params = new Objects\TournamentCodeParameters([
-			'allowedSummonerIds' => [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ],
+			'allowedSummonerIds' => [
+				"wk07XyBvsx0tT6qVY1qKeH-PqCJgEFwKecEfew",
+				"AOc8l0ucYYH2UPDY_QFSsRMvnkc7xDH3zf9-Bg",
+				"w7j8mTu_r1FFx9Z46l-qW-ryNlQM_3KyI5JTRA",
+				"RvCDqKrSsX3b2j7Q-666QvoTR54tH4c3ZF0e9w",
+				"CW_QDuT7YoVesISw_7lw7g5roBxjjDVkX6RmEQ",
+				"0s4wsmI0ruT6y3YKOZNH1MEqyq64nYfNEeyk_g",
+				"UO4uklosNOReoERwfrXEHwnmCSR4_znfOgk11A",
+				"AdyAWnr4FwFWutSPvsFFRxUWA_PQ3vSvvsi1TA",
+				"kOokFfNudFZ8pM7Tvoo_dm1pXVBps_zSJ37AVg",
+				"oI2eFR83UGC3N5OltKkz3NSP_Th_C8nw_0sGcw"
+			],
 			'mapType'            => 'SUMMONERS_RIFT',
 			'pickType'           => 'ALL_RANDOM',
 			'spectatorType'      => 'ALL',
@@ -77,7 +86,7 @@ class TournamentEndpointObjectIntegrityTest extends RiotAPITestCase
 
 		//  Get library processed results
 		/** @var array $result */
-		$result = $api->createTournamentCodes(465010, 1, $params);
+		$result = $api->createTournamentCodes(470080, 1, $params);
 		//  Get raw result
 		$rawResult = $api->getResult();
 
@@ -115,8 +124,6 @@ class TournamentEndpointObjectIntegrityTest extends RiotAPITestCase
 	 */
 	public function testCreateTournamentProvider( RiotAPI $api )
 	{
-		$this->markTestIncomplete("This test has not been updated to match v4 calls yet.");
-
 		$providerParams = new Objects\ProviderRegistrationParameters([
 			'region' => Region::EUROPE_EAST,
 			'url'    => 'https://github.com/dolejska-daniel/riot-api'
@@ -233,10 +240,19 @@ class TournamentEndpointObjectIntegrityTest extends RiotAPITestCase
 	 */
 	public function testEditTournamentCode( RiotAPI $api )
 	{
-		$this->markTestIncomplete("This test has not been updated to match v4 calls yet.");
-
 		$codeParams = new Objects\TournamentCodeUpdateParameters([
-			'allowedParticipants' => [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ],
+			'allowedSummonerIds' => [
+				"wk07XyBvsx0tT6qVY1qKeH-PqCJgEFwKecEfew",
+				"AOc8l0ucYYH2UPDY_QFSsRMvnkc7xDH3zf9-Bg",
+				"w7j8mTu_r1FFx9Z46l-qW-ryNlQM_3KyI5JTRA",
+				"RvCDqKrSsX3b2j7Q-666QvoTR54tH4c3ZF0e9w",
+				"CW_QDuT7YoVesISw_7lw7g5roBxjjDVkX6RmEQ",
+				"0s4wsmI0ruT6y3YKOZNH1MEqyq64nYfNEeyk_g",
+				"UO4uklosNOReoERwfrXEHwnmCSR4_znfOgk11A",
+				"AdyAWnr4FwFWutSPvsFFRxUWA_PQ3vSvvsi1TA",
+				"kOokFfNudFZ8pM7Tvoo_dm1pXVBps_zSJ37AVg",
+				"oI2eFR83UGC3N5OltKkz3NSP_Th_C8nw_0sGcw"
+			],
 			'mapType'             => 'SUMMONERS_RIFT',
 			'pickType'            => 'ALL_RANDOM',
 			'spectatorType'       => 'ALL',
@@ -245,7 +261,7 @@ class TournamentEndpointObjectIntegrityTest extends RiotAPITestCase
 
 		//  Get library processed results
 		/** @var array $result */
-		$result = $api->editTournamentCode('EUNE045c8-8f1f371e-dbc3-494c-8dd5-c5a3acf89506', $codeParams);
+		$result = $api->editTournamentCode('EUNE045d6-a97bb9e2-a069-4278-bad0-812c75eb2351', $codeParams);
 		//  Get raw result
 		$rawResult = $api->getResult();
 
@@ -281,8 +297,6 @@ class TournamentEndpointObjectIntegrityTest extends RiotAPITestCase
 	 */
 	public function testGetTournamentCodeData( RiotAPI $api )
 	{
-		$this->markTestIncomplete("This test has not been updated to match v4 calls yet.");
-
 		//  Get library processed results
 		/** @var Objects\TournamentCodeDto $result */
 		$result = $api->getTournamentCodeData('EUNE045c8-8f1f371e-dbc3-494c-8dd5-c5a3acf89506');

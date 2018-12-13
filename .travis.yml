@@ -36,7 +36,7 @@ jobs:
 
 # Start tests
 script:
-    - vendor/bin/phpunit -v --bootstrap phpunit.php --configuration phpunit.xml --coverage-text --coverage-clover $TRAVIS_BUILD_DIR/build/logs/clover.xml --colors=never
+    - vendor/bin/phpunit -v --bootstrap phpunit.php --configuration phpunit_LeagueAPI.xml --coverage-text --coverage-clover $TRAVIS_BUILD_DIR/build/logs/clover.xml --colors=never
 
 # Submit coverage results
 after_success:
