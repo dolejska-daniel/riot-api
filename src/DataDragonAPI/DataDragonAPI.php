@@ -991,9 +991,9 @@ class DataDragonAPI
 	 *
 	 * @return string
 	 */
-	public static function getReforgedRuneIconUrlO( StaticReforgedRuneDto $rune ): string
+	protected static function getReforgedRuneIconUrlO( StaticReforgedRuneDto $rune ): string
 	{
-		return self::getSetting(self::SET_ENDPOINT) . "/img/" . $rune->icon;
+		return self::getSetting(self::SET_ENDPOINT) . "img/$rune->icon";
 	}
 
 	/**
@@ -1026,9 +1026,9 @@ class DataDragonAPI
 	 *
 	 * @return string
 	 */
-	public static function getReforgedRunePathIconUrlO( StaticReforgedRunePathDto $runePath ): string
+	protected static function getReforgedRunePathIconUrlO( StaticReforgedRunePathDto $runePath ): string
 	{
-		return self::getSetting(self::SET_ENDPOINT) . "/img/" . $runePath->icon;
+		return self::getSetting(self::SET_ENDPOINT) . "img/$runePath->icon";
 	}
 
 	/**

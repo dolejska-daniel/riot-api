@@ -26,10 +26,6 @@ use RiotAPI\Objects\ApiObject;
  *   Class StaticRealmDto
  * This object contains realm data.
  *
- * Used in:
- *   lol-static-data (v3)
- *     @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getRealm
- *
  * @package RiotAPI\Objects\StaticData
  */
 class StaticRealmDto extends ApiObject

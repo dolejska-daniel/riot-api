@@ -1940,49 +1940,71 @@ class RiotAPI
 		}
 	}
 
-    /**
-     *   Retrieve realm data. (Region versions)
-     *
-     * @return StaticData\StaticRealmDto
-     */
+	/**
+	 *   Retrieve realm data. (Region versions)
+	 *
+	 * @return StaticData\StaticRealmDto
+	 * @throws RequestException
+	 * @throws ServerException
+	 */
     public function getStaticRealm(): StaticData\StaticRealmDto
     {
-	    trigger_error("Call not yet bridged to DataDragonAPI.", E_USER_ERROR);
-        return new StaticData\StaticRealmDto($this->getResult(), $this);
+	    $result = false;
+	    try
+	    {
+		    // Fetch StaticData from JSON files
+		    $result = DataDragonAPI::getStaticRealms($this->getSetting(self::SET_REGION));
+	    }
+	    catch (DataDragonException\ArgumentException $ex)
+	    {
+		    throw new RequestException($ex->getMessage(), $ex->getCode());
+	    }
+	    finally
+	    {
+		    if (!$result) throw new ServerException("StaticData failed to be loaded.");
+
+		    // Parse array and create instances
+		    return new StaticData\StaticRealmDto($result, $this);
+	    }
     }
 
-    /**
-     *   Retrieve reforged rune path.
-     *
-     * @param string|null $locale
-     * @param string|null $version
-     *
-     * @return StaticData\StaticReforgedRunePathDto[]
-     */
+	/**
+	 *   Retrieve reforged rune path.
+	 *
+	 * @param string $locale
+	 * @param string|null $version
+	 *
+	 * @return StaticData\StaticReforgedRunePathDto[]
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws SettingsException
+	 */
     public function getStaticReforgedRunePaths( string $locale = 'en_US', string $version = null ): array
     {
-	    trigger_error("Call not yet bridged to DataDragonAPI.", E_USER_ERROR);
+	    $result = false;
+	    try
+	    {
+		    // Fetch StaticData from JSON files
+		    $result = DataDragonAPI::getStaticReforgedRunes($locale, $version);
+	    }
+	    catch (DataDragonException\SettingsException $ex)
+	    {
+		    throw new SettingsException("DataDragon API was not initialized properly! StaticData endpoints cannot be used.");
+	    }
+	    catch (DataDragonException\ArgumentException $ex)
+	    {
+		    throw new RequestException($ex->getMessage(), $ex->getCode());
+	    }
+	    finally
+	    {
+		    if (!$result) throw new ServerException("StaticData failed to be loaded.");
 
-        $r = [];
-        foreach ($this->getResult() as $item)
-            $r[] = new StaticData\StaticReforgedRunePathDto($item, $this);
+		    $r = [];
+		    foreach ($result as $item)
+			    $r[] = new StaticData\StaticReforgedRunePathDto($item, $this);
 
-        return $r;
-    }
-
-    /**
-     *   Retrieve reforged rune path by ID.
-     *
-     * @param int|null    $id
-     * @param string|null $locale
-     * @param string|null $version
-     *
-     * @return StaticData\StaticReforgedRunePathDto
-     */
-    public function getStaticReforgedRunePathById( int $id = null, string $locale = 'en_US', string $version = null ): StaticData\StaticReforgedRunePathDto
-    {
-	    trigger_error("Call not yet bridged to DataDragonAPI.", E_USER_ERROR);
-        return new StaticData\StaticReforgedRunePathDto($this->getResult(), $this);
+		    return $r;
+	    }
     }
 
     /**

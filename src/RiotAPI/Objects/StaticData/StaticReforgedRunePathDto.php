@@ -26,10 +26,7 @@ use RiotAPI\Objects\ApiObject;
  *   Class StaticReforgedRunePathDto
  * This object contains reforged rune path data.
  *
- * Used in:
- *   lol-static-data (v3)
- *     @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getReforgedRunePaths
- *     @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getReforgedRunePathById
+ * @iterable $slots
  *
  * @package RiotAPI\Objects\StaticData
  */
