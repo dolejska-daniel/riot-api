@@ -19,7 +19,7 @@
 
 namespace RiotAPI\Objects\StaticData;
 
-use RiotAPI\Objects\ApiObject;
+use RiotAPI\Objects\ApiObjectIterable;
 
 
 /**
@@ -30,7 +30,7 @@ use RiotAPI\Objects\ApiObject;
  *
  * @package RiotAPI\Objects\StaticData
  */
-class StaticReforgedRunePathDto extends ApiObject
+class StaticReforgedRunePathDto extends ApiObjectIterable
 {
 	/** @var StaticReforgedRuneSlotDto[] $slots */
 	public $slots;

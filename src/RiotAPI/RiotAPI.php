@@ -1986,12 +1986,12 @@ class RiotAPI
 	 * @param string $locale
 	 * @param string|null $version
 	 *
-	 * @return StaticData\StaticReforgedRunePathDto[]
+	 * @return StaticData\StaticReforgedRunePathList
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws SettingsException
 	 */
-    public function getStaticReforgedRunePaths( string $locale = 'en_US', string $version = null ): array
+    public function getStaticReforgedRunePaths( string $locale = 'en_US', string $version = null ): StaticData\StaticReforgedRunePathList
     {
 	    $result = false;
 	    try
@@ -2004,7 +2004,7 @@ class RiotAPI
 		    $r = [];
 		    foreach ($result as $path)
 		    	$r[$path['id']] = $path;
-		    $result = $r;
+		    $result = [ 'paths' => $r ];
 
 		    $this->result_data = $result;
 	    }
@@ -2018,14 +2018,8 @@ class RiotAPI
 	    }
 	    finally
 	    {
-		    $r = [];
-		    foreach ($result as $item)
-		    {
-			    $i = new StaticData\StaticReforgedRunePathDto($item, $this);
-			    $r[$i->id] = $i;
-		    }
-
-		    return $r;
+		    // Parse array and create instances
+		    return new StaticData\StaticReforgedRunePathList($result, $this);
 	    }
     }
 
@@ -2035,12 +2029,12 @@ class RiotAPI
 	 * @param string $locale
 	 * @param string|null $version
 	 *
-	 * @return StaticData\StaticReforgedRuneDto[]
+	 * @return StaticData\StaticReforgedRuneList
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws SettingsException
 	 */
-    public function getStaticReforgedRunes( string $locale = 'en_US', string $version = null ): array
+    public function getStaticReforgedRunes( string $locale = 'en_US', string $version = null ): StaticData\StaticReforgedRuneList
     {
 	    $result = false;
 	    try
@@ -2061,7 +2055,7 @@ class RiotAPI
 				    }
 			    }
 		    }
-		    $result = $r;
+		    $result = [ 'runes' => $r ];
 
 		    $this->result_data = $result;
 	    }
@@ -2075,14 +2069,8 @@ class RiotAPI
 	    }
 	    finally
 	    {
-		    $r = [];
-		    foreach ($result as $item)
-		    {
-			    $i = new StaticData\StaticReforgedRuneDto($item, $this);
-			    $r[$i->id] = $i;
-		    }
-
-		    return $r;
+		    // Parse array and create instances
+		    return new StaticData\StaticReforgedRuneList($result, $this);
 	    }
     }
 

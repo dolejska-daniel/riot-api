@@ -23,15 +23,15 @@ use RiotAPI\Objects\ApiObjectIterable;
 
 
 /**
- *   Class StaticReforgedRuneSlotDto
- * This object contains reforged rune slot data.
+ *   Class StaticReforgedRunePathList
+ * This object contains collection of reforged rune paths.
  *
- * @iterable $runes
+ * @iterable $paths
  *
  * @package RiotAPI\Objects\StaticData
  */
-class StaticReforgedRuneSlotDto extends ApiObjectIterable
+class StaticReforgedRunePathList extends ApiObjectIterable
 {
-	/** @var StaticReforgedRuneDto[] $runes */
-	public $runes;
+	/** @var StaticReforgedRunePathDto[] $paths */
+	public $paths;
 }

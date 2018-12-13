@@ -252,15 +252,15 @@ class StaticDataEndpointTest extends RiotAPITestCase
 	public function testGetStaticReforgedRunePaths( RiotAPI $api )
 	{
 		//  Get library processed results
-		/** @var StaticData\StaticReforgedRunePathDto[] $result */
+		/** @var StaticData\StaticReforgedRunePathList $result */
 		$result = $api->getStaticReforgedRunePaths();
 
-		$this->assertSameSize($api->getResult(), $result);
+		$this->assertSameSize($api->getResult()['paths'], $result->paths);
 
-		$this->assertArrayHasKey(8200, $result);
-		$this->assertSame(8200, $result[8200]->id);
-		$this->assertSame("Sorcery", $result[8200]->key);
-		$this->assertSame("Sorcery", $result[8200]->name);
+		$this->assertArrayHasKey(8200, $result->paths);
+		$this->assertSame(8200, $result->paths[8200]->id);
+		$this->assertSame("Sorcery", $result->paths[8200]->key);
+		$this->assertSame("Sorcery", $result->paths[8200]->name);
 	}
 
 	/**
@@ -271,12 +271,12 @@ class StaticDataEndpointTest extends RiotAPITestCase
 	public function testGetStaticReforgedRunes( RiotAPI $api )
 	{
 		//  Get library processed results
-		/** @var StaticData\StaticReforgedRuneDto[] $result */
+		/** @var StaticData\StaticReforgedRuneList $result */
 		$result = $api->getStaticReforgedRunes();
 
-		$this->assertSame(8229, $result[8229]->id);
-		$this->assertSame("ArcaneComet", $result[8229]->key);
-		$this->assertSame("Arcane Comet", $result[8229]->name);
+		$this->assertSame(8229, $result->runes[8229]->id);
+		$this->assertSame("ArcaneComet", $result->runes[8229]->key);
+		$this->assertSame("Arcane Comet", $result->runes[8229]->name);
 	}
 
 	/**

@@ -22,10 +22,10 @@ declare(strict_types=1);
 use PHPUnit\Framework\TestCase;
 
 use RiotAPI\Exceptions\GeneralException;
-use RiotAPI\Extensions\ChampionListDtoExtension;
-use RiotAPI\Objects\ChampionDto;
-use RiotAPI\Objects\ChampionListDto;
+use RiotAPI\Extensions\StaticReforgedRunePathListExtension;
 use RiotAPI\Objects\IApiObject;
+use RiotAPI\Objects\StaticData\StaticReforgedRuneDto;
+use RiotAPI\Objects\StaticData\StaticReforgedRunePathList;
 use RiotAPI\RiotAPI;
 use RiotAPI\Definitions\Region;
 
@@ -43,11 +43,12 @@ class ExtensionsTest extends TestCase
 	public function testInit()
 	{
 		$api = new RiotAPI([
-			RiotAPI::SET_KEY            => getenv('API_KEY'),
-			RiotAPI::SET_REGION         => Region::EUROPE_EAST,
-			RiotAPI::SET_USE_DUMMY_DATA => true,
-			RiotAPI::SET_EXTENSIONS     => [
-				ChampionListDto::class => ChampionListDtoExtension::class,
+			RiotAPI::SET_KEY             => getenv('API_KEY'),
+			RiotAPI::SET_REGION          => Region::EUROPE_EAST,
+			RiotAPI::SET_USE_DUMMY_DATA  => true,
+			RiotAPI::SET_DATADRAGON_INIT => true,
+			RiotAPI::SET_EXTENSIONS      => [
+				StaticReforgedRunePathList::class => StaticReforgedRunePathListExtension::class,
 			],
 		]);
 
@@ -92,7 +93,7 @@ class ExtensionsTest extends TestCase
 			RiotAPI::SET_REGION         => Region::EUROPE_EAST,
 			RiotAPI::SET_USE_DUMMY_DATA => true,
 			RiotAPI::SET_EXTENSIONS     => [
-				ChampionListDto::class => IApiObject::class,
+				StaticReforgedRunePathList::class => IApiObject::class,
 			],
 		]);
 	}
@@ -107,7 +108,7 @@ class ExtensionsTest extends TestCase
 			RiotAPI::SET_REGION         => Region::EUROPE_EAST,
 			RiotAPI::SET_USE_DUMMY_DATA => true,
 			RiotAPI::SET_EXTENSIONS     => [
-				ChampionListDto::class => NoninstantiableExtension::class,
+				StaticReforgedRunePathList::class => NoninstantiableExtension::class,
 			],
 		]);
 	}
@@ -122,7 +123,7 @@ class ExtensionsTest extends TestCase
 			RiotAPI::SET_REGION         => Region::EUROPE_EAST,
 			RiotAPI::SET_USE_DUMMY_DATA => true,
 			RiotAPI::SET_EXTENSIONS     => [
-				ChampionListDto::class => "InvalidClass",
+				StaticReforgedRunePathList::class => "InvalidClass",
 			],
 		]);
 	}
@@ -134,21 +135,11 @@ class ExtensionsTest extends TestCase
 	 */
 	public function testCallExtensionFunction_Valid( RiotAPI $api )
 	{
-		$this->markTestIncomplete("This test has not been re-implemented yet.");
+		/** @var StaticReforgedRunePathListExtension $paths */
+		$paths = $api->getStaticReforgedRunePaths();
 
-		$champions = $api->getChampions();
-
-		$this->assertTrue($champions->isActive(61));
-		$this->assertNull($champions->isActive(1347843));
-
-		$this->assertTrue($champions->isRankedEnabled(61));
-		$this->assertNull($champions->isRankedEnabled(42487643));
-
-		$this->assertFalse($champions->isFreeToPlay(61));
-		$this->assertNull($champions->isFreeToPlay(55645198));
-
-		$this->assertInstanceOf(ChampionDto::class, $champions->getById(61));
-		$this->assertNull($champions->getById(814684753));
+		$this->assertInstanceOf(StaticReforgedRuneDto::class, $paths->getRuneById(8229));
+		$this->assertNull($paths->getRuneById(814684753));
 	}
 
 	/**
@@ -158,13 +149,12 @@ class ExtensionsTest extends TestCase
 	 */
 	public function testCallExtensionFunction_Invalid( RiotAPI $api )
 	{
-		$this->markTestIncomplete("This test has not been re-implemented yet.");
-
 		$this->expectException(GeneralException::class);
 		$this->expectExceptionMessage('failed to be executed');
 
-		$masteryPages = $api->getChampions();
-		$masteryPages->invalidFunction();
+		/** @var StaticReforgedRunePathListExtension $paths */
+		$paths = $api->getStaticReforgedRunePaths();
+		$paths->invalidFunction();
 	}
 
 	/**
@@ -174,12 +164,10 @@ class ExtensionsTest extends TestCase
 	 */
 	public function testCallExtensionFunction_NoExtension( RiotAPI $api )
 	{
-		$this->markTestIncomplete("This test has not been re-implemented yet.");
-
 		$this->expectException(GeneralException::class);
 		$this->expectExceptionMessage('no extension exists for this ApiObject');
 
-		$masteryPages = $api->getChampions();
+		$masteryPages = $api->getChampionRotations();
 		$masteryPages->invalidFunction();
 	}
 }

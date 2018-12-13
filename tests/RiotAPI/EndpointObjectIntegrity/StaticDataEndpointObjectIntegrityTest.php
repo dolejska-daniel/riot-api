@@ -256,12 +256,12 @@ class StaticDataEndpointObjectIntegrityTest extends RiotAPITestCase
 	public function testGetStaticReforgedRunePaths( RiotAPI $api )
 	{
 		//  Get library processed results
-		/** @var StaticData\StaticReforgedRunePathDto[] $result */
+		/** @var StaticData\StaticReforgedRunePathList $result */
 		$result = $api->getStaticReforgedRunePaths();
 		//  Get raw result
 		$rawResult = $api->getResult();
 
-		$this->checkObjectPropertiesAndDataValidityOfObjectList($result, $rawResult, StaticData\StaticReforgedRunePathDto::class);
+		$this->checkObjectPropertiesAndDataValidity($result, $rawResult, StaticData\StaticReforgedRunePathList::class);
 	}
 
 	/**
@@ -272,12 +272,12 @@ class StaticDataEndpointObjectIntegrityTest extends RiotAPITestCase
 	public function testGetStaticReforgedRunes( RiotAPI $api )
 	{
 		//  Get library processed results
-		/** @var StaticData\StaticReforgedRuneDto[] $result */
+		/** @var StaticData\StaticReforgedRuneList $result */
 		$result = $api->getStaticReforgedRunes();
 		//  Get raw result
 		$rawResult = $api->getResult();
 
-		$this->checkObjectPropertiesAndDataValidityOfObjectList($result, $rawResult, StaticData\StaticReforgedRuneDto::class);
+		$this->checkObjectPropertiesAndDataValidity($result, $rawResult, StaticData\StaticReforgedRuneList::class);
 	}
 
 
