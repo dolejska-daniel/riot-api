@@ -26,10 +26,6 @@ use RiotAPI\Objects\ApiObjectIterable;
  *   Class StaticMapDataDto
  * This object contains map data.
  *
- * Used in:
- *   lol-static-data (v3)
- *     @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getMapData
- *
  * @iterable $data
  *
  * @package RiotAPI\Objects\StaticData

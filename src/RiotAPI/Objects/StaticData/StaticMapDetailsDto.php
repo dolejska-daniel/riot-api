@@ -26,22 +26,18 @@ use RiotAPI\Objects\ApiObject;
  *   Class StaticMapDetailsDto
  * This object contains map details data.
  *
- * Used in:
- *   lol-static-data (v3)
- *     @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getMapData
- *
  * @package RiotAPI\Objects\StaticData
  */
 class StaticMapDetailsDto extends ApiObject
 {
-	/** @var string $mapName */
-	public $mapName;
+	/** @var int $MapId */
+	public $MapId;
+
+	/** @var string $MapName */
+	public $MapName;
 
 	/** @var StaticImageDto $image */
 	public $image;
-
-	/** @var int $mapId */
-	public $mapId;
 
 	/** @var int[] $unpurchasableItemList */
 	public $unpurchasableItemList;

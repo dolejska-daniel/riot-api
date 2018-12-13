@@ -1739,11 +1739,33 @@ class RiotAPI
 	 * @param string $version
 	 *
 	 * @return StaticData\StaticLanguageStringsDto
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws SettingsException
 	 */
 	public function getStaticLanguageStrings( string $locale = 'en_US', string $version = null ): StaticData\StaticLanguageStringsDto
 	{
-		trigger_error("Call not yet bridged to DataDragonAPI.", E_USER_ERROR);
-		return new StaticData\StaticLanguageStringsDto($this->getResult(), $this);
+		$result = false;
+		try
+		{
+			// Fetch StaticData from JSON files
+			$result = DataDragonAPI::getStaticLanguageStrings($locale, $version);
+		}
+		catch (DataDragonException\SettingsException $ex)
+		{
+			throw new SettingsException("DataDragon API was not initialized properly! StaticData endpoints cannot be used.");
+		}
+		catch (DataDragonException\ArgumentException $ex)
+		{
+			throw new RequestException($ex->getMessage(), $ex->getCode());
+		}
+		finally
+		{
+			if (!$result) throw new ServerException("StaticData failed to be loaded.");
+
+			// Parse array and create instances
+			return new StaticData\StaticLanguageStringsDto($result, $this);
+		}
 	}
 
 	/**
@@ -1763,11 +1785,33 @@ class RiotAPI
 	 * @param string $version
 	 *
 	 * @return StaticData\StaticMapDataDto
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws SettingsException
 	 */
 	public function getStaticMaps( string $locale = 'en_US', string $version = null ): StaticData\StaticMapDataDto
 	{
-		trigger_error("Call not yet bridged to DataDragonAPI.", E_USER_ERROR);
-		return new StaticData\StaticMapDataDto($this->getResult(), $this);
+		$result = false;
+		try
+		{
+			// Fetch StaticData from JSON files
+			$result = DataDragonAPI::getStaticMaps($locale, $version);
+		}
+		catch (DataDragonException\SettingsException $ex)
+		{
+			throw new SettingsException("DataDragon API was not initialized properly! StaticData endpoints cannot be used.");
+		}
+		catch (DataDragonException\ArgumentException $ex)
+		{
+			throw new RequestException($ex->getMessage(), $ex->getCode());
+		}
+		finally
+		{
+			if (!$result) throw new ServerException("StaticData failed to be loaded.");
+
+			// Parse array and create instances
+			return new StaticData\StaticMapDataDto($result, $this);
+		}
 	}
 
 	/**

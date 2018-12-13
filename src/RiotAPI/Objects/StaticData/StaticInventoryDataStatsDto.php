@@ -26,11 +26,6 @@ use RiotAPI\Objects\ApiObject;
  *   Class StaticInventoryDataStatsDto
  * This object contains stats for inventory (e.g., runes and items).
  *
- * Used in:
- *   lol-static-data (v3)
- *     @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getItemList
- *     @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getItemById
- *
  * @package RiotAPI\Objects\StaticData
  */
 class StaticInventoryDataStatsDto extends ApiObject

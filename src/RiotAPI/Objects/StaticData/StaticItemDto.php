@@ -26,11 +26,6 @@ use RiotAPI\Objects\ApiObject;
  *   Class StaticItemDto
  * This object contains item data.
  *
- * Used in:
- *   lol-static-data (v3)
- *     @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getItemList
- *     @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getItemById
- *
  * @package RiotAPI\Objects\StaticData
  */
 class StaticItemDto extends ApiObject
