@@ -90,9 +90,6 @@ class StaticItemDto extends ApiObject
 	/** @var bool $consumed */
 	public $consumed;
 
-	/** @var string $sanitizedDescription */
-	public $sanitizedDescription;
-
 	/** @var int $depth */
 	public $depth;
 

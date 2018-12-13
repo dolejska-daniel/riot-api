@@ -48,12 +48,6 @@ class StaticChampionSpellDto extends ApiObject
 	/** @var StaticImageDto $image */
 	public $image;
 
-	/** @var string $sanitizedDescription */
-	public $sanitizedDescription;
-
-	/** @var string $sanitizedTooltip */
-	public $sanitizedTooltip;
-
 	/**
 	 *   This field is a List of List of Double.
 	 *

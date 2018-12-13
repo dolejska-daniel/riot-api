@@ -49,9 +49,6 @@ class StaticMasteryDto extends ApiObject
 	/** @var StaticImageDto $image */
 	public $image;
 
-	/** @var string[] $sanitizedDescription */
-	public $sanitizedDescription;
-
 	/** @var int $id */
 	public $id;
 

@@ -1777,17 +1777,21 @@ class RiotAPI
 	 */
 	public function getStaticLanguages(): array
 	{
+		$result = false;
 		try
 		{
 			// Fetch StaticData from JSON files
 			$result = DataDragonAPI::getStaticLanguages();
-			if (!$result) throw new ServerException("StaticData failed to be loaded.");
-
-			return $result;
 		}
 		catch (DataDragonException\ArgumentException $ex)
 		{
 			throw new RequestException($ex->getMessage(), $ex->getCode());
+		}
+		finally
+		{
+			if (!$result) throw new ServerException("StaticData failed to be loaded.");
+
+			return $result;
 		}
 	}
 
@@ -2121,72 +2125,149 @@ class RiotAPI
 	/**
 	 *   Retrieves summoner spell list.
 	 *
-	 * @param string       $locale
-	 * @param string       $version
-	 * @param bool         $data_by_id
-	 * @param string|array $tags
+	 * @param bool   $data_by_key
+	 * @param string $locale
+	 * @param string $version
 	 *
 	 * @return StaticData\StaticSummonerSpellListDto
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws SettingsException
 	 */
-	public function getStaticSummonerSpells( string $locale = 'en_US', string $version = null, bool $data_by_id = false, $tags = null ): StaticData\StaticSummonerSpellListDto
+	public function getStaticSummonerSpells( bool $data_by_key = false, string $locale = 'en_US', string $version = null, $tags = null ): StaticData\StaticSummonerSpellListDto
 	{
-		if ($data_by_id) trigger_error("Parameter 'data_by_id' is not currently implemented.", E_NOTICE);
 		if ($tags) trigger_error("Parameter 'tags' is no longer supported.", E_USER_DEPRECATED);
-		trigger_error("Call not yet bridged to DataDragonAPI.", E_USER_ERROR);
-		return new StaticData\StaticSummonerSpellListDto($this->getResult(), $this);
+
+		$result = false;
+		try
+		{
+			// Fetch StaticData from JSON files
+			if ($data_by_key)
+				$result = DataDragonAPI::getStaticSummonerSpellsWithKeys($locale, $version);
+			else
+				$result = DataDragonAPI::getStaticSummonerSpells($locale, $version);
+		}
+		catch (DataDragonException\SettingsException $ex)
+		{
+			throw new SettingsException("DataDragon API was not initialized properly! StaticData endpoints cannot be used.");
+		}
+		catch (DataDragonException\ArgumentException $ex)
+		{
+			throw new RequestException($ex->getMessage(), $ex->getCode());
+		}
+		finally
+		{
+			if (!$result) throw new ServerException("StaticData failed to be loaded.");
+
+			// Parse array and create instances
+			return new StaticData\StaticSummonerSpellListDto($result, $this);
+		}
 	}
 
 	/**
 	 *   Retrieves summoner spell by its unique numeric key.
 	 *
-	 * @param int $summoner_spell_key
+	 * @param int    $summoner_spell_key
 	 * @param string $locale
 	 * @param string $version
-	 * @param string|array $tags
 	 *
 	 * @return StaticData\StaticSummonerSpellDto
-	 *
-	 * @throws \DataDragonAPI\Exception\ArgumentException
-	 * @throws \DataDragonAPI\Exception\SettingsException
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws SettingsException
 	 */
 	public function getStaticSummonerSpell( int $summoner_spell_key, string $locale = 'en_US', string $version = null, $tags = null ): StaticData\StaticSummonerSpellDto
 	{
 		if ($tags) trigger_error("Parameter 'tags' is no longer supported.", E_USER_DEPRECATED);
 
-		$result = DataDragonAPI::getStaticSummonerSpell($summoner_spell_key, $locale, $version);
-		return new StaticData\StaticSummonerSpellDto($result, $this);
+		$result = false;
+		try
+		{
+			// Fetch StaticData from JSON files
+			$result = DataDragonAPI::getStaticSummonerSpellByKey($summoner_spell_key, $locale, $version);
+		}
+		catch (DataDragonException\SettingsException $ex)
+		{
+			throw new SettingsException("DataDragon API was not initialized properly! StaticData endpoints cannot be used.");
+		}
+		catch (DataDragonException\ArgumentException $ex)
+		{
+			throw new RequestException($ex->getMessage(), $ex->getCode());
+		}
+		finally
+		{
+			if (!$result) throw new ServerException("StaticData failed to be loaded.");
+
+			// Parse array and create instances
+			return new StaticData\StaticSummonerSpellDto($result, $this);
+		}
 	}
 
 	/**
-	 *   Retrieves summoner spell by its unique ID.
+	 *   Retrieves summoner spell by its unique string identifier.
 	 *
 	 * @param string $summoner_spell_id
 	 * @param string $locale
 	 * @param string $version
-	 * @param string|array $tags
 	 *
 	 * @return StaticData\StaticSummonerSpellDto
-	 *
-	 * @throws \DataDragonAPI\Exception\ArgumentException
-	 * @throws \DataDragonAPI\Exception\SettingsException
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws SettingsException
 	 */
 	public function getStaticSummonerSpellById( string $summoner_spell_id, string $locale = 'en_US', string $version = null, $tags = null ): StaticData\StaticSummonerSpellDto
 	{
 		if ($tags) trigger_error("Parameter 'tags' is no longer supported.", E_USER_DEPRECATED);
 
-		$result = DataDragonAPI::getStaticSummonerSpell($summoner_spell_id, $locale, $version);
-		return new StaticData\StaticSummonerSpellDto($result, $this);
+		$result = false;
+		try
+		{
+			// Fetch StaticData from JSON files
+			$result = DataDragonAPI::getStaticSummonerSpellById($summoner_spell_id, $locale, $version);
+		}
+		catch (DataDragonException\SettingsException $ex)
+		{
+			throw new SettingsException("DataDragon API was not initialized properly! StaticData endpoints cannot be used.");
+		}
+		catch (DataDragonException\ArgumentException $ex)
+		{
+			throw new RequestException($ex->getMessage(), $ex->getCode());
+		}
+		finally
+		{
+			if (!$result) throw new ServerException("StaticData failed to be loaded.");
+
+			// Parse array and create instances
+			return new StaticData\StaticSummonerSpellDto($result, $this);
+		}
 	}
 
 	/**
 	 *   Retrieve version data.
 	 *
 	 * @return array
-	 * @throws \DataDragonAPI\Exception\ArgumentException
+	 * @throws RequestException
+	 * @throws ServerException
 	 */
 	public function getStaticVersions(): array
 	{
-		return DataDragonAPI::getStaticVersions();
+		$result = false;
+		try
+		{
+			// Fetch StaticData from JSON files
+			$result = DataDragonAPI::getStaticVersions();
+		}
+		catch (DataDragonException\ArgumentException $ex)
+		{
+			throw new RequestException($ex->getMessage(), $ex->getCode());
+		}
+		finally
+		{
+			if (!$result) throw new ServerException("StaticData failed to be loaded.");
+
+			// Return data
+			return $result;
+		}
 	}
 
 

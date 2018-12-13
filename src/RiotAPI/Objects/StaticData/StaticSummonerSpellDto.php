@@ -26,11 +26,6 @@ use RiotAPI\Objects\ApiObject;
  *   Class StaticSummonerSpellDto
  * This object contains summoner spell data.
  *
- * Used in:
- *   lol-static-data (v3)
- *     @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getSummonerSpellList
- *     @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getSummonerSpellById
- *
  * @package RiotAPI\Objects\StaticData
  */
 class StaticSummonerSpellDto extends ApiObject
@@ -71,7 +66,7 @@ class StaticSummonerSpellDto extends ApiObject
 	/**
 	 *   This field is a List of List of Double.
 	 *
-	 * @var Staticobject[] $effect
+	 * @var int[][] $effect
 	 */
 	public $effect;
 
@@ -93,17 +88,11 @@ class StaticSummonerSpellDto extends ApiObject
 	/** @var string $costType */
 	public $costType;
 
-	/** @var string $sanitizedDescription */
-	public $sanitizedDescription;
-
-	/** @var string $sanitizedTooltip */
-	public $sanitizedTooltip;
-
 	/**
 	 *   This field is either a List of Integer or the String 'self' for spells 
 	 * that target one's own champion.
 	 *
-	 * @var Staticobject $range
+	 * @var int[] $range
 	 */
 	public $range;
 

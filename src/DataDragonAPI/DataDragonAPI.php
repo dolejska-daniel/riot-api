@@ -1224,7 +1224,7 @@ class DataDragonAPI
 	{
 		$data = self::getStaticChampions($locale, $version);
 		if (isset($data['data'][$champion_id]) == false)
-			throw new ArgumentException('Champion with given id was not found.', 404);
+			throw new ArgumentException('Champion with given ID was not found.', 404);
 
 		return $data['data'][$champion_id];
 	}
@@ -1471,7 +1471,7 @@ class DataDragonAPI
 	{
 		$data = self::getStaticSummonerSpells($locale, $version);
 		if (isset($data['data'][$summonerspell_id]) == false)
-			throw new ArgumentException('Summoner spell with given id was not found.', 404);
+			throw new ArgumentException('Summoner spell with given ID was not found.', 404);
 
 		return $data['data'][$summonerspell_id];
 	}
