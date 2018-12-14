@@ -16,13 +16,25 @@ If you've been using this library and just updated - READ THIS.
 **OLD DEPRECATED USAGE**:
 ```php
 use RiotAPI\RiotAPI;
+use RiotAPI\Exceptions\GeneralException;
+use RiotAPI\Objects\ChampionInfo;
 
-$api = new RiotAPI([...]);
+try
+{
+	$api = new RiotAPI([...]);
+}
+catch (GeneralException $e)
+{
+	// ...
+}
 ```
 ```php
-use RiotAPI\DataDragonAPI;
+use DataDragonAPI\DataDragonAPI;
+use DataDragonAPI\Exception\GeneralException;
+use DataDragonAPI\Definition\Map;
 
 DataDragonAPI::initByCdn([...]);
+// ...
 ```
 
 **NEW USAGE**:
@@ -32,38 +44,48 @@ Also all related objects (`Objects`, `Definitions`, ...) has been moved to `Riot
 
 ```php
 use RiotAPI\LeagueAPI\LeagueAPI;
+use RiotAPI\LeagueAPI\Exceptions\GeneralException;
+use RiotAPI\LeagueAPI\Objects\ChampionInfo;
 
-$api = new LeagueAPI([...]);
+try
+{
+	$api = new LeagueAPI([...]);
+}
+catch (GeneralException $e)
+{
+	// ...
+}
 ```
 
 `DataDragonAPI` class has been moved to `RiotAPI\DataDragonAPI` namespace.
-Also all related objects (`Definitions`, ...) has been moved to `RiotAPI\DataDragonAPI` (`RiotAPI\DataDragonAPI\Definitions` respectively...).
+Also all related objects (`Definition` and `Exception`) has been moved to `RiotAPI\DataDragonAPI` (`RiotAPI\DataDragonAPI\Definitions` and `RiotAPI\DataDragonAPI\Exceptions` respectively...).
 
 ```php
 use RiotAPI\DataDragonAPI\DataDragonAPI;
+use RiotAPI\DataDragonAPI\Exceptions\GeneralException;
+use RiotAPI\DataDragonAPI\Definitions\Map;
 
 DataDragonAPI::initByCdn([...]);
+// ...
 ```
 
 
 # Table of Contents
 1. [Introduction](#introduction)
 2. [Downloading](#downloading)
-3. [BUGs and TODOs](#bugs-and-todos)
-	1. [BUGs](#bugs)
-	2. [TODOs](#todos)
-4. [League of Legends API](#league-of-legends-api)
+3. [League of Legends API](#league-of-legends-api)
 	1. [Resource versions](#resource-versions)
 	2. [Initializing the library](#initializing-the-library)
 	3. [Usage example](#usage-example)
 	4. [Cache providers](#cache-providers)
 	5. [Rate limiting](#rate-limiting)
 	6. [Call caching](#call-caching)
-	7. [StaticData linking](#staticdata-linking)
-	8. [Extensions](#extensions)
-	9. [Callback functions](#callback-functions)
-	10. [CLI support](#cli-support)
-5. [DataDragon API](#datadragon-api)
+	7. [StaticData endpoints](#staticdata-endpoints)
+	8. [StaticData linking](#staticdata-linking)
+	9. [Extensions](#extensions)
+	10. [Callback functions](#callback-functions)
+	11. [CLI support](#cli-support)
+4. [DataDragon API](#datadragon-api)
 
 
 # [Introduction](https://github.com/dolejska-daniel/riot-api/wiki/Home#introduction)
@@ -74,13 +96,13 @@ A small DataDragon API is also included.
 
 Here are some handy features:
 
-- **Rate limit caching** and limit exceeding prevention - fully automatic.
-- **Call caching** - this enables the library to re-use already fetched data within short timespan - saving time and API rate limit.
-- **StaticData endpoints** - you can work with StaticData endpoints as if they were never deprecated.
-- **StaticData linking** - library can automatically link StaticData related to your request right into the returned object.
-- **Custom callbacks** - you can set custom function which will be called before or after the request is processed.
-- **Object extensions** - you can implement own methods to the fetched API objects itself and enable yourself to use them later to ease of your work.
-- **CLI supported**! You can use the library easily even in PHP CLI mode.
+- **[Rate limit caching](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Rate-limiting)** and limit exceeding prevention - fully automatic.
+- **[Call caching](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Call-caching)** - this enables the library to re-use already fetched data within short timespan - saving time and API rate limit.
+- **[StaticData endpoints](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-StaticData-endpoints)** - you can work with StaticData endpoints as if they were never deprecated.
+- **[StaticData linking](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-StaticData-linking)** - library can automatically link StaticData related to your request right into the returned object.
+- **[Custom callbacks](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Callback-functions)** - you can set custom function which will be called before or after the request is processed.
+- **[Object extensions](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Extensions)** - you can implement own methods to the fetched API objects itself and enable yourself to use them later to ease of your work.
+- **[CLI supported](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-CLI-support)**! You can use the library easily even in PHP CLI mode.
 - **Interim mode** support, you are going to be able to use the API the same way whether your key is in `interim mode` or not (meaning you won't need to change anything when you jump to production).
 - **Objects everywhere**! API calls return data in special objects.
 
@@ -94,6 +116,7 @@ While having Composer installed it takes only `composer require dolejska-daniel/
 
 
 # League of Legends API
+
 
 ## [Resource versions](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Resources-and-endpoints)
 Below you can find table of implemented API resources and the version in which they are currently implemented.
@@ -115,6 +138,7 @@ Please refer to [wiki pages](https://github.com/dolejska-daniel/riot-api/wiki/Le
 | [Third Party Code](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI%3A-Resources-and-endpoints#third-party-code-) | ![Third Party Code endpoint implemented version](https://img.shields.io/badge/implemented_version-v4-brightgreen.svg) |
 | [Tournament](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Resources-and-endpoints#tournament---tournament-stub-) | ![Tournament resource implemented version](https://img.shields.io/badge/implemented_version-v4-brightgreen.svg) |
 | [Tournament Stub](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Resources-and-endpoints#tournament---tournament-stub-) | ![Tournament Stub resource implemented version](https://img.shields.io/badge/implemented_version-v4-brightgreen.svg) |
+
 
 ## [Initializing the library](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-How-to-begin)
 How to begin?
@@ -141,6 +165,7 @@ $ch = $api->getStaticChampion(61); // Orianna <3
 And there is a lot more what you can set when initializing the library - mainly to enable special features or to amend behaviour of the library.
 Please see [the wiki pages](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-How-to-begin) for complete list of library's settings.
 
+
 ## [Usage example](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-How-to-begin#usage-example)
 Working with LeagueAPI can not be easier, just watch how to fetch summoner information based on summoner's name:
 
@@ -150,18 +175,21 @@ Working with LeagueAPI can not be easier, just watch how to fetch summoner infor
 //  this fetches the summoner data and returns SummonerDto object
 $summoner = $api->getSummonerByName('I am TheKronnY');
 
-echo $summoner->id;             //  30904166
+echo $summoner->id;             //  KnNZNuEVZ5rZry3I...
+echo $summoner->puuid;          //  rNmb6Rq8CQUqOHzM...
 echo $summoner->name;           //  I am TheKronnY
-echo $summoner->summonerLevel;  //  30
+echo $summoner->summonerLevel;  //  69
 
 print_r($summoner->getData());  //  Or array of all the data
 /* Array
  * (
- *    [id] => 30904166
- *    [name] => I am TheKronnY
- *    [profileIconId] => 540
- *    [summonerLevel] => 30
- *    [revisionDate] => 1484850969000
+ *     [id] => KnNZNuEVZ5rZry3IyWwYSVuikRe0y3qTWSkr1wxcmV5CLJ8
+ *     [accountId] => tGSPHbasiCOgRM_MuovMKfXw7oh6pfXmGiPDnXcxJDohrQ
+ *     [puuid] => rNmb6Rq8CQUqOHzMsFihMCUy4Pd201vDaRW9djAoJ9se7myXrDprvng9neCanq7yGNmz7B3Wri4Elw
+ *     [name] => I am TheKronnY
+ *     [profileIconId] => 3180
+ *     [revisionDate] => 1543438015000
+ *     [summonerLevel] => 69
  * )
  */
 ```
@@ -188,68 +216,66 @@ print_r($champion->getData());  //  Or array of all the data
  */
 ```
 
-## [Cache providers](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Cache-providers)
-Cache providers are responsible for keeping data of [rate limiting](#rate-limiting)
-and [call caching](#call-caching) within instances of the library. This feature
-is automatically enabled, when any of previously mentioned features is used.
 
-When using this feature, you can set `LeagueAPI::SET_CACHE_PROVIDER` to any class,
-thought it has to implement `Objects\ICacheProvider` interface.
-By using `LeagueAPI::SET_CACHE_PROVIDER_PARAMS` option, you can pass any
-variables to the cache provider.
+## [Cache providers](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Cache-providers)
+Cache providers are responsible for keeping data of [rate limiting](#rate-limiting) and [call caching](#call-caching) within instances of the library.
+This feature is automatically enabled, when any of previously mentioned features is used.
+
+When using this feature, you can set `LeagueAPI::SET_CACHE_PROVIDER` to any class, thought it has to implement `Objects\ICacheProvider` interface.
+By using `LeagueAPI::SET_CACHE_PROVIDER_PARAMS` option, you can pass any variables to the cache provider.
 
 For more, please see [the wiki pages](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Cache-providers).
 
+
 ## [Rate limiting](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Rate-limiting)
-This clever feature will easily prevent exceeding your per key 
-call limits & method limits. In order to enable this feature, you have to set
-`LeagueAPI::SET_CACHE_RATELIMIT` to `true`. Everything is completly automatic,
-so all you need to do is to enable this feature.
+This clever feature will easily prevent exceeding your per key call limits & method limits.
+In order to enable this feature, you have to set `LeagueAPI::SET_CACHE_RATELIMIT` to `true`.
+Everything is completly automatic, so all you need to do is to enable this feature.
 
 For more, please see [the wiki pages](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Rate-limiting).
 
+
 ## [Call caching](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Call-caching)
-This feature can prevent unnecessary calls to API within short timespan
-by temporarily saving fetched data from API and using them as the result data.
+This feature can prevent unnecessary calls to API within short timespan by temporarily saving fetched data from API and using them as the result data.
 In order to enable this feature, you have to set `LeagueAPI::SET_CACHE_CALLS` to `true`.
-You should also provide `LeagueAPI::SET_CACHE_CALLS_LENGTH` option or else default
-time interval of `60 seconds` will be used.
+You should also provide `LeagueAPI::SET_CACHE_CALLS_LENGTH` option or else default time interval of `60 seconds` will be used.
 
 For more, please see [the wiki pages](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Call-caching).
 
+
+## [StaticData endpoints](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-StaticData-endpoints)
+StaticData endpoints provide you with easy way to transform StaticData into object instances and easily work with them.
+
+For more, please see [the wiki pages](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-StaticData-endpoints).
+
+
 ## [StaticData linking](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-StaticData-linking)
-This feature allows you to automatically link static data related to your request.
-This action __is time consuming__ (works well when caching call data for
-`StaticData resource`), but calls to `StaticData resource` are not counted
-to your rate limit so there is no problem in using it.
+This feature allows you to automatically link StaticData related to your request.
+This action __is time consuming__ (works well when caching call data for `StaticData resource`), but calls to fetch StaticData are not counted to your API key's rate limit.
 
 For more, please see [the wiki pages](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-StaticData-linking).
 
-## [Extensions](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Extensions)
-Using extensions for ApiObjects is useful tool, allowing implementation
-of your own methods into the ApiObjects itself. Extensions are enabled by
-using settings option `LeagueAPI::SET_EXTENSIONS` when initializing the library.
 
-Any extending class must implement `Objects\IApiObjectExtension`. Only class names
-are provided, no instances required. Extension will be initialized (instantiated)
-when object is being initialized.
+## [Extensions](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Extensions)
+Using extensions for ApiObjects is useful tool, allowing implementation of your own methods into the ApiObjects itself.
+Extensions are enabled by using settings option `LeagueAPI::SET_EXTENSIONS` when initializing the library.
 
 For more, please see [the wiki pages](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Extensions).
 
-## [Callback functions](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Callback-functions)
-Custom function callback before and after the call is made.
 
-Before request callbacks have ability to cancel upcomming request - when `false` is returned
-by _any callback_ function, exception `Exceptions\RequestException` is raised and
-request is cancelled.
+## [Callback functions](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Callback-functions)
+Allows you to provide custom functions to be called before and after the actual API request is sent.
+
+Before callbacks have ability to cancel upcomming request - when `false` is returned by _any callback_ function, exception `Exceptions\RequestException` is raised and request is cancelled.
 
 For more, please see [the wiki pages](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Callback-functions).
+
 
 ## [CLI support](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-CLI-support).
 You can easily get API results even in CLI:
 
 ```shell
-root@localhost:~/src/LeagueAPI# php7.0 LeagueAPICLI.php getChampions --config ~/LeagueAPI_Config.json
+root@localhost:~/src/LeagueAPI# php7.0 LeagueAPICLI.php getChampion 61 --config ~/LeagueAPI_Config.json
 ```
 
 For more information about CLI support, please see [the wiki pages](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-CLI-support).
@@ -266,8 +292,8 @@ echo DataDragonAPI::getChampionLoading('Orianna', 7);
 
 **Output**:
 ```html
-<img src="http://ddragon.leagueoflegends.com/cdn/img/champion/loading/Orianna_0.jpg" class="dd-icon dd-loading" alt="Orianna">
-<img src="http://ddragon.leagueoflegends.com/cdn/img/champion/loading/Orianna_7.jpg" class="dd-icon dd-loading" alt="Orianna">
+<img alt="Orianna" class="dd-icon dd-loading" src="http://ddragon.leagueoflegends.com/cdn/img/champion/loading/Orianna_0.jpg">
+<img alt="Orianna" class="dd-icon dd-loading" src="http://ddragon.leagueoflegends.com/cdn/img/champion/loading/Orianna_7.jpg">
 ```
 
 **Render**:
@@ -288,9 +314,9 @@ echo DataDragonAPI::getItemIcon(3138);
 
 **Output**:
 ```html
-<img src="http://ddragon.leagueoflegends.com/cdn/0.151.2/img/item/3132.png" class="dd-icon dd-item" alt="3132">
-<img src="http://ddragon.leagueoflegends.com/cdn/0.151.2/img/item/3126.png" class="dd-icon dd-item" alt="3126">
-<img src="http://ddragon.leagueoflegends.com/cdn/0.151.2/img/item/3138.png" class="dd-icon dd-item" alt="3138">
+<img alt="3132" class="dd-icon dd-item" src="http://ddragon.leagueoflegends.com/cdn/0.151.2/img/item/3132.png">
+<img alt="3126" class="dd-icon dd-item" src="http://ddragon.leagueoflegends.com/cdn/0.151.2/img/item/3126.png">
+<img alt="3138" class="dd-icon dd-item" src="http://ddragon.leagueoflegends.com/cdn/0.151.2/img/item/3138.png">
 ```
 
 **Render**:
@@ -315,12 +341,12 @@ foreach($orianna->spells as $spell)
 
 **Output**:
 ```html
-<img alt="Orianna" class="dd-icon dd-icon-champ  " src="https://ddragon.leagueoflegends.com/cdn/8.24.1/img/champion/Orianna.png">
+<img alt="Orianna" class="dd-icon dd-icon-champ" src="https://ddragon.leagueoflegends.com/cdn/8.24.1/img/champion/Orianna.png">
 
-<img src="http://ddragon.leagueoflegends.com/cdn/8.24.1/img/spell/OrianaIzunaCommand.png" class="dd-icon dd-spell" alt="OrianaIzunaCommand">
-<img src="http://ddragon.leagueoflegends.com/cdn/8.24.1/img/spell/OrianaDissonanceCommand.png" class="dd-icon dd-spell" alt="OrianaDissonanceCommand">
-<img src="http://ddragon.leagueoflegends.com/cdn/8.24.1/img/spell/OrianaRedactCommand.png" class="dd-icon dd-spell" alt="OrianaRedactCommand">
-<img src="http://ddragon.leagueoflegends.com/cdn/8.24.1/img/spell/OrianaDetonateCommand.png" class="dd-icon dd-spell" alt="OrianaDetonateCommand">
+<img alt="OrianaIzunaCommand" class="dd-icon dd-spell" src="http://ddragon.leagueoflegends.com/cdn/8.24.1/img/spell/OrianaIzunaCommand.png">
+<img alt="OrianaDissonanceCommand" class="dd-icon dd-spell" src="http://ddragon.leagueoflegends.com/cdn/8.24.1/img/spell/OrianaDissonanceCommand.png">
+<img alt="OrianaRedactCommand" class="dd-icon dd-spell" src="http://ddragon.leagueoflegends.com/cdn/8.24.1/img/spell/OrianaRedactCommand.png">
+<img alt="OrianaDetonateCommand" class="dd-icon dd-spell" src="http://ddragon.leagueoflegends.com/cdn/8.24.1/img/spell/OrianaDetonateCommand.png">
 ```
 
 **Render**:

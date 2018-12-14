@@ -330,7 +330,6 @@ class LeagueAPI
 	 *
 	 * @throws SettingsException
 	 * @throws GeneralException
-	 * @throws DataDragonExceptions\RequestException
 	 */
 	public function __construct( array $settings, IRegion $custom_regionDataProvider = null, IPlatform $custom_platformDataProvider = null )
 	{
@@ -625,8 +624,7 @@ class LeagueAPI
 
 	/**
 	 *   LeagueAPI destructor.
-	 *
-	 * Saves cache files (if needed) before destroying the object.
+	 *   Saves cache files (if needed) before destroying the object.
 	 */
 	public function __destruct()
 	{
@@ -665,8 +663,6 @@ class LeagueAPI
 
 	/**
 	 *   Saves required cache objects.
-	 *
-	 * @throws GeneralException
 	 *
 	 * @internal
 	 */
@@ -1561,10 +1557,8 @@ class LeagueAPI
 	 * @throws ServerException
 	 * @throws SettingsException
 	 */
-	public function getStaticChampions( bool $data_by_key = null, string $locale = 'en_US', string $version = null, $tags = null ): StaticData\StaticChampionListDto
+	public function getStaticChampions( bool $data_by_key = null, string $locale = 'en_US', string $version = null ): StaticData\StaticChampionListDto
 	{
-		if ($tags) trigger_error("Parameter 'tags' is no longer supported.", E_USER_DEPRECATED);
-
 		$result = false;
 		try
 		{
@@ -1614,10 +1608,8 @@ class LeagueAPI
 	 * @throws SettingsException
 	 * @throws ServerException
 	 */
-	public function getStaticChampion( int $champion_id, bool $extended = false, string $locale = 'en_US', string $version = null, $tags = null ): StaticData\StaticChampionDto
+	public function getStaticChampion( int $champion_id, bool $extended = false, string $locale = 'en_US', string $version = null ): StaticData\StaticChampionDto
 	{
-		if ($tags) trigger_error("Parameter 'tags' is no longer supported.", E_USER_DEPRECATED);
-
 		$result = false;
 		try
 		{
@@ -1655,10 +1647,8 @@ class LeagueAPI
 	 * @throws ServerException
 	 * @throws SettingsException
 	 */
-	public function getStaticItems( string $locale = 'en_US', string $version = null, $tags = null ): StaticData\StaticItemListDto
+	public function getStaticItems( string $locale = 'en_US', string $version = null ): StaticData\StaticItemListDto
 	{
-		if ($tags) trigger_error("Parameter 'tags' is no longer supported.", E_USER_DEPRECATED);
-
 		$result = false;
 		try
 		{
@@ -1700,10 +1690,8 @@ class LeagueAPI
 	 * @throws ServerException
 	 * @throws SettingsException
 	 */
-	public function getStaticItem( int $item_id, string $locale = 'en_US', string $version = null, $tags = null ): StaticData\StaticItemDto
+	public function getStaticItem( int $item_id, string $locale = 'en_US', string $version = null ): StaticData\StaticItemDto
 	{
-		if ($tags) trigger_error("Parameter 'tags' is no longer supported.", E_USER_DEPRECATED);
-
 		$result = false;
 		try
 		{
@@ -1844,10 +1832,8 @@ class LeagueAPI
 	 * @throws ServerException
 	 * @throws SettingsException
 	 */
-	public function getStaticMasteries( string $locale = 'en_US', string $version = null, $tags = null ): StaticData\StaticMasteryListDto
+	public function getStaticMasteries( string $locale = 'en_US', string $version = null ): StaticData\StaticMasteryListDto
 	{
-		if ($tags) trigger_error("Parameter 'tags' is no longer supported.", E_USER_DEPRECATED);
-
 		$result = false;
 		try
 		{
@@ -1884,10 +1870,8 @@ class LeagueAPI
 	 * @throws ServerException
 	 * @throws SettingsException
 	 */
-	public function getStaticMastery( int $mastery_id, string $locale = 'en_US', string $version = null, $tags = null ): StaticData\StaticMasteryDto
+	public function getStaticMastery( int $mastery_id, string $locale = 'en_US', string $version = null ): StaticData\StaticMasteryDto
 	{
-		if ($tags) trigger_error("Parameter 'tags' is no longer supported.", E_USER_DEPRECATED);
-
 		$result = false;
 		try
 		{
@@ -2083,10 +2067,8 @@ class LeagueAPI
 	 * @throws ServerException
 	 * @throws SettingsException
 	 */
-	public function getStaticRunes( string $locale = 'en_US', string $version = null, $tags = null ): StaticData\StaticRuneListDto
+	public function getStaticRunes( string $locale = 'en_US', string $version = null ): StaticData\StaticRuneListDto
 	{
-		if ($tags) trigger_error("Parameter 'tags' is no longer supported.", E_USER_DEPRECATED);
-
 		$result = false;
 		try
 		{
@@ -2123,10 +2105,8 @@ class LeagueAPI
 	 * @throws ServerException
 	 * @throws SettingsException
 	 */
-	public function getStaticRune( int $rune_id, string $locale = 'en_US', string $version = null, $tags = null ): StaticData\StaticRuneDto
+	public function getStaticRune( int $rune_id, string $locale = 'en_US', string $version = null ): StaticData\StaticRuneDto
 	{
-		if ($tags) trigger_error("Parameter 'tags' is no longer supported.", E_USER_DEPRECATED);
-
 		$result = false;
 		try
 		{
@@ -2163,10 +2143,8 @@ class LeagueAPI
 	 * @throws ServerException
 	 * @throws SettingsException
 	 */
-	public function getStaticSummonerSpells( bool $data_by_key = false, string $locale = 'en_US', string $version = null, $tags = null ): StaticData\StaticSummonerSpellListDto
+	public function getStaticSummonerSpells( bool $data_by_key = false, string $locale = 'en_US', string $version = null ): StaticData\StaticSummonerSpellListDto
 	{
-		if ($tags) trigger_error("Parameter 'tags' is no longer supported.", E_USER_DEPRECATED);
-
 		$result = false;
 		try
 		{
@@ -2206,10 +2184,8 @@ class LeagueAPI
 	 * @throws ServerException
 	 * @throws SettingsException
 	 */
-	public function getStaticSummonerSpell( int $summoner_spell_key, string $locale = 'en_US', string $version = null, $tags = null ): StaticData\StaticSummonerSpellDto
+	public function getStaticSummonerSpell( int $summoner_spell_key, string $locale = 'en_US', string $version = null ): StaticData\StaticSummonerSpellDto
 	{
-		if ($tags) trigger_error("Parameter 'tags' is no longer supported.", E_USER_DEPRECATED);
-
 		$result = false;
 		try
 		{
@@ -2246,10 +2222,8 @@ class LeagueAPI
 	 * @throws ServerException
 	 * @throws SettingsException
 	 */
-	public function getStaticSummonerSpellById( string $summoner_spell_id, string $locale = 'en_US', string $version = null, $tags = null ): StaticData\StaticSummonerSpellDto
+	public function getStaticSummonerSpellById( string $summoner_spell_id, string $locale = 'en_US', string $version = null ): StaticData\StaticSummonerSpellDto
 	{
-		if ($tags) trigger_error("Parameter 'tags' is no longer supported.", E_USER_DEPRECATED);
-
 		$result = false;
 		try
 		{
@@ -2324,6 +2298,7 @@ class LeagueAPI
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
+	 * @throws GeneralException
 	 *
 	 * @link https://developer.riotgames.com/api-methods/#lol-status-v3/GET_getShardData
 	 */
@@ -2357,6 +2332,7 @@ class LeagueAPI
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
+	 * @throws GeneralException
 	 *
 	 * @link https://developer.riotgames.com/api-methods/#match-v4/GET_getMatch
 	 */
@@ -2372,7 +2348,7 @@ class LeagueAPI
 	/**
 	 *   Retrieve match by match ID and tournament code.
 	 *
-	 * @param int    $match_id
+	 * @param int $match_id
 	 * @param string $tournament_code
 	 *
 	 * @return Objects\MatchDto
@@ -2381,6 +2357,7 @@ class LeagueAPI
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
+	 * @throws GeneralException
 	 *
 	 * @link https://developer.riotgames.com/api-methods/#match-v4/GET_getMatchByTournamentCode
 	 */
@@ -2404,6 +2381,7 @@ class LeagueAPI
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
+	 * @throws GeneralException
 	 *
 	 * @link https://developer.riotgames.com/api-methods/#match-v4/GET_getMatchIdsByTournamentCode
 	 */
@@ -2434,6 +2412,7 @@ class LeagueAPI
 	 * @throws ServerException
 	 * @throws ServerLimitException
 	 * @throws SettingsException
+	 * @throws GeneralException
 	 *
 	 * @link https://developer.riotgames.com/api-methods/#match-v4/GET_getMatchlist
 	 */
@@ -2464,6 +2443,7 @@ class LeagueAPI
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
+	 * @throws GeneralException
 	 *
 	 * @link https://developer.riotgames.com/api-methods/#match-v4/GET_getMatchTimeline
 	 */
@@ -2497,6 +2477,7 @@ class LeagueAPI
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
+	 * @throws GeneralException
 	 *
 	 * @link https://developer.riotgames.com/api-methods/#summoner-v4/GET_getBySummonerId
 	 */
@@ -2520,6 +2501,7 @@ class LeagueAPI
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
+	 * @throws GeneralException
 	 *
 	 * @link https://developer.riotgames.com/api-methods/#summoner-v4/GET_getBySummonerName
 	 */
@@ -2545,6 +2527,7 @@ class LeagueAPI
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
+	 * @throws GeneralException
 	 *
 	 * @link https://developer.riotgames.com/api-methods/#summoner-v4/GET_getByAccountId
 	 */
@@ -2578,6 +2561,7 @@ class LeagueAPI
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
+	 * @throws GeneralException
 	 *
 	 * @link https://developer.riotgames.com/api-methods/#third-party-code-v4/GET_getThirdPartyCodeBySummonerId
 	 */
@@ -2603,8 +2587,8 @@ class LeagueAPI
 	/**
 	 *   Creates set of tournament codes for given tournament.
 	 *
-	 * @param int                      $tournament_id
-	 * @param int                      $count
+	 * @param int $tournament_id
+	 * @param int $count
 	 * @param TournamentCodeParameters $parameters
 	 *
 	 * @return array
@@ -2614,6 +2598,7 @@ class LeagueAPI
 	 * @throws RequestParameterException
 	 * @throws ServerException
 	 * @throws ServerLimitException
+	 * @throws GeneralException
 	 *
 	 * @link https://developer.riotgames.com/api-methods/#tournament-v4/POST_createTournamentCode
 	 */
@@ -2659,7 +2644,7 @@ class LeagueAPI
 	/**
 	 *   Updates tournament code's settings.
 	 *
-	 * @param string                                 $tournament_code
+	 * @param string $tournament_code
 	 * @param Objects\TournamentCodeUpdateParameters $parameters
 	 *
 	 * @return Objects\LobbyEventDtoWrapper
@@ -2669,6 +2654,7 @@ class LeagueAPI
 	 * @throws RequestParameterException
 	 * @throws ServerException
 	 * @throws ServerLimitException
+	 * @throws GeneralException
 	 *
 	 * @link https://developer.riotgames.com/api-methods/#tournament-v4/PUT_updateCode
 	 */
@@ -2708,6 +2694,7 @@ class LeagueAPI
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
+	 * @throws GeneralException
 	 *
 	 * @link https://developer.riotgames.com/api-methods/#tournament-v4/GET_getTournamentCode
 	 */
@@ -2736,6 +2723,7 @@ class LeagueAPI
 	 * @throws RequestParameterException
 	 * @throws ServerException
 	 * @throws ServerLimitException
+	 * @throws GeneralException
 	 *
 	 * @link https://developer.riotgames.com/api-methods/#tournament-v4/POST_registerProviderData
 	 */
@@ -2775,6 +2763,7 @@ class LeagueAPI
 	 * @throws RequestParameterException
 	 * @throws ServerException
 	 * @throws ServerLimitException
+	 * @throws GeneralException
 	 *
 	 * @link https://developer.riotgames.com/api-methods/#tournament-v4/POST_registerTournament
 	 */
@@ -2811,6 +2800,7 @@ class LeagueAPI
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
+	 * @throws GeneralException
 	 *
 	 * @link https://developer.riotgames.com/api-methods/#tournament-v4/GET_getLobbyEventsByCode
 	 */
@@ -3014,6 +3004,7 @@ class LeagueAPI
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
+	 * @throws GeneralException
 	 *
 	 * @internal
 	 */
