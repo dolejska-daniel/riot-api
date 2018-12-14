@@ -365,7 +365,7 @@ class LibraryTest extends RiotAPITestCase
 	public function testMakeCall_4xx(LeagueAPI $api )
 	{
 		$this->expectException(RequestException::class);
-		$this->expectExceptionMessage("LeagueAPI: Unknown error occured");
+		$this->expectExceptionMessage("LeagueAPI: Unspecified error occured");
 
 		$api->makeTestEndpointCall(498);
 	}
