@@ -20,9 +20,8 @@
 namespace RiotAPI\LeagueAPI;
 
 
-use Guzzle\Http\Client;
-use Guzzle\Http\Exception as GuzzleExceptions;
-
+use GuzzleHttp\Client;
+use GuzzleHttp\Psr7\Response;
 use GuzzleHttp\RequestOptions;
 use GuzzleHttp\Exception as GuzzleHttpExceptions;
 
@@ -395,7 +394,7 @@ class LeagueAPI
 			? $custom_platformDataProvider
 			: new Platform();
 
-		$this->guzzle = new Client($this->getSetting(self::SET_API_BASEURL), []);
+		$this->guzzle = new Client([]);
 
 		//  Some caching will be made, let's set up cache provider
 		if ($this->getSetting(self::SET_CACHE_CALLS) || $this->getSetting(self::SET_CACHE_RATELIMIT))
@@ -954,7 +953,7 @@ class LeagueAPI
 
 		$this->_beforeCall($url, $requestHash);
 
-		if (!$responseBody && $this->getSetting(self::SET_USE_DUMMY_DATA, false))
+		if (!$responseCode && $this->getSetting(self::SET_USE_DUMMY_DATA, false))
 		{
 			// DummyData are supposed to be used
 			try
@@ -971,7 +970,7 @@ class LeagueAPI
 			}
 		}
 
-		if (!$responseBody && $this->getSetting(self::SET_CACHE_CALLS) && $this->ccc && $this->ccc->isCallCached($requestHash))
+		if (!$responseCode && $this->getSetting(self::SET_CACHE_CALLS) && $this->ccc && $this->ccc->isCallCached($requestHash))
 		{
 			// calls are cached and this request is saved in cache
 			$responseBody    = $this->ccc->loadCallData($requestHash);
@@ -979,49 +978,52 @@ class LeagueAPI
 			$responseHeaders = [];
 		}
 
-		if (!$responseBody)
+		if (!$responseCode)
 		{
 			// calls are not cached or this request is not cached
 			// perform call to Riot API
 			try
 			{
 				// Create HTTP request
-				$gRequest = $this->guzzle->createRequest(
+				$gRequest = $this->guzzle->request(
 					$method,
 					$url,
-					$requestHeaders,
-					$this->post_data
+					[
+						RequestOptions::HEADERS => $requestHeaders,
+						RequestOptions::JSON    => $this->post_data,
+					]
 				);
 
 				// Send request
+				/** @var Response $gResponse */
 				$gResponse = $gRequest->send();
 			}
-			catch (GuzzleExceptions\ClientErrorResponseException $ex)
+			catch (GuzzleHttpExceptions\RequestException $ex)
 			{
 				$responseCode = $ex->getCode();
 				if ($response = $ex->getResponse())
 				{
-					$responseHeaders = $response->getHeaders()->toArray();
+					$responseHeaders = $response->getHeaders();
 					$responseBody    = $response->getBody();
 				}
 
-				$this->processCall($responseHeaders, $responseBody, $responseCode);
+				$this->processCallResult($responseHeaders, $responseBody, $responseCode);
 				throw new RequestException("LeagueAPI: Request error occured - {$ex->getMessage()}", $ex->getCode(), $ex);
 			}
-			catch (\RuntimeException $ex)
+			catch (GuzzleHttpExceptions\GuzzleException $e)
 			{
 				throw new RequestException("LeagueAPI: Request could not be sent - {$ex->getMessage()}", $ex->getCode(), $ex);
 			}
 
 			$responseBody    = $gResponse->getBody();
 			$responseCode    = $gResponse->getStatusCode();
-			$responseHeaders = $gResponse->getHeaders()->toArray();
+			$responseHeaders = $gResponse->getHeaders();
 		}
 
 		if ($overrideRegion)
 			$this->unsetTemporaryRegion();
 
-		$this->processCall($responseHeaders, $responseBody, $responseCode);
+		$this->processCallResult($responseHeaders, $responseBody, $responseCode);
 
 		$this->_afterCall($url, $requestHash);
 
@@ -1041,7 +1043,7 @@ class LeagueAPI
 	 * @throws ServerException
 	 * @throws ServerLimitException
 	 */
-	protected function processCall( array $response_headers = null, string $response_body = null, int $response_code = 0 )
+	protected function processCallResult( array $response_headers = null, string $response_body = null, int $response_code = 0 )
 	{
 		$this->result_code     = $response_code;
 		$this->result_headers  = $response_headers;
@@ -1088,7 +1090,7 @@ class LeagueAPI
 	{
 		$data = @file_get_contents($this->_getDummyDataFileName());
 		$data = @unserialize($data);
-		if (!$data || empty($data))
+		if (!$data)
 			throw new RequestException("DummyData file failed to be opened.");
 
 		$headers       = $data['headers'];
@@ -1159,6 +1161,7 @@ class LeagueAPI
 	 */
 	public function _getCallUrl( &$curlHeaders = [] ): string
 	{
+		//  TODO: move logic to Guzzle?
 		$curlHeaders = [];
 		//  Platform against which will call be made
 		$url_platformPart = $this->platforms->getPlatformName($this->getSetting(self::SET_REGION));
