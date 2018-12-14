@@ -20,6 +20,13 @@
 namespace RiotAPI\LeagueAPI;
 
 
+use Guzzle\Http\Client;
+use Guzzle\Http\Exception as GuzzleExceptions;
+
+use GuzzleHttp\RequestOptions;
+use GuzzleHttp\Exception as GuzzleHttpExceptions;
+
+
 use RiotAPI\LeagueAPI\Definitions\CallCacheControl;
 use RiotAPI\LeagueAPI\Definitions\FileCacheProvider;
 use RiotAPI\LeagueAPI\Definitions\ICacheProvider;
@@ -251,7 +258,6 @@ class LeagueAPI
 	protected $settings = array(
 		self::SET_API_BASEURL      => '.api.riotgames.com',
 		self::SET_KEY_INCLUDE_TYPE => self::KEY_AS_HEADER,
-		self::SET_VERIFY_SSL       => false,
 		self::SET_USE_DUMMY_DATA   => false,
 		self::SET_SAVE_DUMMY_DATA  => false,
 	);
@@ -295,6 +301,9 @@ class LeagueAPI
 	/** @var string $resource_endpoint */
 	protected $resource_endpoint;
 
+
+	/** @var Client */
+	protected $guzzle;
 
 	/** @var array $query_data */
 	protected $query_data = [];
@@ -385,6 +394,8 @@ class LeagueAPI
 		$this->platforms = $custom_platformDataProvider
 			? $custom_platformDataProvider
 			: new Platform();
+
+		$this->guzzle = new Client($this->getSetting(self::SET_API_BASEURL), []);
 
 		//  Some caching will be made, let's set up cache provider
 		if ($this->getSetting(self::SET_CACHE_CALLS) || $this->getSetting(self::SET_CACHE_RATELIMIT))
@@ -784,9 +795,13 @@ class LeagueAPI
 	 */
 	public function unsetTemporaryRegion(): self
 	{
-		$region = $this->getSetting(self::SET_ORIG_REGION);
-		$this->setSetting(self::SET_REGION, $region);
-		$this->setSetting(self::SET_PLATFORM, $this->platforms->getPlatformName($region));
+		if ($this->isSettingSet(self::SET_ORIG_REGION))
+		{
+			$region = $this->getSetting(self::SET_ORIG_REGION);
+			$this->setSetting(self::SET_REGION, $region);
+			$this->setSetting(self::SET_PLATFORM, $this->platforms->getPlatformName($region));
+			$this->setSetting(self::SET_ORIG_REGION, null);
+		}
 		return $this;
 	}
 
@@ -896,6 +911,8 @@ class LeagueAPI
 	}
 
 	/**
+	 * @internal
+	 *
 	 *   Makes call to LeagueAPI.
 	 *
 	 * @param string|null $overrideRegion
@@ -906,8 +923,6 @@ class LeagueAPI
 	 * @throws ServerLimitException
 	 * @throws SettingsException
 	 * @throws GeneralException
-	 *
-	 * @internal
 	 */
 	protected function makeCall( string $overrideRegion = null, string $method = self::METHOD_GET )
 	{
@@ -916,152 +931,146 @@ class LeagueAPI
 
 		$this->used_method = $method;
 
-		$url = $this->_getCallUrl($curlHeaders);
+		$requestHeaders = [];
+		$url = $this->_getCallUrl($requestHeaders);
 		$requestHash = md5($url);
 
-		$ch = curl_init();
-		curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-		curl_setopt($ch, CURLOPT_HEADER, true);
-
-		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, $this->getSetting(self::SET_VERIFY_SSL));
-
-		if ($method == self::METHOD_GET)
-		{
-			curl_setopt($ch, CURLOPT_URL, $url);
-		}
+		if ($method == self::METHOD_GET);
 		elseif ($method == self::METHOD_POST)
 		{
-			$curlHeaders[] = 'Content-Type: application/json';
-			$curlHeaders[] = 'Connection: Keep-Alive';
-
-			curl_setopt($ch, CURLOPT_URL, $url);
-			curl_setopt($ch, CURLOPT_POST, true);
-			curl_setopt($ch, CURLOPT_POSTFIELDS,
-				$this->post_data);
+			$requestHeaders['Content-Type'] = 'application/json';
 		}
 		elseif ($method == self::METHOD_PUT)
 		{
-			$curlHeaders[] = 'Content-Type: application/json';
-			$curlHeaders[] = 'Connection: Keep-Alive';
-
-			curl_setopt($ch, CURLOPT_URL, $url);
-			curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
-			curl_setopt($ch, CURLOPT_POSTFIELDS,
-				$this->post_data);
+			$requestHeaders['Content-Type'] = 'application/json';
 		}
+		elseif ($method == self::METHOD_DELETE);
 		else
-			throw new RequestException('Invalid method selected.');
+			throw new RequestException("LeagueAPI: Invalid request method selected.");
 
-		curl_setopt($ch, CURLOPT_HTTPHEADER, $curlHeaders);
+		$responseBody    = null;
+		$responseHeaders = null;
+		$responseCode    = null;
 
 		$this->_beforeCall($url, $requestHash);
 
-		$response       = null;
-		$headers        = null;
-		$response_code  = null;
-
-		if ($this->getSetting(self::SET_USE_DUMMY_DATA, false))
+		if (!$responseBody && $this->getSetting(self::SET_USE_DUMMY_DATA, false))
 		{
-			//  DummyData are supposed to be used
+			// DummyData are supposed to be used
 			try
 			{
-				//  try loading the data
-				$this->_loadDummyData($headers, $response, $response_code);
+				// try loading the data
+				$this->_loadDummyData($responseHeaders, $responseBody, $responseCode);
 			}
 			catch (RequestException $ex)
 			{
-				//  loading failed, check whether an actual request should be made
+				// loading failed, check whether an actual request should be made
 				if ($this->getSetting(self::SET_SAVE_DUMMY_DATA, false) == false)
-					//  saving is not allowed, dummydata does not exist
-					throw new RequestException("No DummyData available for call. " . $this->_getDummyDataFileName());
+					// saving is not allowed, dummydata does not exist
+					throw new RequestException("No DummyData available for call. File '{$this->_getDummyDataFileName()}' not found.");
 			}
 		}
 
-		//  was response already fetched?
-		if ($response == false)
+		if (!$responseBody && $this->getSetting(self::SET_CACHE_CALLS) && $this->ccc && $this->ccc->isCallCached($requestHash))
 		{
-			if ($this->getSetting(self::SET_CACHE_CALLS) && $this->ccc != false && $this->ccc->isCallCached($requestHash))
-			{
-				//  calls are cached and this request is saved in cache
-				$response = $this->ccc->loadCallData($requestHash);
-				$response_code = 200;
-				$headers = [];
-			}
-			else
-			{
-				//  calls are not cached or this request is not cached
-				//  perform call to Riot API
-				$raw_data = curl_exec($ch);
-				$header_size = curl_getinfo($ch, CURLINFO_HEADER_SIZE);
+			// calls are cached and this request is saved in cache
+			$responseBody    = $this->ccc->loadCallData($requestHash);
+			$responseCode    = 200;
+			$responseHeaders = [];
+		}
 
-				$headers = $this->parseHeaders(substr($raw_data, 0, $header_size));
-				$response = substr($raw_data, $header_size);
-				$response_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+		if (!$responseBody)
+		{
+			// calls are not cached or this request is not cached
+			// perform call to Riot API
+			try
+			{
+				// Create HTTP request
+				$gRequest = $this->guzzle->createRequest(
+					$method,
+					$url,
+					$requestHeaders,
+					$this->post_data
+				);
+
+				// Send request
+				$gResponse = $gRequest->send();
 			}
+			catch (GuzzleExceptions\ClientErrorResponseException $ex)
+			{
+				$responseCode = $ex->getCode();
+				if ($response = $ex->getResponse())
+				{
+					$responseHeaders = $response->getHeaders()->toArray();
+					$responseBody    = $response->getBody();
+				}
+
+				$this->processCall($responseHeaders, $responseBody, $responseCode);
+				throw new RequestException("LeagueAPI: Request error occured - {$ex->getMessage()}", $ex->getCode(), $ex);
+			}
+			catch (\RuntimeException $ex)
+			{
+				throw new RequestException("LeagueAPI: Request could not be sent - {$ex->getMessage()}", $ex->getCode(), $ex);
+			}
+
+			$responseBody    = $gResponse->getBody();
+			$responseCode    = $gResponse->getStatusCode();
+			$responseHeaders = $gResponse->getHeaders()->toArray();
 		}
 
 		if ($overrideRegion)
 			$this->unsetTemporaryRegion();
 
-		if (($curl_errno = curl_errno($ch)) !== 0)
-		{
-			$curl_error = curl_error($ch);
-			throw new RequestException('cURL error ocurred: ' . $curl_error, $curl_errno);
-		}
+		$this->processCall($responseHeaders, $responseBody, $responseCode);
 
-		$this->result_data_raw = $response;
-		$this->result_data     = json_decode($response, true);
-		$this->result_headers  = $headers;
-		$this->result_code     = $response_code;
+		$this->_afterCall($url, $requestHash);
 
-		$errMessage = "";
-		if (!is_null($this->result_data) && isset($this->result_data['status']['message']))
-			$errMessage = " ({$this->result_data['status']['message']})";
-
-		if ($response_code == 503)
-		{
-			throw new ServerException('LeagueAPI: Service is unavailable.', $response_code);
-		}
-		elseif ($response_code == 500)
-		{
-			throw new ServerException('LeagueAPI: Internal server error occured.', $response_code);
-		}
-		elseif ($response_code == 429)
-		{
-			throw new ServerLimitException('LeagueAPI: Rate limit for this API key was exceeded.' . $errMessage, $response_code);
-		}
-		elseif ($response_code == 415)
-		{
-			throw new RequestException('Request: Unsupported media type.' . $errMessage, $response_code);
-		}
-		elseif ($response_code == 404)
-		{
-			throw new RequestException('Request: Not found.' . $errMessage, $response_code);
-		}
-		elseif ($response_code == 403)
-		{
-			throw new RequestException('Request: Forbidden.' . $errMessage, $response_code);
-		}
-		elseif ($response_code == 401)
-		{
-			throw new RequestException('Request: Unauthorized.' . $errMessage, $response_code);
-		}
-		elseif ($response_code == 400)
-		{
-			throw new RequestException('Request: Invalid request.' . $errMessage, $response_code);
-		}
-		elseif ($response_code > 400)
-		{
-			throw new RequestException("LeagueAPI: Unknown error occured. [CODE $response_code]" . $errMessage, $response_code);
-		}
-
-		$this->_afterCall($url, $requestHash, $ch);
-
-		$this->query_data = array();
+		$this->query_data = [];
 		$this->post_data  = null;
 		$this->used_key   = self::SET_KEY;
+	}
 
-		curl_close($ch);
+	/**
+	 * @internal
+	 *
+	 * @param array $response_headers
+	 * @param string $response_body
+	 * @param int $response_code
+	 *
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 */
+	protected function processCall( array $response_headers = null, string $response_body = null, int $response_code = 0 )
+	{
+		$this->result_code     = $response_code;
+		$this->result_headers  = $response_headers;
+		$this->result_data_raw = $response_body;
+		$this->result_data     = @json_decode($response_body, true) ?: null;
+
+		$message = @$this->result_data['status']['message'] ?: "";
+		switch ($response_code)
+		{
+			case 503:
+				throw new ServerException('LeagueAPI: Service is temporarily unavailable.', $response_code);
+			case 500:
+				throw new ServerException('LeagueAPI: Internal server error occured.', $response_code);
+			case 429:
+				throw new ServerLimitException("LeagueAPI: Rate limit for this API key was exceeded. $message", $response_code);
+			case 415:
+				throw new RequestException("LeagueAPI: Unsupported media type. $message", $response_code);
+			case 404:
+				throw new RequestException("LeagueAPI: Not Found. $message", $response_code);
+			case 403:
+				throw new RequestException("LeagueAPI: Forbidden. $message", $response_code);
+			case 401:
+				throw new RequestException("LeagueAPI: Unauthorized. $message", $response_code);
+			case 400:
+				throw new RequestException("LeagueAPI: Request is invalid. $message", $response_code);
+			default:
+				if ($response_code >= 400)
+					throw new RequestException("LeagueAPI: Unspecified error occured ({$response_code}). $message", $response_code);
+		}
 	}
 
 	/**
@@ -1078,13 +1087,12 @@ class LeagueAPI
 	public function _loadDummyData( &$headers, &$response, &$response_code )
 	{
 		$data = @file_get_contents($this->_getDummyDataFileName());
-		$data = unserialize($data);
-
+		$data = @unserialize($data);
 		if (!$data || empty($data))
 			throw new RequestException("DummyData file failed to be opened.");
 
-		$headers = $data['headers'];
-		$response = $data['response'];
+		$headers       = $data['headers'];
+		$response      = $data['response'];
 		$response_code = $data['code'];
 	}
 
@@ -1128,15 +1136,14 @@ class LeagueAPI
 	 *
 	 * @param string $url
 	 * @param string $requestHash
-	 * @param        $curlResource
 	 *
 	 * @internal
 	 */
-	protected function _afterCall( string $url, string $requestHash, $curlResource )
+	protected function _afterCall( string $url, string $requestHash )
 	{
 		foreach ($this->afterCall as $function)
 		{
-			$function($this, $url, $requestHash, $curlResource);
+			$function($this, $url, $requestHash);
 		}
 	}
 
@@ -1175,7 +1182,7 @@ class LeagueAPI
 		elseif ($this->getSetting(self::SET_KEY_INCLUDE_TYPE) === self::KEY_AS_HEADER)
 		{
 			//  API key is to be included as request header
-			$curlHeaders[] = self::HEADER_API_KEY . ': ' . $this->getSetting($this->used_key);
+			$curlHeaders[self::HEADER_API_KEY] = $this->getSetting($this->used_key);
 			$url_keyPart = (!empty($this->query_data) ? '?' : '');
 		}
 
@@ -1199,30 +1206,6 @@ class LeagueAPI
 			$quer = "_" . $quer;
 
 		return __DIR__ . "/../../tests/DummyData/{$method}_$endp$quer$data.json";
-	}
-
-	/**
-	 *   Parses HTTP headers from raw result.
-	 *
-	 * @param $requestHeaders
-	 *
-	 * @return array
-	 */
-	public static function parseHeaders( $requestHeaders ): array
-	{
-		$r = array();
-		foreach (explode(PHP_EOL, $requestHeaders) as $line)
-		{
-			if (strpos($line, ':'))
-			{
-				$e = explode(": ", $line);
-				$r[$e[0]] = @$e[1];
-			}
-			elseif (strlen($line))
-				$r[] = $line;
-		}
-
-		return $r;
 	}
 
 	/**

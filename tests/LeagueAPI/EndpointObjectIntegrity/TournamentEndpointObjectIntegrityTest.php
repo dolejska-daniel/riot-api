@@ -253,15 +253,15 @@ class TournamentEndpointObjectIntegrityTest extends RiotAPITestCase
 				"kOokFfNudFZ8pM7Tvoo_dm1pXVBps_zSJ37AVg",
 				"oI2eFR83UGC3N5OltKkz3NSP_Th_C8nw_0sGcw"
 			],
-			'mapType'             => 'SUMMONERS_RIFT',
-			'pickType'            => 'ALL_RANDOM',
-			'spectatorType'       => 'ALL',
-			'teamSize'            => 5
+			'mapType'       => 'SUMMONERS_RIFT',
+			'pickType'      => 'ALL_RANDOM',
+			'spectatorType' => 'ALL',
+			'teamSize'      => 5
 		]);
 
 		//  Get library processed results
 		/** @var array $result */
-		$result = $api->editTournamentCode('EUNE045d6-a97bb9e2-a069-4278-bad0-812c75eb2351', $codeParams);
+		$result = $api->editTournamentCode('EUNE045c8-8f1f371e-dbc3-494c-8dd5-c5a3acf89506', $codeParams);
 		//  Get raw result
 		$rawResult = $api->getResult();
 

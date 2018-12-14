@@ -188,25 +188,6 @@ class LibraryTest extends RiotAPITestCase
 		$api->setSetting(LeagueAPI::SET_API_BASEURL, "http://google.com");
 	}
 
-	public function testParseHeaders()
-	{
-		$headers = "HTTP/1.1 200 OK" . PHP_EOL . "Accept: text/plain" . PHP_EOL . "X-Powered-By: PHP/5.4.0" . PHP_EOL . "";
-		$array = LeagueAPI::parseHeaders($headers);
-
-		//  We want no empty key/values here
-		$this->assertNotSameSize(explode(PHP_EOL, $headers), $array);
-		$this->assertSameSize(explode(PHP_EOL, trim($headers)), $array);
-
-		$this->assertArrayHasKey(0, $array);
-		$this->assertSame('HTTP/1.1 200 OK', $array[0]);
-
-		$this->assertArrayHasKey('Accept', $array);
-		$this->assertSame('text/plain', $array['Accept']);
-
-		$this->assertArrayHasKey('X-Powered-By', $array);
-		$this->assertSame('PHP/5.4.0', $array['X-Powered-By']);
-	}
-
 	public function testCustomRegionDataProvider()
 	{
 		//  TODO
@@ -253,7 +234,7 @@ class LibraryTest extends RiotAPITestCase
 	public function testMakeCall_InvalidMethod_KeyAsQuery(LeagueAPI $api )
 	{
 		$this->expectException(RequestException::class);
-		$this->expectExceptionMessage("Invalid method selected.");
+		$this->expectExceptionMessage("Invalid request method selected.");
 
 		$api->setSetting(LeagueAPI::SET_KEY_INCLUDE_TYPE, LeagueAPI::KEY_AS_QUERY_PARAM);
 		$api->makeTestEndpointCall("", null, "INVALID_METHOD");
@@ -267,7 +248,7 @@ class LibraryTest extends RiotAPITestCase
 	public function testMakeCall_InvalidMethod(LeagueAPI $api )
 	{
 		$this->expectException(RequestException::class);
-		$this->expectExceptionMessage("Invalid method selected.");
+		$this->expectExceptionMessage("Invalid request method selected.");
 
 		$api->makeTestEndpointCall("", null, "INVALID_METHOD");
 	}
@@ -280,7 +261,7 @@ class LibraryTest extends RiotAPITestCase
 	public function testMakeCall_503(LeagueAPI $api )
 	{
 		$this->expectException(ServerException::class);
-		$this->expectExceptionMessage("LeagueAPI: Service is unavailable.");
+		$this->expectExceptionMessage("LeagueAPI: Service is temporarily unavailable.");
 
 		$api->makeTestEndpointCall(503);
 	}
@@ -319,7 +300,7 @@ class LibraryTest extends RiotAPITestCase
 	public function testMakeCall_415(LeagueAPI $api )
 	{
 		$this->expectException(RequestException::class);
-		$this->expectExceptionMessage("Request: Unsupported media type.");
+		$this->expectExceptionMessage("LeagueAPI: Unsupported media type.");
 
 		$api->makeTestEndpointCall(415);
 	}
@@ -332,7 +313,7 @@ class LibraryTest extends RiotAPITestCase
 	public function testMakeCall_404(LeagueAPI $api )
 	{
 		$this->expectException(RequestException::class);
-		$this->expectExceptionMessage("Request: Not found.");
+		$this->expectExceptionMessage("LeagueAPI: Not Found.");
 
 		$api->makeTestEndpointCall(404);
 	}
@@ -345,7 +326,7 @@ class LibraryTest extends RiotAPITestCase
 	public function testMakeCall_403(LeagueAPI $api )
 	{
 		$this->expectException(RequestException::class);
-		$this->expectExceptionMessage("Request: Forbidden.");
+		$this->expectExceptionMessage("LeagueAPI: Forbidden.");
 
 		$api->makeTestEndpointCall(403);
 	}
@@ -358,7 +339,7 @@ class LibraryTest extends RiotAPITestCase
 	public function testMakeCall_401(LeagueAPI $api )
 	{
 		$this->expectException(RequestException::class);
-		$this->expectExceptionMessage("Request: Unauthorized.");
+		$this->expectExceptionMessage("LeagueAPI: Unauthorized.");
 
 		$api->makeTestEndpointCall(401);
 	}
@@ -371,7 +352,7 @@ class LibraryTest extends RiotAPITestCase
 	public function testMakeCall_400(LeagueAPI $api )
 	{
 		$this->expectException(RequestException::class);
-		$this->expectExceptionMessage("Request: Invalid request.");
+		$this->expectExceptionMessage("LeagueAPI: Request is invalid.");
 
 		$api->makeTestEndpointCall(400);
 	}
@@ -384,7 +365,7 @@ class LibraryTest extends RiotAPITestCase
 	public function testMakeCall_4xx(LeagueAPI $api )
 	{
 		$this->expectException(RequestException::class);
-		$this->expectExceptionMessage("LeagueAPI: Unknown error occured.");
+		$this->expectExceptionMessage("LeagueAPI: Unknown error occured");
 
 		$api->makeTestEndpointCall(498);
 	}
@@ -416,7 +397,7 @@ class LibraryTest extends RiotAPITestCase
 	public function testCurlException()
 	{
 		$this->expectException(RequestException::class);
-		$this->expectExceptionMessage('cURL error ocurred');
+		$this->expectExceptionMessage('LeagueAPI: Request could not be sent - [curl]');
 
 		$api = new LeagueAPI([
 			LeagueAPI::SET_KEY         => getenv('API_KEY'),
