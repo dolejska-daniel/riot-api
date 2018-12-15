@@ -20,12 +20,8 @@
 namespace RiotAPI\LeagueAPI;
 
 
-use GuzzleHttp\Client;
-use GuzzleHttp\Psr7\Response;
-use GuzzleHttp\RequestOptions;
-use GuzzleHttp\Exception as GuzzleHttpExceptions;
 
-
+use RiotAPI\LeagueAPI\Definitions\AsyncRequest;
 use RiotAPI\LeagueAPI\Definitions\CallCacheControl;
 use RiotAPI\LeagueAPI\Definitions\FileCacheProvider;
 use RiotAPI\LeagueAPI\Definitions\ICacheProvider;
@@ -57,6 +53,14 @@ use RiotAPI\LeagueAPI\Exceptions\SettingsException;
 use RiotAPI\DataDragonAPI\DataDragonAPI;
 use RiotAPI\DataDragonAPI\Exceptions as DataDragonExceptions;
 
+
+use GuzzleHttp\Client;
+use GuzzleHttp\RequestOptions;
+use GuzzleHttp\Promise\PromiseInterface;
+use GuzzleHttp\Exception as GuzzleHttpExceptions;
+use function GuzzleHttp\Promise\settle;
+
+use Psr\Http\Message\ResponseInterface;
 
 /**
  *   Class LeagueAPI
@@ -301,8 +305,18 @@ class LeagueAPI
 	protected $resource_endpoint;
 
 
-	/** @var Client */
+	/** @var Client $guzzle */
 	protected $guzzle;
+
+	/** @var AsyncRequest $next_async_request */
+	protected $next_async_request;
+
+	/** @var AsyncRequest[] $async_requests */
+	protected $async_requests = [];
+
+	/** @var Client[] $async_clients */
+	protected $async_clients = [];
+
 
 	/** @var array $query_data */
 	protected $query_data = [];
@@ -394,7 +408,8 @@ class LeagueAPI
 			? $custom_platformDataProvider
 			: new Platform();
 
-		$this->guzzle = new Client([]);
+		// TODO: Guzzle Client settings?
+		$this->guzzle = new Client();
 
 		//  Some caching will be made, let's set up cache provider
 		if ($this->getSetting(self::SET_CACHE_CALLS) || $this->getSetting(self::SET_CACHE_RATELIMIT))
@@ -414,7 +429,6 @@ class LeagueAPI
 				throw new SettingsException('Using STATICDATA LINKING feature requires enabled call caching on STATICDATA RESOURCE.');
 			}
 		}
-
 
 		//  Set up before calls callbacks
 		$this->_setupBeforeCalls();
@@ -910,6 +924,69 @@ class LeagueAPI
 	}
 
 	/**
+	 *   Adds next API call to given async request group. Sending needs to be
+	 * initiated by calling commitAsync function.
+	 *
+	 * @param callable|null $onFulfilled
+	 * @param callable|null $onRejected
+	 * @param string        $group
+	 *
+	 * @return LeagueAPI
+	 */
+	public function nextAsync( callable $onFulfilled = null, callable $onRejected = null, string $group = "default" ): self
+	{
+		$client = @$this->async_clients[$group];
+		if (!$client)
+			//  TODO: Guzzle Client settings?
+			$this->async_clients[$group] = $client = new Client();
+
+		$this->async_requests[$group][] = $this->next_async_request = new AsyncRequest($client);
+		$this->next_async_request->onFulfilled = $onFulfilled;
+		$this->next_async_request->onRejected = $onRejected;
+
+		return $this;
+	}
+
+	/**
+	 *   Initiates async requests from given group. Waits until completed.
+	 *
+	 * @param string $group
+	 */
+	public function commitAsync( string $group = "default" )
+	{
+		$list = [];
+		$requests = @$this->async_requests[$group] ?: [];
+
+		/** @var AsyncRequest $request */
+		foreach ($requests as $request)
+			$list[] = $request->getPromise();
+
+		unset($this->async_requests[$group]);
+		settle($list)->wait();
+	}
+
+	/**
+	 * @internal
+	 *
+	 * @param PromiseInterface $promise
+	 * @param callable         $resultCallback
+	 *
+	 * @return null
+	 */
+	function resolveOrEnqueuePromise( PromiseInterface $promise, callable $resultCallback )
+	{
+		if ($this->next_async_request)
+		{
+			$promise = $promise->then(function($result) use ($resultCallback) {
+				return $resultCallback($result);
+			});
+			$this->next_async_request->setPromise($promise);
+			return $this->next_async_request = null;
+		}
+		return $resultCallback($promise->wait());
+	}
+
+	/**
 	 * @internal
 	 *
 	 *   Makes call to LeagueAPI.
@@ -917,43 +994,29 @@ class LeagueAPI
 	 * @param string|null $overrideRegion
 	 * @param string $method
 	 *
+	 * @return PromiseInterface
 	 * @throws RequestException
 	 * @throws ServerException
 	 * @throws ServerLimitException
 	 * @throws SettingsException
 	 * @throws GeneralException
 	 */
-	protected function makeCall( string $overrideRegion = null, string $method = self::METHOD_GET )
+	protected function makeCall( string $overrideRegion = null, string $method = self::METHOD_GET ): PromiseInterface
 	{
 		if ($overrideRegion)
 			$this->setTemporaryRegion($overrideRegion);
 
 		$this->used_method = $method;
+		$this->used_key    = self::SET_KEY;
 
 		$requestHeaders = [];
 		$url = $this->_getCallUrl($requestHeaders);
 		$requestHash = md5($url);
 
-		if ($method == self::METHOD_GET);
-		elseif ($method == self::METHOD_POST)
-		{
-			$requestHeaders['Content-Type'] = 'application/json';
-		}
-		elseif ($method == self::METHOD_PUT)
-		{
-			$requestHeaders['Content-Type'] = 'application/json';
-		}
-		elseif ($method == self::METHOD_DELETE);
-		else
-			throw new RequestException("LeagueAPI: Invalid request method selected.");
-
-		$responseBody    = null;
-		$responseHeaders = null;
-		$responseCode    = null;
-
+		/*
 		$this->_beforeCall($url, $requestHash);
 
-		if (!$responseCode && $this->getSetting(self::SET_USE_DUMMY_DATA, false))
+		if ($this->getSetting(self::SET_USE_DUMMY_DATA, false))
 		{
 			// DummyData are supposed to be used
 			try
@@ -970,37 +1033,46 @@ class LeagueAPI
 			}
 		}
 
-		if (!$responseCode && $this->getSetting(self::SET_CACHE_CALLS) && $this->ccc && $this->ccc->isCallCached($requestHash))
+		if ($this->getSetting(self::SET_CACHE_CALLS) && $this->ccc && $this->ccc->isCallCached($requestHash))
 		{
 			// calls are cached and this request is saved in cache
-			$responseBody    = $this->ccc->loadCallData($requestHash);
-			$responseCode    = 200;
-			$responseHeaders = [];
+			$this->processCallResult([], $this->ccc->loadCallData($requestHash), 200);
 		}
+		*/
 
-		if (!$responseCode)
-		{
-			// calls are not cached or this request is not cached
-			// perform call to Riot API
-			try
-			{
-				// Create HTTP request
-				$gRequest = $this->guzzle->request(
-					$method,
-					$url,
-					[
-						RequestOptions::HEADERS => $requestHeaders,
-						RequestOptions::JSON    => $this->post_data,
-					]
-				);
+		// calls are not cached or this request is not cached
+		// perform call to Riot API
+		$guzzle = $this->guzzle;
+		if ($this->next_async_request)
+			$guzzle = $this->next_async_request->client;
 
-				// Send request
-				/** @var Response $gResponse */
-				$gResponse = $gRequest->send();
-			}
-			catch (GuzzleHttpExceptions\RequestException $ex)
+		// Create HTTP request
+		$requestPromise = $guzzle->requestAsync(
+			$method,
+			$url,
+			[
+				RequestOptions::HEADERS => $requestHeaders,
+				RequestOptions::JSON    => $this->post_data,
+			]
+		);
+
+		// Upon its completion - process the data
+		$requestPromise = $requestPromise->then(function($response) use (&$requestPromise, $url, $requestHash) {
+			/** @var ResponseInterface $response */
+			$this->processCallResult($response->getHeaders(), $response->getBody(), $response->getStatusCode());
+			return $this->getResult();
+		});
+
+		// If request fails, try to process it and raise exceptions
+		$requestPromise = $requestPromise->otherwise(function($ex) {
+			/** @var \Exception $ex */
+
+			if ($ex instanceof GuzzleHttpExceptions\RequestException)
 			{
-				$responseCode = $ex->getCode();
+				$responseHeaders = null;
+				$responseBody    = null;
+				$responseCode    = $ex->getCode();
+
 				if ($response = $ex->getResponse())
 				{
 					$responseHeaders = $response->getHeaders();
@@ -1010,26 +1082,26 @@ class LeagueAPI
 				$this->processCallResult($responseHeaders, $responseBody, $responseCode);
 				throw new RequestException("LeagueAPI: Request error occured - {$ex->getMessage()}", $ex->getCode(), $ex);
 			}
-			catch (GuzzleHttpExceptions\GuzzleException $e)
+			elseif ($ex instanceof GuzzleHttpExceptions\ServerException)
 			{
-				throw new RequestException("LeagueAPI: Request could not be sent - {$ex->getMessage()}", $ex->getCode(), $ex);
+				throw new ServerException("LeagueAPI: Server error occured {$ex->getMessage()}", $ex->getCode(), $ex);
 			}
 
-			$responseBody    = $gResponse->getBody();
-			$responseCode    = $gResponse->getStatusCode();
-			$responseHeaders = $gResponse->getHeaders();
-		}
+			throw new RequestException("LeagueAPI: Request could not be sent - {$ex->getMessage()}", $ex->getCode(), $ex);
+		});
+
+		if ($this->next_async_request)
+			return $requestPromise;
+
+		//$this->_afterCall($url, $requestHash);
 
 		if ($overrideRegion)
 			$this->unsetTemporaryRegion();
 
-		$this->processCallResult($responseHeaders, $responseBody, $responseCode);
-
-		$this->_afterCall($url, $requestHash);
-
 		$this->query_data = [];
 		$this->post_data  = null;
-		$this->used_key   = self::SET_KEY;
+
+		return $requestPromise;
 	}
 
 	/**
@@ -1099,9 +1171,9 @@ class LeagueAPI
 	}
 
 	/**
-	 *   Saves dummy response to file.
-	 *
 	 * @internal
+	 *
+	 *   Saves dummy response to file.
 	 */
 	public function _saveDummyData()
 	{
@@ -1113,14 +1185,14 @@ class LeagueAPI
 	}
 
 	/**
+	 * @internal
+	 *
 	 *   Processes 'beforeCall' callbacks.
 	 *
 	 * @param string $url
 	 * @param string $requestHash
 	 *
 	 * @throws RequestException
-	 *
-	 * @internal
 	 */
 	protected function _beforeCall( string $url, string $requestHash )
 	{
@@ -1134,12 +1206,12 @@ class LeagueAPI
 	}
 
 	/**
+	 * @internal
+	 *
 	 *   Processes 'afterCall' callbacks.
 	 *
 	 * @param string $url
 	 * @param string $requestHash
-	 *
-	 * @internal
 	 */
 	protected function _afterCall( string $url, string $requestHash )
 	{
@@ -1150,19 +1222,20 @@ class LeagueAPI
 	}
 
 	/**
+	 * @internal
+	 *
 	 *   Builds API call URL based on current settings.
 	 *
-	 * @param array $curlHeaders
+	 * @param array $requestHeaders
 	 *
 	 * @return string
 	 *
 	 * @throws GeneralException
-	 * @internal
 	 */
-	public function _getCallUrl( &$curlHeaders = [] ): string
+	public function _getCallUrl( &$requestHeaders = [] ): string
 	{
 		//  TODO: move logic to Guzzle?
-		$curlHeaders = [];
+		$requestHeaders = [];
 		//  Platform against which will call be made
 		$url_platformPart = $this->platforms->getPlatformName($this->getSetting(self::SET_REGION));
 
@@ -1170,34 +1243,31 @@ class LeagueAPI
 		$url_basePart = $this->getSetting(self::SET_API_BASEURL);
 
 		//  Query parameters
-		$url_queryPart = [];
-		foreach ($this->query_data as $item => $value)
-			$url_queryPart[] = "$item=$value";
-		$url_queryPart = implode('&', $url_queryPart);
+		$url_queryPart = http_build_query($this->query_data);
 
 		//  API key
 		$url_keyPart = "";
 		if ($this->getSetting(self::SET_KEY_INCLUDE_TYPE) === self::KEY_AS_QUERY_PARAM)
 		{
 			//  API key is to be included as query parameter
-			$url_keyPart = "?api_key=" . $this->getSetting($this->used_key) . (!empty($this->query_data) ? '&' : '');
+			$url_keyPart = "?api_key=" . $this->getSetting($this->used_key) . (!empty($url_queryPart) ?? '&');
 		}
 		elseif ($this->getSetting(self::SET_KEY_INCLUDE_TYPE) === self::KEY_AS_HEADER)
 		{
 			//  API key is to be included as request header
-			$curlHeaders[self::HEADER_API_KEY] = $this->getSetting($this->used_key);
-			$url_keyPart = (!empty($this->query_data) ? '?' : '');
+			$requestHeaders[self::HEADER_API_KEY] = $this->getSetting($this->used_key);
+			$url_keyPart = (!empty($url_queryPart) ?? '?');
 		}
 
 		return "https://" . $url_platformPart . $url_basePart . $this->endpoint . $url_keyPart . $url_queryPart;
 	}
 
 	/**
+	 * @internal
+	 *
 	 *   Returns dummy response filename based on current settings.
 	 *
 	 * @return string
-	 *
-	 * @internal
 	 */
 	public function _getDummyDataFileName(): string
 	{
@@ -1232,13 +1302,15 @@ class LeagueAPI
 	 * @throws ServerLimitException
 	 * @throws SettingsException
 	 */
-	public function getChampionRotations(): Objects\ChampionInfo
+	public function getChampionRotations()
 	{
-		$this->setEndpoint("/lol/platform/" . self::RESOURCE_CHAMPION_VERSION . "/champion-rotations")
+		$resultPromise = $this->setEndpoint("/lol/platform/" . self::RESOURCE_CHAMPION_VERSION . "/champion-rotations")
 			->setResource(self::RESOURCE_CHAMPION, "/champion-rotations")
 			->makeCall();
 
-		return new Objects\ChampionInfo($this->getResult(), $this);
+		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
+			return new Objects\ChampionInfo($result, $this);
+		});
 	}
 
 	/**
@@ -1268,13 +1340,15 @@ class LeagueAPI
 	 *
 	 * @link https://developer.riotgames.com/api-methods/#champion-mastery-v4/GET_getChampionMastery
 	 */
-	public function getChampionMastery( string $encrypted_summoner_id, int $champion_id ): Objects\ChampionMasteryDto
+	public function getChampionMastery( string $encrypted_summoner_id, int $champion_id )
 	{
-		$this->setEndpoint("/lol/champion-mastery/" . self::RESOURCE_CHAMPIONMASTERY_VERSION . "/champion-masteries/by-summoner/{$encrypted_summoner_id}/by-champion/{$champion_id}")
+		$resultPromise = $this->setEndpoint("/lol/champion-mastery/" . self::RESOURCE_CHAMPIONMASTERY_VERSION . "/champion-masteries/by-summoner/{$encrypted_summoner_id}/by-champion/{$champion_id}")
 			->setResource(self::RESOURCE_CHAMPIONMASTERY, "/champion-masteries/by-summoner/%s/by-champion/%i")
 			->makeCall();
 
-		return new Objects\ChampionMasteryDto($this->getResult(), $this);
+		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
+			return new Objects\ChampionMasteryDto($result, $this);
+		});
 	}
 
 	/**
@@ -1293,17 +1367,19 @@ class LeagueAPI
 	 *
 	 * @link https://developer.riotgames.com/api-methods/#champion-mastery-v4/GET_getAllChampionMasteries
 	 */
-	public function getChampionMasteries( string $encrypted_summoner_id ): array
+	public function getChampionMasteries( string $encrypted_summoner_id )
 	{
-		$this->setEndpoint("/lol/champion-mastery/" . self::RESOURCE_CHAMPIONMASTERY_VERSION . "/champion-masteries/by-summoner/{$encrypted_summoner_id}")
+		$resultPromise = $this->setEndpoint("/lol/champion-mastery/" . self::RESOURCE_CHAMPIONMASTERY_VERSION . "/champion-masteries/by-summoner/{$encrypted_summoner_id}")
 			->setResource(self::RESOURCE_CHAMPIONMASTERY, "/champion-masteries/by-summoner/%i")
 			->makeCall();
 
-		$r = array();
-		foreach ($this->getResult() as $ident => $championMasteryDtoData)
-			$r[$ident] = new Objects\ChampionMasteryDto($championMasteryDtoData, $this);
+		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
+			$r = [];
+			foreach ($result as $ident => $championMasteryDtoData)
+				$r[$ident] = new Objects\ChampionMasteryDto($championMasteryDtoData, $this);
 
-		return $r;
+			return $r;
+		});
 	}
 
 	/**
@@ -1322,13 +1398,15 @@ class LeagueAPI
 	 *
 	 * @link https://developer.riotgames.com/api-methods/#champion-mastery-v4/GET_getChampionMasteryScore
 	 */
-	public function getChampionMasteryScore( string $encrypted_summoner_id ): int
+	public function getChampionMasteryScore( string $encrypted_summoner_id )
 	{
-		$this->setEndpoint("/lol/champion-mastery/" . self::RESOURCE_CHAMPIONMASTERY_VERSION . "/scores/by-summoner/{$encrypted_summoner_id}")
+		$resultPromise = $this->setEndpoint("/lol/champion-mastery/" . self::RESOURCE_CHAMPIONMASTERY_VERSION . "/scores/by-summoner/{$encrypted_summoner_id}")
 			->setResource(self::RESOURCE_CHAMPIONMASTERY, "/scores/by-summoner/%i")
 			->makeCall();
 
-		return $this->getResult();
+		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
+			return $result;
+		});
 	}
 
 
@@ -1356,13 +1434,15 @@ class LeagueAPI
 	 *
 	 * @link https://developer.riotgames.com/api-methods/#spectator-v4/GET_getCurrentGameInfoBySummoner
 	 */
-	public function getCurrentGameInfo( string $encrypted_summoner_id ): Objects\CurrentGameInfo
+	public function getCurrentGameInfo( string $encrypted_summoner_id )
 	{
-		$this->setEndpoint("/lol/spectator/" . self::RESOURCE_SPECTATOR_VERSION . "/active-games/by-summoner/{$encrypted_summoner_id}")
+		$resultPromise = $this->setEndpoint("/lol/spectator/" . self::RESOURCE_SPECTATOR_VERSION . "/active-games/by-summoner/{$encrypted_summoner_id}")
 			->setResource(self::RESOURCE_SPECTATOR, "/active-games/by-summoner/%i")
 			->makeCall();
 
-		return new Objects\CurrentGameInfo($this->getResult(), $this);
+		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
+			return new Objects\CurrentGameInfo($result, $this);
+		});
 	}
 
 	/**
@@ -1378,13 +1458,15 @@ class LeagueAPI
 	 *
 	 * @link https://developer.riotgames.com/api-methods/#spectator-v4/GET_getFeaturedGames
 	 */
-	public function getFeaturedGames(): Objects\FeaturedGames
+	public function getFeaturedGames()
 	{
-		$this->setEndpoint("/lol/spectator/" . self::RESOURCE_SPECTATOR_VERSION . "/featured-games")
+		$resultPromise = $this->setEndpoint("/lol/spectator/" . self::RESOURCE_SPECTATOR_VERSION . "/featured-games")
 			->setResource(self::RESOURCE_SPECTATOR, "/featured-games")
 			->makeCall();
 
-		return new Objects\FeaturedGames($this->getResult(), $this);
+		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
+			return new Objects\FeaturedGames($result, $this);
+		});
 	}
 
 
@@ -1412,13 +1494,15 @@ class LeagueAPI
 	 *
 	 * @link https://developer.riotgames.com/api-methods/#league-v4/GET_getLeagueById
 	 */
-	public function getLeagueById( string $league_id ): Objects\LeagueListDto
+	public function getLeagueById( string $league_id )
 	{
-		$this->setEndpoint("/lol/league/" . self::RESOURCE_LEAGUE_VERSION . "/leagues/{$league_id}")
+		$resultPromise = $this->setEndpoint("/lol/league/" . self::RESOURCE_LEAGUE_VERSION . "/leagues/{$league_id}")
 			->setResource(self::RESOURCE_LEAGUE, "/leagues/%s")
 			->makeCall();
 
-		return new Objects\LeagueListDto($this->getResult(), $this);
+		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
+			return new Objects\LeagueListDto($result, $this);
+		});
 	}
 
 	/**
@@ -1436,17 +1520,19 @@ class LeagueAPI
 	 *
 	 * @link https://developer.riotgames.com/api-methods/#league-v4/GET_getAllLeaguePositionsForSummoner
 	 */
-	public function getLeaguePositionsForSummoner( string $encrypted_summoner_id ): array
+	public function getLeaguePositionsForSummoner( string $encrypted_summoner_id )
 	{
-		$this->setEndpoint("/lol/league/" . self::RESOURCE_LEAGUE_VERSION . "/positions/by-summoner/{$encrypted_summoner_id}")
+		$resultPromise = $this->setEndpoint("/lol/league/" . self::RESOURCE_LEAGUE_VERSION . "/positions/by-summoner/{$encrypted_summoner_id}")
 			->setResource(self::RESOURCE_LEAGUE, "/positions/by-summoner/%i")
 			->makeCall();
 
-		$r = [];
-		foreach ($this->getResult() as $leagueListDtoData)
-			$r[] = new Objects\LeaguePositionDto($leagueListDtoData, $this);
+		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
+			$r = [];
+			foreach ($result as $leagueListDtoData)
+				$r[] = new Objects\LeaguePositionDto($leagueListDtoData, $this);
 
-		return $r;
+			return $r;
+		});
 	}
 
 	/**
@@ -1464,13 +1550,15 @@ class LeagueAPI
 	 *
 	 * @link https://developer.riotgames.com/api-methods/#league-v4/GET_getChallengerLeague
 	 */
-	public function getLeagueChallenger( string $game_queue_type ): Objects\LeagueListDto
+	public function getLeagueChallenger( string $game_queue_type )
 	{
-		$this->setEndpoint("/lol/league/" . self::RESOURCE_LEAGUE_VERSION . "/challengerleagues/by-queue/{$game_queue_type}")
+		$resultPromise = $this->setEndpoint("/lol/league/" . self::RESOURCE_LEAGUE_VERSION . "/challengerleagues/by-queue/{$game_queue_type}")
 			->setResource(self::RESOURCE_LEAGUE, "/challengerleagues/by-queue/%s")
 			->makeCall();
 
-		return new Objects\LeagueListDto($this->getResult(), $this);
+		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
+			return new Objects\LeagueListDto($result, $this);
+		});
 	}
 
 	/**
@@ -1488,13 +1576,15 @@ class LeagueAPI
 	 *
 	 * @link https://developer.riotgames.com/api-methods/#league-v4/GET_getMasterLeague
 	 */
-	public function getLeagueGrandmaster( string $game_queue_type ): Objects\LeagueListDto
+	public function getLeagueGrandmaster( string $game_queue_type )
 	{
-		$this->setEndpoint("/lol/league/" . self::RESOURCE_LEAGUE_VERSION . "/grandmasterleagues/by-queue/{$game_queue_type}")
+		$resultPromise = $this->setEndpoint("/lol/league/" . self::RESOURCE_LEAGUE_VERSION . "/grandmasterleagues/by-queue/{$game_queue_type}")
 			->setResource(self::RESOURCE_LEAGUE, "/grandmasterleagues/by-queue/%s")
 			->makeCall();
 
-		return new Objects\LeagueListDto($this->getResult(), $this);
+		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
+			return new Objects\LeagueListDto($result, $this);
+		});
 	}
 
 	/**
@@ -1512,13 +1602,15 @@ class LeagueAPI
 	 *
 	 * @link https://developer.riotgames.com/api-methods/#league-v4/GET_getMasterLeague
 	 */
-	public function getLeagueMaster( string $game_queue_type ): Objects\LeagueListDto
+	public function getLeagueMaster( string $game_queue_type )
 	{
-		$this->setEndpoint("/lol/league/" . self::RESOURCE_LEAGUE_VERSION . "/masterleagues/by-queue/{$game_queue_type}")
+		$resultPromise = $this->setEndpoint("/lol/league/" . self::RESOURCE_LEAGUE_VERSION . "/masterleagues/by-queue/{$game_queue_type}")
 			->setResource(self::RESOURCE_LEAGUE, "/masterleagues/by-queue/%s")
 			->makeCall();
 
-		return new Objects\LeagueListDto($this->getResult(), $this);
+		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
+			return new Objects\LeagueListDto($result, $this);
+		});
 	}
 
 
@@ -2288,13 +2380,15 @@ class LeagueAPI
 	 *
 	 * @link https://developer.riotgames.com/api-methods/#lol-status-v3/GET_getShardData
 	 */
-	public function getStatusData( string $override_region = null ): Objects\ShardStatus
+	public function getStatusData( string $override_region = null )
 	{
-		$this->setEndpoint("/lol/status/" . self::RESOURCE_STATUS_VERSION . "/shard-data")
+		$resultPromise = $this->setEndpoint("/lol/status/" . self::RESOURCE_STATUS_VERSION . "/shard-data")
 			->setResource(self::RESOURCE_STATICDATA, "/shard-data")
 			->makeCall($override_region);
 
-		return new Objects\ShardStatus($this->getResult(), $this);
+		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
+			return new Objects\ShardStatus($result, $this);
+		});
 	}
 
 
@@ -2322,13 +2416,15 @@ class LeagueAPI
 	 *
 	 * @link https://developer.riotgames.com/api-methods/#match-v4/GET_getMatch
 	 */
-	public function getMatch( $match_id ): Objects\MatchDto
+	public function getMatch( $match_id )
 	{
-		$this->setEndpoint("/lol/match/" . self::RESOURCE_MATCH_VERSION . "/matches/{$match_id}")
+		$resultPromise = $this->setEndpoint("/lol/match/" . self::RESOURCE_MATCH_VERSION . "/matches/{$match_id}")
 			->setResource(self::RESOURCE_MATCH, "/matches/%i")
 			->makeCall();
 
-		return new Objects\MatchDto($this->getResult(), $this);
+		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
+			return new Objects\MatchDto($result, $this);
+		});
 	}
 
 	/**
@@ -2347,13 +2443,15 @@ class LeagueAPI
 	 *
 	 * @link https://developer.riotgames.com/api-methods/#match-v4/GET_getMatchByTournamentCode
 	 */
-	public function getMatchByTournamentCode( $match_id, string $tournament_code ): Objects\MatchDto
+	public function getMatchByTournamentCode( $match_id, string $tournament_code )
 	{
-		$this->setEndpoint("/lol/match/" . self::RESOURCE_MATCH_VERSION . "/matches/{$match_id}/by-tournament-code/{$tournament_code}")
+		$resultPromise = $this->setEndpoint("/lol/match/" . self::RESOURCE_MATCH_VERSION . "/matches/{$match_id}/by-tournament-code/{$tournament_code}")
 			->setResource(self::RESOURCE_MATCH, "/matches/%i/by-tournament-code/%s")
 			->makeCall();
 
-		return new Objects\MatchDto($this->getResult(), $this);
+		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
+			return new Objects\MatchDto($result, $this);
+		});
 	}
 
 	/**
@@ -2371,13 +2469,15 @@ class LeagueAPI
 	 *
 	 * @link https://developer.riotgames.com/api-methods/#match-v4/GET_getMatchIdsByTournamentCode
 	 */
-	public function getMatchIdsByTournamentCode( string $tournament_code ): array
+	public function getMatchIdsByTournamentCode( string $tournament_code )
 	{
-		$this->setEndpoint("/lol/match/" . self::RESOURCE_MATCH_VERSION . "/matches/by-tournament-code/{$tournament_code}/ids")
+		$resultPromise = $this->setEndpoint("/lol/match/" . self::RESOURCE_MATCH_VERSION . "/matches/by-tournament-code/{$tournament_code}/ids")
 			->setResource(self::RESOURCE_MATCH, "/matches/by-tournament-code/%s/ids")
 			->makeCall();
 
-		return $this->getResult();
+		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
+			return $result;
+		});
 	}
 
 	/**
@@ -2404,7 +2504,7 @@ class LeagueAPI
 	 */
 	public function getMatchlistByAccount( string $encrypted_account_id, $queue = null, $season = null, $champion = null, int $beginTime = null, int $endTime = null, int $beginIndex = null, int $endIndex = null ): Objects\MatchlistDto
 	{
-		$this->setEndpoint("/lol/match/" . self::RESOURCE_MATCH_VERSION . "/matchlists/by-account/{$encrypted_account_id}")
+		$resultPromise = $this->setEndpoint("/lol/match/" . self::RESOURCE_MATCH_VERSION . "/matchlists/by-account/{$encrypted_account_id}")
 			->setResource(self::RESOURCE_MATCH, "/matchlists/by-account/%i")
 			->addQuery('queue', $queue)
 			->addQuery('season', $season)
@@ -2415,7 +2515,9 @@ class LeagueAPI
 			->addQuery('endIndex', $endIndex)
 			->makeCall();
 
-		return new Objects\MatchlistDto($this->getResult(), $this);
+		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
+			return new Objects\MatchlistDto($result, $this);
+		});
 	}
 
 	/**
@@ -2433,13 +2535,15 @@ class LeagueAPI
 	 *
 	 * @link https://developer.riotgames.com/api-methods/#match-v4/GET_getMatchTimeline
 	 */
-	public function getMatchTimeline( $match_id ): Objects\MatchTimelineDto
+	public function getMatchTimeline( $match_id )
 	{
-		$this->setEndpoint("/lol/match/" . self::RESOURCE_MATCH_VERSION . "/timelines/by-match/{$match_id}")
+		$resultPromise = $this->setEndpoint("/lol/match/" . self::RESOURCE_MATCH_VERSION . "/timelines/by-match/{$match_id}")
 			->setResource(self::RESOURCE_MATCH, "/timelines/by-match/%i")
 			->makeCall();
 
-		return new Objects\MatchTimelineDto($this->getResult(), $this);
+		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
+			return new Objects\MatchTimelineDto($result, $this);
+		});
 	}
 
 
@@ -2467,13 +2571,15 @@ class LeagueAPI
 	 *
 	 * @link https://developer.riotgames.com/api-methods/#summoner-v4/GET_getBySummonerId
 	 */
-	public function getSummoner( string $encrypted_summoner_id ): Objects\SummonerDto
+	public function getSummoner( string $encrypted_summoner_id )
 	{
-		$this->setEndpoint("/lol/summoner/" . self::RESOURCE_SUMMONER_VERSION . "/summoners/{$encrypted_summoner_id}")
+		$resultPromise = $this->setEndpoint("/lol/summoner/" . self::RESOURCE_SUMMONER_VERSION . "/summoners/{$encrypted_summoner_id}")
 			->setResource(self::RESOURCE_SUMMONER, "/summoners/%i")
 			->makeCall();
 
-		return new Objects\SummonerDto($this->getResult(), $this);
+		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
+			return new Objects\SummonerDto($result, $this);
+		});
 	}
 
 	/**
@@ -2491,15 +2597,17 @@ class LeagueAPI
 	 *
 	 * @link https://developer.riotgames.com/api-methods/#summoner-v4/GET_getBySummonerName
 	 */
-	public function getSummonerByName( string $summoner_name ): Objects\SummonerDto
+	public function getSummonerByName( string $summoner_name )
 	{
 		$summoner_name = str_replace(' ', '', $summoner_name);
 
-		$this->setEndpoint("/lol/summoner/" . self::RESOURCE_SUMMONER_VERSION . "/summoners/by-name/{$summoner_name}")
+		$resultPromise = $this->setEndpoint("/lol/summoner/" . self::RESOURCE_SUMMONER_VERSION . "/summoners/by-name/{$summoner_name}")
 			->setResource(self::RESOURCE_SUMMONER, "/summoners/by-name/%s")
 			->makeCall();
 
-		return new Objects\SummonerDto($this->getResult(), $this);
+		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
+			return new Objects\SummonerDto($result, $this);
+		});
 	}
 
 	/**
@@ -2517,13 +2625,15 @@ class LeagueAPI
 	 *
 	 * @link https://developer.riotgames.com/api-methods/#summoner-v4/GET_getByAccountId
 	 */
-	public function getSummonerByAccount( string $encrypted_account_id ): Objects\SummonerDto
+	public function getSummonerByAccount( string $encrypted_account_id )
 	{
-		$this->setEndpoint("/lol/summoner/" . self::RESOURCE_SUMMONER_VERSION . "/summoners/by-account/{$encrypted_account_id}")
+		$resultPromise = $this->setEndpoint("/lol/summoner/" . self::RESOURCE_SUMMONER_VERSION . "/summoners/by-account/{$encrypted_account_id}")
 			->setResource(self::RESOURCE_SUMMONER, "/summoners/by-account/%i")
 			->makeCall();
 
-		return new Objects\SummonerDto($this->getResult(), $this);
+		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
+			return new Objects\SummonerDto($result, $this);
+		});
 	}
 
 
@@ -2551,13 +2661,15 @@ class LeagueAPI
 	 *
 	 * @link https://developer.riotgames.com/api-methods/#third-party-code-v4/GET_getThirdPartyCodeBySummonerId
 	 */
-	public function getThirdPartyCodeBySummonerId( string $encrypted_summoner_id ): string
+	public function getThirdPartyCodeBySummonerId( string $encrypted_summoner_id )
 	{
-		$this->setEndpoint("/lol/platform/" . self::RESOURCE_THIRD_PARTY_CODE_VERSION . "/third-party-code/by-summoner/{$encrypted_summoner_id}")
+		$resultPromise = $this->setEndpoint("/lol/platform/" . self::RESOURCE_THIRD_PARTY_CODE_VERSION . "/third-party-code/by-summoner/{$encrypted_summoner_id}")
 			->setResource(self::RESOURCE_THIRD_PARTY_CODE, "/third-party-code/by-summoner/%i")
 			->makeCall();
 
-		return $this->getResult();
+		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
+			return $result;
+		});
 	}
 
 
@@ -2588,7 +2700,7 @@ class LeagueAPI
 	 *
 	 * @link https://developer.riotgames.com/api-methods/#tournament-v4/POST_createTournamentCode
 	 */
-	public function createTournamentCodes( int $tournament_id, int $count, TournamentCodeParameters $parameters ): array
+	public function createTournamentCodes( int $tournament_id, int $count, TournamentCodeParameters $parameters )
 	{
 		if ($this->getSetting(self::SET_INTERIM, false))
 			return $this->createTournamentCodes_STUB($tournament_id, $count, $parameters);
@@ -2616,7 +2728,7 @@ class LeagueAPI
 
 		$data = json_encode($parameters);
 
-		$this->setEndpoint("/lol/tournament/" . self::RESOURCE_TOURNAMENT_VERSION . "/codes")
+		$resultPromise = $this->setEndpoint("/lol/tournament/" . self::RESOURCE_TOURNAMENT_VERSION . "/codes")
 			->setResource(self::RESOURCE_TOURNAMENT, "/codes")
 			->addQuery('tournamentId', $tournament_id)
 			->addQuery('count', $count)
@@ -2624,7 +2736,9 @@ class LeagueAPI
 			->useKey(self::SET_TOURNAMENT_KEY)
 			->makeCall(Region::AMERICAS, self::METHOD_POST);
 
-		return $this->getResult();
+		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
+			return $result;
+		});
 	}
 
 	/**
@@ -2632,8 +2746,6 @@ class LeagueAPI
 	 *
 	 * @param string $tournament_code
 	 * @param Objects\TournamentCodeUpdateParameters $parameters
-	 *
-	 * @return Objects\LobbyEventDtoWrapper
 	 *
 	 * @throws SettingsException
 	 * @throws RequestException
@@ -2660,13 +2772,13 @@ class LeagueAPI
 
 		$data = json_encode($parameters);
 
-		$this->setEndpoint("/lol/tournament/" . self::RESOURCE_TOURNAMENT_VERSION . "/codes/{$tournament_code}")
+		$resultPromise = $this->setEndpoint("/lol/tournament/" . self::RESOURCE_TOURNAMENT_VERSION . "/codes/{$tournament_code}")
 			->setResource(self::RESOURCE_TOURNAMENT, "/codes/%s")
 			->setData($data)
 			->useKey(self::SET_TOURNAMENT_KEY)
 			->makeCall(Region::AMERICAS, self::METHOD_PUT);
 
-		return $this->getResult();
+		$this->resolveOrEnqueuePromise($resultPromise);
 	}
 
 	/**
@@ -2684,17 +2796,19 @@ class LeagueAPI
 	 *
 	 * @link https://developer.riotgames.com/api-methods/#tournament-v4/GET_getTournamentCode
 	 */
-	public function getTournamentCodeData( string $tournament_code ): Objects\TournamentCodeDto
+	public function getTournamentCodeData( string $tournament_code )
 	{
 		if ($this->getSetting(self::SET_INTERIM, false))
 			throw new RequestException('This endpoint is not available in interim mode.');
 
-		$this->setEndpoint("/lol/tournament/" . self::RESOURCE_TOURNAMENT_VERSION . "/codes/{$tournament_code}")
+		$resultPromise = $this->setEndpoint("/lol/tournament/" . self::RESOURCE_TOURNAMENT_VERSION . "/codes/{$tournament_code}")
 			->setResource(self::RESOURCE_TOURNAMENT, "/codes/%s")
 			->useKey(self::SET_TOURNAMENT_KEY)
 			->makeCall(Region::AMERICAS);
 
-		return new Objects\TournamentCodeDto($this->getResult(), $this);
+		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
+			return new Objects\TournamentCodeDto($result, $this);
+		});
 	}
 
 	/**
@@ -2713,7 +2827,7 @@ class LeagueAPI
 	 *
 	 * @link https://developer.riotgames.com/api-methods/#tournament-v4/POST_registerProviderData
 	 */
-	public function createTournamentProvider( ProviderRegistrationParameters $parameters ): int
+	public function createTournamentProvider( ProviderRegistrationParameters $parameters )
 	{
 		if ($this->getSetting(self::SET_INTERIM, false))
 			return $this->createTournamentProvider_STUB($parameters);
@@ -2728,13 +2842,15 @@ class LeagueAPI
 
 		$data = json_encode($parameters, JSON_UNESCAPED_SLASHES);
 
-		$this->setEndpoint("/lol/tournament/" . self::RESOURCE_TOURNAMENT_VERSION . "/providers")
+		$resultPromise = $this->setEndpoint("/lol/tournament/" . self::RESOURCE_TOURNAMENT_VERSION . "/providers")
 			->setResource(self::RESOURCE_TOURNAMENT, "/providers")
 			->setData($data)
 			->useKey(self::SET_TOURNAMENT_KEY)
 			->makeCall(Region::AMERICAS, self::METHOD_POST);
 
-		return $this->getResult();
+		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
+			return $result;
+		});
 	}
 
 	/**
@@ -2753,7 +2869,7 @@ class LeagueAPI
 	 *
 	 * @link https://developer.riotgames.com/api-methods/#tournament-v4/POST_registerTournament
 	 */
-	public function createTournament( TournamentRegistrationParameters $parameters ): int
+	public function createTournament( TournamentRegistrationParameters $parameters )
 	{
 		if ($this->getSetting(self::SET_INTERIM, false))
 			return $this->createTournament_STUB($parameters);
@@ -2766,13 +2882,15 @@ class LeagueAPI
 
 		$data = json_encode($parameters, JSON_UNESCAPED_SLASHES);
 
-		$this->setEndpoint("/lol/tournament/" . self::RESOURCE_TOURNAMENT_VERSION . "/tournaments")
+		$resultPromise = $this->setEndpoint("/lol/tournament/" . self::RESOURCE_TOURNAMENT_VERSION . "/tournaments")
 			->setResource(self::RESOURCE_TOURNAMENT, "/tournaments")
 			->setData($data)
 			->useKey(self::SET_TOURNAMENT_KEY)
 			->makeCall(Region::AMERICAS, self::METHOD_POST);
 
-		return $this->getResult();
+		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
+			return $result;
+		});
 	}
 
 	/**
@@ -2790,17 +2908,19 @@ class LeagueAPI
 	 *
 	 * @link https://developer.riotgames.com/api-methods/#tournament-v4/GET_getLobbyEventsByCode
 	 */
-	public function getTournamentLobbyEvents( string $tournament_code ): Objects\LobbyEventDtoWrapper
+	public function getTournamentLobbyEvents( string $tournament_code )
 	{
 		if ($this->getSetting(self::SET_INTERIM, false))
 			return $this->getTournamentLobbyEvents_STUB($tournament_code);
 
-		$this->setEndpoint("/lol/tournament/" . self::RESOURCE_TOURNAMENT_VERSION . "/lobby-events/by-code/{$tournament_code}")
+		$resultPromise = $this->setEndpoint("/lol/tournament/" . self::RESOURCE_TOURNAMENT_VERSION . "/lobby-events/by-code/{$tournament_code}")
 			->setResource(self::RESOURCE_TOURNAMENT, "/lobby-events/by-code/%s")
 			->useKey(self::SET_TOURNAMENT_KEY)
 			->makeCall(Region::AMERICAS);
 
-		return new Objects\LobbyEventDtoWrapper($this->getResult(), $this);
+		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
+			return new Objects\LobbyEventDtoWrapper($result, $this);
+		});
 	}
 
 
@@ -2833,7 +2953,7 @@ class LeagueAPI
 	 *
 	 * @internal
 	 */
-	public function createTournamentCodes_STUB( int $tournament_id, int $count, TournamentCodeParameters $parameters ): array
+	public function createTournamentCodes_STUB( int $tournament_id, int $count, TournamentCodeParameters $parameters )
 	{
 		if ($parameters->teamSize <= 0)
 			throw new RequestParameterException('Team size (teamSize) must be greater than or equal to 1.');
@@ -2858,7 +2978,7 @@ class LeagueAPI
 
 		$data = json_encode($parameters);
 
-		$this->setEndpoint("/lol/tournament-stub/" . self::RESOURCE_TOURNAMENT_STUB_VERSION . "/codes")
+		$resultPromise = $this->setEndpoint("/lol/tournament-stub/" . self::RESOURCE_TOURNAMENT_STUB_VERSION . "/codes")
 			->setResource(self::RESOURCE_TOURNAMENT, "/codes")
 			->addQuery('tournamentId', $tournament_id)
 			->addQuery('count', $count)
@@ -2866,7 +2986,9 @@ class LeagueAPI
 			->useKey(self::SET_TOURNAMENT_KEY)
 			->makeCall(Region::AMERICAS, self::METHOD_POST);
 
-		return $this->getResult();
+		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
+			return $result;
+		});
 	}
 
 	/**
@@ -2887,7 +3009,7 @@ class LeagueAPI
 	 *
 	 * @internal
 	 */
-	public function createTournamentProvider_STUB( ProviderRegistrationParameters $parameters ): int
+	public function createTournamentProvider_STUB( ProviderRegistrationParameters $parameters )
 	{
 		if (empty($parameters->url))
 			throw new RequestParameterException('Callback URL (url) may not be empty.');
@@ -2899,13 +3021,15 @@ class LeagueAPI
 
 		$data = json_encode($parameters, JSON_UNESCAPED_SLASHES);
 
-		$this->setEndpoint("/lol/tournament-stub/" . self::RESOURCE_TOURNAMENT_STUB_VERSION . "/providers")
+		$resultPromise = $this->setEndpoint("/lol/tournament-stub/" . self::RESOURCE_TOURNAMENT_STUB_VERSION . "/providers")
 			->setResource(self::RESOURCE_TOURNAMENT_STUB, "/providers")
 			->setData($data)
 			->useKey(self::SET_TOURNAMENT_KEY)
 			->makeCall(Region::AMERICAS, self::METHOD_POST);
 
-		return $this->getResult();
+		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
+			return $result;
+		});
 	}
 
 	/**
@@ -2926,7 +3050,7 @@ class LeagueAPI
 	 *
 	 * @internal
 	 */
-	public function createTournament_STUB( TournamentRegistrationParameters $parameters ): int
+	public function createTournament_STUB( TournamentRegistrationParameters $parameters )
 	{
 		if (empty($parameters->name))
 			throw new RequestParameterException('Tournament name (name) may not be empty.');
@@ -2936,13 +3060,15 @@ class LeagueAPI
 
 		$data = json_encode($parameters, JSON_UNESCAPED_SLASHES);
 
-		$this->setEndpoint("/lol/tournament-stub/" . self::RESOURCE_TOURNAMENT_STUB_VERSION . "/tournaments")
+		$resultPromise = $this->setEndpoint("/lol/tournament-stub/" . self::RESOURCE_TOURNAMENT_STUB_VERSION . "/tournaments")
 			->setResource(self::RESOURCE_TOURNAMENT_STUB, "/tournaments")
 			->setData($data)
 			->useKey(self::SET_TOURNAMENT_KEY)
 			->makeCall(Region::AMERICAS, self::METHOD_POST);
 
-		return $this->getResult();
+		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
+			return $result;
+		});
 	}
 
 	/**
@@ -2962,14 +3088,16 @@ class LeagueAPI
 	 *
 	 * @internal
 	 */
-	public function getTournamentLobbyEvents_STUB( string $tournament_code ): Objects\LobbyEventDtoWrapper
+	public function getTournamentLobbyEvents_STUB( string $tournament_code )
 	{
-		$this->setEndpoint("/lol/tournament-stub/" . self::RESOURCE_TOURNAMENT_STUB_VERSION . "/lobby-events/by-code/{$tournament_code}")
+		$resultPromise = $this->setEndpoint("/lol/tournament-stub/" . self::RESOURCE_TOURNAMENT_STUB_VERSION . "/lobby-events/by-code/{$tournament_code}")
 			->setResource(self::RESOURCE_TOURNAMENT_STUB, "/lobby-events/by-code/%s")
 			->useKey(self::SET_TOURNAMENT_KEY)
 			->makeCall(Region::AMERICAS);
 
-		return new Objects\LobbyEventDtoWrapper($this->getResult(), $this);
+		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
+			return new Objects\LobbyEventDtoWrapper($result, $this);
+		});
 	}
 
 
@@ -2996,9 +3124,11 @@ class LeagueAPI
 	 */
 	public function makeTestEndpointCall( $specs, string $region = null, string $method = null )
 	{
-		$this->setEndpoint("/lol/test-endpoint/v0/" . $specs)
+		$resultPromise = $this->setEndpoint("/lol/test-endpoint/v0/" . $specs)
 			->makeCall($region ?: null, $method ?: self::METHOD_GET);
 
-		return $this->getResult();
+		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
+			return $result;
+		});
 	}
 }
