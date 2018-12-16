@@ -36,21 +36,21 @@ class Perks extends ApiObjectIterable
 	/**
 	 *   Primary runes path.
 	 *
-	 * @var float $perkStyle
+	 * @var int $perkStyle
 	 */
 	public $perkStyle;
 
 	/**
 	 *   IDs of the perks/runes assigned.
 	 *
-	 * @var float[] $perkIds
+	 * @var int[] $perkIds
 	 */
 	public $perkIds;
 
 	/**
 	 *   Secondary runes path.
 	 *
-	 * @var float $perkSubStyle
+	 * @var int $perkSubStyle
 	 */
 	public $perkSubStyle;
 }

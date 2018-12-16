@@ -46,7 +46,7 @@ class MatchDto extends ApiObject
 	 */
 	public $queueId;
 
-	/** @var float $gameId */
+	/** @var int $gameId */
 	public $gameId;
 
 	/**
@@ -109,7 +109,7 @@ class MatchDto extends ApiObject
 	/**
 	 *   Match duration in seconds.
 	 *
-	 * @var float $gameDuration
+	 * @var int $gameDuration
 	 */
 	public $gameDuration;
 
@@ -117,7 +117,7 @@ class MatchDto extends ApiObject
 	 *   Designates the timestamp when champion select ended and the loading screen 
 	 * appeared, NOT when the game timer was at 0:00.
 	 *
-	 * @var float $gameCreation
+	 * @var int $gameCreation
 	 */
 	public $gameCreation;
 }

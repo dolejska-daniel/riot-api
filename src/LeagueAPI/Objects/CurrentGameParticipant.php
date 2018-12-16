@@ -36,14 +36,14 @@ class CurrentGameParticipant extends ApiObjectLinkable
 	/**
 	 *   The ID of the profile icon used by this participant.
 	 *
-	 * @var float $profileIconId
+	 * @var int $profileIconId
 	 */
 	public $profileIconId;
 
 	/**
 	 *   The ID of the champion played by this participant.
 	 *
-	 * @var float $championId
+	 * @var int $championId
 	 */
 	public $championId;
 
@@ -78,21 +78,21 @@ class CurrentGameParticipant extends ApiObjectLinkable
 	/**
 	 *   The ID of the second summoner spell used by this participant.
 	 *
-	 * @var float $spell2Id
+	 * @var int $spell2Id
 	 */
 	public $spell2Id;
 
 	/**
 	 *   The team ID of this participant, indicating the participant's team.
 	 *
-	 * @var float $teamId
+	 * @var int $teamId
 	 */
 	public $teamId;
 
 	/**
 	 *   The ID of the first summoner spell used by this participant.
 	 *
-	 * @var float $spell1Id
+	 * @var int $spell1Id
 	 */
 	public $spell1Id;
 

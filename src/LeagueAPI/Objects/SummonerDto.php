@@ -59,7 +59,7 @@ class SummonerDto extends ApiObject
 	/**
 	 *   Summoner level associated with the summoner.
 	 *
-	 * @var float $summonerLevel
+	 * @var int $summonerLevel
 	 */
 	public $summonerLevel;
 
@@ -68,7 +68,7 @@ class SummonerDto extends ApiObject
 	 * following events will update this timestamp: profile icon change, playing the 
 	 * tutorial or advanced tutorial, finishing a game, summoner name change.
 	 *
-	 * @var float $revisionDate
+	 * @var int $revisionDate
 	 */
 	public $revisionDate;
 

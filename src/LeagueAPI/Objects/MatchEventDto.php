@@ -76,7 +76,7 @@ class MatchEventDto extends ApiObject
 	/** @var int $victimId */
 	public $victimId;
 
-	/** @var float $timestamp */
+	/** @var int $timestamp */
 	public $timestamp;
 
 	/** @var int $afterId */

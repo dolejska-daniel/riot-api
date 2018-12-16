@@ -39,7 +39,7 @@ class Incident extends ApiObjectIterable
 	/** @var string $created_at */
 	public $created_at;
 
-	/** @var float $id */
+	/** @var int $id */
 	public $id;
 
 	/** @var Message[] $updates */
