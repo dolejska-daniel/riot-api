@@ -80,11 +80,12 @@ DataDragonAPI::initByCdn([...]);
 	4. [Cache providers](#cache-providers)
 	5. [Rate limiting](#rate-limiting)
 	6. [Call caching](#call-caching)
-	7. [StaticData endpoints](#staticdata-endpoints)
-	8. [StaticData linking](#staticdata-linking)
-	9. [Extensions](#extensions)
-	10. [Callback functions](#callback-functions)
-	11. [CLI support](#cli-support)
+	7. [Asynchronous requests](#asynchronous-requests)
+	8. [StaticData endpoints](#staticdata-endpoints)
+	9. [StaticData linking](#staticdata-linking)
+	10. [Extensions](#extensions)
+	11. [Callback functions](#callback-functions)
+	12. [CLI support](#cli-support)
 4. [DataDragon API](#datadragon-api)
 
 
@@ -243,8 +244,16 @@ You should also provide `LeagueAPI::SET_CACHE_CALLS_LENGTH` option or else defau
 For more, please see [the wiki pages](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Call-caching).
 
 
+## [Asynchronous requests](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Asynchronous-requests)
+This feature allows request grouping and their asynchronous sending using [Guzzle](https://github.com/guzzle/guzzle).
+After request is sent and its response received, user provided callbacks are invoked with received data.
+
+For more, please see [the wiki pages](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Asynchronous-requests).
+
+
 ## [StaticData endpoints](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-StaticData-endpoints)
-StaticData endpoints provide you with easy way to transform StaticData into object instances and easily work with them.
+These endpoints provide you with easy way to transform StaticData into object instances and easily work with them.
+They are also supported in numerous DataDragonAPI functions (displaying images).
 
 For more, please see [the wiki pages](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-StaticData-endpoints).
 
