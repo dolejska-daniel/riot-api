@@ -57,6 +57,7 @@ use RiotAPI\DataDragonAPI\Exceptions as DataDragonExceptions;
 use GuzzleHttp\Client;
 use GuzzleHttp\RequestOptions;
 use GuzzleHttp\Promise\PromiseInterface;
+use GuzzleHttp\Promise\FulfilledPromise;
 use GuzzleHttp\Exception as GuzzleHttpExceptions;
 use function GuzzleHttp\Promise\settle;
 
@@ -973,17 +974,17 @@ class LeagueAPI
 	 *
 	 * @return null
 	 */
-	function resolveOrEnqueuePromise( PromiseInterface $promise, callable $resultCallback )
+	function resolveOrEnqueuePromise( PromiseInterface $promise, callable $resultCallback = null )
 	{
 		if ($this->next_async_request)
 		{
 			$promise = $promise->then(function($result) use ($resultCallback) {
-				return $resultCallback($result);
+				return $resultCallback ? $resultCallback($result) : null;
 			});
 			$this->next_async_request->setPromise($promise);
 			return $this->next_async_request = null;
 		}
-		return $resultCallback($promise->wait());
+		return $resultCallback ? $resultCallback($promise->wait()) : null;
 	}
 
 	/**
@@ -1010,58 +1011,61 @@ class LeagueAPI
 		$this->used_key    = self::SET_KEY;
 
 		$requestHeaders = [];
+		$requestPromise = null;
 		$url = $this->_getCallUrl($requestHeaders);
 		$requestHash = md5($url);
 
-		/*
-		$this->_beforeCall($url, $requestHash);
-
-		if ($this->getSetting(self::SET_USE_DUMMY_DATA, false))
+		if (!$requestPromise && $this->getSetting(self::SET_USE_DUMMY_DATA, false))
 		{
 			// DummyData are supposed to be used
 			try
 			{
 				// try loading the data
 				$this->_loadDummyData($responseHeaders, $responseBody, $responseCode);
+				$this->processCallResult($responseHeaders, $responseBody, $responseCode);
+				$requestPromise = new FulfilledPromise($this->getResult());
 			}
 			catch (RequestException $ex)
 			{
 				// loading failed, check whether an actual request should be made
 				if ($this->getSetting(self::SET_SAVE_DUMMY_DATA, false) == false)
 					// saving is not allowed, dummydata does not exist
-					throw new RequestException("No DummyData available for call. File '{$this->_getDummyDataFileName()}' not found.");
+					throw $ex;
 			}
 		}
 
-		if ($this->getSetting(self::SET_CACHE_CALLS) && $this->ccc && $this->ccc->isCallCached($requestHash))
+		if (!$requestPromise && $this->getSetting(self::SET_CACHE_CALLS) && $this->ccc && $this->ccc->isCallCached($requestHash))
 		{
 			// calls are cached and this request is saved in cache
 			$this->processCallResult([], $this->ccc->loadCallData($requestHash), 200);
+			$requestPromise = new FulfilledPromise($this->getResult());
 		}
-		*/
 
-		// calls are not cached or this request is not cached
-		// perform call to Riot API
-		$guzzle = $this->guzzle;
-		if ($this->next_async_request)
-			$guzzle = $this->next_async_request->client;
+		if (!$requestPromise)
+		{
+			// calls are not cached or this request is not cached
+			// perform call to Riot API
+			$guzzle = $this->guzzle;
+			if ($this->next_async_request)
+				$guzzle = $this->next_async_request->client;
 
-		// Create HTTP request
-		$requestPromise = $guzzle->requestAsync(
-			$method,
-			$url,
-			[
-				RequestOptions::HEADERS => $requestHeaders,
-				RequestOptions::JSON    => $this->post_data,
-			]
-		);
+			$this->_beforeCall($url, $requestHash);
 
-		// Upon its completion - process the data
-		$requestPromise = $requestPromise->then(function($response) use (&$requestPromise, $url, $requestHash) {
-			/** @var ResponseInterface $response */
-			$this->processCallResult($response->getHeaders(), $response->getBody(), $response->getStatusCode());
-			return $this->getResult();
-		});
+			// Create HTTP request
+			$requestPromise = $guzzle->requestAsync(
+				$method,
+				$url,
+				[
+					RequestOptions::HEADERS => $requestHeaders,
+					RequestOptions::JSON    => $this->post_data,
+				]
+			);
+			$requestPromise = $requestPromise->then(function(ResponseInterface $response) use ($url, $requestHash) {
+				$this->processCallResult($response->getHeaders(), $response->getBody(), $response->getStatusCode());
+				$this->_afterCall($url, $requestHash);
+				return $this->getResult();
+			});
+		}
 
 		// If request fails, try to process it and raise exceptions
 		$requestPromise = $requestPromise->otherwise(function($ex) {
@@ -1092,8 +1096,6 @@ class LeagueAPI
 
 		if ($this->next_async_request)
 			return $requestPromise;
-
-		//$this->_afterCall($url, $requestHash);
 
 		if ($overrideRegion)
 			$this->unsetTemporaryRegion();
@@ -1163,7 +1165,7 @@ class LeagueAPI
 		$data = @file_get_contents($this->_getDummyDataFileName());
 		$data = @unserialize($data);
 		if (!$data)
-			throw new RequestException("DummyData file failed to be opened.");
+			throw new RequestException("No DummyData available for call. File '{$this->_getDummyDataFileName()}' failed to be parsed.");
 
 		$headers       = $data['headers'];
 		$response      = $data['response'];
@@ -1404,7 +1406,7 @@ class LeagueAPI
 			->setResource(self::RESOURCE_CHAMPIONMASTERY, "/scores/by-summoner/%i")
 			->makeCall();
 
-		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
+		return $this->resolveOrEnqueuePromise($resultPromise, function(int $result) {
 			return $result;
 		});
 	}
@@ -2667,7 +2669,7 @@ class LeagueAPI
 			->setResource(self::RESOURCE_THIRD_PARTY_CODE, "/third-party-code/by-summoner/%i")
 			->makeCall();
 
-		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
+		return $this->resolveOrEnqueuePromise($resultPromise, function(string $result) {
 			return $result;
 		});
 	}
@@ -2848,7 +2850,7 @@ class LeagueAPI
 			->useKey(self::SET_TOURNAMENT_KEY)
 			->makeCall(Region::AMERICAS, self::METHOD_POST);
 
-		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
+		return $this->resolveOrEnqueuePromise($resultPromise, function(int $result) {
 			return $result;
 		});
 	}
@@ -2888,7 +2890,7 @@ class LeagueAPI
 			->useKey(self::SET_TOURNAMENT_KEY)
 			->makeCall(Region::AMERICAS, self::METHOD_POST);
 
-		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
+		return $this->resolveOrEnqueuePromise($resultPromise, function(int $result) {
 			return $result;
 		});
 	}
@@ -3027,7 +3029,7 @@ class LeagueAPI
 			->useKey(self::SET_TOURNAMENT_KEY)
 			->makeCall(Region::AMERICAS, self::METHOD_POST);
 
-		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
+		return $this->resolveOrEnqueuePromise($resultPromise, function(int $result) {
 			return $result;
 		});
 	}
@@ -3066,7 +3068,7 @@ class LeagueAPI
 			->useKey(self::SET_TOURNAMENT_KEY)
 			->makeCall(Region::AMERICAS, self::METHOD_POST);
 
-		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
+		return $this->resolveOrEnqueuePromise($resultPromise, function(int $result) {
 			return $result;
 		});
 	}
@@ -3108,6 +3110,8 @@ class LeagueAPI
 	 **/
 
 	/**
+	 * @internal
+	 *
 	 * @param             $specs
 	 * @param string|null $region
 	 * @param string|null $method
@@ -3119,8 +3123,6 @@ class LeagueAPI
 	 * @throws ServerException
 	 * @throws ServerLimitException
 	 * @throws GeneralException
-	 *
-	 * @internal
 	 */
 	public function makeTestEndpointCall( $specs, string $region = null, string $method = null )
 	{

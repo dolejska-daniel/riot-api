@@ -231,33 +231,6 @@ class LibraryTest extends RiotAPITestCase
 	 *
 	 * @param LeagueAPI $api
 	 */
-	public function testMakeCall_InvalidMethod_KeyAsQuery(LeagueAPI $api )
-	{
-		$this->expectException(RequestException::class);
-		$this->expectExceptionMessage("Invalid request method selected.");
-
-		$api->setSetting(LeagueAPI::SET_KEY_INCLUDE_TYPE, LeagueAPI::KEY_AS_QUERY_PARAM);
-		$api->makeTestEndpointCall("", null, "INVALID_METHOD");
-	}
-
-	/**
-	 * @depends testInit
-	 *
-	 * @param LeagueAPI $api
-	 */
-	public function testMakeCall_InvalidMethod(LeagueAPI $api )
-	{
-		$this->expectException(RequestException::class);
-		$this->expectExceptionMessage("Invalid request method selected.");
-
-		$api->makeTestEndpointCall("", null, "INVALID_METHOD");
-	}
-
-	/**
-	 * @depends testInit
-	 *
-	 * @param LeagueAPI $api
-	 */
 	public function testMakeCall_503(LeagueAPI $api )
 	{
 		$this->expectException(ServerException::class);
