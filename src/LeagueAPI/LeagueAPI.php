@@ -1252,13 +1252,16 @@ class LeagueAPI
 		if ($this->getSetting(self::SET_KEY_INCLUDE_TYPE) === self::KEY_AS_QUERY_PARAM)
 		{
 			//  API key is to be included as query parameter
-			$url_keyPart = "?api_key=" . $this->getSetting($this->used_key) . (!empty($url_queryPart) ?? '&');
+			$url_keyPart = "?api_key=" . $this->getSetting($this->used_key);
+			if (!empty($url_queryPart))
+				$url_keyPart.= '&';
 		}
 		elseif ($this->getSetting(self::SET_KEY_INCLUDE_TYPE) === self::KEY_AS_HEADER)
 		{
 			//  API key is to be included as request header
 			$requestHeaders[self::HEADER_API_KEY] = $this->getSetting($this->used_key);
-			$url_keyPart = (!empty($url_queryPart) ?? '?');
+			if (!empty($url_queryPart))
+				$url_keyPart = '?';
 		}
 
 		return "https://" . $url_platformPart . $url_basePart . $this->endpoint . $url_keyPart . $url_queryPart;
@@ -1345,7 +1348,7 @@ class LeagueAPI
 	public function getChampionMastery( string $encrypted_summoner_id, int $champion_id )
 	{
 		$resultPromise = $this->setEndpoint("/lol/champion-mastery/" . self::RESOURCE_CHAMPIONMASTERY_VERSION . "/champion-masteries/by-summoner/{$encrypted_summoner_id}/by-champion/{$champion_id}")
-			->setResource(self::RESOURCE_CHAMPIONMASTERY, "/champion-masteries/by-summoner/%s/by-champion/%i")
+			->setResource(self::RESOURCE_CHAMPIONMASTERY, "/champion-masteries/by-summoner/%s/by-champion/%s")
 			->makeCall();
 
 		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
@@ -1372,7 +1375,7 @@ class LeagueAPI
 	public function getChampionMasteries( string $encrypted_summoner_id )
 	{
 		$resultPromise = $this->setEndpoint("/lol/champion-mastery/" . self::RESOURCE_CHAMPIONMASTERY_VERSION . "/champion-masteries/by-summoner/{$encrypted_summoner_id}")
-			->setResource(self::RESOURCE_CHAMPIONMASTERY, "/champion-masteries/by-summoner/%i")
+			->setResource(self::RESOURCE_CHAMPIONMASTERY, "/champion-masteries/by-summoner/%s")
 			->makeCall();
 
 		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
@@ -1403,7 +1406,7 @@ class LeagueAPI
 	public function getChampionMasteryScore( string $encrypted_summoner_id )
 	{
 		$resultPromise = $this->setEndpoint("/lol/champion-mastery/" . self::RESOURCE_CHAMPIONMASTERY_VERSION . "/scores/by-summoner/{$encrypted_summoner_id}")
-			->setResource(self::RESOURCE_CHAMPIONMASTERY, "/scores/by-summoner/%i")
+			->setResource(self::RESOURCE_CHAMPIONMASTERY, "/scores/by-summoner/%s")
 			->makeCall();
 
 		return $this->resolveOrEnqueuePromise($resultPromise, function(int $result) {
@@ -1439,7 +1442,7 @@ class LeagueAPI
 	public function getCurrentGameInfo( string $encrypted_summoner_id )
 	{
 		$resultPromise = $this->setEndpoint("/lol/spectator/" . self::RESOURCE_SPECTATOR_VERSION . "/active-games/by-summoner/{$encrypted_summoner_id}")
-			->setResource(self::RESOURCE_SPECTATOR, "/active-games/by-summoner/%i")
+			->setResource(self::RESOURCE_SPECTATOR, "/active-games/by-summoner/%s")
 			->makeCall();
 
 		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
@@ -1525,7 +1528,7 @@ class LeagueAPI
 	public function getLeaguePositionsForSummoner( string $encrypted_summoner_id )
 	{
 		$resultPromise = $this->setEndpoint("/lol/league/" . self::RESOURCE_LEAGUE_VERSION . "/positions/by-summoner/{$encrypted_summoner_id}")
-			->setResource(self::RESOURCE_LEAGUE, "/positions/by-summoner/%i")
+			->setResource(self::RESOURCE_LEAGUE, "/positions/by-summoner/%s")
 			->makeCall();
 
 		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
@@ -2507,7 +2510,7 @@ class LeagueAPI
 	public function getMatchlistByAccount( string $encrypted_account_id, $queue = null, $season = null, $champion = null, int $beginTime = null, int $endTime = null, int $beginIndex = null, int $endIndex = null ): Objects\MatchlistDto
 	{
 		$resultPromise = $this->setEndpoint("/lol/match/" . self::RESOURCE_MATCH_VERSION . "/matchlists/by-account/{$encrypted_account_id}")
-			->setResource(self::RESOURCE_MATCH, "/matchlists/by-account/%i")
+			->setResource(self::RESOURCE_MATCH, "/matchlists/by-account/%s")
 			->addQuery('queue', $queue)
 			->addQuery('season', $season)
 			->addQuery('champion', $champion)
@@ -2576,7 +2579,7 @@ class LeagueAPI
 	public function getSummoner( string $encrypted_summoner_id )
 	{
 		$resultPromise = $this->setEndpoint("/lol/summoner/" . self::RESOURCE_SUMMONER_VERSION . "/summoners/{$encrypted_summoner_id}")
-			->setResource(self::RESOURCE_SUMMONER, "/summoners/%i")
+			->setResource(self::RESOURCE_SUMMONER, "/summoners/%s")
 			->makeCall();
 
 		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
@@ -2630,7 +2633,7 @@ class LeagueAPI
 	public function getSummonerByAccount( string $encrypted_account_id )
 	{
 		$resultPromise = $this->setEndpoint("/lol/summoner/" . self::RESOURCE_SUMMONER_VERSION . "/summoners/by-account/{$encrypted_account_id}")
-			->setResource(self::RESOURCE_SUMMONER, "/summoners/by-account/%i")
+			->setResource(self::RESOURCE_SUMMONER, "/summoners/by-account/%s")
 			->makeCall();
 
 		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
@@ -2666,7 +2669,7 @@ class LeagueAPI
 	public function getThirdPartyCodeBySummonerId( string $encrypted_summoner_id )
 	{
 		$resultPromise = $this->setEndpoint("/lol/platform/" . self::RESOURCE_THIRD_PARTY_CODE_VERSION . "/third-party-code/by-summoner/{$encrypted_summoner_id}")
-			->setResource(self::RESOURCE_THIRD_PARTY_CODE, "/third-party-code/by-summoner/%i")
+			->setResource(self::RESOURCE_THIRD_PARTY_CODE, "/third-party-code/by-summoner/%s")
 			->makeCall();
 
 		return $this->resolveOrEnqueuePromise($resultPromise, function(string $result) {
