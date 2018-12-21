@@ -51,7 +51,18 @@ class TournamentStubEndpointObjectIntegrityTest extends RiotAPITestCase
 	public function testCreateTournamentCodes(LeagueAPI $api )
 	{
 		$params = new Objects\TournamentCodeParameters([
-			'allowedSummonerIds' => [ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 ],
+			'allowedSummonerIds' => [
+				"wk07XyBvsx0tT6qVY1qKeH-PqCJgEFwKecEfew",
+				"AOc8l0ucYYH2UPDY_QFSsRMvnkc7xDH3zf9-Bg",
+				"w7j8mTu_r1FFx9Z46l-qW-ryNlQM_3KyI5JTRA",
+				"RvCDqKrSsX3b2j7Q-666QvoTR54tH4c3ZF0e9w",
+				"CW_QDuT7YoVesISw_7lw7g5roBxjjDVkX6RmEQ",
+				"0s4wsmI0ruT6y3YKOZNH1MEqyq64nYfNEeyk_g",
+				"UO4uklosNOReoERwfrXEHwnmCSR4_znfOgk11A",
+				"AdyAWnr4FwFWutSPvsFFRxUWA_PQ3vSvvsi1TA",
+				"kOokFfNudFZ8pM7Tvoo_dm1pXVBps_zSJ37AVg",
+				"oI2eFR83UGC3N5OltKkz3NSP_Th_C8nw_0sGcw"
+			],
 			'mapType'            => 'SUMMONERS_RIFT',
 			'pickType'           => 'ALL_RANDOM',
 			'spectatorType'      => 'ALL',

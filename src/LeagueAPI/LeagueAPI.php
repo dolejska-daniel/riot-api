@@ -613,7 +613,8 @@ class LeagueAPI
 		};
 
 		//  Save result data, if CallCache is enabled and when the old result has expired
-		$this->afterCall[] = function ( $api, $url, $requestHash ) {
+		$this->afterCall[] = function () {
+			$requestHash = func_get_arg(2);
 			if ($this->getSetting(self::SET_CACHE_CALLS, false) && $this->ccc != false && $this->ccc->isCallCached($requestHash) == false)
 			{
 				//  Get information for how long to save the data
@@ -624,8 +625,9 @@ class LeagueAPI
 
 		//  Save result data as new DummyData if enabled and if data does not already exist
 		$this->afterCall[] = function () {
-			if ($this->getSetting(self::SET_SAVE_DUMMY_DATA, false) && file_exists($this->_getDummyDataFileName()) == false)
-				$this->_saveDummyData();
+			$dummyData_file = func_get_arg(3);
+			if ($this->getSetting(self::SET_SAVE_DUMMY_DATA, false) && file_exists($dummyData_file) == false)
+				$this->_saveDummyData($dummyData_file);
 		};
 
 		//  Save newly cached data
@@ -1051,18 +1053,21 @@ class LeagueAPI
 
 			$this->_beforeCall($url, $requestHash);
 
+			$options[RequestOptions::HEADERS] = $requestHeaders;
+			if ($this->post_data)
+				$options[RequestOptions::BODY] = $this->post_data;
+
 			// Create HTTP request
 			$requestPromise = $guzzle->requestAsync(
 				$method,
 				$url,
-				[
-					RequestOptions::HEADERS => $requestHeaders,
-					RequestOptions::JSON    => $this->post_data,
-				]
+				$options
 			);
-			$requestPromise = $requestPromise->then(function(ResponseInterface $response) use ($url, $requestHash) {
+
+			$dummyData_file = $this->_getDummyDataFileName();
+			$requestPromise = $requestPromise->then(function(ResponseInterface $response) use ($url, $requestHash, $dummyData_file) {
 				$this->processCallResult($response->getHeaders(), $response->getBody(), $response->getStatusCode());
-				$this->_afterCall($url, $requestHash);
+				$this->_afterCall($url, $requestHash, $dummyData_file);
 				return $this->getResult();
 			});
 		}
@@ -1176,10 +1181,12 @@ class LeagueAPI
 	 * @internal
 	 *
 	 *   Saves dummy response to file.
+	 *
+	 * @param string|null $dummyData_file
 	 */
-	public function _saveDummyData()
+	public function _saveDummyData( string $dummyData_file = null )
 	{
-		file_put_contents($this->_getDummyDataFileName(), serialize([
+		file_put_contents($dummyData_file ?: $this->_getDummyDataFileName(), serialize([
 			'headers'  => $this->result_headers,
 			'response' => $this->result_data_raw,
 			'code'     => $this->result_code,
@@ -1214,12 +1221,13 @@ class LeagueAPI
 	 *
 	 * @param string $url
 	 * @param string $requestHash
+	 * @param string $dummyData_file
 	 */
-	protected function _afterCall( string $url, string $requestHash )
+	protected function _afterCall( string $url, string $requestHash, string $dummyData_file )
 	{
 		foreach ($this->afterCall as $function)
 		{
-			$function($this, $url, $requestHash);
+			$function($this, $url, $requestHash, $dummyData_file);
 		}
 	}
 
