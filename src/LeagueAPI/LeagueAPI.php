@@ -1078,7 +1078,7 @@ class LeagueAPI
 
 			if ($ex instanceof GuzzleHttpExceptions\RequestException)
 			{
-				$responseHeaders = null;
+				$responseHeaders = [];
 				$responseBody    = null;
 				$responseCode    = $ex->getCode();
 
