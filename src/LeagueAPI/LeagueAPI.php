@@ -1124,6 +1124,12 @@ class LeagueAPI
 	 */
 	protected function processCallResult( array $response_headers = null, string $response_body = null, int $response_code = 0 )
 	{
+		// flatten response headers array from Guzzle
+		array_walk($response_headers, function ( &$value ) {
+			if (is_array($value) && count($value) == 1)
+				$value = $value[0];
+		});
+
 		$this->result_code     = $response_code;
 		$this->result_headers  = $response_headers;
 		$this->result_data_raw = $response_body;
