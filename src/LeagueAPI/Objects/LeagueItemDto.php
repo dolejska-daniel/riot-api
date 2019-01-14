@@ -34,6 +34,20 @@ namespace RiotAPI\LeagueAPI\Objects;
  */
 class LeagueItemDto extends ApiObject
 {
+	/**
+	 *   Summoner ID. (Encrypted).
+	 *
+	 * @var string $id
+	 */
+	public $summonerId;
+
+	/**
+	 *   Summoner name.
+	 *
+	 * @var string $name
+	 */
+	public $summonerName;
+
 	/** @var string $rank */
 	public $rank;
 

@@ -50,7 +50,7 @@ class SummonerDto extends ApiObject
 	public $name;
 
 	/**
-	 *   PUUID.
+	 *   PUUID. (Encrypted).
 	 *
 	 * @var string $puuid
 	 */
@@ -73,14 +73,14 @@ class SummonerDto extends ApiObject
 	public $revisionDate;
 
 	/**
-	 *   Summoner ID.
+	 *   Summoner ID. (Encrypted).
 	 *
 	 * @var string $id
 	 */
 	public $id;
 
 	/**
-	 *   Account ID.
+	 *   Account ID. (Encrypted).
 	 *
 	 * @var string $accountId
 	 */
