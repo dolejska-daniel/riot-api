@@ -264,6 +264,7 @@ class LeagueAPI
 		self::SET_KEY_INCLUDE_TYPE => self::KEY_AS_HEADER,
 		self::SET_USE_DUMMY_DATA   => false,
 		self::SET_SAVE_DUMMY_DATA  => false,
+		self::SET_VERIFY_SSL       => true,
 	);
 
 	/** @var IRegion $regions */
@@ -894,9 +895,6 @@ class LeagueAPI
 	{
 		if (!is_null($value))
 		{
-			if (is_array($value))
-				$value = implode("&{$name}=", $value);
-
 			$this->query_data[$name] = $value;
 		}
 
@@ -1053,6 +1051,7 @@ class LeagueAPI
 
 			$this->_beforeCall($url, $requestHash);
 
+			$options[RequestOptions::VERIFY] = $this->getSetting(self::SET_VERIFY_SSL);
 			$options[RequestOptions::HEADERS] = $requestHeaders;
 			if ($this->post_data)
 				$options[RequestOptions::BODY] = $this->post_data;
@@ -1259,7 +1258,18 @@ class LeagueAPI
 		$url_basePart = $this->getSetting(self::SET_API_BASEURL);
 
 		//  Query parameters
-		$url_queryPart = http_build_query($this->query_data);
+		$url_queryPart = "";
+		foreach ($this->query_data as $key => $value)
+		{
+			if (is_array($value))
+			{
+				foreach ($value as $v)
+					$url_queryPart.= "&$key=$v";
+			}
+			else
+				$url_queryPart.= "&$key=$value";
+		}
+		$url_queryPart = substr($url_queryPart, 1);
 
 		//  API key
 		$url_keyPart = "";
