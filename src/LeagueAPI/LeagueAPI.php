@@ -1132,7 +1132,7 @@ class LeagueAPI
 		$this->result_code     = $response_code;
 		$this->result_headers  = $response_headers;
 		$this->result_data_raw = $response_body;
-		$this->result_data     = @json_decode($response_body, true) ?? null;
+		$this->result_data     = json_decode($response_body, true);
 
 		$message = @$this->result_data['status']['message'] ?: "";
 		switch ($response_code)
