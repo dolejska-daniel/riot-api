@@ -374,7 +374,7 @@ class DataDragonAPI
 	{
 		$urlHash = md5($url);
 
-		$data = self::loadCachedStaticData($urlHash);
+		$data = self::loadCachedStaticData($url);
 		if ($data) return $data;
 
 		//  Lastly try loading from web
