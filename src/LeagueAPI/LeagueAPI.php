@@ -2740,12 +2740,6 @@ class LeagueAPI
 		if ($parameters->teamSize >= 6)
 			throw new RequestParameterException('Team size (teamSize) must be less than or equal to 5.');
 
-		if (empty($parameters->allowedSummonerIds))
-			throw new RequestParameterException('List of participants (allowedSummonerIds) may not be empty. If you wish to allow anyone, fill it with 0, 1, 2, 3, etc.');
-
-		if ($parameters->teamSize * 2 > count($parameters->allowedSummonerIds))
-			throw new RequestParameterException('Not enough players to fill teams (more participants required).');
-
 		if (in_array($parameters->pickType, self::TOURNAMENT_ALLOWED_PICK_TYPES, true) == false)
 			throw new RequestParameterException('Value of pick type (pickType) is invalid. Allowed values: ' . implode(', ', self::TOURNAMENT_ALLOWED_PICK_TYPES));
 
@@ -2755,7 +2749,18 @@ class LeagueAPI
 		if (in_array($parameters->spectatorType, self::TOURNAMENT_ALLOWED_SPECTATOR_TYPES, true) == false)
 			throw new RequestParameterException('Value of spectator type (spectatorType) is invalid. Allowed values: ' . implode(', ', self::TOURNAMENT_ALLOWED_SPECTATOR_TYPES));
 
-		$data = json_encode($parameters);
+		$parameter_array = (array)$parameters;
+		if (empty($parameters->allowedSummonerIds))
+		{
+			unset($parameter_array['allowedSummonerIds']);
+		}
+		else
+		{
+			if ($parameters->teamSize * 2 > count($parameters->allowedSummonerIds))
+				throw new RequestParameterException('Not enough players to fill teams (more participants required). If you wish to allow anyone do not fill this field.');
+		}
+
+		$data = json_encode($parameter_array);
 
 		$resultPromise = $this->setEndpoint("/lol/tournament/" . self::RESOURCE_TOURNAMENT_VERSION . "/codes")
 			->setResource(self::RESOURCE_TOURNAMENT, "/codes")
@@ -2990,12 +2995,6 @@ class LeagueAPI
 		if ($parameters->teamSize >= 6)
 			throw new RequestParameterException('Team size (teamSize) must be less than or equal to 5.');
 
-		if (empty($parameters->allowedSummonerIds))
-			throw new RequestParameterException('List of participants (allowedSummonerIds) may not be empty. If you wish to allow anyone, fill it with 0, 1, 2, 3, etc.');
-
-		if ($parameters->teamSize * 2 > count($parameters->allowedSummonerIds))
-			throw new RequestParameterException('Not enough players to fill teams (more participants required).');
-
 		if (in_array($parameters->pickType, self::TOURNAMENT_ALLOWED_PICK_TYPES, true) == false)
 			throw new RequestParameterException('Value of pick type (pickType) is invalid. Allowed values: ' . implode(', ', self::TOURNAMENT_ALLOWED_PICK_TYPES));
 
@@ -3005,7 +3004,17 @@ class LeagueAPI
 		if (in_array($parameters->spectatorType, self::TOURNAMENT_ALLOWED_SPECTATOR_TYPES, true) == false)
 			throw new RequestParameterException('Value of spectator type (spectatorType) is invalid. Allowed values: ' . implode(', ', self::TOURNAMENT_ALLOWED_SPECTATOR_TYPES));
 
-		$data = json_encode($parameters);
+		$parameter_array = (array)$parameters;
+		if (empty($parameters->allowedSummonerIds))
+		{
+			unset($parameter_array['allowedSummonerIds']);
+		}
+		else
+		{
+			if ($parameters->teamSize * 2 > count($parameters->allowedSummonerIds))
+				throw new RequestParameterException('Not enough players to fill teams (more participants required). If you wish to allow anyone do not fill this field.');
+		}
+		$data = json_encode($parameter_array);
 
 		$resultPromise = $this->setEndpoint("/lol/tournament-stub/" . self::RESOURCE_TOURNAMENT_STUB_VERSION . "/codes")
 			->setResource(self::RESOURCE_TOURNAMENT, "/codes")
