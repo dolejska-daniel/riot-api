@@ -56,10 +56,10 @@ class TournamentCodeParameters extends ApiObject
 	public $pickType;
 
 	/**
-	 *   Optional list of participants in order to validate the players eligible to 
-	 * join the lobby. NOTE: We currently do not enforce participants at the team 
-	 * level, but rather the aggregate of teamOne and teamTwo. We may add the ability to 
-	 * enforce at the team level in the future.
+	 *   Optional list of encrypted summonerIds in order to validate the players 
+	 * eligible to join the lobby. NOTE: We currently do not enforce participants at the 
+	 * team level, but rather the aggregate of teamOne and teamTwo. We may add the 
+	 * ability to enforce at the team level in the future.
 	 *
 	 * @var string[] $allowedSummonerIds
 	 */

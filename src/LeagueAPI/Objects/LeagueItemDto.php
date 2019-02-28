@@ -34,22 +34,8 @@ namespace RiotAPI\LeagueAPI\Objects;
  */
 class LeagueItemDto extends ApiObject
 {
-	/**
-	 *   Summoner ID. (Encrypted).
-	 *
-	 * @var string $id
-	 */
-	public $summonerId;
-
-	/**
-	 *   Summoner name.
-	 *
-	 * @var string $name
-	 */
+	/** @var string $summonerName */
 	public $summonerName;
-
-	/** @var string $rank */
-	public $rank;
 
 	/** @var bool $hotStreak */
 	public $hotStreak;
@@ -69,14 +55,18 @@ class LeagueItemDto extends ApiObject
 	/** @var bool $freshBlood */
 	public $freshBlood;
 
-	/** @var string $playerOrTeamName */
-	public $playerOrTeamName;
-
 	/** @var bool $inactive */
 	public $inactive;
 
-	/** @var string $playerOrTeamId */
-	public $playerOrTeamId;
+	/** @var string $rank */
+	public $rank;
+
+	/**
+	 *   Player's summonerId (Encrypted).
+	 *
+	 * @var string $summonerId
+	 */
+	public $summonerId;
 
 	/** @var int $leaguePoints */
 	public $leaguePoints;

@@ -26,6 +26,7 @@ namespace RiotAPI\LeagueAPI\Objects;
  * Used in:
  *   league (v4)
  *     @link https://developer.riotgames.com/api-methods/#league-v4/GET_getAllLeaguePositionsForSummoner
+ *     @link https://developer.riotgames.com/api-methods/#league-v4/GET_getPositionalLeagueEntries
  *
  * @package RiotAPI\LeagueAPI\Objects
  */
@@ -52,8 +53,8 @@ class LeaguePositionDto extends ApiObject
 	/** @var int $losses */
 	public $losses;
 
-	/** @var bool $freshBlood */
-	public $freshBlood;
+	/** @var string $rank */
+	public $rank;
 
 	/** @var string $leagueId */
 	public $leagueId;
@@ -61,16 +62,27 @@ class LeaguePositionDto extends ApiObject
 	/** @var bool $inactive */
 	public $inactive;
 
-	/** @var string $rank */
-	public $rank;
+	/** @var bool $freshBlood */
+	public $freshBlood;
 
 	/** @var string $leagueName */
 	public $leagueName;
 
+	/**
+	 *   (Legal values: APEX, TOP, JUNGLE, MIDDLE, BOTTOM, UTILITY, NONE).
+	 *
+	 * @var string $position
+	 */
+	public $position;
+
 	/** @var string $tier */
 	public $tier;
 
-	/** @var string $summonerId */
+	/**
+	 *   Player's summonerId (Encrypted).
+	 *
+	 * @var string $summonerId
+	 */
 	public $summonerId;
 
 	/** @var int $leaguePoints */

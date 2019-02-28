@@ -74,7 +74,11 @@ class TournamentCodeDto extends ApiObject
 	 */
 	public $teamSize;
 
-	/** @var string[] $participants */
+	/**
+	 *   The summonerIds of the participants (Encrypted).
+	 *
+	 * @var string[] $participants
+	 */
 	public $participants;
 
 	/**

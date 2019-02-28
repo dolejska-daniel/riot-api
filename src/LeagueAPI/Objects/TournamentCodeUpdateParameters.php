@@ -24,8 +24,8 @@ namespace RiotAPI\LeagueAPI\Objects;
  *   Class TournamentCodeUpdateParameters
  *
  * Used in:
- *   tournament (v3)
- *     @link https://developer.riotgames.com/api-methods/#tournament-v3/PUT_updateCode
+ *   tournament (v4)
+ *     @link https://developer.riotgames.com/api-methods/#tournament-v4/PUT_updateCode
  *
  * @package RiotAPI\LeagueAPI\Objects
  */
@@ -47,12 +47,12 @@ class TournamentCodeUpdateParameters extends ApiObject
 	public $pickType;
 
 	/**
-	 *   Optional list of participants in order to validate the players eligible to 
-	 * join the lobby. NOTE: We currently do not enforce participants at the team 
-	 * level, but rather the aggregate of teamOne and teamTwo. We may add the ability to 
-	 * enforce at the team level in the future.
+	 *   Optional list of encrypted summonerIds in order to validate the players 
+	 * eligible to join the lobby. NOTE: We currently do not enforce participants at the 
+	 * team level, but rather the aggregate of teamOne and teamTwo. We may add the 
+	 * ability to enforce at the team level in the future.
 	 *
-	 * @var int[] $allowedSummonerIds
+	 * @var string[] $allowedSummonerIds
 	 */
 	public $allowedSummonerIds;
 

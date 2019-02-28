@@ -50,7 +50,7 @@ class SummonerDto extends ApiObject
 	public $name;
 
 	/**
-	 *   PUUID. (Encrypted).
+	 *   Encrypted PUUID. Exact length of 78 characters.
 	 *
 	 * @var string $puuid
 	 */
@@ -73,14 +73,14 @@ class SummonerDto extends ApiObject
 	public $revisionDate;
 
 	/**
-	 *   Summoner ID. (Encrypted).
+	 *   Encrypted summoner ID. Max length 63 characters.
 	 *
 	 * @var string $id
 	 */
 	public $id;
 
 	/**
-	 *   Account ID. (Encrypted).
+	 *   Encrypted account ID. Max length 56 characters.
 	 *
 	 * @var string $accountId
 	 */

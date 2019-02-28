@@ -95,7 +95,7 @@ class ChampionMasteryDto extends ApiObjectLinkable
 	public $championPointsSinceLastLevel;
 
 	/**
-	 *   Summoner ID for this entry.
+	 *   Summoner ID for this entry. (Encrypted).
 	 *
 	 * @var string $summonerId
 	 */

@@ -30,13 +30,14 @@ namespace RiotAPI\LeagueAPI\Objects;
  *     @link https://developer.riotgames.com/api-methods/#league-v4/GET_getLeagueById
  *     @link https://developer.riotgames.com/api-methods/#league-v4/GET_getMasterLeague
  *     @link https://developer.riotgames.com/api-methods/#league-v4/GET_getAllLeaguePositionsForSummoner
+ *     @link https://developer.riotgames.com/api-methods/#league-v4/GET_getPositionalLeagueEntries
  *
  * @package RiotAPI\LeagueAPI\Objects
  */
 class MiniSeriesDto extends ApiObject
 {
-	/** @var int $wins */
-	public $wins;
+	/** @var string $progress */
+	public $progress;
 
 	/** @var int $losses */
 	public $losses;
@@ -44,6 +45,6 @@ class MiniSeriesDto extends ApiObject
 	/** @var int $target */
 	public $target;
 
-	/** @var string $progress */
-	public $progress;
+	/** @var int $wins */
+	public $wins;
 }

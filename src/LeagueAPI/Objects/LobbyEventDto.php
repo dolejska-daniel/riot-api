@@ -26,6 +26,8 @@ namespace RiotAPI\LeagueAPI\Objects;
  * Used in:
  *   tournament-stub (v4)
  *     @link https://developer.riotgames.com/api-methods/#tournament-stub-v4/GET_getLobbyEventsByCode
+ *   tournament (v4)
+ *     @link https://developer.riotgames.com/api-methods/#tournament-v4/GET_getLobbyEventsByCode
  *
  * @package RiotAPI\LeagueAPI\Objects
  */
@@ -39,7 +41,7 @@ class LobbyEventDto extends ApiObject
 	public $eventType;
 
 	/**
-	 *   The summoner that triggered the event.
+	 *   The summonerId that triggered the event (Encrypted).
 	 *
 	 * @var string $summonerId
 	 */
