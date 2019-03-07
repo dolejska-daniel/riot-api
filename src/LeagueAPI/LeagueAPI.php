@@ -2282,7 +2282,7 @@ class LeagueAPI
 	/**
 	 *   Retrieves summoner spell by its unique numeric key.
 	 *
-	 * @param int    $summoner_spell_key
+	 * @param int    $summoner_spell_id
 	 * @param string $locale
 	 * @param string $version
 	 *
@@ -2291,13 +2291,13 @@ class LeagueAPI
 	 * @throws ServerException
 	 * @throws SettingsException
 	 */
-	public function getStaticSummonerSpell( int $summoner_spell_key, string $locale = 'en_US', string $version = null ): StaticData\StaticSummonerSpellDto
+	public function getStaticSummonerSpell( int $summoner_spell_id, string $locale = 'en_US', string $version = null ): StaticData\StaticSummonerSpellDto
 	{
 		$result = false;
 		try
 		{
 			// Fetch StaticData from JSON files
-			$result = DataDragonAPI::getStaticSummonerSpellByKey($summoner_spell_key, $locale, $version);
+			$result = DataDragonAPI::getStaticSummonerSpellById($summoner_spell_id, $locale, $version);
 			if (!$result) throw new ServerException("StaticData failed to be loaded.");
 
 			$this->result_data = $result;
@@ -2320,7 +2320,7 @@ class LeagueAPI
 	/**
 	 *   Retrieves summoner spell by its unique string identifier.
 	 *
-	 * @param string $summoner_spell_id
+	 * @param string $summoner_spell_key
 	 * @param string $locale
 	 * @param string $version
 	 *
@@ -2329,13 +2329,13 @@ class LeagueAPI
 	 * @throws ServerException
 	 * @throws SettingsException
 	 */
-	public function getStaticSummonerSpellById( string $summoner_spell_id, string $locale = 'en_US', string $version = null ): StaticData\StaticSummonerSpellDto
+	public function getStaticSummonerSpellByKey( string $summoner_spell_key, string $locale = 'en_US', string $version = null ): StaticData\StaticSummonerSpellDto
 	{
 		$result = false;
 		try
 		{
 			// Fetch StaticData from JSON files
-			$result = DataDragonAPI::getStaticSummonerSpellById($summoner_spell_id, $locale, $version);
+			$result = DataDragonAPI::getStaticSummonerSpell($summoner_spell_key, $locale, $version);
 			if (!$result) throw new ServerException("StaticData failed to be loaded.");
 
 			$this->result_data = $result;

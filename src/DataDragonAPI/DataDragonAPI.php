@@ -791,7 +791,7 @@ class DataDragonAPI
 	 */
 	public static function getSummonerSpellIconO( StaticSummonerSpellDto $summonerSpell, array $attributes = [] ): Html
 	{
-		return self::getSpellIcon($summonerSpell->key, $attributes);
+		return self::getSpellIcon($summonerSpell->id, $attributes);
 	}
 
 	/**
@@ -1463,7 +1463,7 @@ class DataDragonAPI
 	}
 
 	/**
-	 * @param string      $summonerspell_id
+	 * @param string      $summonerspell_key
 	 * @param string      $locale
 	 * @param string|null $version
 	 *
@@ -1471,13 +1471,27 @@ class DataDragonAPI
 	 * @throws ArgumentException
 	 * @throws SettingsException
 	 */
-	public static function getStaticSummonerSpell( string $summonerspell_id, string $locale = 'en_US', string $version = null ) : array
+	public static function getStaticSummonerSpell( string $summonerspell_key, string $locale = 'en_US', string $version = null ) : array
 	{
 		$data = self::getStaticSummonerSpells($locale, $version);
-		if (isset($data['data'][$summonerspell_id]) == false)
-			throw new ArgumentException('Summoner spell with given ID was not found.', 404);
+		if (isset($data['data'][$summonerspell_key]) == false)
+			throw new ArgumentException('Summoner spell with given key was not found.', 404);
 
-		return $data['data'][$summonerspell_id];
+		return $data['data'][$summonerspell_key];
+	}
+
+	/**
+	 * @param int         $summonerspell_key
+	 * @param string      $locale
+	 * @param string|null $version
+	 *
+	 * @return array
+	 * @throws ArgumentException
+	 * @throws SettingsException
+	 */
+	public static function getStaticSummonerSpellByKey( int $summonerspell_key, string $locale = 'en_US', string $version = null ) : array
+	{
+		return self::getStaticSummonerSpell($summonerspell_key, $locale, $version);
 	}
 
 	/**
@@ -1493,25 +1507,11 @@ class DataDragonAPI
 	 */
 	public static function getStaticSummonerSpellById( string $summonerspell_id, string $locale = 'en_US', string $version = null ) : array
 	{
-		return self::getStaticSummonerSpell($summonerspell_id, $locale, $version);
-	}
-
-	/**
-	 * @param int         $summonerspell_key
-	 * @param string      $locale
-	 * @param string|null $version
-	 *
-	 * @return array
-	 * @throws ArgumentException
-	 * @throws SettingsException
-	 */
-	public static function getStaticSummonerSpellByKey( int $summonerspell_key, string $locale = 'en_US', string $version = null ) : array
-	{
 		$data = self::getStaticSummonerSpellsWithKeys($locale, $version);
-		if (isset($data['data'][$summonerspell_key]) == false)
-			throw new ArgumentException('Summoner spell with given key was not found.', 404);
+		if (isset($data['data'][$summonerspell_id]) == false)
+			throw new ArgumentException('Summoner spell with given ID was not found.', 404);
 
-		return $data['data'][$summonerspell_key];
+		return $data['data'][$summonerspell_id];
 	}
 
 	/**
