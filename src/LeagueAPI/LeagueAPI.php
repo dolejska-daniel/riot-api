@@ -21,6 +21,7 @@ namespace RiotAPI\LeagueAPI;
 
 
 
+use Nette\Utils\DateTime;
 use RiotAPI\LeagueAPI\Definitions\AsyncRequest;
 use RiotAPI\LeagueAPI\Definitions\CallCacheControl;
 use RiotAPI\LeagueAPI\Definitions\FileCacheProvider;
@@ -138,7 +139,8 @@ class LeagueAPI
 		HEADER_METHOD_RATELIMIT       = 'X-Method-Rate-Limit',
 		HEADER_METHOD_RATELIMIT_COUNT = 'X-Method-Rate-Limit-Count',
 		HEADER_APP_RATELIMIT          = 'X-App-Rate-Limit',
-		HEADER_APP_RATELIMIT_COUNT    = 'X-App-Rate-Limit-Count';
+		HEADER_APP_RATELIMIT_COUNT    = 'X-App-Rate-Limit-Count',
+		HEADER_DEPRECATION            = 'X-Riot-Deprecated';
 
 	/**
 	 * Pick type constants.
@@ -1134,6 +1136,9 @@ class LeagueAPI
 		$this->result_data_raw = $response_body;
 		$this->result_data     = json_decode($response_body, true);
 
+		if (isset($this->result_headers[self::HEADER_DEPRECATION]))
+			trigger_error("Used endpoint '{$this->getResourceEndpoint()}' is being deprecated! This endpoint will stop working on " . DateTime::from($this->result_headers[self::HEADER_DEPRECATION]) . ".", E_USER_WARNING);
+
 		$message = @$this->result_data['status']['message'] ?: "";
 		switch ($response_code)
 		{
@@ -1559,6 +1564,68 @@ class LeagueAPI
 			$r = [];
 			foreach ($result as $leagueListDtoData)
 				$r[] = new Objects\LeaguePositionDto($leagueListDtoData, $this);
+
+			return $r;
+		});
+	}
+
+	/**
+	 *   Get league entries in all queues for a given summoner ID.
+	 *
+	 * @param string $encrypted_summoner_id
+	 *
+	 * @return null
+	 *
+	 * @throws GeneralException
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 * @throws SettingsException
+	 *
+	 * @link https://developer.riotgames.com/api-methods/#league-v4/GET_getLeagueEntriesForSummoner
+	 */
+	public function getLeagueEntriesForSummoner( string $encrypted_summoner_id )
+	{
+		$resultPromise = $this->setEndpoint("/lol/league/" . self::RESOURCE_LEAGUE_VERSION . "/entries/by-summoner/{$encrypted_summoner_id}")
+			->setResource(self::RESOURCE_LEAGUE, "/entries/by-summoner/%s")
+			->makeCall();
+
+		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
+			$r = [];
+			foreach ($result as $leagueEntryDtoData)
+				$r[] = new Objects\LeagueEntryDto($leagueEntryDtoData, $this);
+
+			return $r;
+		});
+	}
+
+	/**
+	 *   Get all the league entries.
+	 *
+	 * @param string $queue
+	 * @param string $tier
+	 * @param string $division
+	 *
+	 * @return null
+	 *
+	 * @throws GeneralException
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 * @throws SettingsException
+	 *
+	 * @link https://developer.riotgames.com/api-methods/#league-v4/GET_getLeagueEntries
+	 */
+	public function getLeagueEntries( string $queue, string $tier, string $division )
+	{
+		$resultPromise = $this->setEndpoint("/lol/league/" . self::RESOURCE_LEAGUE_VERSION . "/entries/{$queue}/{$tier}/{$division}")
+			->setResource(self::RESOURCE_LEAGUE, "/entries/%s/%s/%s")
+			->makeCall();
+
+		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
+			$r = [];
+			foreach ($result as $leagueEntryDtoData)
+				$r[] = new Objects\LeagueEntryDto($leagueEntryDtoData, $this);
 
 			return $r;
 		});

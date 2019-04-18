@@ -21,32 +21,60 @@ namespace RiotAPI\LeagueAPI\Objects;
 
 
 /**
- *   Class MiniSeriesDto
+ *   Class LeagueEntryDto
  *
  * Used in:
  *   league (v4)
- *     @link https://developer.riotgames.com/api-methods/#league-v4/GET_getChallengerLeague
  *     @link https://developer.riotgames.com/api-methods/#league-v4/GET_getLeagueEntriesForSummoner
  *     @link https://developer.riotgames.com/api-methods/#league-v4/GET_getLeagueEntriesForSummoner
- *     @link https://developer.riotgames.com/api-methods/#league-v4/GET_getGrandmasterLeague
- *     @link https://developer.riotgames.com/api-methods/#league-v4/GET_getLeagueById
- *     @link https://developer.riotgames.com/api-methods/#league-v4/GET_getMasterLeague
- *     @link https://developer.riotgames.com/api-methods/#league-v4/GET_getAllLeaguePositionsForSummoner
- *     @link https://developer.riotgames.com/api-methods/#league-v4/GET_getPositionalLeagueEntries
  *
  * @package RiotAPI\LeagueAPI\Objects
  */
-class MiniSeriesDto extends ApiObject
+class LeagueEntryDto extends ApiObject
 {
-	/** @var string $progress */
-	public $progress;
+	/** @var string $queueType */
+	public $queueType;
+
+	/** @var string $summonerName */
+	public $summonerName;
+
+	/** @var bool $hotStreak */
+	public $hotStreak;
+
+	/** @var MiniSeriesDto $miniSeries */
+	public $miniSeries;
+
+	/** @var int $wins */
+	public $wins;
+
+	/** @var bool $veteran */
+	public $veteran;
 
 	/** @var int $losses */
 	public $losses;
 
-	/** @var int $target */
-	public $target;
+	/** @var string $rank */
+	public $rank;
 
-	/** @var int $wins */
-	public $wins;
+	/** @var string $leagueId */
+	public $leagueId;
+
+	/** @var bool $inactive */
+	public $inactive;
+
+	/** @var bool $freshBlood */
+	public $freshBlood;
+
+	/** @var string $tier */
+	public $tier;
+
+	/**
+	 *   Player's summonerId (Encrypted).
+	 *
+	 * @var string $summonerId
+	 */
+	public $summonerId;
+
+	/** @var int $leaguePoints */
+	public $leaguePoints;
 }
