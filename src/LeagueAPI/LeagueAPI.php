@@ -1556,8 +1556,8 @@ class LeagueAPI
 	 */
 	public function getLeaguePositionsForSummoner( string $encrypted_summoner_id )
 	{
-		$resultPromise = $this->setEndpoint("/lol/league/" . self::RESOURCE_LEAGUE_VERSION . "/positions/by-summoner/{$encrypted_summoner_id}")
-			->setResource(self::RESOURCE_LEAGUE, "/positions/by-summoner/%s")
+		$resultPromise = $this->setEndpoint("/lol/league/" . self::RESOURCE_LEAGUE_VERSION . "/entries/by-summoner/{$encrypted_summoner_id}")
+			->setResource(self::RESOURCE_LEAGUE, "/entries/by-summoner/%s")
 			->makeCall();
 
 		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
