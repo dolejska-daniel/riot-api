@@ -23,6 +23,9 @@ matrix:
 
 # Allow addons
 addons:
+    apt:
+        packages:
+            - libonig-dev
     code_climate:
         repo_token: $CODECLIMATE_REPO_TOKEN
 
