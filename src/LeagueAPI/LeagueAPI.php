@@ -2816,7 +2816,7 @@ class LeagueAPI
 		if (in_array($parameters->spectatorType, self::TOURNAMENT_ALLOWED_SPECTATOR_TYPES, true) == false)
 			throw new RequestParameterException('Value of spectator type (spectatorType) is invalid. Allowed values: ' . implode(', ', self::TOURNAMENT_ALLOWED_SPECTATOR_TYPES));
 
-		$parameter_array = (array)$parameters;
+		$parameter_array = get_object_vars($parameters);
 		if (empty($parameters->allowedSummonerIds))
 		{
 			unset($parameter_array['allowedSummonerIds']);
@@ -2824,9 +2824,8 @@ class LeagueAPI
 		else
 		{
 			if ($parameters->teamSize * 2 > count($parameters->allowedSummonerIds))
-				throw new RequestParameterException('Not enough players to fill teams (more participants required). If you wish to allow anyone do not fill this field.');
+				throw new RequestParameterException('Not enough players to fill teams (more participants required). If you wish to allow anyone do not fill "allowedSummonerIds" field.');
 		}
-
 		$data = json_encode($parameter_array);
 
 		$resultPromise = $this->setEndpoint("/lol/tournament/" . self::RESOURCE_TOURNAMENT_VERSION . "/codes")
@@ -3071,7 +3070,7 @@ class LeagueAPI
 		if (in_array($parameters->spectatorType, self::TOURNAMENT_ALLOWED_SPECTATOR_TYPES, true) == false)
 			throw new RequestParameterException('Value of spectator type (spectatorType) is invalid. Allowed values: ' . implode(', ', self::TOURNAMENT_ALLOWED_SPECTATOR_TYPES));
 
-		$parameter_array = (array)$parameters;
+		$parameter_array = get_object_vars($parameters);
 		if (empty($parameters->allowedSummonerIds))
 		{
 			unset($parameter_array['allowedSummonerIds']);
@@ -3079,7 +3078,7 @@ class LeagueAPI
 		else
 		{
 			if ($parameters->teamSize * 2 > count($parameters->allowedSummonerIds))
-				throw new RequestParameterException('Not enough players to fill teams (more participants required). If you wish to allow anyone do not fill this field.');
+				throw new RequestParameterException('Not enough players to fill teams (more participants required). If you wish to allow anyone do not fill "allowedSummonerIds" field.');
 		}
 		$data = json_encode($parameter_array);
 
