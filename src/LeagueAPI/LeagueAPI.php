@@ -1139,7 +1139,7 @@ class LeagueAPI
 		if (isset($this->result_headers[self::HEADER_DEPRECATION]))
 			trigger_error("Used endpoint '{$this->getResourceEndpoint()}' is being deprecated! This endpoint will stop working on " . DateTime::from($this->result_headers[self::HEADER_DEPRECATION]) . ".", E_USER_WARNING);
 
-		$message = @$this->result_data['status']['message'] ?: "";
+		$message = isset($this->result_data['status']) ? @$this->result_data['status']['message'] : "";
 		switch ($response_code)
 		{
 			case 503:
