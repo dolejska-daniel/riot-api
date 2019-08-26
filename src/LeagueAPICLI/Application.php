@@ -98,7 +98,8 @@ class Application extends SymfonyAplication
 		);
 
 		$command->addOption("output", "o", InputOption::VALUE_REQUIRED,
-			"Path to save JSON response output."
+			"Path to save JSON response output.\n" .
+			"https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI%3A-CLI-support#output-file"
 		);
 
 		$command->addOption("pretty", null, InputOption::VALUE_NONE,

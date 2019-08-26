@@ -121,7 +121,7 @@ This file contains only general introduction to library features.
 
 # [Downloading](https://github.com/dolejska-daniel/riot-api/wiki/Home#downloading)
 The easiest way to downlaod and use this library is via [Composer](https://getcomposer.org/).
-If you are not using it yet, start now!
+If you are not using it yet, start **now**!
 
 While having Composer installed on your machine it takes only `composer require "dolejska-daniel/riot-api:^3"` to get the library ready to roll!
 
@@ -230,6 +230,8 @@ print_r($champion->getData());  //  Or array of all the data
  */
 ```
 
+More usage examples for LeagueAPI can be found [here](https://github.com/dolejska-daniel/riot-api/blob/master/examples/LeagueAPI/README.md).
+
 
 ## [Cache providers](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Cache-providers)
 Cache providers are responsible for keeping data of [rate limiting](#rate-limiting) and [call caching](#call-caching) within instances of the library.
@@ -310,6 +312,7 @@ root@localhost:~/riot-api/src/LeagueAPICLI# leagueapicli summoner:get-by-name "I
 ```
 
 For additional information about CLI support, please see [the wiki pages](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-CLI-support).
+More usage examples for LeagueAPICLI can be found [here](https://github.com/dolejska-daniel/riot-api/blob/master/examples/LeagueAPICLI/README.md).
 
 
 # [DataDragon API](https://github.com/dolejska-daniel/riot-api/wiki/DataDragonAPI:-How-to-begin)
@@ -389,3 +392,4 @@ foreach($orianna->spells as $spell)
 ![OrianaDetonateCommand](http://ddragon.leagueoflegends.com/cdn/8.24.1/img/spell/OrianaDetonateCommand.png)
 
 For more, please see [the wiki pages](https://github.com/dolejska-daniel/riot-api/wiki/DataDragonAPI:-How-to-begin).
+More usage examples for DataDragonAPI can be found [here](https://github.com/dolejska-daniel/riot-api/blob/master/examples/DataDragonAPI/README.md).

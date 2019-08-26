@@ -1,0 +1,9 @@
+{
+	"SET_KEY":              "YOUR_API_KEY",
+	"SET_TOURNAMENT_KEY":   "YOUR_API_KEY",
+	"SET_REGION":           "eune",
+	"SET_VERIFY_SSL":       false,
+	"SET_DATADRAGON_INIT":  true,
+	"SET_INTERIM":          true,
+	"SET_CACHE_RATELIMIT":  true
+}
