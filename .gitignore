@@ -2,6 +2,7 @@
 
 # Composer files
 vendor/
+composer.phar
 
 # Testing data
 tests/Coverage/

@@ -1094,7 +1094,7 @@ class LeagueAPI
 			}
 			elseif ($ex instanceof GuzzleHttpExceptions\ServerException)
 			{
-				throw new ServerException("LeagueAPI: Server error occured {$ex->getMessage()}", $ex->getCode(), $ex);
+				throw new ServerException("LeagueAPI: Server error occured - {$ex->getMessage()}", $ex->getCode(), $ex);
 			}
 
 			throw new RequestException("LeagueAPI: Request could not be sent - {$ex->getMessage()}", $ex->getCode(), $ex);
@@ -1328,6 +1328,9 @@ class LeagueAPI
 	/**
 	 *   Retrieve current champion rotations.
 	 *
+	 * @cli-name get-rotations
+	 * @cli-namespace champion
+	 *
 	 * @return Objects\ChampionInfo
 	 *
 	 * @throws GeneralException
@@ -1361,6 +1364,9 @@ class LeagueAPI
 	 * there were no masteries found for given player id or player id and champion id
 	 * combination. (RPC)
 	 *
+	 * @cli-name get-mastery
+	 * @cli-namespace champion-mastery
+	 *
 	 * @param string $encrypted_summoner_id
 	 * @param int $champion_id
 	 *
@@ -1388,6 +1394,9 @@ class LeagueAPI
 	/**
 	 *   Get all champion mastery entries sorted by number of champion points descending
 	 * (RPC)
+	 *
+	 * @cli-name get-masteries
+	 * @cli-namespace champion-mastery
 	 *
 	 * @param string $encrypted_summoner_id
 	 *
@@ -1419,6 +1428,9 @@ class LeagueAPI
 	/**
 	 *   Get a player's total champion mastery score, which is sum of individual champion
 	 * mastery levels (RPC)
+	 *
+	 * @cli-name get-mastery-score
+	 * @cli-namespace champion-mastery
 	 *
 	 * @param string $encrypted_summoner_id
 	 *
@@ -1456,6 +1468,9 @@ class LeagueAPI
 	/**
 	 *   Get current game information for the given summoner ID.
 	 *
+	 * @cli-name get-current-game-info
+	 * @cli-namespace spectator
+	 *
 	 * @param string $encrypted_summoner_id
 	 *
 	 * @return Objects\CurrentGameInfo
@@ -1481,6 +1496,9 @@ class LeagueAPI
 
 	/**
 	 *   Get list of featured games.
+	 *
+	 * @cli-name get-featured-games
+	 * @cli-namespace spectator
 	 *
 	 * @return Objects\FeaturedGames
 	 *
@@ -1516,6 +1534,9 @@ class LeagueAPI
 	/**
 	 *   Get league by its UUID.
 	 *
+	 * @cli-name get-by-id
+	 * @cli-namespace league
+	 *
 	 * @param string $league_id
 	 *
 	 * @return Objects\LeagueListDto
@@ -1541,6 +1562,9 @@ class LeagueAPI
 
 	/**
 	 *   Get leagues mapped by summoner ID for a given list of summoner IDs.
+	 *
+	 * @cli-name get-positions-for-summoner
+	 * @cli-namespace league
 	 *
 	 * @param string $encrypted_summoner_id
 	 *
@@ -1572,6 +1596,9 @@ class LeagueAPI
 	/**
 	 *   Get league entries in all queues for a given summoner ID.
 	 *
+	 * @cli-name get-league-entries-for-summoner
+	 * @cli-namespace league
+	 *
 	 * @param string $encrypted_summoner_id
 	 *
 	 * @return null
@@ -1601,6 +1628,9 @@ class LeagueAPI
 
 	/**
 	 *   Get all the league entries.
+	 *
+	 * @cli-name get-league-entries
+	 * @cli-namespace league
 	 *
 	 * @param string $queue
 	 * @param string $tier
@@ -1634,6 +1664,9 @@ class LeagueAPI
 	/**
 	 *   Get challenger tier leagues.
 	 *
+	 * @cli-name get-league-challenger
+	 * @cli-namespace league
+	 *
 	 * @param string $game_queue_type
 	 *
 	 * @return Objects\LeagueListDto
@@ -1660,6 +1693,9 @@ class LeagueAPI
 	/**
 	 *   Get grandmaster tier leagues.
 	 *
+	 * @cli-name get-league-grandmaster
+	 * @cli-namespace league
+	 *
 	 * @param string $game_queue_type
 	 *
 	 * @return Objects\LeagueListDto
@@ -1685,6 +1721,9 @@ class LeagueAPI
 
 	/**
 	 *   Get master tier leagues.
+	 *
+	 * @cli-name get-league-master
+	 * @cli-namespace league
 	 *
 	 * @param string $game_queue_type
 	 *
@@ -1720,6 +1759,9 @@ class LeagueAPI
 
 	/**
 	 *   Retrieves champion list.
+	 *
+	 * @cli-name get-champions
+	 * @cli-namespace static-data
 	 *
 	 * @param bool $data_by_key
 	 * @param string $locale
@@ -1772,6 +1814,9 @@ class LeagueAPI
 	/**
 	 *   Retrieves a champion by its numeric key.
 	 *
+	 * @cli-name get-champion
+	 * @cli-namespace static-data
+	 *
 	 * @param int    $champion_id
 	 * @param bool   $extended
 	 * @param string $locale
@@ -1812,6 +1857,9 @@ class LeagueAPI
 
 	/**
 	 *   Retrieves item list.
+	 *
+	 * @cli-name get-items
+	 * @cli-namespace static-data
 	 *
 	 * @param string $locale
 	 * @param string $version
@@ -1855,6 +1903,9 @@ class LeagueAPI
 	/**
 	 *   Retrieves item by its unique ID.
 	 *
+	 * @cli-name get-item
+	 * @cli-namespace static-data
+	 *
 	 * @param int $item_id
 	 * @param string $locale
 	 * @param string $version
@@ -1896,6 +1947,9 @@ class LeagueAPI
 	/**
 	 *   Retrieve language strings data.
 	 *
+	 * @cli-name get-language-strings
+	 * @cli-namespace static-data
+	 *
 	 * @param string $locale
 	 * @param string $version
 	 *
@@ -1933,6 +1987,9 @@ class LeagueAPI
 	/**
 	 *   Retrieve supported languages data.
 	 *
+	 * @cli-name get-languages
+	 * @cli-namespace static-data
+	 *
 	 * @return array
 	 * @throws RequestException
 	 * @throws ServerException
@@ -1960,6 +2017,9 @@ class LeagueAPI
 
 	/**
 	 *   Retrieve map data.
+	 *
+	 * @cli-name get-maps
+	 * @cli-namespace static-data
 	 *
 	 * @param string $locale
 	 * @param string $version
@@ -1998,6 +2058,9 @@ class LeagueAPI
 	/**
 	 *   Retrieves mastery list.
 	 *
+	 * @cli-name get-masteries
+	 * @cli-namespace static-data
+	 *
 	 * @param string $locale
 	 * @param string $version
 	 *
@@ -2034,6 +2097,9 @@ class LeagueAPI
 
 	/**
 	 *   Retrieves mastery by its unique ID.
+	 *
+	 * @cli-name get-mastery
+	 * @cli-namespace static-data
 	 *
 	 * @param int    $mastery_id
 	 * @param string $locale
@@ -2073,6 +2139,9 @@ class LeagueAPI
 	/**
 	 *   Retrieve profile icon list.
 	 *
+	 * @cli-name get-profile-icons
+	 * @cli-namespace static-data
+	 *
 	 * @param string $locale
 	 * @param string $version
 	 *
@@ -2110,6 +2179,9 @@ class LeagueAPI
 	/**
 	 *   Retrieve realm data. (Region versions)
 	 *
+	 * @cli-name get-realm
+	 * @cli-namespace static-data
+	 *
 	 * @return StaticData\StaticRealmDto
 	 * @throws RequestException
 	 * @throws ServerException
@@ -2138,6 +2210,9 @@ class LeagueAPI
 
 	/**
 	 *   Retrieve reforged rune path.
+	 *
+	 * @cli-name get-reforged-rune-paths
+	 * @cli-namespace static-data
 	 *
 	 * @param string $locale
 	 * @param string|null $version
@@ -2181,6 +2256,9 @@ class LeagueAPI
 
 	/**
 	 *   Retrieve reforged rune path.
+	 *
+	 * @cli-name get-reforged-runes
+	 * @cli-namespace static-data
 	 *
 	 * @param string $locale
 	 * @param string|null $version
@@ -2233,6 +2311,9 @@ class LeagueAPI
 	/**
 	 *   Retrieves rune list.
 	 *
+	 * @cli-name get-runes
+	 * @cli-namespace static-data
+	 *
 	 * @param string $locale
 	 * @param string $version
 	 *
@@ -2269,6 +2350,9 @@ class LeagueAPI
 
 	/**
 	 *   Retrieves rune by its unique ID.
+	 *
+	 * @cli-name get-rune
+	 * @cli-namespace static-data
 	 *
 	 * @param int    $rune_id
 	 * @param string $locale
@@ -2307,6 +2391,9 @@ class LeagueAPI
 
 	/**
 	 *   Retrieves summoner spell list.
+	 *
+	 * @cli-name get-summoner-spells
+	 * @cli-namespace static-data
 	 *
 	 * @param bool   $data_by_key
 	 * @param string $locale
@@ -2349,6 +2436,9 @@ class LeagueAPI
 	/**
 	 *   Retrieves summoner spell by its unique numeric key.
 	 *
+	 * @cli-name get-summoner-spell
+	 * @cli-namespace static-data
+	 *
 	 * @param int    $summoner_spell_id
 	 * @param string $locale
 	 * @param string $version
@@ -2387,6 +2477,9 @@ class LeagueAPI
 	/**
 	 *   Retrieves summoner spell by its unique string identifier.
 	 *
+	 * @cli-name get-summoner-spell-by-key
+	 * @cli-namespace static-data
+	 *
 	 * @param string $summoner_spell_key
 	 * @param string $locale
 	 * @param string $version
@@ -2424,6 +2517,9 @@ class LeagueAPI
 
 	/**
 	 *   Retrieve version data.
+	 *
+	 * @cli-name get-versions
+	 * @cli-namespace static-data
 	 *
 	 * @return array
 	 * @throws RequestException
@@ -2464,6 +2560,9 @@ class LeagueAPI
 	/**
 	 *   Get status data - shard list.
 	 *
+	 * @cli-name get
+	 * @cli-namespace status
+	 *
 	 * @param string|null $override_region
 	 *
 	 * @return Objects\ShardStatus
@@ -2500,6 +2599,9 @@ class LeagueAPI
 	/**
 	 *   Retrieve match by match ID.
 	 *
+	 * @cli-name get
+	 * @cli-namespace match
+	 *
 	 * @param int $match_id
 	 *
 	 * @return Objects\MatchDto
@@ -2525,6 +2627,9 @@ class LeagueAPI
 
 	/**
 	 *   Retrieve match by match ID and tournament code.
+	 *
+	 * @cli-name get-by-tournament-code
+	 * @cli-namespace match
 	 *
 	 * @param int $match_id
 	 * @param string $tournament_code
@@ -2553,6 +2658,9 @@ class LeagueAPI
 	/**
 	 *   Retrieve list of match IDs by tournament code.
 	 *
+	 * @cli-name get-ids-by-tournament-code
+	 * @cli-namespace match
+	 *
 	 * @param string $tournament_code
 	 *
 	 * @return array
@@ -2578,6 +2686,9 @@ class LeagueAPI
 
 	/**
 	 *   Retrieve matchlist by account ID.
+	 *
+	 * @cli-name get-matchlist-by-account
+	 * @cli-namespace match
 	 *
 	 * @param string $encrypted_account_id
 	 * @param int|array $queue
@@ -2619,6 +2730,9 @@ class LeagueAPI
 	/**
 	 *   Retrieve matchlsit by account ID.
 	 *
+	 * @cli-name get-timeline
+	 * @cli-namespace match
+	 *
 	 * @param int $match_id
 	 *
 	 * @return Objects\MatchTimelineDto
@@ -2655,6 +2769,9 @@ class LeagueAPI
 	/**
 	 *   Get single summoner object for a given summoner ID.
 	 *
+	 * @cli-name get
+	 * @cli-namespace summoner
+	 *
 	 * @param string $encrypted_summoner_id
 	 *
 	 * @return Objects\SummonerDto
@@ -2680,6 +2797,9 @@ class LeagueAPI
 
 	/**
 	 *   Get summoner name for a given summoner name.
+	 *
+	 * @cli-name get-by-name
+	 * @cli-namespace summoner
 	 *
 	 * @param string $summoner_name
 	 *
@@ -2708,6 +2828,9 @@ class LeagueAPI
 
 	/**
 	 *   Get single summoner object for a given summoner's account ID.
+	 *
+	 * @cli-name get-by-account-id
+	 * @cli-namespace summoner
 	 *
 	 * @param string $encrypted_account_id
 	 *
@@ -2745,6 +2868,9 @@ class LeagueAPI
 	/**
 	 *   Get third party code for given summoner ID.
 	 *
+	 * @cli-name get-by-summoner-id
+	 * @cli-namespace third-party-code
+	 *
 	 * @param string $encrypted_summoner_id
 	 *
 	 * @return string
@@ -2780,6 +2906,9 @@ class LeagueAPI
 
 	/**
 	 *   Creates set of tournament codes for given tournament.
+	 *
+	 * @cli-name create-codes
+	 * @cli-namespace tournament
 	 *
 	 * @param int $tournament_id
 	 * @param int $count
@@ -2844,6 +2973,9 @@ class LeagueAPI
 	/**
 	 *   Updates tournament code's settings.
 	 *
+	 * @cli-name edit-code
+	 * @cli-namespace tournament
+	 *
 	 * @param string $tournament_code
 	 * @param Objects\TournamentCodeUpdateParameters $parameters
 	 *
@@ -2884,6 +3016,9 @@ class LeagueAPI
 	/**
 	 *   Retrieves tournament code settings for given tournament code.
 	 *
+	 * @cli-name get-code-data
+	 * @cli-namespace tournament
+	 *
 	 * @param string $tournament_code
 	 *
 	 * @return Objects\TournamentCodeDto
@@ -2913,6 +3048,9 @@ class LeagueAPI
 
 	/**
 	 *   Creates a tournament provider and returns its ID.
+	 *
+	 * @cli-name create-provider
+	 * @cli-namespace tournament
 	 *
 	 * @param ProviderRegistrationParameters $parameters
 	 *
@@ -2956,6 +3094,9 @@ class LeagueAPI
 	/**
 	 *   Creates a tournament and returns its ID.
 	 *
+	 * @cli-name create-tournament
+	 * @cli-namespace tournament
+	 *
 	 * @param TournamentRegistrationParameters $parameters
 	 *
 	 * @return int
@@ -2995,6 +3136,9 @@ class LeagueAPI
 
 	/**
 	 *   Gets a list of lobby events by tournament code.
+	 *
+	 * @cli-name get-lobby-events
+	 * @cli-namespace tournament
 	 *
 	 * @param string $tournament_code
 	 *

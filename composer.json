@@ -15,6 +15,7 @@
 	"require": {
 		"nette/utils": "^2.5",
 		"guzzlehttp/guzzle": "^6.3",
+		"symfony/console": "^v4",
 		"php": "^7.0.0",
 		"ext-json": "*"
 	},
