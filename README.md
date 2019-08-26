@@ -1,6 +1,6 @@
 # RiotAPI PHP7 wrapper [![GitHub release](https://img.shields.io/github/release/dolejska-daniel/riot-api.svg)](https://github.com/dolejska-daniel/riot-api) [![Packagist](https://img.shields.io/packagist/v/dolejska-daniel/riot-api.svg)](https://packagist.org/packages/dolejska-daniel/riot-api)
 
-> Version v3.0.0-rc.1
+> Version v3.1.0
 
 [![Build Status](https://travis-ci.org/dolejska-daniel/riot-api.svg?branch=master)](https://travis-ci.org/dolejska-daniel/riot-api)
 [![Test Coverage](https://codeclimate.com/github/dolejska-daniel/riot-api/badges/coverage.svg)](https://codeclimate.com/github/dolejska-daniel/riot-api/coverage)
@@ -281,10 +281,19 @@ For more, please see [the wiki pages](https://github.com/dolejska-daniel/riot-ap
 
 
 ## [CLI support](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-CLI-support).
-You can easily get API results even in CLI:
+You can also use the library in command line environment:
 
 ```shell
-root@localhost:~/src/LeagueAPI# php7.0 LeagueAPICLI.php getChampion 61 --config ~/LeagueAPI_Config.json
+root@localhost:~/riot-api/src/LeagueAPICLI# leagueapicli summoner:get-by-name "I am TheKronnY" --pretty --config ~/config.json
+{
+    "id": "Y0ac04pquunxrtvEtxWsG8hX0EBYSFfVuuL6JsR5AaWOoLo",
+    "accountId": "UIctwb-75CS_vCHe494r-cDO9zlvGzu4JVdWIb_ox7xqmg",
+    "puuid": "XYPInPFGOn1mqOmkzZEtf9jzNCUTK5KviHWxNfNnmWZ_4EovMV-q02qY5rXtRGWl1Nb_oK-2D1m4Bg",
+    "name": "I am TheKronnY",
+    "profileIconId": 540,
+    "revisionDate": 1566761498000,
+    "summonerLevel": 111
+}
 ```
 
 For more information about CLI support, please see [the wiki pages](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-CLI-support).

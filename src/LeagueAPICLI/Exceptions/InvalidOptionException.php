@@ -17,13 +17,15 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace RiotAPI\LeagueAPI\CLI\Exceptions;
+namespace RiotAPI\LeagueAPICLI\Exceptions;
 
 use RiotAPI\LeagueAPI\Exceptions\GeneralException;
 
 /**
- *   Class ProcessException
+ *   Class InvalidOptionException
  *
- * @package RiotAPI\LeagueAPI\CLI\Exceptions
+ * @package RiotAPI\LeagueAPICLI\Exceptions
  */
-class ProcessException extends GeneralException {}
+class InvalidOptionException extends GeneralException
+{
+}

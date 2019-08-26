@@ -19,9 +19,8 @@
 
 namespace RiotAPI\LeagueAPI;
 
-
-
 use Nette\Utils\DateTime;
+
 use RiotAPI\LeagueAPI\Definitions\AsyncRequest;
 use RiotAPI\LeagueAPI\Definitions\CallCacheControl;
 use RiotAPI\LeagueAPI\Definitions\FileCacheProvider;
@@ -50,10 +49,8 @@ use RiotAPI\LeagueAPI\Exceptions\ServerException;
 use RiotAPI\LeagueAPI\Exceptions\ServerLimitException;
 use RiotAPI\LeagueAPI\Exceptions\SettingsException;
 
-
 use RiotAPI\DataDragonAPI\DataDragonAPI;
 use RiotAPI\DataDragonAPI\Exceptions as DataDragonExceptions;
-
 
 use GuzzleHttp\Client;
 use GuzzleHttp\RequestOptions;
@@ -1316,10 +1313,10 @@ class LeagueAPI
 	}
 
 	/**
-	 * ==================================================================d=d=
+	 * ==================================================================dd=
 	 *     Champion Endpoint Methods
 	 *     @link https://developer.riotgames.com/api-methods/#champion-v3
-	 * ==================================================================d=d=
+	 * ==================================================================dd=
 	 **/
 	const RESOURCE_CHAMPION = '1237:champion';
 	const RESOURCE_CHAMPION_VERSION = 'v3';
@@ -1351,10 +1348,10 @@ class LeagueAPI
 	}
 
 	/**
-	 * ==================================================================d=d=
+	 * ==================================================================dd=
 	 *     Champion Mastery Endpoint Methods
 	 *     @link https://developer.riotgames.com/api-methods/#champion-mastery-v4
-	 * ==================================================================d=d=
+	 * ==================================================================dd=
 	 **/
 	const RESOURCE_CHAMPIONMASTERY = '1418:champion-mastery';
 	const RESOURCE_CHAMPIONMASTERY_VERSION = 'v4';
@@ -1457,10 +1454,10 @@ class LeagueAPI
 
 
 	/**
-	 * ==================================================================d=d=
+	 * ==================================================================dd=
 	 *     Spectator Endpoint Methods
 	 *     @link https://developer.riotgames.com/api-methods/#spectator-v4
-	 * ==================================================================d=d=
+	 * ==================================================================dd=
 	 **/
 	const RESOURCE_SPECTATOR = '1419:spectator';
 	const RESOURCE_SPECTATOR_VERSION = 'v4';
@@ -1523,10 +1520,10 @@ class LeagueAPI
 
 
 	/**
-	 * ==================================================================d=d=
+	 * ==================================================================dd=
 	 *     League Endpoint Methods
 	 *     @link https://developer.riotgames.com/api-methods/#league-v4
-	 * ==================================================================d=d=
+	 * ==================================================================dd=
 	 **/
 	const RESOURCE_LEAGUE = '1424:league';
 	const RESOURCE_LEAGUE_VERSION = 'v4';
@@ -1750,9 +1747,9 @@ class LeagueAPI
 
 
 	/**
-	 * ==================================================================d=d=
+	 * ==================================================================dd=
 	 *     Static Data Endpoint Methods
-	 * ==================================================================d=d=
+	 * ==================================================================dd=
 	 **/
 	const RESOURCE_STATICDATA = '1351:lol-static-data';
 	const RESOURCE_STATICDATA_V3 = 'v3';
@@ -2549,10 +2546,10 @@ class LeagueAPI
 
 
 	/**
-	 * ==================================================================d=d=
+	 * ==================================================================dd=
 	 *     Status Endpoint Methods
 	 *     @link https://developer.riotgames.com/api-methods/#lol-status-v3
-	 * ==================================================================d=d=
+	 * ==================================================================dd=
 	 **/
 	const RESOURCE_STATUS = '1246:lol-status';
 	const RESOURCE_STATUS_VERSION = 'v3';
@@ -2588,10 +2585,10 @@ class LeagueAPI
 
 
 	/**
-	 * ==================================================================d=d=
+	 * ==================================================================dd=
 	 *     Match Endpoint Methods
 	 *     @link https://developer.riotgames.com/api-methods/#match-v4
-	 * ==================================================================d=d=
+	 * ==================================================================dd=
 	 **/
 	const RESOURCE_MATCH = '1420:match';
 	const RESOURCE_MATCH_VERSION = 'v4';
@@ -2758,10 +2755,10 @@ class LeagueAPI
 
 
 	/**
-	 * ==================================================================d=d=
+	 * ==================================================================dd=
 	 *     Summoner Endpoint Methods
 	 *     @link https://developer.riotgames.com/api-methods/#summoner-v4
-	 * ==================================================================d=d=
+	 * ==================================================================dd=
 	 **/
 	const RESOURCE_SUMMONER = '1416:summoner';
 	const RESOURCE_SUMMONER_VERSION = 'v4';
@@ -2857,10 +2854,10 @@ class LeagueAPI
 
 
 	/**
-	 * ==================================================================d=d=
+	 * ==================================================================dd=
 	 *     Third Party Code Endpoint Methods
 	 *     @link https://developer.riotgames.com/api-methods/#third-party-code-v4
-	 * ==================================================================d=d=
+	 * ==================================================================dd=
 	 **/
 	const RESOURCE_THIRD_PARTY_CODE = '1426:third-party-code';
 	const RESOURCE_THIRD_PARTY_CODE_VERSION = 'v4';
@@ -2896,10 +2893,10 @@ class LeagueAPI
 
 
 	/**
-	 * ==================================================================d=d=
+	 * ==================================================================dd=
 	 *     Tournament Endpoint Methods
 	 *     @link https://developer.riotgames.com/api-methods/#tournament-v4
-	 * ==================================================================d=d=
+	 * ==================================================================dd=
 	 **/
 	const RESOURCE_TOURNAMENT = '1436:tournament';
 	const RESOURCE_TOURNAMENT_VERSION = 'v4';
@@ -3169,10 +3166,10 @@ class LeagueAPI
 
 
 	/**
-	 * ==================================================================d=d=
+	 * ==================================================================dd=
 	 *     Tournament Stub Endpoint Methods
 	 *     @link https://developer.riotgames.com/api-methods/#tournament-stub-v4
-	 * ==================================================================d=d=
+	 * ==================================================================dd=
 	 **/
 	const RESOURCE_TOURNAMENT_STUB = '1435:tournament-stub';
 	const RESOURCE_TOURNAMENT_STUB_VERSION = 'v4';
@@ -3350,9 +3347,9 @@ class LeagueAPI
 
 
 	/**
-	 * ==================================================================d=d=
+	 * ==================================================================dd=
 	 *     Fake Endpoint for testing purposes
-	 * ==================================================================d=d=
+	 * ==================================================================dd=
 	 **/
 
 	/**

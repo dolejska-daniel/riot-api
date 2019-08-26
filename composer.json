@@ -15,8 +15,8 @@
 	"require": {
 		"nette/utils": "^2.5",
 		"guzzlehttp/guzzle": "^6.3",
-		"symfony/console": "^v4",
-		"php": "^7.0.0",
+		"symfony/console": "^v3",
+		"php": "^7|^8",
 		"ext-json": "*"
 	},
 	"require-dev": {
@@ -25,9 +25,13 @@
 	},
 	"autoload": {
 		"psr-4": {
-			"RiotAPI\\DataDragonAPI\\": "src/DataDragonAPI",
-			"RiotAPI\\LeagueAPI\\": "src/LeagueAPI"
+			"RiotAPI\\LeagueAPI\\": "src/LeagueAPI",
+			"RiotAPI\\LeagueAPICLI\\": "src/LeagueAPICLI",
+			"RiotAPI\\DataDragonAPI\\": "src/DataDragonAPI"
 		}
 	},
+	"bin": [
+		"src/LeagueAPICLI/leagueapicli"
+	],
 	"minimum-stability": "stable"
 }

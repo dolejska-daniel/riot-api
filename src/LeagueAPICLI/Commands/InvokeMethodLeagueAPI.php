@@ -17,10 +17,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace RiotAPI\LeagueAPI\CLI\Commands;
+namespace RiotAPI\LeagueAPICLI\Commands;
 
 use RiotAPI\LeagueAPI\LeagueAPI;
-use RiotAPI\LeagueAPI\CLI\Exceptions\InvalidOptionException;
+use RiotAPI\LeagueAPICLI\Exceptions\InvalidOptionException;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -30,7 +30,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 /**
  *   Class InvokeMethodLeagueAPI
  *
- * @package RiotAPI\LeagueAPI\CLI\Commands
+ * @package RiotAPI\LeagueAPICLI\Commands
  */
 class InvokeMethodLeagueAPI extends Command
 {
@@ -92,15 +92,19 @@ class InvokeMethodLeagueAPI extends Command
 		$this->methodRef->invokeArgs($this->api, $arguments);
 		$data = $this->api->getResult();
 
+		$json_options = null;
+		if ($input->hasOption('pretty') && $input->getOption('pretty'))
+			$json_options = JSON_PRETTY_PRINT;
+
 		$output_path = $input->getOption('output');
 		if ($output_path)
 		{
 			if (!is_writeable($output_path))
 				throw new InvalidOptionException("Path to the output file ('$output_path') is not valid or the file is not writeable.");
 
-			file_put_contents($output_path, json_encode($data));
+			file_put_contents($output_path, json_encode($data, $json_options));
 		}
 
-		$output->write(json_encode($data));
+		$output->write(json_encode($data, $json_options));
 	}
 }
