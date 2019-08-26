@@ -9,70 +9,9 @@
 [![Support Project](https://img.shields.io/badge/support_project-PayPal-blue.svg)](https://www.paypal.me/dolejskad)
 
 
-# RiotAPI v3.1 CLI CHANGES
-
-
-
-# RiotAPI v3 CHANGES WARNING!
-Update [`v3.0.0-rc.1`](https://github.com/dolejska-daniel/riot-api/releases/tag/v3.0.0-rc.1) came with big changes to the library!
-If you've been using this library and just updated - READ THIS.
-
-**OLD DEPRECATED USAGE**:
-```php
-use RiotAPI\RiotAPI;
-use RiotAPI\Exceptions\GeneralException;
-use RiotAPI\Objects\ChampionInfo;
-
-try
-{
-	$api = new RiotAPI([...]);
-}
-catch (GeneralException $e)
-{
-	// ...
-}
-```
-```php
-use DataDragonAPI\DataDragonAPI;
-use DataDragonAPI\Exception\GeneralException;
-use DataDragonAPI\Definition\Map;
-
-DataDragonAPI::initByCdn([...]);
-// ...
-```
-
-**NEW USAGE**:
-
-Main API class `RiotAPI` has been renamed to `LeagueAPI` and has been moved to `RiotAPI\LeagueAPI` namespace.
-Also all related objects (`Objects`, `Definitions`, ...) has been moved to `RiotAPI\LeagueAPI` (`RiotAPI\LeagueAPI\Objects`, `RiotAPI\LeagueAPI\Definitions` respectively...).
-
-```php
-use RiotAPI\LeagueAPI\LeagueAPI;
-use RiotAPI\LeagueAPI\Exceptions\GeneralException;
-use RiotAPI\LeagueAPI\Objects\ChampionInfo;
-
-try
-{
-	$api = new LeagueAPI([...]);
-}
-catch (GeneralException $e)
-{
-	// ...
-}
-```
-
-`DataDragonAPI` class has been moved to `RiotAPI\DataDragonAPI` namespace.
-Also all related objects (`Definition` and `Exception`) has been moved to `RiotAPI\DataDragonAPI` (`RiotAPI\DataDragonAPI\Definitions` and `RiotAPI\DataDragonAPI\Exceptions` respectively...).
-
-```php
-use RiotAPI\DataDragonAPI\DataDragonAPI;
-use RiotAPI\DataDragonAPI\Exceptions\GeneralException;
-use RiotAPI\DataDragonAPI\Definitions\Map;
-
-DataDragonAPI::initByCdn([...]);
-// ...
-```
-
+# RiotAPI `v3.1.0` CLI CHANGES
+CLI support was remade from ground up now using `symfony/console`.
+For new usage details, please visit [the updated wiki pages](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-CLI-support).
 
 # Table of Contents
 1. [Introduction](#introduction)

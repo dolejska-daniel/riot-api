@@ -85,7 +85,7 @@ class RiotAPITestCase extends TestCase
 				continue; // TODO: Continue?
 
 			//  For each property parse its DataType
-			$dataType = self::getPropertyDataType($propRef->getDocComment());
+			$dataType = RiotAPI\LeagueAPI\Objects\ApiObject::getPropertyDataType($propRef->getDocComment());
 
 			//  Check if its data type is non-standard data type (our special object)
 			if ($dataType !== false)
@@ -131,28 +131,6 @@ class RiotAPITestCase extends TestCase
 		//  Check data validity
 		$data = $object->getData();
 		$this->assertSame($originalData, $data, "Clean data of {$ref->getName()} are not valid! They do not match with original request result data.");
-	}
-
-	/**
-	 *   Returns DataType specified in PHPDoc comment.
-	 *
-	 * @param string $phpDocComment
-	 *
-	 * @return bool|\stdClass
-	 */
-	public static function getPropertyDataType( string $phpDocComment )
-	{
-		$o = new \stdClass();
-
-		preg_match('/@var\s+(\w+)(\[\])?/', $phpDocComment, $matches);
-
-		$o->class = $matches[1];
-		$o->isArray = isset($matches[2]);
-
-		if (in_array($o->class, [ 'integer', 'int', 'string', 'bool', 'boolean', 'double', 'float', 'array' ]))
-			return false;
-
-		return $o;
 	}
 
 	/**
