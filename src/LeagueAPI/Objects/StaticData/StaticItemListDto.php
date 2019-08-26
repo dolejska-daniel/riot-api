@@ -26,10 +26,6 @@ use RiotAPI\LeagueAPI\Objects\ApiObjectIterable;
  *   Class StaticItemListDto
  * This object contains item list data.
  *
- * Used in:
- *   lol-static-data (v3)
- *     @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getItemList
- *
  * @iterable $data
  *
  * @package RiotAPI\LeagueAPI\Objects\StaticData

@@ -26,10 +26,6 @@ use RiotAPI\LeagueAPI\Objects\ApiObject;
  *   Class StaticGroupDto
  * This object contains item group data.
  *
- * Used in:
- *   lol-static-data (v3)
- *     @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getItemList
- *
  * @package RiotAPI\LeagueAPI\Objects\StaticData
  */
 class StaticGroupDto extends ApiObject

@@ -25,8 +25,8 @@ namespace RiotAPI\LeagueAPI\Objects;
  *
  * Used in:
  *   match (v4)
- *     @link https://developer.riotgames.com/api-methods/#match-v4/GET_getMatchIdsByTournamentCode
- *     @link https://developer.riotgames.com/api-methods/#match-v4/GET_getMatchByTournamentCode
+ *     @link https://developer.riotgames.com/apis#match-v4/GET_getMatchIdsByTournamentCode
+ *     @link https://developer.riotgames.com/apis#match-v4/GET_getMatchByTournamentCode
  *
  * @package RiotAPI\LeagueAPI\Objects
  */

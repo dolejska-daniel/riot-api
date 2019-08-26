@@ -25,10 +25,10 @@ namespace RiotAPI\LeagueAPI\Objects;
  *
  * Used in:
  *   league (v4)
- *     @link https://developer.riotgames.com/api-methods/#league-v4/GET_getChallengerLeague
- *     @link https://developer.riotgames.com/api-methods/#league-v4/GET_getGrandmasterLeague
- *     @link https://developer.riotgames.com/api-methods/#league-v4/GET_getLeagueById
- *     @link https://developer.riotgames.com/api-methods/#league-v4/GET_getMasterLeague
+ *     @link https://developer.riotgames.com/apis#league-v4/GET_getChallengerLeague
+ *     @link https://developer.riotgames.com/apis#league-v4/GET_getGrandmasterLeague
+ *     @link https://developer.riotgames.com/apis#league-v4/GET_getLeagueById
+ *     @link https://developer.riotgames.com/apis#league-v4/GET_getMasterLeague
  *
  * @package RiotAPI\LeagueAPI\Objects
  */
@@ -43,13 +43,22 @@ class LeagueItemDto extends ApiObject
 	/** @var MiniSeriesDto $miniSeries */
 	public $miniSeries;
 
-	/** @var int $wins */
+	/**
+	 *   Winning team on Summoners Rift. First placement in Teamfight Tactics.
+	 *
+	 * @var int $wins
+	 */
 	public $wins;
 
 	/** @var bool $veteran */
 	public $veteran;
 
-	/** @var int $losses */
+	/**
+	 *   Losing team on Summoners Rift. Second through eighth placement in 
+	 * Teamfight Tactics.
+	 *
+	 * @var int $losses
+	 */
 	public $losses;
 
 	/** @var bool $freshBlood */

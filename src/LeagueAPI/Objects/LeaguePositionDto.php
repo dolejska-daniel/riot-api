@@ -25,8 +25,8 @@ namespace RiotAPI\LeagueAPI\Objects;
  *
  * Used in:
  *   league (v4)
- *     @link https://developer.riotgames.com/api-methods/#league-v4/GET_getAllLeaguePositionsForSummoner
- *     @link https://developer.riotgames.com/api-methods/#league-v4/GET_getPositionalLeagueEntries
+ *     @link https://developer.riotgames.com/apis#league-v4/GET_getAllLeaguePositionsForSummoner
+ *     @link https://developer.riotgames.com/apis#league-v4/GET_getPositionalLeagueEntries
  *
  * @package RiotAPI\LeagueAPI\Objects
  */

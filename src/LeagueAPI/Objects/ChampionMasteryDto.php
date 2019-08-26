@@ -26,8 +26,8 @@ namespace RiotAPI\LeagueAPI\Objects;
  *
  * Used in:
  *   champion-mastery (v4)
- *     @link https://developer.riotgames.com/api-methods/#champion-mastery-v4/GET_getAllChampionMasteries
- *     @link https://developer.riotgames.com/api-methods/#champion-mastery-v4/GET_getChampionMastery
+ *     @link https://developer.riotgames.com/apis#champion-mastery-v4/GET_getAllChampionMasteries
+ *     @link https://developer.riotgames.com/apis#champion-mastery-v4/GET_getChampionMastery
  *
  * @linkable getStaticChampion($championId)
  *

@@ -25,7 +25,7 @@ namespace RiotAPI\LeagueAPI\Objects;
  *
  * Used in:
  *   tournament (v4)
- *     @link https://developer.riotgames.com/api-methods/#tournament-v4/PUT_updateCode
+ *     @link https://developer.riotgames.com/apis#tournament-v4/PUT_updateCode
  *
  * @package RiotAPI\LeagueAPI\Objects
  */

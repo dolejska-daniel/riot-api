@@ -25,7 +25,7 @@ namespace RiotAPI\LeagueAPI\Objects;
  *
  * Used in:
  *   lol-status (v3)
- *     @link https://developer.riotgames.com/api-methods/#lol-status-v3/GET_getShardData
+ *     @link https://developer.riotgames.com/apis#lol-status-v3/GET_getShardData
  *
  * @iterable $updates
  *

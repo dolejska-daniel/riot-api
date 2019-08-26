@@ -25,9 +25,9 @@ namespace RiotAPI\LeagueAPI\Objects;
  *
  * Used in:
  *   tournament-stub (v4)
- *     @link https://developer.riotgames.com/api-methods/#tournament-stub-v4/GET_getLobbyEventsByCode
+ *     @link https://developer.riotgames.com/apis#tournament-stub-v4/GET_getLobbyEventsByCode
  *   tournament (v4)
- *     @link https://developer.riotgames.com/api-methods/#tournament-v4/GET_getLobbyEventsByCode
+ *     @link https://developer.riotgames.com/apis#tournament-v4/GET_getLobbyEventsByCode
  *
  * @package RiotAPI\LeagueAPI\Objects
  */

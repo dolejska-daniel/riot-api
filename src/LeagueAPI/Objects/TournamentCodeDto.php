@@ -25,7 +25,7 @@ namespace RiotAPI\LeagueAPI\Objects;
  *
  * Used in:
  *   tournament (v4)
- *     @link https://developer.riotgames.com/api-methods/#tournament-v4/GET_getTournamentCode
+ *     @link https://developer.riotgames.com/apis#tournament-v4/GET_getTournamentCode
  *
  * @package RiotAPI\LeagueAPI\Objects
  */

@@ -26,10 +26,6 @@ use RiotAPI\LeagueAPI\Objects\ApiObject;
  *   Class StaticItemTreeDto
  * This object contains item tree data.
  *
- * Used in:
- *   lol-static-data (v3)
- *     @link https://developer.riotgames.com/api-methods/#lol-static-data-v3/GET_getItemList
- *
  * @package RiotAPI\LeagueAPI\Objects\StaticData
  */
 class StaticItemTreeDto extends ApiObject

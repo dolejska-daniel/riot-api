@@ -24,9 +24,11 @@ namespace RiotAPI\LeagueAPI\Objects;
  *   Class LeagueEntryDto
  *
  * Used in:
+ *   league-exp (v4)
+ *     @link https://developer.riotgames.com/apis#league-exp-v4/GET_getLeagueEntries
  *   league (v4)
- *     @link https://developer.riotgames.com/api-methods/#league-v4/GET_getLeagueEntriesForSummoner
- *     @link https://developer.riotgames.com/api-methods/#league-v4/GET_getLeagueEntriesForSummoner
+ *     @link https://developer.riotgames.com/apis#league-v4/GET_getLeagueEntriesForSummoner
+ *     @link https://developer.riotgames.com/apis#league-v4/GET_getLeagueEntriesForSummoner
  *
  * @package RiotAPI\LeagueAPI\Objects
  */
@@ -44,13 +46,22 @@ class LeagueEntryDto extends ApiObject
 	/** @var MiniSeriesDto $miniSeries */
 	public $miniSeries;
 
-	/** @var int $wins */
+	/**
+	 *   Winning team on Summoners Rift. First placement in Teamfight Tactics.
+	 *
+	 * @var int $wins
+	 */
 	public $wins;
 
 	/** @var bool $veteran */
 	public $veteran;
 
-	/** @var int $losses */
+	/**
+	 *   Losing team on Summoners Rift. Second through eighth placement in 
+	 * Teamfight Tactics.
+	 *
+	 * @var int $losses
+	 */
 	public $losses;
 
 	/** @var string $rank */

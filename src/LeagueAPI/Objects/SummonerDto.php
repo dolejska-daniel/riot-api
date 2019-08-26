@@ -26,10 +26,10 @@ namespace RiotAPI\LeagueAPI\Objects;
  *
  * Used in:
  *   summoner (v4)
- *     @link https://developer.riotgames.com/api-methods/#summoner-v4/GET_getByAccountId
- *     @link https://developer.riotgames.com/api-methods/#summoner-v4/GET_getBySummonerName
- *     @link https://developer.riotgames.com/api-methods/#summoner-v4/GET_getByPUUID
- *     @link https://developer.riotgames.com/api-methods/#summoner-v4/GET_getBySummonerId
+ *     @link https://developer.riotgames.com/apis#summoner-v4/GET_getByAccountId
+ *     @link https://developer.riotgames.com/apis#summoner-v4/GET_getBySummonerName
+ *     @link https://developer.riotgames.com/apis#summoner-v4/GET_getByPUUID
+ *     @link https://developer.riotgames.com/apis#summoner-v4/GET_getBySummonerId
  *
  * @package RiotAPI\LeagueAPI\Objects
  */

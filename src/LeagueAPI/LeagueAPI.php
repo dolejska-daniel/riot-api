@@ -1315,7 +1315,7 @@ class LeagueAPI
 	/**
 	 * ==================================================================dd=
 	 *     Champion Endpoint Methods
-	 *     @link https://developer.riotgames.com/api-methods/#champion-v3
+	 *     @link https://developer.riotgames.com/apis#champion-v3
 	 * ==================================================================dd=
 	 **/
 	const RESOURCE_CHAMPION = '1237:champion';
@@ -1350,7 +1350,7 @@ class LeagueAPI
 	/**
 	 * ==================================================================dd=
 	 *     Champion Mastery Endpoint Methods
-	 *     @link https://developer.riotgames.com/api-methods/#champion-mastery-v4
+	 *     @link https://developer.riotgames.com/apis#champion-mastery-v4
 	 * ==================================================================dd=
 	 **/
 	const RESOURCE_CHAMPIONMASTERY = '1418:champion-mastery';
@@ -1375,7 +1375,7 @@ class LeagueAPI
 	 * @throws ServerLimitException
 	 * @throws GeneralException
 	 *
-	 * @link https://developer.riotgames.com/api-methods/#champion-mastery-v4/GET_getChampionMastery
+	 * @link https://developer.riotgames.com/apis#champion-mastery-v4/GET_getChampionMastery
 	 */
 	public function getChampionMastery( string $encrypted_summoner_id, int $champion_id )
 	{
@@ -1405,7 +1405,7 @@ class LeagueAPI
 	 * @throws ServerLimitException
 	 * @throws GeneralException
 	 *
-	 * @link https://developer.riotgames.com/api-methods/#champion-mastery-v4/GET_getAllChampionMasteries
+	 * @link https://developer.riotgames.com/apis#champion-mastery-v4/GET_getAllChampionMasteries
 	 */
 	public function getChampionMasteries( string $encrypted_summoner_id )
 	{
@@ -1439,7 +1439,7 @@ class LeagueAPI
 	 * @throws ServerLimitException
 	 * @throws GeneralException
 	 *
-	 * @link https://developer.riotgames.com/api-methods/#champion-mastery-v4/GET_getChampionMasteryScore
+	 * @link https://developer.riotgames.com/apis#champion-mastery-v4/GET_getChampionMasteryScore
 	 */
 	public function getChampionMasteryScore( string $encrypted_summoner_id )
 	{
@@ -1456,7 +1456,7 @@ class LeagueAPI
 	/**
 	 * ==================================================================dd=
 	 *     Spectator Endpoint Methods
-	 *     @link https://developer.riotgames.com/api-methods/#spectator-v4
+	 *     @link https://developer.riotgames.com/apis#spectator-v4
 	 * ==================================================================dd=
 	 **/
 	const RESOURCE_SPECTATOR = '1419:spectator';
@@ -1478,7 +1478,7 @@ class LeagueAPI
 	 * @throws ServerLimitException
 	 * @throws GeneralException
 	 *
-	 * @link https://developer.riotgames.com/api-methods/#spectator-v4/GET_getCurrentGameInfoBySummoner
+	 * @link https://developer.riotgames.com/apis#spectator-v4/GET_getCurrentGameInfoBySummoner
 	 */
 	public function getCurrentGameInfo( string $encrypted_summoner_id )
 	{
@@ -1505,7 +1505,7 @@ class LeagueAPI
 	 * @throws ServerLimitException
 	 * @throws GeneralException
 	 *
-	 * @link https://developer.riotgames.com/api-methods/#spectator-v4/GET_getFeaturedGames
+	 * @link https://developer.riotgames.com/apis#spectator-v4/GET_getFeaturedGames
 	 */
 	public function getFeaturedGames()
 	{
@@ -1522,7 +1522,7 @@ class LeagueAPI
 	/**
 	 * ==================================================================dd=
 	 *     League Endpoint Methods
-	 *     @link https://developer.riotgames.com/api-methods/#league-v4
+	 *     @link https://developer.riotgames.com/apis#league-v4
 	 * ==================================================================dd=
 	 **/
 	const RESOURCE_LEAGUE = '1424:league';
@@ -1544,7 +1544,7 @@ class LeagueAPI
 	 * @throws ServerLimitException
 	 * @throws GeneralException
 	 *
-	 * @link https://developer.riotgames.com/api-methods/#league-v4/GET_getLeagueById
+	 * @link https://developer.riotgames.com/apis#league-v4/GET_getLeagueById
 	 */
 	public function getLeagueById( string $league_id )
 	{
@@ -1573,7 +1573,7 @@ class LeagueAPI
 	 * @throws ServerLimitException
 	 * @throws GeneralException
 	 *
-	 * @link https://developer.riotgames.com/api-methods/#league-v4/GET_getAllLeaguePositionsForSummoner
+	 * @link https://developer.riotgames.com/apis#league-v4/GET_getAllLeaguePositionsForSummoner
 	 */
 	public function getLeaguePositionsForSummoner( string $encrypted_summoner_id )
 	{
@@ -1598,7 +1598,7 @@ class LeagueAPI
 	 *
 	 * @param string $encrypted_summoner_id
 	 *
-	 * @return null
+	 * @return Objects\LeagueEntryDto[]
 	 *
 	 * @throws GeneralException
 	 * @throws RequestException
@@ -1606,7 +1606,7 @@ class LeagueAPI
 	 * @throws ServerLimitException
 	 * @throws SettingsException
 	 *
-	 * @link https://developer.riotgames.com/api-methods/#league-v4/GET_getLeagueEntriesForSummoner
+	 * @link https://developer.riotgames.com/apis#league-v4/GET_getLeagueEntriesForSummoner
 	 */
 	public function getLeagueEntriesForSummoner( string $encrypted_summoner_id )
 	{
@@ -1633,7 +1633,7 @@ class LeagueAPI
 	 * @param string $tier
 	 * @param string $division
 	 *
-	 * @return null
+	 * @return Objects\LeagueEntryDto[]
 	 *
 	 * @throws GeneralException
 	 * @throws RequestException
@@ -1641,7 +1641,7 @@ class LeagueAPI
 	 * @throws ServerLimitException
 	 * @throws SettingsException
 	 *
-	 * @link https://developer.riotgames.com/api-methods/#league-v4/GET_getLeagueEntries
+	 * @link https://developer.riotgames.com/apis#league-v4/GET_getLeagueEntries
 	 */
 	public function getLeagueEntries( string $queue, string $tier, string $division )
 	{
@@ -1674,7 +1674,7 @@ class LeagueAPI
 	 * @throws ServerLimitException
 	 * @throws GeneralException
 	 *
-	 * @link https://developer.riotgames.com/api-methods/#league-v4/GET_getChallengerLeague
+	 * @link https://developer.riotgames.com/apis#league-v4/GET_getChallengerLeague
 	 */
 	public function getLeagueChallenger( string $game_queue_type )
 	{
@@ -1703,7 +1703,7 @@ class LeagueAPI
 	 * @throws ServerLimitException
 	 * @throws GeneralException
 	 *
-	 * @link https://developer.riotgames.com/api-methods/#league-v4/GET_getMasterLeague
+	 * @link https://developer.riotgames.com/apis#league-v4/GET_getMasterLeague
 	 */
 	public function getLeagueGrandmaster( string $game_queue_type )
 	{
@@ -1732,7 +1732,7 @@ class LeagueAPI
 	 * @throws ServerLimitException
 	 * @throws GeneralException
 	 *
-	 * @link https://developer.riotgames.com/api-methods/#league-v4/GET_getMasterLeague
+	 * @link https://developer.riotgames.com/apis#league-v4/GET_getMasterLeague
 	 */
 	public function getLeagueMaster( string $game_queue_type )
 	{
@@ -1742,6 +1742,51 @@ class LeagueAPI
 
 		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
 			return new Objects\LeagueListDto($result, $this);
+		});
+	}
+
+
+	/**
+	 * ==================================================================dd=
+	 *     League Endpoint Methods
+	 *     @link https://developer.riotgames.com/apis#league-exp-v4
+	 * ==================================================================dd=
+	 **/
+	const RESOURCE_LEAGUE_EXP = '1474:league-exp';
+	const RESOURCE_LEAGUE_EXP_VERSION = 'v4';
+
+	/**
+	 *   Get all the league entries.
+	 *
+	 * @cli-name get-league-entries
+	 * @cli-namespace league-exp
+	 *
+	 * @param string $queue
+	 * @param string $tier
+	 * @param string $division
+	 *
+	 * @return Objects\LeagueEntryDto[]
+	 *
+	 * @throws GeneralException
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 * @throws SettingsException
+	 *
+	 * @link https://developer.riotgames.com/apis#league-exp-v4/GET_getLeagueEntries
+	 */
+	public function getLeagueEntriesExp( string $queue, string $tier, string $division )
+	{
+		$resultPromise = $this->setEndpoint("/lol/league-exp/" . self::RESOURCE_LEAGUE_EXP_VERSION . "/entries/{$queue}/{$tier}/{$division}")
+			->setResource(self::RESOURCE_LEAGUE_EXP, "/entries/%s/%s/%s")
+			->makeCall();
+
+		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
+			$r = [];
+			foreach ($result as $leagueEntryDtoData)
+				$r[] = new Objects\LeagueEntryDto($leagueEntryDtoData, $this);
+
+			return $r;
 		});
 	}
 
@@ -2548,7 +2593,7 @@ class LeagueAPI
 	/**
 	 * ==================================================================dd=
 	 *     Status Endpoint Methods
-	 *     @link https://developer.riotgames.com/api-methods/#lol-status-v3
+	 *     @link https://developer.riotgames.com/apis#lol-status-v3
 	 * ==================================================================dd=
 	 **/
 	const RESOURCE_STATUS = '1246:lol-status';
@@ -2570,7 +2615,7 @@ class LeagueAPI
 	 * @throws ServerLimitException
 	 * @throws GeneralException
 	 *
-	 * @link https://developer.riotgames.com/api-methods/#lol-status-v3/GET_getShardData
+	 * @link https://developer.riotgames.com/apis#lol-status-v3/GET_getShardData
 	 */
 	public function getStatusData( string $override_region = null )
 	{
@@ -2587,7 +2632,7 @@ class LeagueAPI
 	/**
 	 * ==================================================================dd=
 	 *     Match Endpoint Methods
-	 *     @link https://developer.riotgames.com/api-methods/#match-v4
+	 *     @link https://developer.riotgames.com/apis#match-v4
 	 * ==================================================================dd=
 	 **/
 	const RESOURCE_MATCH = '1420:match';
@@ -2609,7 +2654,7 @@ class LeagueAPI
 	 * @throws ServerLimitException
 	 * @throws GeneralException
 	 *
-	 * @link https://developer.riotgames.com/api-methods/#match-v4/GET_getMatch
+	 * @link https://developer.riotgames.com/apis#match-v4/GET_getMatch
 	 */
 	public function getMatch( $match_id )
 	{
@@ -2639,7 +2684,7 @@ class LeagueAPI
 	 * @throws ServerLimitException
 	 * @throws GeneralException
 	 *
-	 * @link https://developer.riotgames.com/api-methods/#match-v4/GET_getMatchByTournamentCode
+	 * @link https://developer.riotgames.com/apis#match-v4/GET_getMatchByTournamentCode
 	 */
 	public function getMatchByTournamentCode( $match_id, string $tournament_code )
 	{
@@ -2668,7 +2713,7 @@ class LeagueAPI
 	 * @throws ServerLimitException
 	 * @throws GeneralException
 	 *
-	 * @link https://developer.riotgames.com/api-methods/#match-v4/GET_getMatchIdsByTournamentCode
+	 * @link https://developer.riotgames.com/apis#match-v4/GET_getMatchIdsByTournamentCode
 	 */
 	public function getMatchIdsByTournamentCode( string $tournament_code )
 	{
@@ -2704,9 +2749,9 @@ class LeagueAPI
 	 * @throws SettingsException
 	 * @throws GeneralException
 	 *
-	 * @link https://developer.riotgames.com/api-methods/#match-v4/GET_getMatchlist
+	 * @link https://developer.riotgames.com/apis#match-v4/GET_getMatchlist
 	 */
-	public function getMatchlistByAccount( string $encrypted_account_id, $queue = null, $season = null, $champion = null, int $beginTime = null, int $endTime = null, int $beginIndex = null, int $endIndex = null ): Objects\MatchlistDto
+	public function getMatchlistByAccount( string $encrypted_account_id, $queue = null, $season = null, $champion = null, int $beginTime = null, int $endTime = null, int $beginIndex = null, int $endIndex = null )
 	{
 		$resultPromise = $this->setEndpoint("/lol/match/" . self::RESOURCE_MATCH_VERSION . "/matchlists/by-account/{$encrypted_account_id}")
 			->setResource(self::RESOURCE_MATCH, "/matchlists/by-account/%s")
@@ -2740,7 +2785,7 @@ class LeagueAPI
 	 * @throws ServerLimitException
 	 * @throws GeneralException
 	 *
-	 * @link https://developer.riotgames.com/api-methods/#match-v4/GET_getMatchTimeline
+	 * @link https://developer.riotgames.com/apis#match-v4/GET_getMatchTimeline
 	 */
 	public function getMatchTimeline( $match_id )
 	{
@@ -2757,7 +2802,7 @@ class LeagueAPI
 	/**
 	 * ==================================================================dd=
 	 *     Summoner Endpoint Methods
-	 *     @link https://developer.riotgames.com/api-methods/#summoner-v4
+	 *     @link https://developer.riotgames.com/apis#summoner-v4
 	 * ==================================================================dd=
 	 **/
 	const RESOURCE_SUMMONER = '1416:summoner';
@@ -2779,7 +2824,7 @@ class LeagueAPI
 	 * @throws ServerLimitException
 	 * @throws GeneralException
 	 *
-	 * @link https://developer.riotgames.com/api-methods/#summoner-v4/GET_getBySummonerId
+	 * @link https://developer.riotgames.com/apis#summoner-v4/GET_getBySummonerId
 	 */
 	public function getSummoner( string $encrypted_summoner_id )
 	{
@@ -2808,7 +2853,7 @@ class LeagueAPI
 	 * @throws ServerLimitException
 	 * @throws GeneralException
 	 *
-	 * @link https://developer.riotgames.com/api-methods/#summoner-v4/GET_getBySummonerName
+	 * @link https://developer.riotgames.com/apis#summoner-v4/GET_getBySummonerName
 	 */
 	public function getSummonerByName( string $summoner_name )
 	{
@@ -2839,7 +2884,7 @@ class LeagueAPI
 	 * @throws ServerLimitException
 	 * @throws GeneralException
 	 *
-	 * @link https://developer.riotgames.com/api-methods/#summoner-v4/GET_getByAccountId
+	 * @link https://developer.riotgames.com/apis#summoner-v4/GET_getByAccountId
 	 */
 	public function getSummonerByAccount( string $encrypted_account_id )
 	{
@@ -2856,7 +2901,7 @@ class LeagueAPI
 	/**
 	 * ==================================================================dd=
 	 *     Third Party Code Endpoint Methods
-	 *     @link https://developer.riotgames.com/api-methods/#third-party-code-v4
+	 *     @link https://developer.riotgames.com/apis#third-party-code-v4
 	 * ==================================================================dd=
 	 **/
 	const RESOURCE_THIRD_PARTY_CODE = '1426:third-party-code';
@@ -2878,7 +2923,7 @@ class LeagueAPI
 	 * @throws ServerLimitException
 	 * @throws GeneralException
 	 *
-	 * @link https://developer.riotgames.com/api-methods/#third-party-code-v4/GET_getThirdPartyCodeBySummonerId
+	 * @link https://developer.riotgames.com/apis#third-party-code-v4/GET_getThirdPartyCodeBySummonerId
 	 */
 	public function getThirdPartyCodeBySummonerId( string $encrypted_summoner_id )
 	{
@@ -2895,7 +2940,7 @@ class LeagueAPI
 	/**
 	 * ==================================================================dd=
 	 *     Tournament Endpoint Methods
-	 *     @link https://developer.riotgames.com/api-methods/#tournament-v4
+	 *     @link https://developer.riotgames.com/apis#tournament-v4
 	 * ==================================================================dd=
 	 **/
 	const RESOURCE_TOURNAMENT = '1436:tournament';
@@ -2920,7 +2965,7 @@ class LeagueAPI
 	 * @throws ServerLimitException
 	 * @throws GeneralException
 	 *
-	 * @link https://developer.riotgames.com/api-methods/#tournament-v4/POST_createTournamentCode
+	 * @link https://developer.riotgames.com/apis#tournament-v4/POST_createTournamentCode
 	 */
 	public function createTournamentCodes( int $tournament_id, int $count, TournamentCodeParameters $parameters )
 	{
@@ -2983,7 +3028,7 @@ class LeagueAPI
 	 * @throws ServerLimitException
 	 * @throws GeneralException
 	 *
-	 * @link https://developer.riotgames.com/api-methods/#tournament-v4/PUT_updateCode
+	 * @link https://developer.riotgames.com/apis#tournament-v4/PUT_updateCode
 	 */
 	public function editTournamentCode( string $tournament_code, TournamentCodeUpdateParameters $parameters )
 	{
@@ -3026,7 +3071,7 @@ class LeagueAPI
 	 * @throws ServerLimitException
 	 * @throws GeneralException
 	 *
-	 * @link https://developer.riotgames.com/api-methods/#tournament-v4/GET_getTournamentCode
+	 * @link https://developer.riotgames.com/apis#tournament-v4/GET_getTournamentCode
 	 */
 	public function getTournamentCodeData( string $tournament_code )
 	{
@@ -3060,7 +3105,7 @@ class LeagueAPI
 	 * @throws ServerLimitException
 	 * @throws GeneralException
 	 *
-	 * @link https://developer.riotgames.com/api-methods/#tournament-v4/POST_registerProviderData
+	 * @link https://developer.riotgames.com/apis#tournament-v4/POST_registerProviderData
 	 */
 	public function createTournamentProvider( ProviderRegistrationParameters $parameters )
 	{
@@ -3105,7 +3150,7 @@ class LeagueAPI
 	 * @throws ServerLimitException
 	 * @throws GeneralException
 	 *
-	 * @link https://developer.riotgames.com/api-methods/#tournament-v4/POST_registerTournament
+	 * @link https://developer.riotgames.com/apis#tournament-v4/POST_registerTournament
 	 */
 	public function createTournament( TournamentRegistrationParameters $parameters )
 	{
@@ -3147,7 +3192,7 @@ class LeagueAPI
 	 * @throws ServerLimitException
 	 * @throws GeneralException
 	 *
-	 * @link https://developer.riotgames.com/api-methods/#tournament-v4/GET_getLobbyEventsByCode
+	 * @link https://developer.riotgames.com/apis#tournament-v4/GET_getLobbyEventsByCode
 	 */
 	public function getTournamentLobbyEvents( string $tournament_code )
 	{
@@ -3168,7 +3213,7 @@ class LeagueAPI
 	/**
 	 * ==================================================================dd=
 	 *     Tournament Stub Endpoint Methods
-	 *     @link https://developer.riotgames.com/api-methods/#tournament-stub-v4
+	 *     @link https://developer.riotgames.com/apis#tournament-stub-v4
 	 * ==================================================================dd=
 	 **/
 	const RESOURCE_TOURNAMENT_STUB = '1435:tournament-stub';
@@ -3190,7 +3235,7 @@ class LeagueAPI
 	 * @throws ServerLimitException
 	 * @throws GeneralException
 	 *
-	 * @link https://developer.riotgames.com/api-methods/#tournament-stub-v4/POST_createTournamentCode
+	 * @link https://developer.riotgames.com/apis#tournament-stub-v4/POST_createTournamentCode
 	 *
 	 * @internal
 	 */
@@ -3250,7 +3295,7 @@ class LeagueAPI
 	 * @throws ServerLimitException
 	 * @throws GeneralException
 	 *
-	 * @link https://developer.riotgames.com/api-methods/#tournament-stub-v4/POST_registerProviderData
+	 * @link https://developer.riotgames.com/apis#tournament-stub-v4/POST_registerProviderData
 	 *
 	 * @internal
 	 */
@@ -3291,7 +3336,7 @@ class LeagueAPI
 	 * @throws ServerLimitException
 	 * @throws GeneralException
 	 *
-	 * @link https://developer.riotgames.com/api-methods/#tournament-stub-v4/POST_registerTournament
+	 * @link https://developer.riotgames.com/apis#tournament-stub-v4/POST_registerTournament
 	 *
 	 * @internal
 	 */
@@ -3329,7 +3374,7 @@ class LeagueAPI
 	 * @throws ServerLimitException
 	 * @throws GeneralException
 	 *
-	 * @link https://developer.riotgames.com/api-methods/#tournament-stub-v4/GET_getLobbyEventsByCode
+	 * @link https://developer.riotgames.com/apis#tournament-stub-v4/GET_getLobbyEventsByCode
 	 *
 	 * @internal
 	 */

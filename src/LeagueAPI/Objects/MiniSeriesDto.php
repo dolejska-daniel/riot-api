@@ -24,15 +24,15 @@ namespace RiotAPI\LeagueAPI\Objects;
  *   Class MiniSeriesDto
  *
  * Used in:
+ *   league-exp (v4)
+ *     @link https://developer.riotgames.com/apis#league-exp-v4/GET_getLeagueEntries
  *   league (v4)
- *     @link https://developer.riotgames.com/api-methods/#league-v4/GET_getChallengerLeague
- *     @link https://developer.riotgames.com/api-methods/#league-v4/GET_getLeagueEntriesForSummoner
- *     @link https://developer.riotgames.com/api-methods/#league-v4/GET_getLeagueEntriesForSummoner
- *     @link https://developer.riotgames.com/api-methods/#league-v4/GET_getGrandmasterLeague
- *     @link https://developer.riotgames.com/api-methods/#league-v4/GET_getLeagueById
- *     @link https://developer.riotgames.com/api-methods/#league-v4/GET_getMasterLeague
- *     @link https://developer.riotgames.com/api-methods/#league-v4/GET_getAllLeaguePositionsForSummoner
- *     @link https://developer.riotgames.com/api-methods/#league-v4/GET_getPositionalLeagueEntries
+ *     @link https://developer.riotgames.com/apis#league-v4/GET_getChallengerLeague
+ *     @link https://developer.riotgames.com/apis#league-v4/GET_getLeagueEntriesForSummoner
+ *     @link https://developer.riotgames.com/apis#league-v4/GET_getLeagueEntriesForSummoner
+ *     @link https://developer.riotgames.com/apis#league-v4/GET_getGrandmasterLeague
+ *     @link https://developer.riotgames.com/apis#league-v4/GET_getLeagueById
+ *     @link https://developer.riotgames.com/apis#league-v4/GET_getMasterLeague
  *
  * @package RiotAPI\LeagueAPI\Objects
  */

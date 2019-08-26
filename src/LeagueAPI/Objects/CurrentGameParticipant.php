@@ -25,7 +25,7 @@ namespace RiotAPI\LeagueAPI\Objects;
  *
  * Used in:
  *   spectator (v4)
- *     @link https://developer.riotgames.com/api-methods/#spectator-v4/GET_getCurrentGameInfoBySummoner
+ *     @link https://developer.riotgames.com/apis#spectator-v4/GET_getCurrentGameInfoBySummoner
  *
  * @linkable getStaticChampion($championId)
  *

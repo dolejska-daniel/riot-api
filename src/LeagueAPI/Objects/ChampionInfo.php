@@ -25,7 +25,7 @@ namespace RiotAPI\LeagueAPI\Objects;
  *
  * Used in:
  *   champion (v3)
- *     @link https://developer.riotgames.com/api-methods/#champion-v3/GET_getChampionInfo
+ *     @link https://developer.riotgames.com/apis#champion-v3/GET_getChampionInfo
  *
  * @package RiotAPI\LeagueAPI\Objects
  */
