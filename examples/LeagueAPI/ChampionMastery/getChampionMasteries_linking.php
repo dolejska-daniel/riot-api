@@ -28,10 +28,8 @@ $custom_api = new LeagueAPI([
 	LeagueAPI::SET_CACHE_CALLS        => true,
 ]);
 
-$summoner = 30904166;
-
-//  Make a call to LeagueAPI
-$masteries = $custom_api->getChampionMasteries($summoner);
+$summoner = $custom_api->getSummonerByName("I am TheKronnY");
+$masteries = $custom_api->getChampionMasteries($summoner->id);
 
 ?>
 <html>

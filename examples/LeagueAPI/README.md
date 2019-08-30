@@ -2,15 +2,8 @@
 Here you can check out some usage examples for League library.
 
 ## Champion resource
-__getChampion__:
-- [Fetch data for all champions](https://github.com/dolejska-daniel/riot-api/blob/master/examples/LeagueAPI/Champion/getChampions_all.php)
-- [Fetch data for all champions (with StaticData linking)](https://github.com/dolejska-daniel/riot-api/blob/master/examples/LeagueAPI/Champion/getChampions_all_linking.php)
-- [Fetch data for free to play champions only](https://github.com/dolejska-daniel/riot-api/blob/master/examples/LeagueAPI/Champion/getChampions_f2p.php)
-- [Fetch data for free to play champions only (with StaticData linking)](https://github.com/dolejska-daniel/riot-api/blob/master/examples/LeagueAPI/Champion/getChampions_f2p_linking.php)
-
-__getChampionById__:
-- [Fetch data for champion with specific ID](https://github.com/dolejska-daniel/riot-api/blob/master/examples/LeagueAPI/Champion/getChampionById_61.php)
-- [Fetch data for champion with specific ID (with StaticData linking)](https://github.com/dolejska-daniel/riot-api/blob/master/examples/LeagueAPI/Champion/getChampionById_61_linking.php)
+__getChampionRotations__:
+- [Fetch data for champion rotations](https://github.com/dolejska-daniel/riot-api/blob/master/examples/LeagueAPI/Champion/getChampionRotations.php)
 
 
 ## Champion Mastery resource
@@ -71,12 +64,10 @@ _TBA_
 
 ## Spectator resource
 __getCurrentGameInfo__:
-
-_TBA_
+- [Fetch current game info data for given summoner](https://github.com/dolejska-daniel/riot-api/blob/master/examples/LeagueAPI/Spectator/getCurrentGameInfo.php)
 
 __getFeaturedGames__:
-
-_TBA_
+- [Fetch featured games data](https://github.com/dolejska-daniel/riot-api/blob/master/examples/LeagueAPI/Spectator/getFeaturedGames.php)
 
 
 ## StaticData resource
@@ -85,7 +76,6 @@ _I believe there is no need to create examples for static data usage._
 
 ## Status resource
 __getStatusData__:
-
 - [Fetch active region status data](https://github.com/dolejska-daniel/riot-api/blob/master/examples/LeagueAPI/Status/getStatusData.php)
 - [Fetch custom region status data](https://github.com/dolejska-daniel/riot-api/blob/master/examples/LeagueAPI/Status/getStatusData_NA.php)
 

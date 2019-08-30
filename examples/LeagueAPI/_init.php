@@ -42,4 +42,5 @@ $api = new LeagueAPI([
 	LeagueAPI::SET_DATADRAGON_INIT  => true,
 	LeagueAPI::SET_INTERIM          => true,
 	LeagueAPI::SET_CACHE_RATELIMIT  => true,
+	LeagueAPI::SET_CACHE_CALLS      => true,
 ]);

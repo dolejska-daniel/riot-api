@@ -7,10 +7,8 @@
 //  Include init file
 require __DIR__ . "/../_init.php";
 
-$summoner = 30904166;
-
-//  Make a call to LeagueAPI
-$masteries = $api->getChampionMasteries($summoner);
+$summoner = $api->getSummonerByName("I am TheKronnY");
+$masteries = $api->getChampionMasteries($summoner->id);
 
 ?>
 <html>

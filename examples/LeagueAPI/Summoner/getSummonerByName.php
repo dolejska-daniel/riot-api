@@ -8,7 +8,6 @@ require __DIR__ . "/../_init.php";
 
 $id = "I am TheKronnY";
 
-//  Make a call to LeagueAPI
 try
 {
 	$s = $api->getSummonerByName($id);
@@ -29,20 +28,30 @@ catch (Exception $ex)
         <table class="table">
             <thead>
             <tr>
-                <th>SummonerID</th>
-                <th>AccountID</th>
-                <th>Profile icon</th>
-                <th>Summoner name</th>
-                <th>Summoner level</th>
+	            <th>Key</th>
+	            <th>Value</th>
             </tr>
             </thead>
             <tbody>
             <tr>
-                <td><?=$s->id?></td>
-                <td><?=$s->accountId?></td>
-                <td><?=$s->profileIconId?></td>
-                <td><?=$s->name?></td>
-                <td><?=$s->summonerLevel?></td>
+	            <th><code>id</code></th>
+	            <td><code><?=$s->id?></code></td>
+            </tr>
+            <tr>
+	            <th><code>accountId</code></th>
+	            <td><code><?=$s->accountId?></code></td>
+            </tr>
+            <tr>
+	            <th><code>profileIconId</code></th>
+	            <td><?=$s->profileIconId?></td>
+            </tr>
+            <tr>
+	            <th><code>name</code></th>
+	            <td><?=$s->name?></td>
+            </tr>
+            <tr>
+	            <th><code>summonerLevel</code></th>
+	            <td><?=$s->summonerLevel?></td>
             </tr>
             </tbody>
         </table>
