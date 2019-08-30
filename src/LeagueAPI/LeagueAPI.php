@@ -243,6 +243,7 @@ class LeagueAPI
 		self::RESOURCE_CHAMPION,
 		self::RESOURCE_CHAMPIONMASTERY,
 		self::RESOURCE_LEAGUE,
+		self::RESOURCE_LEAGUE_EXP,
 		self::RESOURCE_STATICDATA,
 		self::RESOURCE_STATUS,
 		self::RESOURCE_MATCH,
@@ -1764,6 +1765,7 @@ class LeagueAPI
 	 * @param string $queue
 	 * @param string $tier
 	 * @param string $division
+	 * @param int $page
 	 *
 	 * @return Objects\LeagueEntryDto[]
 	 *
@@ -1775,10 +1777,11 @@ class LeagueAPI
 	 *
 	 * @link https://developer.riotgames.com/apis#league-exp-v4/GET_getLeagueEntries
 	 */
-	public function getLeagueEntriesExp( string $queue, string $tier, string $division )
+	public function getLeagueEntriesExp( string $queue, string $tier, string $division, int $page = 1 )
 	{
 		$resultPromise = $this->setEndpoint("/lol/league-exp/" . self::RESOURCE_LEAGUE_EXP_VERSION . "/entries/{$queue}/{$tier}/{$division}")
 			->setResource(self::RESOURCE_LEAGUE_EXP, "/entries/%s/%s/%s")
+			->addQuery('page', $page)
 			->makeCall();
 
 		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
