@@ -26,7 +26,11 @@ namespace RiotAPI\LeagueAPI\Objects;
  */
 abstract class ApiObjectIterable extends ApiObject implements \Iterator
 {
-	protected $_iterable = array();
+	/**
+	 * @var array
+	 * @internal
+	 */
+	protected $_iterable = [];
 
 	public function rewind()
 	{

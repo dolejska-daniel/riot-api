@@ -19,6 +19,12 @@
 
 namespace RiotAPI\LeagueAPI\Objects;
 
+use stdClass;
+use Exception;
+
+use ReflectionClass;
+use ReflectionException;
+
 use RiotAPI\LeagueAPI\Exceptions\GeneralException;
 use RiotAPI\LeagueAPI\Exceptions\SettingsException;
 use RiotAPI\LeagueAPI\Objects\StaticData\StaticChampionListDto;
@@ -35,13 +41,13 @@ abstract class ApiObject implements IApiObject
 	/**
 	 *   ApiObject constructor.
 	 *
-	 * @param array   $data
-	 * @param LeagueAPI $api,
+	 * @param array $data
+	 * @param LeagueAPI $api
 	 */
 	public function __construct(array $data, LeagueAPI $api = null )
 	{
 		// Tries to assigns data to class properties
-		$selfRef = new \ReflectionClass($this);
+		$selfRef = new ReflectionClass($this);
 		$namespace = $selfRef->getNamespaceName();
 		$iterableProp = $selfRef->hasProperty('_iterable')
 			? self::getIterablePropertyName($selfRef->getDocComment())
@@ -61,7 +67,7 @@ abstract class ApiObject implements IApiObject
 					if ($dataType !== false && is_array($value))
 					{
 						//  Property is special DataType
-						$newRef = new \ReflectionClass("$namespace\\$dataType->class");
+						$newRef = new ReflectionClass("$namespace\\$dataType->class");
 						if ($dataType->isArray)
 						{
 							//  Property is array of special DataType (another API object)
@@ -90,7 +96,7 @@ abstract class ApiObject implements IApiObject
 					//  Should this property be linked and is it allowed?
 					if ($linkableProp['parameter'] == $property && $api->getSetting(LeagueAPI::SET_STATICDATA_LINKING, false))
 					{
-						$apiRef = new \ReflectionClass(LeagueAPI::class);
+						$apiRef = new ReflectionClass(LeagueAPI::class);
 						$linkingFunctionRef = $apiRef->getMethod($linkableProp['function']);
 
 						$params = [ $value ];
@@ -128,7 +134,7 @@ abstract class ApiObject implements IApiObject
 				}
 			}
 			//  If property does not exist
-			catch (\ReflectionException $ex) {}
+			catch (ReflectionException $ex) {}
 		}
 
 		$this->_data = $data;
@@ -141,7 +147,7 @@ abstract class ApiObject implements IApiObject
 			//  Is there extension for this class?
 			if (isset($objectExtensions[$selfRef->getName()]) && $extension = $objectExtensions[$selfRef->getName()])
 			{
-				$extension = new \ReflectionClass($extension);
+				$extension = new ReflectionClass($extension);
 				$this->_extension = @$extension->newInstanceArgs([ &$this, &$api ]);
 			}
 		}
@@ -187,11 +193,11 @@ abstract class ApiObject implements IApiObject
 	 *
 	 * @param string $phpDocComment
 	 *
-	 * @return bool|\stdClass
+	 * @return bool|stdClass
 	 */
 	public static function getPropertyDataType( string $phpDocComment )
 	{
-		$o = new \stdClass();
+		$o = new stdClass();
 
 		preg_match('/@var\s+(\w+)(\[\])?/', $phpDocComment, $matches);
 
@@ -209,6 +215,7 @@ abstract class ApiObject implements IApiObject
 	 *   This variable contains all the data in an array.
 	 *
 	 * @var array
+	 * @internal
 	 */
 	protected $_data = array();
 
@@ -227,6 +234,7 @@ abstract class ApiObject implements IApiObject
 	 *   Object extender.
 	 *
 	 * @var IApiObjectExtension
+	 * @internal
 	 */
 	protected $_extension;
 
@@ -246,10 +254,10 @@ abstract class ApiObject implements IApiObject
 
 		try
 		{
-			$r = new \ReflectionClass($this->_extension);
+			$r = new ReflectionClass($this->_extension);
 			return $r->getMethod($name)->invokeArgs($this->_extension, $arguments);
 		}
-		catch (\Exception $ex)
+		catch (Exception $ex)
 		{
 			throw new GeneralException("Method '$name' failed to be executed: " . $ex->getMessage(), 0, $ex);
 		}

@@ -2838,7 +2838,7 @@ class LeagueAPI
 	}
 
 	/**
-	 *   Get summoner name for a given summoner name.
+	 *   Get summoner for a given summoner name.
 	 *
 	 * @cli-name get-by-name
 	 * @cli-namespace summoner
