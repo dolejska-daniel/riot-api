@@ -30,7 +30,7 @@ use RiotAPI\LeagueAPI\LeagueAPI;
 class RateLimitStorage
 {
 	/** @var array $limits */
-	protected $limits = array();
+	protected $limits = [];
 
 	/**
 	 *   RateLimitStorage constructor.
@@ -41,6 +41,17 @@ class RateLimitStorage
 	{
 		foreach ($region->getList() as $regionId => $regionName)
 			$this->limits[$regionId] = [];
+	}
+
+	/**
+	 *   Clears all currently saved data.
+	 *
+	 * @return bool
+	 */
+	public function clear(): bool
+	{
+		$this->limits = [];
+		return true;
 	}
 
 	protected static function parseLimitHeaders( $header )

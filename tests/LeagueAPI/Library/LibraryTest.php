@@ -21,15 +21,15 @@ declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
 
-use RiotAPI\LeagueAPI\Exceptions\RequestException;
-use RiotAPI\LeagueAPI\Exceptions\ServerException;
-use RiotAPI\LeagueAPI\Exceptions\ServerLimitException;
 use RiotAPI\LeagueAPI\LeagueAPI;
 use RiotAPI\LeagueAPI\Definitions\Region;
 use RiotAPI\LeagueAPI\Definitions\Platform;
-use RiotAPI\LeagueAPI\Definitions\IRateLimitControl;
-
+use RiotAPI\LeagueAPI\Exceptions\RequestException;
+use RiotAPI\LeagueAPI\Exceptions\ServerException;
+use RiotAPI\LeagueAPI\Exceptions\ServerLimitException;
 use RiotAPI\LeagueAPI\Exceptions\SettingsException;
+
+use Symfony\Component\Cache\Adapter\MemcachedAdapter;
 
 
 class LibraryTest extends RiotAPITestCase
@@ -93,7 +93,7 @@ class LibraryTest extends RiotAPITestCase
 	public function testInit_settings_invalid_cacheProvider()
 	{
 		$this->expectException(SettingsException::class);
-		$this->expectExceptionMessage("Provided CacheProvider does not implement ICacheProvider interface.");
+		$this->expectExceptionMessage("Provided CacheProvider does not implement Psr\Cache\CacheItemPoolInterface (PSR-6)");
 
 		new LeagueAPI([
 			LeagueAPI::SET_KEY             => getenv('API_KEY'),
@@ -116,22 +116,16 @@ class LibraryTest extends RiotAPITestCase
 		]);
 	}
 
-	public function testFileCacheProviderSettings()
-	{
-		//  TODO
-		$this->markTestIncomplete('This test has not been implemented yet.');
-	}
-
 	public function testInit_settings_invalid_cacheProviderSettings()
 	{
 		$this->expectException(SettingsException::class);
-		$this->expectExceptionMessage("is invalid/failed to be created.");
+		$this->expectExceptionMessage("CacheProvider class failed to be initialized:");
 
 		new LeagueAPI([
 			LeagueAPI::SET_KEY                   => getenv('API_KEY'),
 			LeagueAPI::SET_REGION                => Region::EUROPE_EAST,
 			LeagueAPI::SET_CACHE_RATELIMIT       => true,
-			LeagueAPI::SET_CACHE_PROVIDER        => LeagueAPI::CACHE_PROVIDER_FILE,
+			LeagueAPI::SET_CACHE_PROVIDER        => MemcachedAdapter::class,
 			LeagueAPI::SET_CACHE_PROVIDER_PARAMS => [ '' ],
 		]);
 	}
@@ -198,32 +192,6 @@ class LibraryTest extends RiotAPITestCase
 	{
 		//  TODO
 		$this->markTestIncomplete('This test has not been implemented yet.');
-	}
-
-	/**
-	 * @requires extension memcached
-	 */
-	public function testMemcachedCacheProviderSettings()
-	{
-		//  TODO
-		$this->markTestIncomplete('This test has not been implemented yet.');
-	}
-
-	/**
-	 * @requires extension memcached
-	 */
-	public function testMemcachedCacheProviderInvalidSettings()
-	{
-		$this->expectException(SettingsException::class);
-		$this->expectExceptionMessage("Memcached servers failed to be added.");
-
-		new LeagueAPI([
-			LeagueAPI::SET_KEY                   => getenv('API_KEY'),
-			LeagueAPI::SET_REGION                => Region::EUROPE_EAST,
-			LeagueAPI::SET_CACHE_RATELIMIT       => true,
-			LeagueAPI::SET_CACHE_PROVIDER        => LeagueAPI::CACHE_PROVIDER_MEMCACHED,
-			LeagueAPI::SET_CACHE_PROVIDER_PARAMS => [[ '', 0 ]],
-		]);
 	}
 
 	/**

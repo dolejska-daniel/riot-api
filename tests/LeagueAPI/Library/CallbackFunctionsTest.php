@@ -22,8 +22,6 @@ declare(strict_types=1);
 use PHPUnit\Framework\TestCase;
 
 use RiotAPI\LeagueAPI\LeagueAPI;
-use RiotAPI\LeagueAPI\Exceptions\GeneralException;
-use RiotAPI\LeagueAPI\Objects\IApiObject;
 use RiotAPI\LeagueAPI\Definitions\Region;
 
 use RiotAPI\LeagueAPI\Exceptions\SettingsException;

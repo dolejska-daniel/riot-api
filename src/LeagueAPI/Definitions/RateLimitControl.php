@@ -19,8 +19,6 @@
 
 namespace RiotAPI\LeagueAPI\Definitions;
 
-use RiotAPI\LeagueAPI\Exceptions\SettingsException;
-
 
 /**
  *   Class RateLimitControl
@@ -40,9 +38,16 @@ class RateLimitControl implements IRateLimitControl
 	public function __construct( IRegion $region )
 	{
 		$this->storage = new RateLimitStorage($region);
+	}
 
-		//  Set limits
-		//$this->storage->init();
+	/**
+	 *   Clears all currently saved data.
+	 *
+	 * @return bool
+	 */
+	public function clear(): bool
+	{
+		return $this->storage->clear();
 	}
 
 	/**

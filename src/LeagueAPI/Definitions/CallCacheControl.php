@@ -39,6 +39,16 @@ class CallCacheControl implements ICallCacheControl
 	}
 
 	/**
+	 *   Clears all currently saved data.
+	 *
+	 * @return bool
+	 */
+	public function clear(): bool
+	{
+		return $this->storage->clear();
+	}
+
+	/**
 	 *   Checks whether or not is $hash call cached.
 	 *
 	 * @param string $hash

@@ -55,4 +55,11 @@ interface ICallCacheControl
 	 * @return bool
 	 */
 	public function saveCallData( string $hash, $data, int $length ): bool;
+
+	/**
+	 *   Clears all currently saved data.
+	 *
+	 * @return bool
+	 */
+	public function clear(): bool;
 }

@@ -29,9 +29,10 @@ class ChampionMasteryEndpointObjectIntegrityTest extends RiotAPITestCase
 	public function testInit()
 	{
 		$api = new LeagueAPI([
-			LeagueAPI::SET_KEY            => getenv('API_KEY'),
-			LeagueAPI::SET_REGION         => Region::EUROPE_EAST,
-			LeagueAPI::SET_USE_DUMMY_DATA => true,
+			LeagueAPI::SET_KEY             => getenv('API_KEY'),
+			LeagueAPI::SET_REGION          => Region::EUROPE_EAST,
+			LeagueAPI::SET_USE_DUMMY_DATA  => true,
+			LeagueAPI::SET_SAVE_DUMMY_DATA => getenv('SAVE_DUMMY_DATA') ?? false,
 		]);
 
 		$this->assertInstanceOf(LeagueAPI::class, $api);

@@ -21,14 +21,8 @@ declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
 
-use RiotAPI\LeagueAPI\Exceptions\GeneralException;
-use RiotAPI\LeagueAPI\Extensions\MasteryPagesDtoExtension;
-use RiotAPI\LeagueAPI\Objects\IApiObject;
-use RiotAPI\LeagueAPI\Objects\MasteryPageDto;
-use RiotAPI\LeagueAPI\Objects\MasteryPagesDto;
 use RiotAPI\LeagueAPI\LeagueAPI;
 use RiotAPI\LeagueAPI\Definitions\Region;
-
 use RiotAPI\LeagueAPI\Exceptions\SettingsException;
 
 

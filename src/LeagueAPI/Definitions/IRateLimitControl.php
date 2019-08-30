@@ -71,4 +71,11 @@ interface IRateLimitControl
 	 * @return
 	 */
 	public function registerCall( string $api_key, string $region, string $endpoint, string $app_header, string $method_header );
+
+	/**
+	 *   Clears all currently saved data.
+	 *
+	 * @return bool
+	 */
+	public function clear(): bool;
 }

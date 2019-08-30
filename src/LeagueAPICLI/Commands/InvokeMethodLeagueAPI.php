@@ -19,8 +19,11 @@
 
 namespace RiotAPI\LeagueAPICLI\Commands;
 
-use RiotAPI\LeagueAPI\LeagueAPI;
 use RiotAPI\LeagueAPICLI\Exceptions\InvalidOptionException;
+
+use RiotAPI\LeagueAPI\LeagueAPI;
+use RiotAPI\LeagueAPI\Exceptions\GeneralException;
+use RiotAPI\LeagueAPI\Exceptions\SettingsException;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -53,8 +56,8 @@ class InvokeMethodLeagueAPI extends Command
 	 * @param OutputInterface $output
 	 *
 	 * @throws InvalidOptionException
-	 * @throws \RiotAPI\LeagueAPI\Exceptions\GeneralException
-	 * @throws \RiotAPI\LeagueAPI\Exceptions\SettingsException
+	 * @throws GeneralException
+	 * @throws SettingsException
 	 */
 	protected function initialize(InputInterface $input, OutputInterface $output)
 	{

@@ -35,6 +35,17 @@ class CallCacheStorage
 	 */
 	public function __construct() {}
 
+	/**
+	 *   Clears all currently saved data.
+	 *
+	 * @return bool
+	 */
+	public function clear(): bool
+	{
+		$this->cache = [];
+		return true;
+	}
+
 
 	/**
 	 *   Checks whether or not is $hash call cached.

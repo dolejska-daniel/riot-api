@@ -21,24 +21,14 @@ declare(strict_types=1);
 
 use PHPUnit\Framework\TestCase;
 
-use RiotAPI\LeagueAPI\Exceptions\GeneralException;
-use RiotAPI\LeagueAPI\Exceptions\ServerLimitException;
-use RiotAPI\LeagueAPI\Extensions\MasteryPagesDtoExtension;
-use RiotAPI\LeagueAPI\Objects\IApiObject;
-use RiotAPI\LeagueAPI\Objects\MasteryPageDto;
-use RiotAPI\LeagueAPI\Objects\MasteryPagesDto;
 use RiotAPI\LeagueAPI\LeagueAPI;
 use RiotAPI\LeagueAPI\Definitions\Region;
-
-use RiotAPI\LeagueAPI\Exceptions\SettingsException;
 
 
 class LiveTest extends TestCase
 {
 	public function testInit()
 	{
-		$this->markTestSkipped("Skipping live tests.");
-
 		if (getenv("BUILD_IS_PULL_REQUEST"))
 			$this->markTestSkipped("Skipping live tests in PRs.");
 
@@ -51,7 +41,7 @@ class LiveTest extends TestCase
 			LeagueAPI::SET_CACHE_CALLS        => true,
 			LeagueAPI::SET_CACHE_CALLS_LENGTH => 600,
 			LeagueAPI::SET_USE_DUMMY_DATA     => false,
-			LeagueAPI::SET_SAVE_DUMMY_DATA    => true,
+			LeagueAPI::SET_SAVE_DUMMY_DATA    => false,
 		]);
 
 		$this->assertInstanceOf(LeagueAPI::class, $api);
@@ -72,8 +62,6 @@ class LiveTest extends TestCase
 
 		$summoner = $api->getSummonerByName("KuliS");
 		$this->assertSame("KuliS", $summoner->name);
-		$this->assertSame("Tl4pOlcp2vxCpPp9wVNjTuoMzpb8N6gLgMZiJwOL2JCkdlY", $summoner->id);
-		$this->assertSame("R6fx3_ynno6O06vJb2N1EmfsIIIdJsAFctOSkzsvId5QHA", $summoner->accountId);
 
 		return $api;
 	}
@@ -89,12 +77,10 @@ class LiveTest extends TestCase
 			LeagueAPI::SET_KEY         => "INVALID_KEY",
 			LeagueAPI::SET_REGION      => Region::EUROPE_EAST,
 			LeagueAPI::SET_CACHE_CALLS => true,
-			LeagueAPI::SET_CACHE_CALLS_LENGTH => 60,
+			LeagueAPI::SET_CACHE_CALLS_LENGTH => 600,
 		]);
 
 		$summoner = $api->getSummonerByName("KuliS");
 		$this->assertSame("KuliS", $summoner->name);
-		$this->assertSame("Tl4pOlcp2vxCpPp9wVNjTuoMzpb8N6gLgMZiJwOL2JCkdlY", $summoner->id);
-		$this->assertSame("R6fx3_ynno6O06vJb2N1EmfsIIIdJsAFctOSkzsvId5QHA", $summoner->accountId);
 	}
 }

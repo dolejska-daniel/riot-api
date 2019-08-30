@@ -20,14 +20,13 @@
 namespace RiotAPI\LeagueAPI;
 
 use Nette\Utils\DateTime;
+use Psr\Cache\CacheItemPoolInterface;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 
 use RiotAPI\LeagueAPI\Definitions\AsyncRequest;
 use RiotAPI\LeagueAPI\Definitions\CallCacheControl;
-use RiotAPI\LeagueAPI\Definitions\FileCacheProvider;
-use RiotAPI\LeagueAPI\Definitions\ICacheProvider;
 use RiotAPI\LeagueAPI\Definitions\ICallCacheControl;
 use RiotAPI\LeagueAPI\Definitions\IPlatform;
-use RiotAPI\LeagueAPI\Definitions\MemcachedCacheProvider;
 use RiotAPI\LeagueAPI\Definitions\Platform;
 use RiotAPI\LeagueAPI\Definitions\IRegion;
 use RiotAPI\LeagueAPI\Definitions\Region;
@@ -114,18 +113,11 @@ class LeagueAPI
 		KEY_AS_HEADER      = 'keyInclude:header';
 
 	/**
-	 * Available cache provider options.
-	 */
-	const
-		CACHE_PROVIDER_FILE      = FileCacheProvider::class,
-		CACHE_PROVIDER_MEMCACHED = MemcachedCacheProvider::class;
-
-	/**
 	 * Cache constants used to identify cache target.
 	 */
 	const
-		CACHE_KEY_RLC = 'rate-limit.cache',
-		CACHE_KEY_CCC = 'api-calls.cache';
+		CACHE_KEY_RLC = 'LeagueAPI.rate-limit.cache',
+		CACHE_KEY_CCC = 'LeagueAPI.api-calls.cache';
 
 	/**
 	 * Available API headers.
@@ -274,7 +266,7 @@ class LeagueAPI
 	public $platforms;
 
 
-	/** @var ICacheProvider $cache */
+	/** @var CacheItemPoolInterface $cache */
 	protected $cache;
 
 
@@ -453,15 +445,17 @@ class LeagueAPI
 	protected function _setupCacheProvider()
 	{
 		//  If something should be cached
-		if ($this->isSettingSet(self::SET_CACHE_PROVIDER) == false
-			|| ($this->getSetting(self::SET_CACHE_PROVIDER) == self::CACHE_PROVIDER_FILE && $this->isSettingSet(self::SET_CACHE_PROVIDER_PARAMS) == false))
+		if (!$this->isSettingSet(self::SET_CACHE_PROVIDER)
+			|| ($this->getSetting(self::SET_CACHE_PROVIDER) === FilesystemAdapter::class
+				&& !$this->isSettingSet(self::SET_CACHE_PROVIDER_PARAMS)))
 		{
-			//  Set default cache provider if not already set
 			$this->setSettings([
-				self::SET_CACHE_PROVIDER        => self::CACHE_PROVIDER_FILE,
+				self::SET_CACHE_PROVIDER => FilesystemAdapter::class,
 				self::SET_CACHE_PROVIDER_PARAMS => [
-					__DIR__ . DIRECTORY_SEPARATOR . 'cache' . DIRECTORY_SEPARATOR,
-				],
+					"LeagueAPI", // namespace
+					0, // default lifetime
+					sys_get_temp_dir() . '/LeagueAPI.cache' // directory
+				]
 			]);
 		}
 
@@ -470,8 +464,8 @@ class LeagueAPI
 			//  Creates reflection of specified cache provider (can be user-made)
 			$cacheProvider = new \ReflectionClass($this->getSetting(self::SET_CACHE_PROVIDER));
 			//  Checks if this cache provider implements required interface
-			if ($cacheProvider->implementsInterface(ICacheProvider::class) == false)
-				throw new SettingsException("Provided CacheProvider does not implement ICacheProvider interface.");
+			if (!$cacheProvider->implementsInterface(CacheItemPoolInterface::class))
+				throw new SettingsException("Provided CacheProvider does not implement Psr\Cache\CacheItemPoolInterface (PSR-6)");
 
 			//  Gets default parameters
 			$params = $this->getSetting(self::SET_CACHE_PROVIDER_PARAMS, []);
@@ -481,12 +475,12 @@ class LeagueAPI
 		catch (\ReflectionException $ex)
 		{
 			//  probably problem when instantiating the class
-			throw new SettingsException("Failed to initialize CacheProvider class: " . $ex->getMessage() . ".", 0, $ex);
+			throw new SettingsException("Failed to initialize CacheProvider class: {$ex->getMessage()}.", $ex->getCode(), $ex);
 		}
-		catch (\Exception $ex)
+		catch (\Throwable $ex)
 		{
 			//  something went wrong when initializing the class - invalid settings, etc.
-			throw new SettingsException("CacheProvider class failed to be initialized: " . $ex->getMessage() . ".", 0, $ex);
+			throw new SettingsException("CacheProvider class failed to be initialized: {$ex->getMessage()}.", $ex->getCode(), $ex);
 		}
 
 		//  Loads existing cache or creates new storages
@@ -669,10 +663,17 @@ class LeagueAPI
 		if ($this->getSetting(self::SET_CACHE_RATELIMIT, false))
 		{
 			//  ratelimit cache enabled, try to load already existing object
-			$rlc = $this->cache->load(self::CACHE_KEY_RLC);
-			if ($rlc == false)
+			$rlc = $this->cache->getItem(self::CACHE_KEY_RLC);
+			if ($rlc->isHit())
+			{
+				//  nothing loaded, creating new instance
+				$rlc = $rlc->get();
+			}
+			else
+			{
 				//  nothing loaded, creating new instance
 				$rlc = new RateLimitControl($this->regions);
+			}
 
 			$this->rlc = $rlc;
 		}
@@ -680,12 +681,19 @@ class LeagueAPI
 		if ($this->getSetting(self::SET_CACHE_CALLS, false))
 		{
 			//  call cache enabled, try to load already existing object
-			$callCache = $this->cache->load(self::CACHE_KEY_CCC);
-			if ($callCache == false)
+			$ccc = $this->cache->getItem(self::CACHE_KEY_CCC);
+			if ($ccc->isHit())
+			{
 				//  nothing loaded, creating new instance
-				$callCache = new CallCacheControl();
+				$ccc = $ccc->get();
+			}
+			else
+			{
+				//  nothing loaded, creating new instance
+				$ccc = new CallCacheControl();
+			}
 
-			$this->ccc = $callCache;
+			$this->ccc = $ccc;
 		}
 	}
 
@@ -694,19 +702,48 @@ class LeagueAPI
 	 *
 	 * @internal
 	 */
-	protected function saveCache()
+	protected function saveCache(): bool
 	{
+		if (!$this->cache)
+			return false;
+
 		if ($this->getSetting(self::SET_CACHE_RATELIMIT, false))
 		{
-			//  save RateLimitControl
-			$this->cache->save(self::CACHE_KEY_RLC, $this->rlc, $this->rlc_savetime);
+			// Save RateLimitControl
+			$rlc = $this->cache->getItem(self::CACHE_KEY_RLC);
+			$rlc->set($this->rlc);
+			$rlc->expiresAfter($this->rlc_savetime);
+
+			$this->cache->saveDeferred($rlc);
 		}
 
 		if ($this->getSetting(self::SET_CACHE_CALLS, false))
 		{
-			//  save CallCacheControl
-			$this->cache->save(self::CACHE_KEY_CCC, $this->ccc, $this->ccc_savetime);
+			// Save CallCacheControl
+			$ccc = $this->cache->getItem(self::CACHE_KEY_CCC);
+			$ccc->set($this->ccc);
+			$ccc->expiresAfter($this->ccc_savetime);
+
+			$this->cache->saveDeferred($ccc);
 		}
+
+		return $this->cache->commit();
+	}
+
+	/**
+	 *   Removes all cached data.
+	 *
+	 * @return bool
+	 */
+	public function clearCache(): bool
+	{
+		if ($this->rlc)
+			$this->rlc->clear();
+
+		if ($this->ccc)
+			$this->ccc->clear();
+
+		return $this->cache->clear();
 	}
 
 	/**

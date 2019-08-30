@@ -32,6 +32,7 @@ class StaticDataEndpointObjectIntegrityTest extends RiotAPITestCase
 			LeagueAPI::SET_KEY             => getenv('API_KEY'),
 			LeagueAPI::SET_REGION          => Region::NORTH_AMERICA,
 			LeagueAPI::SET_USE_DUMMY_DATA  => true,
+			LeagueAPI::SET_SAVE_DUMMY_DATA => getenv('SAVE_DUMMY_DATA') ?? false,
 			LeagueAPI::SET_DATADRAGON_INIT => true,
 		]);
 
