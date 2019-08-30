@@ -47,6 +47,10 @@ use RiotAPI\LeagueAPI\Exceptions\RequestParameterException;
 use RiotAPI\LeagueAPI\Exceptions\ServerException;
 use RiotAPI\LeagueAPI\Exceptions\ServerLimitException;
 use RiotAPI\LeagueAPI\Exceptions\SettingsException;
+use RiotAPI\LeagueAPI\Exceptions\DataNotFoundException;
+use RiotAPI\LeagueAPI\Exceptions\ForbiddenException;
+use RiotAPI\LeagueAPI\Exceptions\UnauthorizedException;
+use RiotAPI\LeagueAPI\Exceptions\UnsupportedMediaTypeException;
 
 use RiotAPI\DataDragonAPI\DataDragonAPI;
 use RiotAPI\DataDragonAPI\Exceptions as DataDragonExceptions;
@@ -1184,16 +1188,18 @@ class LeagueAPI
 			case 429:
 				throw new ServerLimitException("LeagueAPI: Rate limit for this API key was exceeded. $message", $response_code);
 			case 415:
-				throw new RequestException("LeagueAPI: Unsupported media type. $message", $response_code);
+				throw new UnsupportedMediaTypeException("LeagueAPI: Unsupported media type. $message", $response_code);
 			case 404:
-				throw new RequestException("LeagueAPI: Not Found. $message", $response_code);
+				throw new DataNotFoundException("LeagueAPI: Not Found. $message", $response_code);
 			case 403:
-				throw new RequestException("LeagueAPI: Forbidden. $message", $response_code);
+				throw new ForbiddenException("LeagueAPI: Forbidden. $message", $response_code);
 			case 401:
-				throw new RequestException("LeagueAPI: Unauthorized. $message", $response_code);
+				throw new UnauthorizedException("LeagueAPI: Unauthorized. $message", $response_code);
 			case 400:
 				throw new RequestException("LeagueAPI: Request is invalid. $message", $response_code);
 			default:
+				if ($response_code >= 500)
+					throw new ServerException("LeagueAPI: Unspecified error occured ({$response_code}). $message", $response_code);
 				if ($response_code >= 400)
 					throw new RequestException("LeagueAPI: Unspecified error occured ({$response_code}). $message", $response_code);
 		}
