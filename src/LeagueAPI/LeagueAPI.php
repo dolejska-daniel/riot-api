@@ -2944,6 +2944,35 @@ class LeagueAPI
 		});
 	}
 
+	/**
+	 *   Get single summoner object for a given summoner's PUUID.
+	 *
+	 * @cli-name get-by-puuid
+	 * @cli-namespace summoner
+	 *
+	 * @param string $encrypted_puuid
+	 *
+	 * @return Objects\SummonerDto
+	 *
+	 * @throws SettingsException
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 * @throws GeneralException
+	 *
+	 * @link https://developer.riotgames.com/apis#summoner-v4/GET_getByPUUID
+	 */
+	public function getSummonerByPUUID( string $encrypted_puuid )
+	{
+		$resultPromise = $this->setEndpoint("/lol/summoner/" . self::RESOURCE_SUMMONER_VERSION . "/summoners/by-puuid/{$encrypted_puuid}")
+			->setResource(self::RESOURCE_SUMMONER, "/summoners/by-puuid/%s")
+			->makeCall();
+
+		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
+			return new Objects\SummonerDto($result, $this);
+		});
+	}
+
 
 	/**
 	 * ==================================================================dd=
