@@ -2933,7 +2933,7 @@ class LeagueAPI
 	 *
 	 * @link https://developer.riotgames.com/apis#summoner-v4/GET_getByAccountId
 	 */
-	public function getSummonerByAccount( string $encrypted_account_id )
+	public function getSummonerByAccountId( string $encrypted_account_id )
 	{
 		$resultPromise = $this->setEndpoint("/lol/summoner/" . self::RESOURCE_SUMMONER_VERSION . "/summoners/by-account/{$encrypted_account_id}")
 			->setResource(self::RESOURCE_SUMMONER, "/summoners/by-account/%s")
