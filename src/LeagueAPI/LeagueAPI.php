@@ -1676,6 +1676,7 @@ class LeagueAPI
 	 * @param string $queue
 	 * @param string $tier
 	 * @param string $division
+	 * @param int $page
 	 *
 	 * @return Objects\LeagueEntryDto[]
 	 *
@@ -1684,13 +1685,13 @@ class LeagueAPI
 	 * @throws ServerException
 	 * @throws ServerLimitException
 	 * @throws SettingsException
-	 *
 	 * @link https://developer.riotgames.com/apis#league-v4/GET_getLeagueEntries
 	 */
-	public function getLeagueEntries( string $queue, string $tier, string $division )
+	public function getLeagueEntries( string $queue, string $tier, string $division, int $page = 1 )
 	{
 		$resultPromise = $this->setEndpoint("/lol/league/" . self::RESOURCE_LEAGUE_VERSION . "/entries/{$queue}/{$tier}/{$division}")
 			->setResource(self::RESOURCE_LEAGUE, "/entries/%s/%s/%s")
+			->addQuery('page', $page)
 			->makeCall();
 
 		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
