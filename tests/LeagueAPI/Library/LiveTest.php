@@ -29,7 +29,7 @@ class LiveTest extends TestCase
 {
 	public function testInit()
 	{
-		if (getenv("BUILD_IS_PULL_REQUEST"))
+		if (getenv("TRAVIS_PULL_REQUEST"))
 			$this->markTestSkipped("Skipping live tests in PRs.");
 
 		$api = new LeagueAPI([

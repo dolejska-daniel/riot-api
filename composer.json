@@ -15,15 +15,14 @@
 	"require": {
 		"nette/utils": "^2.5",
 		"guzzlehttp/guzzle": "^6.3",
-		"symfony/console": "^v3",
-		"symfony/cache": "^3",
+		"symfony/console": "^v4",
+		"symfony/cache": "^4",
 		"psr/cache": "^1.0",
-		"php": "^7.0|^8.0",
+		"php": "^7.1|^8.0",
 		"ext-json": "*"
 	},
 	"require-dev": {
-		"phpunit/phpunit": "6.2.2",
-		"codeclimate/php-test-reporter": "v0.4.4"
+		"phpunit/phpunit": "^6"
 	},
 	"autoload": {
 		"psr-4": {

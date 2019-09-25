@@ -14,6 +14,7 @@ CLI support was remade from ground up now using `symfony/console`.
 For new usage details, please visit [the updated wiki pages](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-CLI-support).
 
 # Table of Contents
+1. [Available versions](#available-versions)
 1. [Introduction](#introduction)
 2. [Downloading](#downloading)
 3. [League of Legends API](#league-of-legends-api)
@@ -30,6 +31,14 @@ For new usage details, please visit [the updated wiki pages](https://github.com/
 	11. [Callback functions](#callback-functions)
 	12. [CLI support](#cli-support)
 4. [DataDragon API](#datadragon-api)
+
+
+# [Available versions](https://github.com/dolejska-daniel/riot-api/wiki/Available-versions)
+
+| Version  | PHP version | API Updates | Library features | Branch                                                    |
+|----------|-------------|-------------|------------------|-----------------------------------------------------------|
+| `v4.x.x` | `>=7.1`     | ✔          | ✔                | [master](https://github.com/dolejska-daniel/riot-api)     |
+| `v3.x.x` | `>=7.0`     | ✔          | ❌                | [v3](https://github.com/dolejska-daniel/riot-api/tree/v3) |
 
 
 # [Introduction](https://github.com/dolejska-daniel/riot-api/wiki/Home#introduction)
