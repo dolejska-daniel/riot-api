@@ -7,7 +7,6 @@ dist: trusty
 
 # Language versions to test agains
 php:
-    - '7.0'
     - '7.1'
     - '7.2'
     - '7.3'
@@ -29,9 +28,9 @@ addons:
         repo_token: $CODECLIMATE_REPO_TOKEN
 
 # Save cache of dependencies
-cache:
-    directories:
-        - vendor/
+#cache:
+#    directories:
+#        - vendor/
 
 # Install dependencies
 install:
@@ -41,7 +40,7 @@ install:
 jobs:
     include:
     - # identify pull requests by environment variable
-        if: type = pull_request
+        if: $TRAVIS_PULL_REQUEST != false
         env: BUILD_IS_PULL_REQUEST=1
 
 # Start tests
