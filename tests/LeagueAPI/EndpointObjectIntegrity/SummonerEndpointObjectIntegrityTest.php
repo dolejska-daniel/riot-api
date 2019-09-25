@@ -45,11 +45,11 @@ class SummonerEndpointObjectIntegrityTest extends RiotAPITestCase
 	 *
 	 * @param LeagueAPI $api
 	 */
-	public function testGetSummonerByAccount(LeagueAPI $api )
+	public function testGetSummonerByAccountId(LeagueAPI $api )
 	{
 		//  Get library processed results
 		/** @var Objects\SummonerDto $result */
-		$result = $api->getSummonerByAccount("R6fx3_ynno6O06vJb2N1EmfsIIIdJsAFctOSkzsvId5QHA");
+		$result = $api->getSummonerByAccountId("R6fx3_ynno6O06vJb2N1EmfsIIIdJsAFctOSkzsvId5QHA");
 		//  Get raw result
 		$rawResult = $api->getResult();
 

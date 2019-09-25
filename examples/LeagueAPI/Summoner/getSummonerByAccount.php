@@ -11,7 +11,7 @@ $id = "I am TheKronnY";
 try
 {
 	$summoner = $api->getSummonerByName($id); // accountIds are unique per API key, getByName first is necessary
-	$s = $api->getSummonerByAccount($summoner->accountId);
+	$s = $api->getSummonerByAccountId($summoner->accountId);
 }
 catch (Exception $ex)
 {
