@@ -40,7 +40,7 @@ install:
 jobs:
     include:
     - # identify pull requests by environment variable
-        if: $TRAVIS_PULL_REQUEST != false
+        if: TRAVIS_PULL_REQUEST != false
         env: BUILD_IS_PULL_REQUEST=1
 
 # Start tests
