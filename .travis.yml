@@ -24,8 +24,6 @@ addons:
     apt:
         packages:
             - libonig-dev
-    code_climate:
-        repo_token: $CODECLIMATE_REPO_TOKEN
 
 # Save cache of dependencies
 #cache:
@@ -36,17 +34,16 @@ addons:
 install:
     - composer install
 
-# Jobs specifications
-jobs:
-    include:
-    - # identify pull requests by environment variable
-        if: TRAVIS_PULL_REQUEST != false
-        env: BUILD_IS_PULL_REQUEST=1
+before_script:
+    - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+    - chmod +x ./cc-test-reporter
+    - ./cc-test-reporter before-build
 
 # Start tests
 script:
     - vendor/bin/phpunit -v --bootstrap phpunit.php --configuration phpunit_LeagueAPI.xml --coverage-text --coverage-clover $TRAVIS_BUILD_DIR/build/logs/clover.xml --colors=never
 
-# Submit coverage results
-after_success:
-    - vendor/bin/test-reporter -n --coverage-report=$TRAVIS_BUILD_DIR/build/logs/clover.xml --verbose
+after_script:
+    # Submit coverage results
+    - mv $TRAVIS_BUILD_DIR/build/logs/clover.xml clover.xml
+    - ./cc-test-reporter after-build --coverage-input-type clover --id $CODECLIMATE_REPO_TOKEN --exit-code $TRAVIS_TEST_RESULT
