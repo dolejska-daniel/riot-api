@@ -1,4 +1,4 @@
-# RiotAPI PHP7 wrapper [![GitHub release](https://img.shields.io/github/release/dolejska-daniel/riot-api.svg)](https://github.com/dolejska-daniel/riot-api) [![Packagist](https://img.shields.io/packagist/v/dolejska-daniel/riot-api.svg)](https://packagist.org/packages/dolejska-daniel/riot-api)
+# RiotAPI PHP7 wrapper
 
 > Version v3.1.0
 
@@ -8,10 +8,6 @@
 [![Packagist](https://img.shields.io/packagist/l/dolejska-daniel/riot-api.svg)](https://packagist.org/packages/dolejska-daniel/riot-api)
 [![Support Project](https://img.shields.io/badge/support_project-PayPal-blue.svg)](https://www.paypal.me/dolejskad)
 
-
-# RiotAPI `v3.1.0` CLI CHANGES
-CLI support was remade from ground up now using `symfony/console`.
-For new usage details, please visit [the updated wiki pages](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-CLI-support).
 
 # Table of Contents
 1. [Available versions](#available-versions)
@@ -35,10 +31,10 @@ For new usage details, please visit [the updated wiki pages](https://github.com/
 
 # [Available versions](https://github.com/dolejska-daniel/riot-api/wiki/Available-versions)
 
-| Version  | PHP version | API Updates | Library features | Branch                                                    |
-|----------|-------------|-------------|------------------|-----------------------------------------------------------|
-| `v4.x.x` | `>=7.1`     | ✔          | ✔                | [master](https://github.com/dolejska-daniel/riot-api)     |
-| `v3.x.x` | `>=7.0`     | ✔          | ❌                | [v3](https://github.com/dolejska-daniel/riot-api/tree/v3) |
+| Versions | API Updates | Library features | Branch |
+|----------|-------------|------------------|--------|
+| [![Packagist](https://img.shields.io/badge/packagist-v4.x.x-blue.svg)](https://packagist.org/packages/dolejska-daniel/riot-api) ![](https://img.shields.io/badge/php->=7.1-blue.svg) | ✔ | ✔ | [master](https://github.com/dolejska-daniel/riot-api) |
+| [![Packagist](https://img.shields.io/badge/packagist-v3.x.x-blue.svg)](https://packagist.org/packages/dolejska-daniel/riot-api) ![](https://img.shields.io/badge/php-^7.0-blue.svg) | ✔ | ❌ | [v3-dev](https://github.com/dolejska-daniel/riot-api/tree/v3-dev) |
 
 
 # [Introduction](https://github.com/dolejska-daniel/riot-api/wiki/Home#introduction)

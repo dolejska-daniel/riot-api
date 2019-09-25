@@ -26,9 +26,9 @@ addons:
             - libonig-dev
 
 # Save cache of dependencies
-#cache:
-#    directories:
-#        - vendor/
+cache:
+    directories:
+        - vendor/
 
 # Install dependencies
 install:
