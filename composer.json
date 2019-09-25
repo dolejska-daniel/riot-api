@@ -15,10 +15,10 @@
 	"require": {
 		"nette/utils": "^2.5",
 		"guzzlehttp/guzzle": "^6.3",
-		"symfony/console": "^v4",
-		"symfony/cache": "^4",
+		"symfony/console": "^v3",
+		"symfony/cache": "^3",
 		"psr/cache": "^1.0",
-		"php": ">=7.1",
+		"php": "^7.0",
 		"ext-json": "*"
 	},
 	"require-dev": {
