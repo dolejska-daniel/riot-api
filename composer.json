@@ -18,7 +18,7 @@
 		"symfony/console": "^v4",
 		"symfony/cache": "^4",
 		"psr/cache": "^1.0",
-		"php": "^7.1|^8.0",
+		"php": ">=7.1",
 		"ext-json": "*"
 	},
 	"require-dev": {
