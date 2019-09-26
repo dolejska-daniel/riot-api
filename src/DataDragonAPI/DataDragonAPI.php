@@ -755,6 +755,20 @@ class DataDragonAPI
 	}
 
 	/**
+	 *   Returns passive icon URL.
+	 *
+	 * @param string $image_name
+	 *
+	 * @return string
+	 * @throws SettingsException
+	 */
+	public static function getPassiveIconUrl( string $image_name ): string
+	{
+		self::checkInit();
+		return self::getSetting(self::SET_ENDPOINT) . self::getSetting(self::SET_VERSION) . "/img/passive/{$image_name}.png";
+	}
+
+	/**
 	 *   Returns spell or summoner spell icon in img HTML TAG.
 	 *
 	 * @param string $spell_name
@@ -804,9 +818,55 @@ class DataDragonAPI
 	 * @return Html
 	 * @throws SettingsException
 	 */
-	public static function getChampionSpellIconO(StaticChampionSpellDto $championSpell, array $attributes = [] ): Html
+	public static function getChampionSpellIconO( StaticChampionSpellDto $championSpell, array $attributes = [] ): Html
 	{
 		return self::getSpellIcon($championSpell->id, $attributes);
+	}
+
+
+	// ---------------------------------------------dd-
+	//  Champion passive icon
+	// ---------------------------------------------dd-
+
+	/**
+	 *   Returns champion passive icon in img HTML TAG.
+	 *
+	 * @param string $image_name
+	 * @param array  $attributes
+	 *
+	 * @return Html
+	 * @throws SettingsException
+	 */
+	public static function getChampionPassiveIcon( $image_name, array $attributes = [] ): Html
+	{
+		self::checkInit();
+
+		$attrs = array_merge([ 'alt'   => $image_name ], self::getSetting(self::SET_CUSTOM_IMG_ATTRS, []), $attributes);
+		$attrs['class'] = implode(' ', [
+			self::getSetting(self::SET_DEFAULT_CLASS),
+			self::getSetting(self::SET_SPELL_ICON_CLASS),
+			@self::getSetting(self::SET_CUSTOM_IMG_ATTRS, [])['class'],
+			@$attributes['class'],
+		]);
+		$attrs['src'] = self::getPassiveIconUrl($image_name);
+
+		return Html::el('img', $attrs);
+	}
+
+	/**
+	 *   Returns champion passive icon from API static-data ChampionDto object
+	 * in img HTML TAG.
+	 *
+	 * @param StaticChampionDto $champion
+	 * @param array             $attributes
+	 *
+	 * @return Html
+	 * @throws SettingsException
+	 */
+	public static function getChampionPassiveIconO( StaticChampionDto $champion, array $attributes = [] ): Html
+	{
+		$image_name = substr($champion->passive->image->full, 0, -4);
+		return self::getChampionPassiveIcon($image_name, $attributes);
 	}
 
 
