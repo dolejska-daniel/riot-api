@@ -25,7 +25,7 @@ use RiotAPI\LeagueAPI\LeagueAPI;
 use RiotAPI\LeagueAPI\Definitions\Region;
 
 
-class CustomLeagueAPI extends LeagueAPI
+class CacheTestCustomLeagueAPI extends LeagueAPI
 {
 	public function getCCC()
 	{
@@ -48,7 +48,7 @@ class CacheTest extends TestCase
 {
 	public function testInit()
 	{
-		$api = new CustomLeagueAPI([
+		$api = new CacheTestCustomLeagueAPI([
 			LeagueAPI::SET_KEY             => getenv('API_KEY'),
 			LeagueAPI::SET_TOURNAMENT_KEY  => getenv('API_TOURNAMENT_KEY'),
 			LeagueAPI::SET_REGION          => Region::EUROPE_EAST,
@@ -76,7 +76,7 @@ class CacheTest extends TestCase
 	public function testCreateAndSaveData( array $args )
 	{
 		/**
-		 * @var CustomLeagueAPI $api
+		 * @var CacheTestCustomLeagueAPI $api
 		 * @var string $hash
 		 */
 		list($api, $hash) = $args;
@@ -102,7 +102,7 @@ class CacheTest extends TestCase
 		 */
 		list($api, $hash, $data) = $args;
 
-		$api = new CustomLeagueAPI([
+		$api = new CacheTestCustomLeagueAPI([
 			LeagueAPI::SET_KEY             => "INVALID_KEY",
 			LeagueAPI::SET_REGION          => Region::EUROPE_EAST,
 			LeagueAPI::SET_CACHE_CALLS     => true,

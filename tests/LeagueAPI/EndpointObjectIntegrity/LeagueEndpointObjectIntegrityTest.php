@@ -62,11 +62,62 @@ class LeagueEndpointObjectIntegrityTest extends RiotAPITestCase
 	 *
 	 * @param LeagueAPI $api
 	 */
+	public function testGetLeagueEntries(LeagueAPI $api )
+	{
+		//  Get library processed results
+		/** @var Objects\LeagueEntryDto[] $result */
+		$result = $api->getLeagueEntries("RANKED_SOLO_5x5", "DIAMOND", "IV");
+		//  Get raw result
+		$rawResult = $api->getResult();
+
+		$this->checkObjectPropertiesAndDataValidityOfObjectList($result, $rawResult, Objects\LeagueEntryDto::class);
+	}
+
+	/**
+	 * @depends testInit
+	 *
+	 * @param LeagueAPI $api
+	 */
+	public function testGetLeagueEntriesForSummoner(LeagueAPI $api )
+	{
+		$summonerId = "KnNZNuEVZ5rZry3IyWwYSVuikRe0y3qTWSkr1wxcmV5CLJ8";
+		//  Get library processed results
+		/** @var Objects\LeagueEntryDto[] $result */
+		$result = $api->getLeagueEntriesForSummoner($summonerId);
+		//  Get raw result
+		$rawResult = $api->getResult();
+
+		$this->checkObjectPropertiesAndDataValidityOfObjectList($result, $rawResult, Objects\LeagueEntryDto::class);
+	}
+
+	/**
+	 * @depends testInit
+	 *
+	 * @param LeagueAPI $api
+	 */
 	public function testGetLeagueChallenger(LeagueAPI $api )
 	{
 		//  Get library processed results
 		/** @var Objects\LeagueListDto $result */
 		$result = $api->getLeagueChallenger('RANKED_SOLO_5x5');
+		//  Get raw result
+		$rawResult = $api->getResult();
+
+		$this->checkObjectPropertiesAndDataValidity($result, $rawResult, Objects\LeagueListDto::class);
+
+		return $result;
+	}
+
+	/**
+	 * @depends testInit
+	 *
+	 * @param LeagueAPI $api
+	 */
+	public function testGetLeagueGrandmaster(LeagueAPI $api )
+	{
+		//  Get library processed results
+		/** @var Objects\LeagueListDto $result */
+		$result = $api->getLeagueGrandmaster('RANKED_SOLO_5x5');
 		//  Get raw result
 		$rawResult = $api->getResult();
 

@@ -122,8 +122,7 @@ class RateLimitControlTest extends RiotAPITestCase
 	 */
 	public function testCanCall_TrueExpired( RateLimitControl $control )
 	{
-		$this->assertFalse($control->canCall(self::$apiKey, self::$region, self::$resource, self::$endpoint));
-		while ($control->canCall(self::$apiKey, self::$region, self::$resource, self::$endpoint) == false);
+		sleep(1);
 		$this->assertTrue($control->canCall(self::$apiKey, self::$region, self::$resource, self::$endpoint));
 	}
 }

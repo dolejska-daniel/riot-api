@@ -1,6 +1,6 @@
 # RiotAPI PHP7 wrapper
 
-> Version v3.1.0
+> Version v4.0.0
 
 [![Build Status](https://travis-ci.org/dolejska-daniel/riot-api.svg?branch=master)](https://travis-ci.org/dolejska-daniel/riot-api)
 [![Test Coverage](https://codeclimate.com/github/dolejska-daniel/riot-api/badges/coverage.svg)](https://codeclimate.com/github/dolejska-daniel/riot-api/coverage)
@@ -64,10 +64,10 @@ This file contains only general introduction to library features.
 
 
 # [Downloading](https://github.com/dolejska-daniel/riot-api/wiki/Home#downloading)
-The easiest way to downlaod and use this library is via [Composer](https://getcomposer.org/).
-If you are not using it yet, start **now**!
+The easiest way to download and use this library is via [Composer](https://getcomposer.org/).
+If you are not using Composer yet, you should start **right now**!
 
-While having Composer installed on your machine it takes only `composer require "dolejska-daniel/riot-api:^3"` to get the library ready to roll!
+While having Composer installed on your machine it takes only `composer require "dolejska-daniel/riot-api:^4"` command to get the library ready to roll!
 
 For additional information about downloading and initial setup, please see [the wiki pages](https://github.com/dolejska-daniel/riot-api/wiki/Home#downloading).
 

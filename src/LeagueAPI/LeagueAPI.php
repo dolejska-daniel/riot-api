@@ -996,15 +996,12 @@ class LeagueAPI
 	 */
 	public function commitAsync( string $group = "default" )
 	{
-		$list = [];
+		/** @var AsyncRequest[] $requests */
 		$requests = @$this->async_requests[$group] ?: [];
+		settle($requests)->wait();
 
-		/** @var AsyncRequest $request */
-		foreach ($requests as $request)
-			$list[] = $request->getPromise();
-
+		unset($this->async_clients[$group]);
 		unset($this->async_requests[$group]);
-		settle($list)->wait();
 	}
 
 	/**
@@ -1056,6 +1053,8 @@ class LeagueAPI
 		$url = $this->_getCallUrl($requestHeaders);
 		$requestHash = md5($url);
 
+		$this->_beforeCall($url, $requestHash);
+
 		if (!$requestPromise && $this->getSetting(self::SET_USE_DUMMY_DATA, false))
 		{
 			// DummyData are supposed to be used
@@ -1064,6 +1063,7 @@ class LeagueAPI
 				// try loading the data
 				$this->_loadDummyData($responseHeaders, $responseBody, $responseCode);
 				$this->processCallResult($responseHeaders, $responseBody, $responseCode);
+				$this->_afterCall($url, $requestHash, $this->_getDummyDataFileName());
 				$requestPromise = new FulfilledPromise($this->getResult());
 			}
 			catch (RequestException $ex)
@@ -1089,8 +1089,6 @@ class LeagueAPI
 			$guzzle = $this->guzzle;
 			if ($this->next_async_request)
 				$guzzle = $this->next_async_request->client;
-
-			$this->_beforeCall($url, $requestHash);
 
 			$options[RequestOptions::VERIFY] = $this->getSetting(self::SET_VERIFY_SSL);
 			$options[RequestOptions::HEADERS] = $requestHeaders;
@@ -1458,11 +1456,10 @@ class LeagueAPI
 			->makeCall();
 
 		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
-			$r = [];
 			foreach ($result as $ident => $championMasteryDtoData)
 				$r[$ident] = new Objects\ChampionMasteryDto($championMasteryDtoData, $this);
 
-			return $r;
+			return $r ?? [];
 		});
 	}
 
@@ -1626,11 +1623,10 @@ class LeagueAPI
 			->makeCall();
 
 		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
-			$r = [];
 			foreach ($result as $leagueListDtoData)
 				$r[] = new Objects\LeaguePositionDto($leagueListDtoData, $this);
 
-			return $r;
+			return $r ?? [];
 		});
 	}
 
@@ -1659,11 +1655,10 @@ class LeagueAPI
 			->makeCall();
 
 		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
-			$r = [];
 			foreach ($result as $leagueEntryDtoData)
 				$r[] = new Objects\LeagueEntryDto($leagueEntryDtoData, $this);
 
-			return $r;
+			return $r ?? [];
 		});
 	}
 
@@ -1695,11 +1690,10 @@ class LeagueAPI
 			->makeCall();
 
 		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
-			$r = [];
 			foreach ($result as $leagueEntryDtoData)
 				$r[] = new Objects\LeagueEntryDto($leagueEntryDtoData, $this);
 
-			return $r;
+			return $r ?? [];
 		});
 	}
 
@@ -1829,11 +1823,10 @@ class LeagueAPI
 			->makeCall();
 
 		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
-			$r = [];
 			foreach ($result as $leagueEntryDtoData)
 				$r[] = new Objects\LeagueEntryDto($leagueEntryDtoData, $this);
 
-			return $r;
+			return $r ?? [];
 		});
 	}
 
@@ -1844,7 +1837,6 @@ class LeagueAPI
 	 * ==================================================================dd=
 	 **/
 	const RESOURCE_STATICDATA = '1351:lol-static-data';
-	const RESOURCE_STATICDATA_V3 = 'v3';
 
 	/**
 	 *   Retrieves champion list.
@@ -3490,10 +3482,11 @@ class LeagueAPI
 	 */
 	public function makeTestEndpointCall( $specs, string $region = null, string $method = null )
 	{
-		$resultPromise = $this->setEndpoint("/lol/test-endpoint/v0/" . $specs)
+		$resultPromise = $this->setEndpoint("/lol/test-endpoint/v0/{$specs}")
+			->setResource("v0", "/lol/test-endpoint/v0/%s")
 			->makeCall($region ?: null, $method ?: self::METHOD_GET);
 
-		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
+		return $this->resolveOrEnqueuePromise($resultPromise, function($result) {
 			return $result;
 		});
 	}
