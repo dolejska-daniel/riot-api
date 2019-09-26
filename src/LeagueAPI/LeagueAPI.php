@@ -19,10 +19,6 @@
 
 namespace RiotAPI\LeagueAPI;
 
-use Nette\Utils\DateTime;
-use Psr\Cache\CacheItemPoolInterface;
-use Symfony\Component\Cache\Adapter\FilesystemAdapter;
-
 use RiotAPI\LeagueAPI\Definitions\AsyncRequest;
 use RiotAPI\LeagueAPI\Definitions\CallCacheControl;
 use RiotAPI\LeagueAPI\Definitions\ICallCacheControl;
@@ -32,6 +28,7 @@ use RiotAPI\LeagueAPI\Definitions\IRegion;
 use RiotAPI\LeagueAPI\Definitions\Region;
 use RiotAPI\LeagueAPI\Definitions\IRateLimitControl;
 use RiotAPI\LeagueAPI\Definitions\RateLimitControl;
+use RiotAPI\LeagueAPI\Definitions\Cache;
 
 use RiotAPI\LeagueAPI\Objects;
 use RiotAPI\LeagueAPI\Objects\IApiObjectExtension;
@@ -62,7 +59,10 @@ use GuzzleHttp\Promise\FulfilledPromise;
 use GuzzleHttp\Exception as GuzzleHttpExceptions;
 use function GuzzleHttp\Promise\settle;
 
+use Nette\Utils\DateTime;
+use Psr\Cache\CacheItemPoolInterface;
 use Psr\Http\Message\ResponseInterface;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
 
 /**
  *   Class LeagueAPI
@@ -438,7 +438,11 @@ class LeagueAPI
 		$this->setSetting(self::SET_PLATFORM, $this->platforms->getPlatformName($this->getSetting(self::SET_REGION)));
 
 		if ($this->getSetting(self::SET_DATADRAGON_INIT))
-			DataDragonAPI::initByRealmObject($this->getStaticRealm(), $this->getSetting(self::SET_DATADRAGON_PARAMS, []));
+		{
+			DataDragonAPI::initByApi($this, $this->getSetting(self::SET_DATADRAGON_PARAMS, []));
+			if ($this->cache)
+				DataDragonAPI::setCacheInterface($this->cache);
+		}
 	}
 
 	/**
@@ -456,9 +460,9 @@ class LeagueAPI
 			$this->setSettings([
 				self::SET_CACHE_PROVIDER => FilesystemAdapter::class,
 				self::SET_CACHE_PROVIDER_PARAMS => [
-					"LeagueAPI", // namespace
-					0, // default lifetime
-					sys_get_temp_dir() . '/LeagueAPI.cache' // directory
+					Cache::LEAGUEAPI_NAMESPACE, // namespace
+					Cache::LIFETIME, // default lifetime
+					Cache::getDirectoryPath() // directory
 				]
 			]);
 		}

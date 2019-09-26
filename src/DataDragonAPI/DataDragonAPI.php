@@ -19,9 +19,8 @@
 
 namespace RiotAPI\DataDragonAPI;
 
-use Nette\Utils\Html;
-
 use RiotAPI\LeagueAPI\LeagueAPI;
+
 use RiotAPI\LeagueAPI\Objects\SummonerDto;
 use RiotAPI\LeagueAPI\Objects\StaticData\StaticImageDto;
 use RiotAPI\LeagueAPI\Objects\StaticData\StaticRealmDto;
@@ -35,16 +34,25 @@ use RiotAPI\LeagueAPI\Objects\StaticData\StaticSummonerSpellDto;
 use RiotAPI\LeagueAPI\Objects\StaticData\StaticReforgedRuneDto;
 use RiotAPI\LeagueAPI\Objects\StaticData\StaticReforgedRunePathDto;
 
+use RiotAPI\LeagueAPI\Definitions\Cache;
+
 use RiotAPI\LeagueAPI\Exceptions as LeagueExceptions;
 
 use RiotAPI\DataDragonAPI\Exceptions\RequestException;
 use RiotAPI\DataDragonAPI\Exceptions\SettingsException;
 use RiotAPI\DataDragonAPI\Exceptions\ArgumentException;
 
+use Nette\Utils\Html;
+use Psr\Cache\CacheItemInterface;
+use Psr\Cache\CacheItemPoolInterface;
+use Symfony\Component\Cache\Adapter\FilesystemAdapter;
+
 
 class DataDragonAPI
 {
-	/** Settings constants. */
+	/**
+	 *   Settings constants.
+	 */
 	const
 		SET_ENDPOINT                    = 'datadragon-cdn',
 		SET_VERSION                     = 'version',
@@ -85,7 +93,9 @@ class DataDragonAPI
 		self::SET_MINIMAP_CLASS             => 'dd-minimap',
 	];
 
-	/** Static-data file constants. */
+	/**
+	 *   Static-data file constants.
+	 */
 	const
 		STATIC_PROFILEICONS     = 'profileicon',
 		STATIC_CHAMPIONS        = 'champion',
@@ -98,6 +108,9 @@ class DataDragonAPI
 		STATIC_MAPS             = 'map',
 		STATIC_RUNESREFORGED    = 'runesReforged';
 
+	/**
+	 *   Available URL fragments.
+	 */
 	const
 		STATIC_SUMMONERSPELLS_BY_KEY = "#by-key",
 		STATIC_CHAMPION_BY_KEY       = "#by-key";
@@ -105,7 +118,7 @@ class DataDragonAPI
 	/**
 	 *   Contains library settings.
 	 *
-	 * @var $settings array
+	 * @var array $settings
 	 */
 	static protected $staticFileTypes = [
 		self::STATIC_PROFILEICONS,
@@ -118,29 +131,63 @@ class DataDragonAPI
 		self::STATIC_MAPS,
 	];
 
-	/** @var string */
-	const CACHE_DIR = __DIR__ . "/cache";
-
 	/**
 	 *   Contains library settings.
 	 *
-	 * @var $settings array
+	 * @var array $settings
 	 */
 	static protected $staticData = [];
 
 	/**
 	 *   Indicates, whether the library has been initialized or not.
 	 *
-	 * @var $initialized bool
+	 * @var bool $initialized
 	 */
 	static protected $initialized = false;
 
 	/**
 	 *   Indicates, whether HTTPS is used or not.
 	 *
-	 * @var $ssl bool
+	 * @var bool $ssl
 	 */
 	static public $ssl = true;
+
+	/**
+	 *   Holds current caching interface.
+	 *
+	 * @var CacheItemPoolInterface $cache
+	 */
+	static protected $cache;
+
+	/**
+	 *   Sets active cache interface instance.
+	 *
+	 * @param CacheItemPoolInterface $cacheInterface
+	 */
+	public static function setCacheInterface( CacheItemPoolInterface $cacheInterface )
+	{
+		self::$cache = $cacheInterface;
+	}
+
+	/**
+	 *   Returns or initializes default cache interface.
+	 *
+	 * @return CacheItemPoolInterface
+	 */
+	public static function getCacheInterface()
+	{
+		if (!self::$cache)
+		{
+			$cacheInterface = new FilesystemAdapter(
+				Cache::DATADRAGON_NAMESPACE,
+				Cache::LIFETIME,
+				Cache::getDirectoryPath()
+			);
+			self::setCacheInterface($cacheInterface);
+		}
+
+		return self::$cache;
+	}
 
 
 	/**
@@ -222,10 +269,11 @@ class DataDragonAPI
 	 *
 	 * @param LeagueAPI $api
 	 * @param array $customSettings
+	 *
 	 * @throws LeagueExceptions\RequestException
 	 * @throws LeagueExceptions\ServerException
 	 */
-	public static function initByApi(LeagueAPI $api, array $customSettings = [] )
+	public static function initByApi( LeagueAPI $api, array $customSettings = [] )
 	{
 		self::initByRealmObject($api->getStaticRealm(), $customSettings);
 	}
@@ -350,6 +398,7 @@ class DataDragonAPI
 	 * @param string|null $fragment
 	 *
 	 * @return string
+	 *
 	 * @throws SettingsException
 	 */
 	public static function getStaticDataFileUrl( string $dataType, string $key = null, $locale = 'en_US', $version = null, string $fragment = null ): string
@@ -364,64 +413,80 @@ class DataDragonAPI
 	 *   Loads static-data for given URL. First from cache, if it doesnt exist,
 	 * try to fetch up-to date from web.
 	 *
-	 * @param string        $url
-	 * @param callable|null $processing  (string $url, array $data)
+	 * @param string $url
+	 * @param callable|null $postprocess (string $url, array $data)
+	 * @param bool $data_from_postprocess
 	 *
 	 * @return array
+	 *
 	 * @throws ArgumentException
 	 */
-	protected static function loadStaticData( string $url, callable $processing = null ): array
+	protected static function loadStaticData( string $url, callable $postprocess = null, bool $data_from_postprocess = false ): array
 	{
-		$urlHash = md5($url);
-
+		// Try loading from cache
 		$data = self::loadCachedStaticData($url);
-		if ($data) return $data;
+		if ($data->isHit()) return $data->get();
 
-		//  Lastly try loading from web
+		// Try loading from web
 		$data = @file_get_contents($url);
-		if ($data == false)
-			throw new ArgumentException("Failed to load static-data for URL: '$url'.");
+		if (!$data) throw new ArgumentException("Failed to load static-data for URL: '$url'.");
 
+		$fragmentlessUrl = $url;
+		if (($fragmentPos = strpos($url, "#")) !== false)
+			$fragmentlessUrl = substr($url, 0, $fragmentPos);
+
+		// Decode and save data to cache
 		$data = json_decode($data, true);
-		//  Save to memory
-		self::$staticData[$urlHash] = $data;
+		self::saveStaticData($fragmentlessUrl, $data);
 
-		self::saveSataicData($urlHash, $data);
-		if ($processing) $processing($url, $data);
+		if ($postprocess)
+		{
+			$postprocess_data = $postprocess($fragmentlessUrl, $data);
+			if ($data_from_postprocess)
+				return $postprocess_data;
+		}
 		return $data;
 	}
 
 	/**
-	 * @param string $url
-	 * @return array
+	 * @return bool
 	 */
-	protected static function loadCachedStaticData( string $url ): array
+	public static function clearCachedStaticData()
 	{
-		$urlHash = md5($url);
-
-		//  First try memory
-		if (isset(self::$staticData[$urlHash]))
-			return self::$staticData[$urlHash];
-
-		//  Then try file cache
-		$data = @file_get_contents(self::CACHE_DIR . "/$urlHash");
-		if ($data)
-			return unserialize($data);
-
-		return [];
+		return self::getCacheInterface()->clear();
 	}
 
-	protected static function saveSataicData( string $urlHash, array $data )
+	/**
+	 * @param string $url
+	 *
+	 * @return array
+	 */
+	protected static function loadCachedStaticData( string $url ): CacheItemInterface
 	{
-		//  Save to file
-		@mkdir(self::CACHE_DIR);
-		file_put_contents(self::CACHE_DIR . "/$urlHash", serialize($data));
+		$urlHash = md5($url);
+		return self::getCacheInterface()->getItem($urlHash);
+	}
+
+	/**
+	 * @param string $url
+	 * @param array  $data
+	 */
+	protected static function saveStaticData( string $url, array $data )
+	{
+		$urlHash = md5($url);
+		$cacheInterface = self::getCacheInterface();
+
+		$staticData = $cacheInterface->getItem($urlHash);
+		$staticData->set($data);
+		$staticData->expiresAfter(3600);
+
+		$cacheInterface->save($staticData);
 	}
 
 
 	// ==================================================================dd=
 	//     Available methods
-	//     @link https://developer.riotgames.com/static-data.html
+	//     @link https://developer.riotgames.com/ddragon.html
 	// ==================================================================dd=
 
 	// ---------------------------------------------dd-
@@ -865,6 +930,13 @@ class DataDragonAPI
 	 */
 	public static function getChampionPassiveIconO( StaticChampionDto $champion, array $attributes = [] ): Html
 	{
+		if (is_null($champion->passive))
+		{
+			trigger_error("Extended champion static data are required for this function to work.");
+			return Html::el("p")->setHtml("This <code>StaticChampionDto</code> instance does not contain required data. Extended data are required.");
+		}
+
+		// Remove ".png" from image name
 		$image_name = substr($champion->passive->image->full, 0, -4);
 		return self::getChampionPassiveIcon($image_name, $attributes);
 	}
@@ -1225,37 +1297,18 @@ class DataDragonAPI
 	// ---------------------------------------------dd-
 
 	/**
-	 * @param string      $locale
+	 * @param string $locale
 	 * @param string|null $version
+	 * @param bool $data_by_key
 	 *
 	 * @return array
 	 * @throws ArgumentException
 	 * @throws SettingsException
 	 */
-	public static function getStaticChampions( string $locale = 'en_US', string $version = null ) : array
-	{
-		$url = self::getStaticDataFileUrl(self::STATIC_CHAMPIONS, null, $locale, $version);
-		return self::loadStaticData($url, [DataDragonAPI::class, "_champion"]);
-	}
-
-	/**
-	 * @param string      $locale
-	 * @param string|null $version
-	 *
-	 * @return array
-	 * @throws ArgumentException
-	 * @throws SettingsException
-	 */
-	public static function getStaticChampionsWithKeys( string $locale = 'en_US', string $version = null ) : array
+	public static function getStaticChampions( string $locale = 'en_US', string $version = null, bool $data_by_key = false ) : array
 	{
 		$url = self::getStaticDataFileUrl(self::STATIC_CHAMPIONS, null, $locale, $version, self::STATIC_CHAMPION_BY_KEY);
-		$data = self::loadCachedStaticData($url);
-		if (!$data)
-		{
-			self::getStaticChampions($locale, $version);
-			$data = self::loadCachedStaticData($url);
-		}
-		return $data;
+		return self::loadStaticData($url, [DataDragonAPI::class, "_champion"], $data_by_key);
 	}
 
 	/**
@@ -1288,7 +1341,7 @@ class DataDragonAPI
 	{
 		$data = self::getStaticChampions($locale, $version);
 		if (isset($data['data'][$champion_id]) == false)
-			throw new ArgumentException('Champion with given ID was not found.', 404);
+			throw new ArgumentException("Champion with ID '$champion_id' was not found.", 404);
 
 		return $data['data'][$champion_id];
 	}
@@ -1306,9 +1359,9 @@ class DataDragonAPI
 	 */
 	public static function getStaticChampionByKey( int $champion_key, string $locale = 'en_US', string $version = null ) : array
 	{
-		$data = self::getStaticChampionsWithKeys($locale, $version);
+		$data = self::getStaticChampions($locale, $version, true);
 		if (isset($data['data'][$champion_key]) == false)
-			throw new ArgumentException('Champion with given key was not found.', 404);
+			throw new ArgumentException("Champion with key '$champion_key' was not found.", 404);
 
 		return $data['data'][$champion_key];
 	}
@@ -1340,7 +1393,7 @@ class DataDragonAPI
 	{
 		$data = self::getStaticItems($locale, $version);
 		if (isset($data['data'][$item_id]) == false)
-			throw new ArgumentException('Item with given ID was not found.', 404);
+			throw new ArgumentException("Item with ID '$item_id' was not found.", 404);
 
 		return $data['data'][$item_id];
 	}
@@ -1410,7 +1463,7 @@ class DataDragonAPI
 	{
 		$data = self::getStaticMasteries($locale, $version);
 		if (isset($data['data'][$mastery_id]) == false)
-			throw new ArgumentException('Mastery with given ID was not found.', 404);
+			throw new ArgumentException("Mastery with ID '$mastery_id' was not found.", 404);
 
 		return $data['data'][$mastery_id];
 	}
@@ -1442,7 +1495,7 @@ class DataDragonAPI
 	{
 		$data = self::getStaticRunes($locale, $version);
 		if (isset($data['data'][$rune_id]) == false)
-			throw new ArgumentException('Rune with given ID was not found.', 404);
+			throw new ArgumentException("Rune with ID '$rune_id' was not found.", 404);
 
 		return $data['data'][$rune_id];
 	}
@@ -1489,37 +1542,18 @@ class DataDragonAPI
 	}
 
 	/**
-	 * @param string      $locale
+	 * @param string $locale
 	 * @param string|null $version
+	 * @param bool $data_by_key
 	 *
 	 * @return array
 	 * @throws ArgumentException
 	 * @throws SettingsException
 	 */
-	public static function getStaticSummonerSpells( string $locale = 'en_US', string $version = null ) : array
-	{
-		$url = self::getStaticDataFileUrl(self::STATIC_SUMMONERSPELLS, null, $locale, $version);
-		return self::loadStaticData($url, [DataDragonAPI::class, "_summonerSpell"]);
-	}
-
-	/**
-	 * @param string      $locale
-	 * @param string|null $version
-	 *
-	 * @return array
-	 * @throws ArgumentException
-	 * @throws SettingsException
-	 */
-	public static function getStaticSummonerSpellsWithKeys( string $locale = 'en_US', string $version = null ) : array
+	public static function getStaticSummonerSpells( string $locale = 'en_US', string $version = null, bool $data_by_key = false ) : array
 	{
 		$url = self::getStaticDataFileUrl(self::STATIC_SUMMONERSPELLS, null, $locale, $version, self::STATIC_SUMMONERSPELLS_BY_KEY);
-		$data = self::loadCachedStaticData($url);
-		if (!$data)
-		{
-			self::getStaticSummonerSpells($locale, $version);
-			$data = self::loadCachedStaticData($url);
-		}
-		return $data;
+		return self::loadStaticData($url, [DataDragonAPI::class, "_summonerSpell"], $data_by_key);
 	}
 
 	/**
@@ -1535,7 +1569,7 @@ class DataDragonAPI
 	{
 		$data = self::getStaticSummonerSpells($locale, $version);
 		if (isset($data['data'][$summonerspell_key]) == false)
-			throw new ArgumentException('Summoner spell with given key was not found.', 404);
+			throw new ArgumentException("Summoner spell with key '$summonerspell_key' was not found.", 404);
 
 		return $data['data'][$summonerspell_key];
 	}
@@ -1567,9 +1601,9 @@ class DataDragonAPI
 	 */
 	public static function getStaticSummonerSpellById( string $summonerspell_id, string $locale = 'en_US', string $version = null ) : array
 	{
-		$data = self::getStaticSummonerSpellsWithKeys($locale, $version);
+		$data = self::getStaticSummonerSpells($locale, $version, true);
 		if (isset($data['data'][$summonerspell_id]) == false)
-			throw new ArgumentException('Summoner spell with given ID was not found.', 404);
+			throw new ArgumentException("Summoner spell with ID '$summonerspell_id' was not found.", 404);
 
 		return $data['data'][$summonerspell_id];
 	}
@@ -1593,6 +1627,8 @@ class DataDragonAPI
 	 * @param string $url
 	 * @param array $data
 	 *
+	 * @return array
+	 *
 	 * @internal
 	 */
 	protected static function _summonerSpell( string $url, array $data )
@@ -1604,12 +1640,16 @@ class DataDragonAPI
 		array_walk($data['data'], function( $d ) use (&$data_by_key) {
 			$data_by_key['data'][(int)$d['key']] = $d;
 		});
-		self::saveSataicData(md5($url), $data_by_key);
+
+		self::saveStaticData($url, $data_by_key);
+		return $data_by_key;
 	}
 
 	/**
 	 * @param string $url
 	 * @param array $data
+	 *
+	 * @return array
 	 *
 	 * @internal
 	 */
@@ -1622,6 +1662,8 @@ class DataDragonAPI
 		array_walk($data['data'], function( $d ) use (&$data_by_key) {
 			$data_by_key['data'][(int)$d['key']] = $d;
 		});
-		self::saveSataicData(md5($url), $data_by_key);
+
+		self::saveStaticData($url, $data_by_key);
+		return $data_by_key;
 	}
 }
