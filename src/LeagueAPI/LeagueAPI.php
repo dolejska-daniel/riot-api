@@ -84,30 +84,31 @@ class LeagueAPI
 	 * Settings constants.
 	 */
 	const
-		SET_REGION                = 'SET_REGION',
-		SET_ORIG_REGION           = 'SET_ORIG_REGION',
-		SET_PLATFORM              = 'SET_PLATFORM',              /** Set internally by setting region **/
-		SET_VERIFY_SSL            = 'SET_VERIFY_SSL',            /** Specifies whether or not to verify SSL (verification often fails on localhost) **/
-		SET_KEY                   = 'SET_KEY',                   /** API key used by default **/
-		SET_KEY_INCLUDE_TYPE      = 'SET_KEY_INCLUDE_TYPE',      /** API key request include type (header, query) **/
-		SET_TOURNAMENT_KEY        = 'SET_TOURNAMENT_KEY',        /** API key used when working with tournaments **/
-		SET_INTERIM               = 'SET_INTERIM',               /** Used to set whether or not is your application in Interim mode (Tournament STUB endpoints) **/
-		SET_CACHE_PROVIDER        = 'SET_CACHE_PROVIDER',        /** Specifies CacheProvider class name **/
-		SET_CACHE_PROVIDER_PARAMS = 'SET_CACHE_PROVIDER_PARAMS', /** Specifies parameters passed to CacheProvider class when initializing **/
-		SET_CACHE_RATELIMIT       = 'SET_CACHE_RATELIMIT',       /** Used to set whether or not to saveCallData and check API key's rate limit **/
-		SET_CACHE_CALLS           = 'SET_CACHE_CALLS',           /** Used to set whether or not to temporary saveCallData API call's results **/
-		SET_CACHE_CALLS_LENGTH    = 'SET_CACHE_CALLS_LENGTH',    /** Specifies for how long are call results saved **/
-		SET_EXTENSIONS            = 'SET_EXTENSIONS',            /** Specifies ApiObject's extensions **/
-		SET_DATADRAGON_INIT       = 'SET_DATADRAGON_INIT',       /** Specifies whether or not should DataDragonAPI be initialized by this library **/
-		SET_DATADRAGON_PARAMS     = 'SET_DATADRAGON_PARAMS',     /** Specifies parameters passed to DataDragonAPI when initialized **/
-		SET_STATICDATA_LINKING    = 'SET_STATICDATA_LINKING',
-		SET_STATICDATA_LOCALE     = 'SET_STATICDATA_LOCALE',
-		SET_STATICDATA_VERSION    = 'SET_STATICDATA_VERSION',
-		SET_CALLBACKS_BEFORE      = 'SET_CALLBACKS_BEFORE',
-		SET_CALLBACKS_AFTER       = 'SET_CALLBACKS_AFTER',
-		SET_API_BASEURL           = 'SET_API_BASEURL',
-		SET_USE_DUMMY_DATA        = 'SET_USE_DUMMY_DATA',
-		SET_SAVE_DUMMY_DATA       = 'SET_SAVE_DUMMY_DATA';
+		SET_REGION                   = 'SET_REGION',
+		SET_ORIG_REGION              = 'SET_ORIG_REGION',
+		SET_PLATFORM                 = 'SET_PLATFORM',                 /** Set internally by setting region **/
+		SET_VERIFY_SSL               = 'SET_VERIFY_SSL',               /** Specifies whether or not to verify SSL (verification often fails on localhost) **/
+		SET_KEY                      = 'SET_KEY',                      /** API key used by default **/
+		SET_KEY_INCLUDE_TYPE         = 'SET_KEY_INCLUDE_TYPE',         /** API key request include type (header, query) **/
+		SET_TOURNAMENT_KEY           = 'SET_TOURNAMENT_KEY',           /** API key used when working with tournaments **/
+		SET_INTERIM                  = 'SET_INTERIM',                  /** Used to set whether or not is your application in Interim mode (Tournament STUB endpoints) **/
+		SET_CACHE_PROVIDER           = 'SET_CACHE_PROVIDER',           /** Specifies CacheProvider class name **/
+		SET_CACHE_PROVIDER_PARAMS    = 'SET_CACHE_PROVIDER_PARAMS',    /** Specifies parameters passed to CacheProvider class when initializing **/
+		SET_DD_CACHE_PROVIDER_PARAMS = 'SET_DD_CACHE_PROVIDER_PARAMS', /** Specifies parameters passed to DataDragonAPI CacheProvider class when initializing **/
+		SET_CACHE_RATELIMIT          = 'SET_CACHE_RATELIMIT',          /** Used to set whether or not to saveCallData and check API key's rate limit **/
+		SET_CACHE_CALLS              = 'SET_CACHE_CALLS',              /** Used to set whether or not to temporary saveCallData API call's results **/
+		SET_CACHE_CALLS_LENGTH       = 'SET_CACHE_CALLS_LENGTH',       /** Specifies for how long are call results saved **/
+		SET_EXTENSIONS               = 'SET_EXTENSIONS',               /** Specifies ApiObject's extensions **/
+		SET_DATADRAGON_INIT          = 'SET_DATADRAGON_INIT',          /** Specifies whether or not should DataDragonAPI be initialized by this library **/
+		SET_DATADRAGON_PARAMS        = 'SET_DATADRAGON_PARAMS',        /** Specifies parameters passed to DataDragonAPI when initialized **/
+		SET_STATICDATA_LINKING       = 'SET_STATICDATA_LINKING',
+		SET_STATICDATA_LOCALE        = 'SET_STATICDATA_LOCALE',
+		SET_STATICDATA_VERSION       = 'SET_STATICDATA_VERSION',
+		SET_CALLBACKS_BEFORE         = 'SET_CALLBACKS_BEFORE',
+		SET_CALLBACKS_AFTER          = 'SET_CALLBACKS_AFTER',
+		SET_API_BASEURL              = 'SET_API_BASEURL',
+		SET_USE_DUMMY_DATA           = 'SET_USE_DUMMY_DATA',
+		SET_SAVE_DUMMY_DATA          = 'SET_SAVE_DUMMY_DATA';
 
 	/**
 	 * Available API key inclusion options.
@@ -209,6 +210,7 @@ class LeagueAPI
 			self::SET_INTERIM,
 			self::SET_CACHE_PROVIDER,
 			self::SET_CACHE_PROVIDER_PARAMS,
+			self::SET_DD_CACHE_PROVIDER_PARAMS,
 			self::SET_CACHE_RATELIMIT,
 			self::SET_CACHE_CALLS,
 			self::SET_CACHE_CALLS_LENGTH,
@@ -228,6 +230,9 @@ class LeagueAPI
 			self::SET_API_BASEURL,
 			self::SET_DATADRAGON_INIT,
 			self::SET_DATADRAGON_PARAMS,
+			self::SET_CACHE_PROVIDER,
+			self::SET_CACHE_PROVIDER_PARAMS,
+			self::SET_DD_CACHE_PROVIDER_PARAMS,
 		];
 
 	/**
@@ -409,6 +414,8 @@ class LeagueAPI
 		// TODO: Guzzle Client settings?
 		$this->guzzle = new Client();
 
+		$this->_setupDefaultCacheProviderSettings();
+
 		//  Some caching will be made, let's set up cache provider
 		if ($this->getSetting(self::SET_CACHE_CALLS) || $this->getSetting(self::SET_CACHE_RATELIMIT))
 			$this->_setupCacheProvider();
@@ -440,8 +447,41 @@ class LeagueAPI
 		if ($this->getSetting(self::SET_DATADRAGON_INIT))
 		{
 			DataDragonAPI::initByApi($this, $this->getSetting(self::SET_DATADRAGON_PARAMS, []));
-			if ($this->cache)
-				DataDragonAPI::setCacheInterface($this->cache);
+			$dd_cache = $this->_initializeCacheProvider(
+				$this->getSetting(self::SET_CACHE_PROVIDER),
+				$this->getSetting(self::SET_DD_CACHE_PROVIDER_PARAMS, [])
+			);
+			DataDragonAPI::setCacheInterface($dd_cache);
+		}
+	}
+
+	protected function _setupDefaultCacheProviderSettings()
+	{
+		//  If something should be cached
+		if (!$this->isSettingSet(self::SET_CACHE_PROVIDER))
+		{
+			$this->settings[self::SET_CACHE_PROVIDER] = FilesystemAdapter::class;
+		}
+
+		if ($this->getSetting(self::SET_CACHE_PROVIDER) === FilesystemAdapter::class)
+		{
+			if (!$this->isSettingSet(self::SET_CACHE_PROVIDER_PARAMS))
+			{
+				$this->settings[self::SET_CACHE_PROVIDER_PARAMS] =  [
+					Cache::LEAGUEAPI_NAMESPACE, // namespace
+					Cache::LIFETIME, // default lifetime
+					Cache::getDirectoryPath() // directory
+				];
+			}
+
+			if (!$this->isSettingSet(self::SET_DD_CACHE_PROVIDER_PARAMS))
+			{
+				$this->settings[self::SET_DD_CACHE_PROVIDER_PARAMS] =  [
+					Cache::DATADRAGON_NAMESPACE, // namespace
+					Cache::LIFETIME, // default lifetime
+					Cache::getDirectoryPath() // directory
+				];
+			}
 		}
 	}
 
@@ -452,33 +492,37 @@ class LeagueAPI
 	 */
 	protected function _setupCacheProvider()
 	{
-		//  If something should be cached
-		if (!$this->isSettingSet(self::SET_CACHE_PROVIDER)
-			|| ($this->getSetting(self::SET_CACHE_PROVIDER) === FilesystemAdapter::class
-				&& !$this->isSettingSet(self::SET_CACHE_PROVIDER_PARAMS)))
-		{
-			$this->setSettings([
-				self::SET_CACHE_PROVIDER => FilesystemAdapter::class,
-				self::SET_CACHE_PROVIDER_PARAMS => [
-					Cache::LEAGUEAPI_NAMESPACE, // namespace
-					Cache::LIFETIME, // default lifetime
-					Cache::getDirectoryPath() // directory
-				]
-			]);
-		}
+		$this->cache = $this->_initializeCacheProvider(
+			$this->getSetting(self::SET_CACHE_PROVIDER),
+			$this->getSetting(self::SET_CACHE_PROVIDER_PARAMS, [])
+		);
 
+		//  Loads existing cache or creates new storages
+		$this->loadCache();
+	}
+
+	/**
+	 * @param $cacheProviderClass
+	 * @param array $params
+	 *
+	 * @return CacheItemPoolInterface
+	 *
+	 * @throws SettingsException
+	 */
+	protected function _initializeCacheProvider( $cacheProviderClass, array $params ): CacheItemPoolInterface
+	{
 		try
 		{
 			//  Creates reflection of specified cache provider (can be user-made)
-			$cacheProvider = new \ReflectionClass($this->getSetting(self::SET_CACHE_PROVIDER));
+			$cacheProvider = new \ReflectionClass($cacheProviderClass);
 			//  Checks if this cache provider implements required interface
 			if (!$cacheProvider->implementsInterface(CacheItemPoolInterface::class))
 				throw new SettingsException("Provided CacheProvider does not implement Psr\Cache\CacheItemPoolInterface (PSR-6)");
 
-			//  Gets default parameters
-			$params = $this->getSetting(self::SET_CACHE_PROVIDER_PARAMS, []);
 			//  and creates new instance of this cache provider
-			$this->cache = $cacheProvider->newInstanceArgs($params);
+			/** @var CacheItemPoolInterface $instance */
+			$instance = $cacheProvider->newInstanceArgs($params);
+			return $instance;
 		}
 		catch (\ReflectionException $ex)
 		{
@@ -490,9 +534,6 @@ class LeagueAPI
 			//  something went wrong when initializing the class - invalid settings, etc.
 			throw new SettingsException("CacheProvider class failed to be initialized: {$ex->getMessage()}.", $ex->getCode(), $ex);
 		}
-
-		//  Loads existing cache or creates new storages
-		$this->loadCache();
 	}
 
 	/**
@@ -1858,17 +1899,13 @@ class LeagueAPI
 	 * @throws ServerException
 	 * @throws SettingsException
 	 */
-	public function getStaticChampions( bool $data_by_key = null, string $locale = 'en_US', string $version = null ): StaticData\StaticChampionListDto
+	public function getStaticChampions( bool $data_by_key = false, string $locale = 'en_US', string $version = null ): StaticData\StaticChampionListDto
 	{
 		$result = false;
 		try
 		{
 			// Fetch StaticData from JSON files
-			if ($data_by_key)
-				$result = DataDragonAPI::getStaticChampionsWithKeys($locale, $version);
-			else
-				$result = DataDragonAPI::getStaticChampions($locale, $version);
-
+			$result = DataDragonAPI::getStaticChampions($locale, $version, $data_by_key);
 			if (!$result) throw new ServerException("StaticData failed to be loaded.");
 
 			// Create missing data
@@ -2495,10 +2532,7 @@ class LeagueAPI
 		try
 		{
 			// Fetch StaticData from JSON files
-			if ($data_by_key)
-				$result = DataDragonAPI::getStaticSummonerSpellsWithKeys($locale, $version);
-			else
-				$result = DataDragonAPI::getStaticSummonerSpells($locale, $version);
+			$result = DataDragonAPI::getStaticSummonerSpells($locale, $version, $data_by_key);
 			if (!$result) throw new ServerException("StaticData failed to be loaded.");
 
 			$this->result_data = $result;

@@ -427,13 +427,13 @@ class DataDragonAPI
 		$data = self::loadCachedStaticData($url);
 		if ($data->isHit()) return $data->get();
 
-		// Try loading from web
-		$data = @file_get_contents($url);
-		if (!$data) throw new ArgumentException("Failed to load static-data for URL: '$url'.");
-
 		$fragmentlessUrl = $url;
 		if (($fragmentPos = strpos($url, "#")) !== false)
 			$fragmentlessUrl = substr($url, 0, $fragmentPos);
+
+		// Try loading from web
+		$data = @file_get_contents($url);
+		if (!$data) throw new ArgumentException("Failed to load static-data for URL: '$url'.");
 
 		// Decode and save data to cache
 		$data = json_decode($data, true);
@@ -1307,7 +1307,7 @@ class DataDragonAPI
 	 */
 	public static function getStaticChampions( string $locale = 'en_US', string $version = null, bool $data_by_key = false ) : array
 	{
-		$url = self::getStaticDataFileUrl(self::STATIC_CHAMPIONS, null, $locale, $version, self::STATIC_CHAMPION_BY_KEY);
+		$url = self::getStaticDataFileUrl(self::STATIC_CHAMPIONS, null, $locale, $version, $data_by_key ? self::STATIC_CHAMPION_BY_KEY : null);
 		return self::loadStaticData($url, [DataDragonAPI::class, "_champion"], $data_by_key);
 	}
 
@@ -1552,7 +1552,7 @@ class DataDragonAPI
 	 */
 	public static function getStaticSummonerSpells( string $locale = 'en_US', string $version = null, bool $data_by_key = false ) : array
 	{
-		$url = self::getStaticDataFileUrl(self::STATIC_SUMMONERSPELLS, null, $locale, $version, self::STATIC_SUMMONERSPELLS_BY_KEY);
+		$url = self::getStaticDataFileUrl(self::STATIC_SUMMONERSPELLS, null, $locale, $version, $data_by_key ? self::STATIC_SUMMONERSPELLS_BY_KEY : null);
 		return self::loadStaticData($url, [DataDragonAPI::class, "_summonerSpell"], $data_by_key);
 	}
 
@@ -1633,7 +1633,7 @@ class DataDragonAPI
 	 */
 	protected static function _summonerSpell( string $url, array $data )
 	{
-		$url = $url . self::STATIC_SUMMONERSPELLS_BY_KEY;
+		$url .= self::STATIC_SUMMONERSPELLS_BY_KEY;
 		$data_by_key = $data;
 		$data_by_key['data'] = [];
 
@@ -1655,7 +1655,7 @@ class DataDragonAPI
 	 */
 	protected static function _champion( string $url, array $data )
 	{
-		$url = $url . self::STATIC_CHAMPION_BY_KEY;
+		$url .= self::STATIC_CHAMPION_BY_KEY;
 		$data_by_key = $data;
 		$data_by_key['data'] = [];
 
