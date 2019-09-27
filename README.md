@@ -1,6 +1,6 @@
 # RiotAPI PHP7 wrapper
 
-> Version v4.0.0
+> Version v4.0.1
 
 [![Build Status](https://travis-ci.org/dolejska-daniel/riot-api.svg?branch=master)](https://travis-ci.org/dolejska-daniel/riot-api)
 [![Test Coverage](https://codeclimate.com/github/dolejska-daniel/riot-api/badges/coverage.svg)](https://codeclimate.com/github/dolejska-daniel/riot-api/coverage)
@@ -178,11 +178,11 @@ More usage examples for LeagueAPI can be found [here](https://github.com/dolejsk
 
 
 ## [Cache providers](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Cache-providers)
-Cache providers are responsible for keeping data of [rate limiting](#rate-limiting) and [call caching](#call-caching) within instances of the library.
+Cache providers are responsible for keeping data of [rate limiting](#rate-limiting), [call caching](#call-caching) and [static data](##datadragon-api) within instances of the library for easy re-use.
 This feature is automatically enabled, when any of previously mentioned features is used.
 
-When using this feature, you can set `LeagueAPI::SET_CACHE_PROVIDER` to any class, thought it has to implement `Objects\ICacheProvider` interface.
-By using `LeagueAPI::SET_CACHE_PROVIDER_PARAMS` option, you can pass any variables to the cache provider.
+When using this feature, you can set `LeagueAPI::SET_CACHE_PROVIDER` to any class, thought it has to be compatible with PSR-6 standard, eg. implement [`Psr\Cache\CacheItemPoolInterface`](https://github.com/php-fig/cache/blob/master/src/CacheItemPoolInterface.php) interface.
+By using `LeagueAPI::SET_CACHE_PROVIDER_PARAMS` or `LeagueAPI::SET_DD_CACHE_PROVIDER_PARAMS` option, you can pass any data to the cache provider class.
 
 For additional information about cache providers, please see [the wiki pages](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Cache-providers).
 
@@ -190,7 +190,7 @@ For additional information about cache providers, please see [the wiki pages](ht
 ## [Rate limiting](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Rate-limiting)
 This clever feature will easily prevent exceeding your per key call limits & method limits.
 In order to enable this feature, you have to set `LeagueAPI::SET_CACHE_RATELIMIT` to `true`.
-Everything is completly automatic, so all you need to do is to enable this feature.
+Everything else is completly automatic, so all you need to do is to enable this feature.
 
 For additional information about rate limiting, please see [the wiki pages](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Rate-limiting).
 
@@ -198,7 +198,7 @@ For additional information about rate limiting, please see [the wiki pages](http
 ## [Call caching](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Call-caching)
 This feature can prevent unnecessary calls to API within short timespan by temporarily saving fetched data from API and using them as the result data.
 In order to enable this feature, you have to set `LeagueAPI::SET_CACHE_CALLS` to `true`.
-You should also provide `LeagueAPI::SET_CACHE_CALLS_LENGTH` option or else default time interval of `60 seconds` will be used.
+You should also provide `LeagueAPI::SET_CACHE_CALLS_LENGTH` option to specify cached data lifetime or else default time interval of `60 seconds` will be used.
 
 For additional information about API call caching, please see [the wiki pages](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Call-caching).
 
@@ -218,14 +218,15 @@ For additional information about StaticData endpoints, please see [the wiki page
 
 
 ## [StaticData linking](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-StaticData-linking)
-This feature allows you to automatically link StaticData related to your request.
-This action __is time consuming__ (works well when caching call data for `StaticData resource`), but calls to fetch StaticData are not counted to your API key's rate limit.
+This feature allows you to automatically link static data related to your request, any data are managed through `DataDragonAPI`.
+All the static data will be locally cached, which makes this operation very fast after its initial requests.
+Also, any requests made by `DataDragonAPI` do not count towards your rate limit.
 
 For additional information about StaticData linking, please see [the wiki pages](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-StaticData-linking).
 
 
 ## [Extensions](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Extensions)
-Using extensions for ApiObjects is useful tool, allowing implementation of your own methods into the ApiObjects itself.
+Using extensions for `ApiObject`s is extremely useful tool, allowing implementation of your own methods and logic into the `ApiObject`s themselves.
 Extensions are enabled by using settings option `LeagueAPI::SET_EXTENSIONS` when initializing the library.
 
 For additional information about API object extensions, please see [the wiki pages](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Extensions).
