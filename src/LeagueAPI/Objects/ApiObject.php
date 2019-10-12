@@ -70,6 +70,8 @@ abstract class ApiObject implements IApiObject
 						$newRef = new ReflectionClass("$namespace\\$dataType->class");
 						if ($dataType->isArray)
 						{
+						    //  Assign initial array
+						    $this->$property = [];
 							//  Property is array of special DataType (another API object)
 							foreach ($value as $identifier => $d)
 								$this->$property[$identifier] = $newRef->newInstance($d, $api);
