@@ -41,7 +41,7 @@ class CallbackFunctionsTest extends TestCase
 		};
 
 		$api = new LeagueAPI([
-			LeagueAPI::SET_KEY              => getenv('API_KEY'),
+			LeagueAPI::SET_KEY              => RiotAPITestCase::getApiKey(),
 			LeagueAPI::SET_REGION           => Region::EUROPE_EAST,
 			LeagueAPI::SET_USE_DUMMY_DATA   => true,
 			LeagueAPI::SET_CALLBACKS_BEFORE => [
@@ -68,7 +68,7 @@ class CallbackFunctionsTest extends TestCase
 	public function testInit_noArray()
 	{
 		$api = new LeagueAPI([
-			LeagueAPI::SET_KEY              => getenv('API_KEY'),
+			LeagueAPI::SET_KEY              => RiotAPITestCase::getApiKey(),
 			LeagueAPI::SET_REGION           => Region::EUROPE_EAST,
 			LeagueAPI::SET_USE_DUMMY_DATA   => true,
 			LeagueAPI::SET_CALLBACKS_BEFORE => function() {
@@ -127,7 +127,7 @@ class CallbackFunctionsTest extends TestCase
 		$this->expectExceptionMessage("is not valid.");
 
 		new LeagueAPI([
-			LeagueAPI::SET_KEY              => getenv('API_KEY'),
+			LeagueAPI::SET_KEY              => RiotAPITestCase::getApiKey(),
 			LeagueAPI::SET_REGION           => Region::EUROPE_EAST,
 			LeagueAPI::SET_USE_DUMMY_DATA   => true,
 			LeagueAPI::SET_CALLBACKS_BEFORE => $beforeCallbacks,

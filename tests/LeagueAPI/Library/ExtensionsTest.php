@@ -44,7 +44,7 @@ class ExtensionsTest extends TestCase
 	public function testInit()
 	{
 		$api = new LeagueAPI([
-			LeagueAPI::SET_KEY             => getenv('API_KEY'),
+			LeagueAPI::SET_KEY             => RiotAPITestCase::getApiKey(),
 			LeagueAPI::SET_REGION          => Region::EUROPE_EAST,
 			LeagueAPI::SET_USE_DUMMY_DATA  => true,
 			LeagueAPI::SET_DATADRAGON_INIT => true,
@@ -61,7 +61,7 @@ class ExtensionsTest extends TestCase
 	public function testInit_noExtension()
 	{
 		$api = new LeagueAPI([
-			LeagueAPI::SET_KEY            => getenv('API_KEY'),
+			LeagueAPI::SET_KEY            => RiotAPITestCase::getApiKey(),
 			LeagueAPI::SET_REGION         => Region::EUROPE_EAST,
 			LeagueAPI::SET_USE_DUMMY_DATA => true,
 		]);
@@ -77,7 +77,7 @@ class ExtensionsTest extends TestCase
 		$this->expectExceptionMessage("Value of settings parameter");
 
 		new LeagueAPI([
-			LeagueAPI::SET_KEY            => getenv('API_KEY'),
+			LeagueAPI::SET_KEY            => RiotAPITestCase::getApiKey(),
 			LeagueAPI::SET_REGION         => Region::EUROPE_EAST,
 			LeagueAPI::SET_USE_DUMMY_DATA => true,
 			LeagueAPI::SET_EXTENSIONS     => IApiObject::class,
@@ -90,7 +90,7 @@ class ExtensionsTest extends TestCase
 		$this->expectExceptionMessage('does not implement IApiObjectExtension interface');
 
 		new LeagueAPI([
-			LeagueAPI::SET_KEY            => getenv('API_KEY'),
+			LeagueAPI::SET_KEY            => RiotAPITestCase::getApiKey(),
 			LeagueAPI::SET_REGION         => Region::EUROPE_EAST,
 			LeagueAPI::SET_USE_DUMMY_DATA => true,
 			LeagueAPI::SET_EXTENSIONS     => [
@@ -105,7 +105,7 @@ class ExtensionsTest extends TestCase
 		$this->expectExceptionMessage('is not instantiable');
 
 		new LeagueAPI([
-			LeagueAPI::SET_KEY            => getenv('API_KEY'),
+			LeagueAPI::SET_KEY            => RiotAPITestCase::getApiKey(),
 			LeagueAPI::SET_REGION         => Region::EUROPE_EAST,
 			LeagueAPI::SET_USE_DUMMY_DATA => true,
 			LeagueAPI::SET_EXTENSIONS     => [
@@ -120,7 +120,7 @@ class ExtensionsTest extends TestCase
 		$this->expectExceptionMessage('is not valid');
 
 		new LeagueAPI([
-			LeagueAPI::SET_KEY            => getenv('API_KEY'),
+			LeagueAPI::SET_KEY            => RiotAPITestCase::getApiKey(),
 			LeagueAPI::SET_REGION         => Region::EUROPE_EAST,
 			LeagueAPI::SET_USE_DUMMY_DATA => true,
 			LeagueAPI::SET_EXTENSIONS     => [
