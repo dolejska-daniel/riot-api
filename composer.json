@@ -13,11 +13,11 @@
 		}
 	],
 	"require": {
-		"nette/utils": "^2.5",
-		"guzzlehttp/guzzle": "^6.3",
+		"nette/utils": "^2|^3",
+		"guzzlehttp/guzzle": "^6",
 		"symfony/console": "^v4",
 		"symfony/cache": "^4",
-		"psr/cache": "^1.0",
+		"psr/cache": "^1",
 		"php": ">=7.1",
 		"ext-json": "*"
 	},
