@@ -32,6 +32,7 @@ cache:
 
 # Install dependencies
 install:
+    - phpenv config-add travis.php.ini
     - composer install
 
 before_script:
