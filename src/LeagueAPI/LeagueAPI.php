@@ -1044,7 +1044,7 @@ class LeagueAPI
 		/** @var AsyncRequest[] $requests */
 		$requests = @$this->async_requests[$group] ?: [];
         $promises = array_map(function ($request) {
-            return $request->promise;
+            return $request->getPromise();
         }, $requests);
 		settle($promises)->wait();
 
