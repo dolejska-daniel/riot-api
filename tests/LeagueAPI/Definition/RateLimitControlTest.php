@@ -47,7 +47,7 @@ class RateLimitControlTest extends RiotAPITestCase
 	 */
 	public function testInit()
 	{
-		self::$apiKey   = getenv("API_KEY");
+		self::$apiKey   = RiotAPITestCase::getApiKey();
 		self::$region   = Region::EUROPE_EAST;
 		self::$endpoint = LeagueAPI::RESOURCE_CHAMPION . "/champions";
 		self::$resource = LeagueAPI::RESOURCE_CHAMPION;

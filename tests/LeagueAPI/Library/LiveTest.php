@@ -33,8 +33,8 @@ class LiveTest extends TestCase
 			$this->markTestSkipped("Skipping live tests in PRs.");
 
 		$api = new LeagueAPI([
-			LeagueAPI::SET_KEY                => getenv('API_KEY'),
-			LeagueAPI::SET_TOURNAMENT_KEY     => getenv('API_TOURNAMENT_KEY'),
+			LeagueAPI::SET_KEY                => RiotAPITestCase::getApiKey(),
+			LeagueAPI::SET_TOURNAMENT_KEY     => RiotAPITestCase::getApiTournamentKey(),
 			LeagueAPI::SET_REGION             => Region::EUROPE_EAST,
 			LeagueAPI::SET_VERIFY_SSL         => false,
 			LeagueAPI::SET_CACHE_RATELIMIT    => true,

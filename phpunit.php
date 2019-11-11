@@ -159,6 +159,26 @@ class RiotAPITestCase extends TestCase
 
 		return rmdir($dir);
 	}
+
+	/**
+	 *   Returns usable API key - either from environment or constant.
+	 *
+	 * @return string
+	 */
+	public static function getApiKey(): string
+	{
+		return getenv('API_KEY') ?: 'API_KEY_UNKNOWN';
+	}
+
+	/**
+	 *   Returns usable tournament API key - either from environment or constant.
+	 *
+	 * @return string
+	 */
+	public static function getApiTournamentKey(): string
+	{
+		return getenv('API_TOURNAMENT_KEY') ?: 'API_KEY_UNKNOWN';
+	}
 }
 
 //  Autoload required classes

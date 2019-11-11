@@ -32,7 +32,7 @@ class CallsCacheTest extends TestCase
 	public function testInit_simple()
 	{
 		$api = new LeagueAPI([
-			LeagueAPI::SET_KEY            => getenv('API_KEY'),
+			LeagueAPI::SET_KEY            => RiotAPITestCase::getApiKey(),
 			LeagueAPI::SET_REGION         => Region::EUROPE_EAST,
 			LeagueAPI::SET_USE_DUMMY_DATA => true,
 			LeagueAPI::SET_CACHE_CALLS    => true,
@@ -46,7 +46,7 @@ class CallsCacheTest extends TestCase
 	public function testInit_numeric()
 	{
 		$api = new LeagueAPI([
-			LeagueAPI::SET_KEY            => getenv('API_KEY'),
+			LeagueAPI::SET_KEY            => RiotAPITestCase::getApiKey(),
 			LeagueAPI::SET_REGION         => Region::EUROPE_EAST,
 			LeagueAPI::SET_USE_DUMMY_DATA => true,
 			LeagueAPI::SET_CACHE_CALLS    => true,
@@ -61,7 +61,7 @@ class CallsCacheTest extends TestCase
 	public function testInit_array()
 	{
 		$api = new LeagueAPI([
-			LeagueAPI::SET_KEY            => getenv('API_KEY'),
+			LeagueAPI::SET_KEY            => RiotAPITestCase::getApiKey(),
 			LeagueAPI::SET_REGION         => Region::EUROPE_EAST,
 			LeagueAPI::SET_USE_DUMMY_DATA => true,
 			LeagueAPI::SET_CACHE_CALLS    => true,
@@ -123,7 +123,7 @@ class CallsCacheTest extends TestCase
 		$this->expectExceptionMessage("is not valid.");
 
 		new LeagueAPI([
-			LeagueAPI::SET_KEY            => getenv('API_KEY'),
+			LeagueAPI::SET_KEY            => RiotAPITestCase::getApiKey(),
 			LeagueAPI::SET_REGION         => Region::EUROPE_EAST,
 			LeagueAPI::SET_USE_DUMMY_DATA => true,
 			LeagueAPI::SET_CACHE_CALLS    => true,
