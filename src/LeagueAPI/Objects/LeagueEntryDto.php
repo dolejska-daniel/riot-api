@@ -29,6 +29,9 @@ namespace RiotAPI\LeagueAPI\Objects;
  *   league (v4)
  *     @link https://developer.riotgames.com/apis#league-v4/GET_getLeagueEntriesForSummoner
  *     @link https://developer.riotgames.com/apis#league-v4/GET_getLeagueEntriesForSummoner
+ *   tft-league (v1)
+ *     @link https://developer.riotgames.com/apis#tft-league-v1/GET_getLeagueEntriesForSummoner
+ *     @link https://developer.riotgames.com/apis#tft-league-v1/GET_getLeagueEntriesForSummoner
  *
  * @package RiotAPI\LeagueAPI\Objects
  */

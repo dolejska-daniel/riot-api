@@ -27,6 +27,8 @@ namespace RiotAPI\LeagueAPI\Objects;
  *   match (v4)
  *     @link https://developer.riotgames.com/apis#match-v4/GET_getMatchIdsByTournamentCode
  *     @link https://developer.riotgames.com/apis#match-v4/GET_getMatchByTournamentCode
+ *   tft-match (v1)
+ *     @link https://developer.riotgames.com/apis#tft-match-v1/GET_getMatchIdsByPUUID
  *
  * @linkable getStaticChampion($championId)
  *
@@ -100,4 +102,83 @@ class ParticipantDto extends ApiObjectLinkable
 
 	/** @var int $championId */
 	public $championId;
+
+	/**
+	 *   Participant placement upon elimination.
+	 *
+	 * @var int $placement
+	 */
+	public $placement;
+
+	/**
+	 *   Participant Little Legend level. Note: This is not the number of active 
+	 * units.
+	 *
+	 * @var int $level
+	 */
+	public $level;
+
+	/**
+	 *   The round the participant was eliminated in. Note: If the player was 
+	 * eliminated in stage 2-1 their last_round would be 5.
+	 *
+	 * @var int $last_round
+	 */
+	public $last_round;
+
+	/**
+	 *   The number of seconds before the participant was eliminated.
+	 *
+	 * @var float $time_eliminated
+	 */
+	public $time_eliminated;
+
+	/**
+	 *   Participant's companion.
+	 *
+	 * @var CompanionDto $companion
+	 */
+	public $companion;
+
+	/**
+	 *   A complete list of traits for the participant's active units.
+	 *
+	 * @var TraitDto[] $traits
+	 */
+	public $traits;
+
+	/**
+	 *   Number of players the participant eliminated.
+	 *
+	 * @var int $players_eliminated
+	 */
+	public $players_eliminated;
+
+	/**
+	 *   Encrypted PUUID.
+	 *
+	 * @var string $puuid
+	 */
+	public $puuid;
+
+	/**
+	 *   Damage the participant dealt to other players.
+	 *
+	 * @var int $total_damage_to_players
+	 */
+	public $total_damage_to_players;
+
+	/**
+	 *   A list of active units for the participant.
+	 *
+	 * @var UnitDto[] $units
+	 */
+	public $units;
+
+	/**
+	 *   Gold left after participant was eliminated.
+	 *
+	 * @var int $gold_left
+	 */
+	public $gold_left;
 }

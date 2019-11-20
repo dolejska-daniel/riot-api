@@ -1908,14 +1908,6 @@ class LeagueAPI
 			$result = DataDragonAPI::getStaticChampions($locale, $version, $data_by_key);
 			if (!$result) throw new ServerException("StaticData failed to be loaded.");
 
-			// Create missing data
-			$result['keys'] = array_map(function($d) use ($data_by_key) {
-				return $data_by_key
-					? $d['id']
-					: $d['key'];
-			}, $result['data']);
-			$result['keys'] = array_flip($result['keys']);
-
 			$this->result_data = $result;
 		}
 		catch (DataDragonExceptions\SettingsException $ex)
@@ -3002,6 +2994,217 @@ class LeagueAPI
 			return new Objects\SummonerDto($result, $this);
 		});
 	}
+
+
+	/**
+	 * ==================================================================dd=
+	 *     TFT League Endpoint Methods
+	 *     @link https://developer.riotgames.com/apis#tft-league-v1
+	 * ==================================================================dd=
+	 **/
+	const RESOURCE_TFT_LEAGUE = '1484:tft-league';
+	const RESOURCE_TFT_LEAGUE_VERSION = 'v1';
+
+	/**
+	 *   Get TFT league entries for a given summoner ID.
+	 *
+	 * @cli-name get-entries-for-summoner
+	 * @cli-namespace tft-league
+	 *
+	 * @param string $encrypted_summoner_id
+	 *
+	 * @return Objects\LeagueEntryDto[]
+	 *
+	 * @throws SettingsException
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 * @throws GeneralException
+	 *
+	 * @link https://developer.riotgames.com/apis#tft-league-v1/GET_getLeagueEntriesForSummoner
+	 */
+	public function getTFTLeagueEntriesForSummoner( string $encrypted_summoner_id )
+	{
+		$resultPromise = $this->setEndpoint("/tft/league/" . self::RESOURCE_TFT_LEAGUE_VERSION . "/entries/by-summoner/{$encrypted_summoner_id}")
+			->setResource(self::RESOURCE_TFT_LEAGUE, "/entries/by-summoner/%s")
+			->makeCall();
+
+		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
+			foreach ($result as $leagueEntryDtoData)
+				$r[] = new Objects\LeagueEntryDto($leagueEntryDtoData, $this);
+
+			return $r ?? [];
+		});
+	}
+
+	/**
+	 *   Get TFT league with given ID, including inactive entries.
+	 *
+	 * @cli-name get-by-id
+	 * @cli-namespace tft-league
+	 *
+	 * @param string $league_id
+	 *
+	 * @return Objects\LeagueListDto
+	 *
+	 * @throws SettingsException
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 * @throws GeneralException
+	 *
+	 * @link https://developer.riotgames.com/apis#tft-league-v1/GET_getLeagueById
+	 */
+	public function getTFTLeagueById( string $league_id )
+	{
+		$resultPromise = $this->setEndpoint("/tft/league/" . self::RESOURCE_TFT_LEAGUE_VERSION . "/leagues/{$league_id}")
+			->setResource(self::RESOURCE_TFT_LEAGUE, "/leagues/%s")
+			->makeCall();
+
+		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
+			return new Objects\LeagueListDto($result, $this);
+		});
+	}
+
+	/**
+	 *   Get all the TFT league entries.
+	 *
+	 * @cli-name get-league-entries
+	 * @cli-namespace tft-league
+	 *
+	 * @param string $tier
+	 * @param string $division
+	 * @param int $page
+	 *
+	 * @return Objects\LeagueEntryDto[]
+	 *
+	 * @throws GeneralException
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 * @throws SettingsException
+	 *
+	 * @link https://developer.riotgames.com/apis#league-v4/GET_getLeagueEntries
+	 */
+	public function getTFTLeagueEntries( string $tier, string $division, int $page = 1 )
+	{
+		$resultPromise = $this->setEndpoint("/tft/league/" . self::RESOURCE_TFT_LEAGUE_VERSION . "/entries/{$tier}/{$division}")
+			->setResource(self::RESOURCE_LEAGUE, "/entries/%s/%s")
+			->addQuery('page', $page)
+			->makeCall();
+
+		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
+			foreach ($result as $leagueEntryDtoData)
+				$r[] = new Objects\LeagueEntryDto($leagueEntryDtoData, $this);
+
+			return $r ?? [];
+		});
+	}
+
+	/**
+	 *   Get the TFT challenger league.
+	 *
+	 * @cli-name get-challenger
+	 * @cli-namespace tft-league
+	 *
+	 * @return Objects\LeagueListDto
+	 *
+	 * @throws SettingsException
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 * @throws GeneralException
+	 *
+	 * @link https://developer.riotgames.com/apis#tft-league-v1/GET_getChallengerLeague
+	 */
+	public function getTFTChallengerLeague()
+	{
+		$resultPromise = $this->setEndpoint("/tft/league/" . self::RESOURCE_TFT_LEAGUE_VERSION . "/challenger")
+			->setResource(self::RESOURCE_TFT_LEAGUE, "/challenger")
+			->makeCall();
+
+		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
+			return new Objects\LeagueListDto($result, $this);
+		});
+	}
+
+	/**
+	 *   Get the TFT grandmaster league.
+	 *
+	 * @cli-name get-grandmaster
+	 * @cli-namespace tft-league
+	 *
+	 * @return Objects\LeagueListDto
+	 *
+	 * @throws SettingsException
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 * @throws GeneralException
+	 *
+	 * @link https://developer.riotgames.com/apis#tft-league-v1/GET_getGrandmasterLeague
+	 */
+	public function getTFTGrandmasterLeague()
+	{
+		$resultPromise = $this->setEndpoint("/tft/league/" . self::RESOURCE_TFT_LEAGUE_VERSION . "/grandmaster")
+			->setResource(self::RESOURCE_TFT_LEAGUE, "/grandmaster")
+			->makeCall();
+
+		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
+			return new Objects\LeagueListDto($result, $this);
+		});
+	}
+
+	/**
+	 *   Get the TFT master league.
+	 *
+	 * @cli-name get-master
+	 * @cli-namespace tft-league
+	 *
+	 * @return Objects\LeagueListDto
+	 *
+	 * @throws SettingsException
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 * @throws GeneralException
+	 *
+	 * @link https://developer.riotgames.com/apis#tft-league-v1/GET_getMasterLeague
+	 */
+	public function getTFTMasterLeague()
+	{
+		$resultPromise = $this->setEndpoint("/tft/league/" . self::RESOURCE_TFT_LEAGUE_VERSION . "/master")
+			->setResource(self::RESOURCE_TFT_LEAGUE, "/master")
+			->makeCall();
+
+		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
+			return new Objects\LeagueListDto($result, $this);
+		});
+	}
+
+
+	/**
+	 * ==================================================================dd=
+	 *     TFT Match Endpoint Methods
+	 *     @link https://developer.riotgames.com/apis#tft-match-v1
+	 * ==================================================================dd=
+	 **/
+	const RESOURCE_TFT_MATCH = '1481:tft-match';
+	const RESOURCE_TFT_MATCH_VERSION = 'v1';
+
+	// TODO: Implement TFT match endpoint functions
+
+
+	/**
+	 * ==================================================================dd=
+	 *     TFT Summoner Endpoint Methods
+	 *     @link https://developer.riotgames.com/apis#tft-summoner-v1
+	 * ==================================================================dd=
+	 **/
+	const RESOURCE_TFT_SUMMONER = '1483:tft-summoner';
+	const RESOURCE_TFT_SUMMONER_VERSION = 'v1';
+
+	// TODO: Implement TFT summoner endpoint functions
 
 
 	/**

@@ -29,6 +29,11 @@ namespace RiotAPI\LeagueAPI\Objects;
  *     @link https://developer.riotgames.com/apis#league-v4/GET_getGrandmasterLeague
  *     @link https://developer.riotgames.com/apis#league-v4/GET_getLeagueById
  *     @link https://developer.riotgames.com/apis#league-v4/GET_getMasterLeague
+ *   tft-league (v1)
+ *     @link https://developer.riotgames.com/apis#tft-league-v1/GET_getChallengerLeague
+ *     @link https://developer.riotgames.com/apis#tft-league-v1/GET_getGrandmasterLeague
+ *     @link https://developer.riotgames.com/apis#tft-league-v1/GET_getLeagueById
+ *     @link https://developer.riotgames.com/apis#tft-league-v1/GET_getMasterLeague
  *
  * @package RiotAPI\LeagueAPI\Objects
  */
