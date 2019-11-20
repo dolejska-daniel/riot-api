@@ -65,7 +65,7 @@ class CallCacheControlTest extends RiotAPITestCase
 	public function testSaveCallData( CallCacheControl $control )
 	{
 		$hash = md5("https://global.api.riotgames.com/lol/tournament-stub/v3/providers");
-		$this->assertTrue($control->saveCallData($hash, self::$data, 2));
+		$this->assertTrue($control->saveCallData($hash, self::$data, 1));
 
 		return $control;
 	}
@@ -123,8 +123,7 @@ class CallCacheControlTest extends RiotAPITestCase
 	public function testIsCallCached_Expired( CallCacheControl $control )
 	{
 		$hash = md5("https://global.api.riotgames.com/lol/tournament-stub/v3/providers");
-		$this->assertTrue($control->isCallCached($hash));
-		while ($control->isCallCached($hash));
+		sleep(2);
 		$this->assertFalse($control->isCallCached($hash));
 	}
 }

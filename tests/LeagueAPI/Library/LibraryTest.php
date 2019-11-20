@@ -116,6 +116,9 @@ class LibraryTest extends RiotAPITestCase
 		]);
 	}
 
+	/**
+	 * @requires extension memcached
+	 */
 	public function testInit_settings_invalid_cacheProviderSettings()
 	{
 		$this->expectException(SettingsException::class);

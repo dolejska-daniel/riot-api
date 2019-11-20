@@ -59,16 +59,6 @@ class AsyncRequest
 
 
 	/**
-	 *   Promise getter.
-	 *
-	 * @return PromiseInterface
-	 */
-	public function getPromise(): PromiseInterface
-	{
-		return $this->promise;
-	}
-
-	/**
 	 *   Promise setter.
 	 *
 	 * @param PromiseInterface $promise

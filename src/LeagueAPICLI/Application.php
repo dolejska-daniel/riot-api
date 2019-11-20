@@ -54,6 +54,9 @@ class Application extends SymfonyAplication
 			$this->addCommandFromReflectionMethod($method);
 	}
 
+	/**
+	 * @param ReflectionMethod $method
+	 */
 	protected function addCommandFromReflectionMethod(ReflectionMethod $method)
 	{
 		$descriptor = MethodDescriptor::fromReflectionMethod($method);
@@ -75,6 +78,12 @@ class Application extends SymfonyAplication
 		$this->add($command);
 	}
 
+	/**
+	 * @param Command $command
+	 * @param ReflectionMethod $method
+	 *
+	 * @throws \ReflectionException
+	 */
 	protected function addArgumentsToCommandFromReflectionMethod(Command $command, ReflectionMethod $method)
 	{
 		// Get method parameters and register them as command's arguments
@@ -89,6 +98,9 @@ class Application extends SymfonyAplication
 		}
 	}
 
+	/**
+	 * @param Command $command
+	 */
 	protected function addGlobalOptionsToCommand(Command $command)
 	{
 		// Register library related options for each command

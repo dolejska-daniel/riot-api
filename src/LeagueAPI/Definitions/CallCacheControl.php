@@ -77,13 +77,13 @@ class CallCacheControl implements ICallCacheControl
 	 *
 	 * @param string $hash
 	 * @param        $data
-	 * @param int    $lenght
+	 * @param int    $length
 	 *
 	 * @return bool
 	 */
-	public function saveCallData( string $hash, $data, int $lenght ): bool
+	public function saveCallData( string $hash, $data, int $length ): bool
 	{
-		$this->storage->save($hash, $data, $lenght);
+		$this->storage->save($hash, $data, $length);
 		return true;
 	}
 }

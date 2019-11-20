@@ -53,7 +53,6 @@ class StaticDataEndpointTest extends RiotAPITestCase
 		$result = $api->getStaticChampions();
 
 		$this->assertSameSize($api->getResult()['data'], $result->data);
-		$this->assertSame(array_keys($result->data), array_values($result->keys));
 
 		$this->assertArrayHasKey("Orianna", $result->data);
 		$this->assertSame("Orianna", $result->data["Orianna"]->id);
@@ -72,7 +71,6 @@ class StaticDataEndpointTest extends RiotAPITestCase
 		$result = $api->getStaticChampions(true);
 
 		$this->assertSameSize($api->getResult()['data'], $result->data);
-		$this->assertSame(array_keys($result->data), array_values($result->keys));
 
 		$this->assertArrayHasKey(61, $result->data);
 		$this->assertSame("Orianna", $result->data[61]->id);
