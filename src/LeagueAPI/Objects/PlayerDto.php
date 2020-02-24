@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016-2019  Daniel Dolejška
+ * Copyright (C) 2016-2020  Daniel Dolejška
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -24,6 +24,8 @@ namespace RiotAPI\LeagueAPI\Objects;
  *   Class PlayerDto
  *
  * Used in:
+ *   lor-ranked (v1)
+ *     @link https://developer.riotgames.com/apis#lor-ranked-v1/GET_getLeaderboards
  *   match (v4)
  *     @link https://developer.riotgames.com/apis#match-v4/GET_getMatchIdsByTournamentCode
  *     @link https://developer.riotgames.com/apis#match-v4/GET_getMatchByTournamentCode
@@ -32,6 +34,12 @@ namespace RiotAPI\LeagueAPI\Objects;
  */
 class PlayerDto extends ApiObject
 {
+	/** @var string $name */
+	public $name;
+
+	/** @var int $rank */
+	public $rank;
+
 	/** @var string $currentPlatformId */
 	public $currentPlatformId;
 

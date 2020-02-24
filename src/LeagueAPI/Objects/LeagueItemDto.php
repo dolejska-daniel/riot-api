@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright (C) 2016-2019  Daniel Dolejška
+ * Copyright (C) 2016-2020  Daniel Dolejška
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -49,7 +49,7 @@ class LeagueItemDto extends ApiObject
 	public $miniSeries;
 
 	/**
-	 *   Winning team on Summoners Rift. First placement in Teamfight Tactics.
+	 *   Winning team on Summoners Rift.
 	 *
 	 * @var int $wins
 	 */
@@ -59,8 +59,7 @@ class LeagueItemDto extends ApiObject
 	public $veteran;
 
 	/**
-	 *   Losing team on Summoners Rift. Second through eighth placement in 
-	 * Teamfight Tactics.
+	 *   Losing team on Summoners Rift.
 	 *
 	 * @var int $losses
 	 */
@@ -76,7 +75,7 @@ class LeagueItemDto extends ApiObject
 	public $rank;
 
 	/**
-	 *   Player's summonerId (Encrypted).
+	 *   Player's encrypted summonerId.
 	 *
 	 * @var string $summonerId
 	 */

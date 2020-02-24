@@ -17,21 +17,24 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-namespace RiotAPI\LeagueAPI\Objects\StaticData;
-
-use RiotAPI\LeagueAPI\Objects\ApiObjectIterable;
+namespace RiotAPI\LeagueAPI\Objects;
 
 
 /**
- *   Class StaticReforgedRunePathList
- * This object contains collection of reforged rune paths.
+ *   Class LeaderboardDto
  *
- * @iterable $paths
+ * Used in:
+ *   lor-ranked (v1)
+ *     @link https://developer.riotgames.com/apis#lor-ranked-v1/GET_getLeaderboards
  *
- * @package RiotAPI\LeagueAPI\Objects\StaticData
+ * @package RiotAPI\LeagueAPI\Objects
  */
-class StaticReforgedRunePathList extends ApiObjectIterable
+class LeaderboardDto extends ApiObject
 {
-	/** @var StaticReforgedRunePathDto[] $paths */
-	public $paths;
+	/**
+	 *   A list of players in Master tier.
+	 *
+	 * @var PlayerDto[] $players
+	 */
+	public $players;
 }
