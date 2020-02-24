@@ -108,7 +108,8 @@ class LeagueAPI
 		SET_CALLBACKS_AFTER          = 'SET_CALLBACKS_AFTER',
 		SET_API_BASEURL              = 'SET_API_BASEURL',
 		SET_USE_DUMMY_DATA           = 'SET_USE_DUMMY_DATA',
-		SET_SAVE_DUMMY_DATA          = 'SET_SAVE_DUMMY_DATA';
+		SET_SAVE_DUMMY_DATA          = 'SET_SAVE_DUMMY_DATA',
+		SET_DEBUG                    = 'SET_DEBUG';
 
 	/**
 	 * Available API key inclusion options.
@@ -225,6 +226,7 @@ class LeagueAPI
 			self::SET_CALLBACKS_BEFORE,
 			self::SET_CALLBACKS_AFTER,
 			self::SET_API_BASEURL,
+			self::SET_DEBUG,
 		],
 		SETTINGS_INIT_ONLY = [
 			self::SET_API_BASEURL,
@@ -266,6 +268,7 @@ class LeagueAPI
 		self::SET_USE_DUMMY_DATA   => false,
 		self::SET_SAVE_DUMMY_DATA  => false,
 		self::SET_VERIFY_SSL       => true,
+		self::SET_DEBUG            => false,
 	);
 
 	/** @var IRegion $regions */
@@ -1043,7 +1046,8 @@ class LeagueAPI
 	{
 		/** @var AsyncRequest[] $requests */
 		$requests = @$this->async_requests[$group] ?: [];
-		settle($requests)->wait();
+		$promises = array_map(function ($r) { return $r->getPromise(); }, $requests);
+		settle($promises)->wait();
 
 		unset($this->async_clients[$group]);
 		unset($this->async_requests[$group]);
@@ -1139,6 +1143,9 @@ class LeagueAPI
 			$options[RequestOptions::HEADERS] = $requestHeaders;
 			if ($this->post_data)
 				$options[RequestOptions::BODY] = $this->post_data;
+
+			if ($this->isSettingSet(self::SET_DEBUG))
+				$options[RequestOptions::DEBUG] = fopen('php://stderr', 'w');
 
 			// Create HTTP request
 			$requestPromise = $guzzle->requestAsync(

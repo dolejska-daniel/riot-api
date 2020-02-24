@@ -48,18 +48,19 @@ class AsyncTest extends RiotAPITestCase
 	public static $onRejectedCalls = 0;
 	public static $summonerList = [];
 
-	public function testInit()
+	/** @var AsyncTestCustomLeagueAPI */
+	private static $api;
+
+	public function setUp()
 	{
-		$api = new AsyncTestCustomLeagueAPI([
-			LeagueAPI::SET_KEY             => RiotAPITestCase::getApiKey(),
-			LeagueAPI::SET_REGION          => Region::EUROPE_EAST,
+		parent::setUp();
+
+		self::$api = new AsyncTestCustomLeagueAPI([
+			LeagueAPI::SET_KEY => RiotAPITestCase::getApiKey(),
+			LeagueAPI::SET_REGION => Region::EUROPE_EAST,
 			LeagueAPI::SET_USE_DUMMY_DATA  => true,
 			LeagueAPI::SET_SAVE_DUMMY_DATA => getenv('SAVE_DUMMY_DATA') ?? false,
 		]);
-
-		$this->assertInstanceOf(LeagueAPI::class, $api);
-
-		return $api;
 	}
 
 	public function _onFulfilled($data)
@@ -76,16 +77,12 @@ class AsyncTest extends RiotAPITestCase
 		self::$onRejectedCalls++;
 	}
 
-	/**
-	 * @depends testInit
-	 *
-	 * @param AsyncTestCustomLeagueAPI $api
-	 */
-	public function testNextAsync( AsyncTestCustomLeagueAPI $api )
+	public function testNextAsync()
 	{
+		$api = self::$api;
 		$this->assertNull($api->next_async_request);
 		$this->assertEmpty($api->async_requests);
-		$this->assertEmpty($api->async_clients);
+		$this->assertEmpty($api->async_requests);
 
 		$api->nextAsync([$this, "_onFulfilled"], [$this, "_onRejected"], self::GROUP);
 		$this->assertInstanceOf(AsyncRequest::class, $api->next_async_request);
@@ -99,44 +96,36 @@ class AsyncTest extends RiotAPITestCase
 		$result = $api->getSummonerByName("I am TheKronnY");
 		$this->assertNull($api->next_async_request);
 		$this->assertNull($result, "Library method call returned value instead of enqueuing promise.");
-	}
+		$this->assertCount(1, $api->async_requests[self::GROUP], "API method call was not enqueued as async");
 
-	/**
-	 * @depends testInit
-	 *
-	 * @param AsyncTestCustomLeagueAPI $api
-	 */
-	public function testNextAsync_Extended( AsyncTestCustomLeagueAPI $api )
-	{
 		$api->nextAsync([$this, "_onFulfilled"], [$this, "_onRejected"], self::GROUP)->getSummonerByName("KuliS");
 		$api->nextAsync([$this, "_onFulfilled"], [$this, "_onRejected"], self::GROUP)->getSummonerByName("PeterThePunisher");
-		$this->assertCount(3, $api->async_requests[self::GROUP]);
+		$this->assertCount(3, $api->async_requests[self::GROUP], "API method calls were not enqueued as async");
+
+		return $api;
 	}
 
 	/**
-	 * @depends testInit
 	 * @depends testNextAsync
 	 *
-	 * @param AsyncTestCustomLeagueAPI $api
+	 * @param $api AsyncTestCustomLeagueAPI
 	 */
-	public function testCommitAsync( AsyncTestCustomLeagueAPI $api )
+	public function testCommitAsync($api)
 	{
+		$this->assertNotNull($api->async_clients);
 		$this->assertArrayHasKey(self::GROUP, $api->async_clients);
 		$this->assertArrayHasKey(self::GROUP, $api->async_requests);
 		$this->assertCount(3, $api->async_requests[self::GROUP]);
+		$this->assertEquals(0, self::$onRejectedCalls, "onRejected callback was invoked before commit");
+		$this->assertEquals(0, self::$onFulfilledCalls, "onFulfilled callback was not invoked before commit");
 
 		$api->commitAsync(self::GROUP);
 
-		$this->assertArrayNotHasKey(self::GROUP, $api->async_clients, "Request client for given async call grop still exists.");
-		$this->assertArrayNotHasKey(self::GROUP, $api->async_requests, "Request array for given async call grop still exists.");
+		$this->assertArrayNotHasKey(self::GROUP, $api->async_clients, "Request client for given async call grop still exists");
+		$this->assertArrayNotHasKey(self::GROUP, $api->async_requests, "Request array for given async call grop still exists");
+		$this->assertCount(3, self::$summonerList, "Required count of results was not returned by API");
 		$this->assertEquals(0, self::$onRejectedCalls, "onRejected callback was invoked");
 		$this->assertEquals(3, self::$onFulfilledCalls, "onFulfilled callback was not invoked");
-		$this->assertCount(3, self::$summonerList);
-		$this->assertSame([
-			"I am TheKronnY",
-			"KuliS",
-			"PeterThePunisher",
-		], self::$summonerList);
 	}
 
 

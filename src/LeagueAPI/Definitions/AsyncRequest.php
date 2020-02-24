@@ -71,4 +71,14 @@ class AsyncRequest
 		$promise->then($this->onFulfilled, $this->onRejected);
 		return $this;
 	}
+
+	/**
+	 *   Promise getter.
+	 *
+	 * @return PromiseInterface
+	 */
+	public function getPromise(): PromiseInterface
+	{
+		return $this->promise;
+	}
 }
