@@ -121,6 +121,7 @@ class InvokeMethodLeagueAPI extends Command
 	{
 		$data = [
 			"headers" => $this->api->getResultHeaders(),
+			"limits" => $this->api->getCurrentLimits(),
 			"result" => $data,
 		];
 	}

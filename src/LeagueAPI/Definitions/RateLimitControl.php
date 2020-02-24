@@ -51,6 +51,23 @@ class RateLimitControl implements IRateLimitControl
 	}
 
 	/**
+	 *   Returns currently stored status of limits for given API key, region and endpoint.
+	 *
+	 * @param string $api_key
+	 * @param string $region
+	 * @param string $endpoint
+	 *
+	 * @return array
+	 */
+	public function getCurrentStatus(string $api_key, string $region, string $endpoint): array
+	{
+		return [
+			"app" => $this->storage->getAppLimits($api_key, $region),
+			"method" => $this->storage->getMethodLimits($api_key, $region, $endpoint),
+		];
+	}
+
+	/**
 	 *   Determines whether or not API call can be made
 	 *
 	 * @param string $api_key

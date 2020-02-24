@@ -1024,6 +1024,16 @@ class LeagueAPI
 	}
 
 	/**
+	 *   Returns current API request limits.
+	 *
+	 * @return array
+	 */
+	public function getCurrentLimits()
+	{
+		return $this->rlc->getCurrentStatus($this->getSetting($this->used_key), $this->getSetting(self::SET_REGION), $this->getResourceEndpoint());
+	}
+
+	/**
 	 *   Adds next API call to given async request group. Sending needs to be
 	 * initiated by calling commitAsync function.
 	 *

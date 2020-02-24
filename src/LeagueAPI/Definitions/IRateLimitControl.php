@@ -35,6 +35,17 @@ interface IRateLimitControl
 	public function __construct( IRegion $region );
 
 	/**
+	 *   Returns currently stored status of limits for given API key, region and endpoint.
+	 *
+	 * @param string $api_key
+	 * @param string $region
+	 * @param string $endpoint
+	 *
+	 * @return array
+	 */
+	public function getCurrentStatus(string $api_key, string $region, string $endpoint): array;
+
+	/**
 	 *   Determines whether or not API call can be made.
 	 *
 	 * @param string $api_key
