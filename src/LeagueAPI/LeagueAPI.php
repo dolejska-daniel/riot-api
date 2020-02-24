@@ -1014,6 +1014,16 @@ class LeagueAPI
 	}
 
 	/**
+	 *   Returns HTTP response headers from the last call.
+	 *
+	 * @return array
+	 */
+	public function getResultHeaders()
+	{
+		return $this->result_headers;
+	}
+
+	/**
 	 *   Adds next API call to given async request group. Sending needs to be
 	 * initiated by calling commitAsync function.
 	 *

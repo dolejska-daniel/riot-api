@@ -95,6 +95,9 @@ class InvokeMethodLeagueAPI extends Command
 		$this->methodRef->invokeArgs($this->api, $arguments);
 		$data = $this->api->getResult();
 
+		if ($input->hasOption('extend') && $input->getOption('extend'))
+			$this->extendResultFormat($data);
+
 		$json_options = null;
 		if ($input->hasOption('pretty') && $input->getOption('pretty'))
 			$json_options = JSON_PRETTY_PRINT;
@@ -109,5 +112,16 @@ class InvokeMethodLeagueAPI extends Command
 		}
 
 		$output->write(json_encode($data, $json_options));
+	}
+
+	/**
+	 * @param $data
+	 */
+	protected function extendResultFormat(&$data)
+	{
+		$data = [
+			"headers" => $this->api->getResultHeaders(),
+			"result" => $data,
+		];
 	}
 }

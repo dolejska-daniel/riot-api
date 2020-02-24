@@ -25,7 +25,6 @@ use RiotAPI\LeagueAPI\Utils\MethodDescriptor;
 
 use Symfony\Component\Console\Application as SymfonyAplication;
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\Input;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 
@@ -50,14 +49,21 @@ class Application extends SymfonyAplication
 		$methods = $apiRef->getMethods(ReflectionProperty::IS_PUBLIC);
 
 		// For each existing method, create command
+		$commands = [];
 		foreach ($methods as $method)
-			$this->addCommandFromReflectionMethod($method);
+			$commands = $this->createCommandFromReflectionMethod($method);
+
+		foreach ($commands as $command)
+			$this->add($command);
 	}
 
 	/**
 	 * @param ReflectionMethod $method
+	 *
+	 * @return InvokeMethodLeagueAPI|void
+	 * @throws \ReflectionException
 	 */
-	protected function addCommandFromReflectionMethod(ReflectionMethod $method)
+	protected function createCommandFromReflectionMethod(ReflectionMethod $method)
 	{
 		$descriptor = MethodDescriptor::fromReflectionMethod($method);
 		if (!$descriptor->isCLIMethod())
@@ -75,7 +81,8 @@ class Application extends SymfonyAplication
 
 		$this->addArgumentsToCommandFromReflectionMethod($command, $method);
 		$this->addGlobalOptionsToCommand($command);
-		$this->add($command);
+
+		return $command;
 	}
 
 	/**
@@ -112,6 +119,11 @@ class Application extends SymfonyAplication
 		$command->addOption("output", "o", InputOption::VALUE_REQUIRED,
 			"Path to save JSON response output.\n" .
 			"https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI%3A-CLI-support#output-file"
+		);
+
+		$command->addOption("extend", "x", InputOption::VALUE_NONE,
+			"Use extended result format.\n" .
+			"https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI%3A-CLI-support#extended-format"
 		);
 
 		$command->addOption("pretty", null, InputOption::VALUE_NONE,
