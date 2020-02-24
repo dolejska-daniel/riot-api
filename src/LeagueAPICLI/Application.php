@@ -54,7 +54,8 @@ class Application extends SymfonyAplication
 			$commands[] = $this->createCommandFromReflectionMethod($method);
 
 		foreach ($commands as $command)
-			$this->add($command);
+			if ($command)
+				$this->add($command);
 	}
 
 	/**
