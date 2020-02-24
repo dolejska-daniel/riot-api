@@ -1144,7 +1144,7 @@ class LeagueAPI
 			if ($this->post_data)
 				$options[RequestOptions::BODY] = $this->post_data;
 
-			if ($this->isSettingSet(self::SET_DEBUG))
+			if ($this->isSettingSet(self::SET_DEBUG) && $this->getSetting(self::SET_DEBUG))
 				$options[RequestOptions::DEBUG] = fopen('php://stderr', 'w');
 
 			// Create HTTP request
