@@ -1911,6 +1911,44 @@ class LeagueAPI
 	const RESOURCE_STATICDATA = '1351:lol-static-data';
 
 	/**
+	 * @param $method
+	 * @param mixed ...$arguments
+	 * @return bool|mixed
+	 *
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws SettingsException
+	 */
+	protected function _makeStaticCall($method, ...$arguments)
+	{
+		try
+		{
+			// Fetch StaticData from JSON files
+			$result = call_user_func_array($method, $arguments);
+			$this->result_data = $result;
+			$this->result_data_raw = [];
+			$this->result_headers = [];
+			$this->result_code = 200;
+
+			if (!$result)
+			{
+				$this->result_code = 599;
+				throw new ServerException("StaticData failed to be loaded.");
+			}
+		}
+		catch (DataDragonExceptions\SettingsException $ex)
+		{
+			throw new SettingsException("DataDragon API was not initialized properly! StaticData endpoints cannot be used.");
+		}
+		catch (DataDragonExceptions\ArgumentException $ex)
+		{
+			throw new RequestException($ex->getMessage(), $ex->getCode());
+		}
+
+		return $result;
+	}
+
+	/**
 	 *   Retrieves champion list.
 	 *
 	 * @cli-name get-champions
@@ -1928,28 +1966,8 @@ class LeagueAPI
 	 */
 	public function getStaticChampions( bool $data_by_key = false, string $locale = 'en_US', string $version = null ): StaticData\StaticChampionListDto
 	{
-		$result = false;
-		try
-		{
-			// Fetch StaticData from JSON files
-			$result = DataDragonAPI::getStaticChampions($locale, $version, $data_by_key);
-			if (!$result) throw new ServerException("StaticData failed to be loaded.");
-
-			$this->result_data = $result;
-		}
-		catch (DataDragonExceptions\SettingsException $ex)
-		{
-			throw new SettingsException("DataDragon API was not initialized properly! StaticData endpoints cannot be used.");
-		}
-		catch (DataDragonExceptions\ArgumentException $ex)
-		{
-			throw new RequestException($ex->getMessage(), $ex->getCode());
-		}
-		finally
-		{
-			// Parse array and create instances
-			return new StaticData\StaticChampionListDto($result, $this);
-		}
+		$result = $this->_makeStaticCall("RiotAPI\\DataDragonAPI\\DataDragonAPI::getStaticChampions", $locale, $version, $data_by_key);
+		return new StaticData\StaticChampionListDto($result, $this);
 	}
 
 	/**
@@ -1970,30 +1988,16 @@ class LeagueAPI
 	 */
 	public function getStaticChampion( int $champion_id, bool $extended = false, string $locale = 'en_US', string $version = null ): StaticData\StaticChampionDto
 	{
-		$result = false;
-		try
+		$result = $this->_makeStaticCall("RiotAPI\\DataDragonAPI\\DataDragonAPI::getStaticChampionByKey", $champion_id, $locale, $version);
+		if ($extended && $result)
 		{
-			// Fetch StaticData from JSON files
-			$result = DataDragonAPI::getStaticChampionByKey($champion_id, $locale, $version);
-			if ($extended && $result)
-				$result = @DataDragonAPI::getStaticChampionDetails($result['id'], $locale, $version)['data'][$result['id']];
-			if (!$result) throw new ServerException("StaticData failed to be loaded.");
-
+			$champion_id = $result['id'];
+			$result = $this->_makeStaticCall("RiotAPI\\DataDragonAPI\\DataDragonAPI::getStaticChampionDetails", $champion_id, $locale, $version);
+			$result = $result['data'][$champion_id];
 			$this->result_data = $result;
 		}
-		catch (DataDragonExceptions\SettingsException $ex)
-		{
-			throw new SettingsException("DataDragon API was not initialized properly! StaticData endpoints cannot be used.");
-		}
-		catch (DataDragonExceptions\ArgumentException $ex)
-		{
-			throw new RequestException($ex->getMessage(), $ex->getCode());
-		}
-		finally
-		{
-			// Parse array and create instances
-			return new StaticData\StaticChampionDto($result, $this);
-		}
+
+		return new StaticData\StaticChampionDto($result, $this);
 	}
 
 	/**
@@ -2012,33 +2016,15 @@ class LeagueAPI
 	 */
 	public function getStaticItems( string $locale = 'en_US', string $version = null ): StaticData\StaticItemListDto
 	{
-		$result = false;
-		try
-		{
-			// Fetch StaticData from JSON files
-			$result = DataDragonAPI::getStaticItems($locale, $version);
-			if (!$result) throw new ServerException("StaticData failed to be loaded.");
+		$result = $this->_makeStaticCall("RiotAPI\\DataDragonAPI\\DataDragonAPI::getStaticItems", $locale, $version);
 
-			// Create missing data
-			array_walk($result['data'], function (&$d, $k) {
-				$d['id'] = $k;
-			});
+		// Create missing data
+		array_walk($result['data'], function (&$d, $k) {
+			$d['id'] = $k;
+		});
+		$this->result_data = $result;
 
-			$this->result_data = $result;
-		}
-		catch (DataDragonExceptions\SettingsException $ex)
-		{
-			throw new SettingsException("DataDragon API was not initialized properly! StaticData endpoints cannot be used.");
-		}
-		catch (DataDragonExceptions\ArgumentException $ex)
-		{
-			throw new RequestException($ex->getMessage(), $ex->getCode());
-		}
-		finally
-		{
-			// Parse array and create instances
-			return new StaticData\StaticItemListDto($result, $this);
-		}
+		return new StaticData\StaticItemListDto($result, $this);
 	}
 
 	/**
@@ -2058,31 +2044,13 @@ class LeagueAPI
 	 */
 	public function getStaticItem( int $item_id, string $locale = 'en_US', string $version = null ): StaticData\StaticItemDto
 	{
-		$result = false;
-		try
-		{
-			// Fetch StaticData from JSON files
-			$result = DataDragonAPI::getStaticItem($item_id, $locale, $version);
-			if (!$result) throw new ServerException("StaticData failed to be loaded.");
+		$result = $this->_makeStaticCall("RiotAPI\\DataDragonAPI\\DataDragonAPI::getStaticItem", $item_id, $locale, $version);
 
-			// Create missing data
-			$result['id'] = $item_id;
+		// Create missing data
+		$result['id'] = $item_id;
+		$this->result_data = $result;
 
-			$this->result_data = $result;
-		}
-		catch (DataDragonExceptions\SettingsException $ex)
-		{
-			throw new SettingsException("DataDragon API was not initialized properly! StaticData endpoints cannot be used.");
-		}
-		catch (DataDragonExceptions\ArgumentException $ex)
-		{
-			throw new RequestException($ex->getMessage(), $ex->getCode());
-		}
-		finally
-		{
-			// Parse array and create instances
-			return new StaticData\StaticItemDto($result, $this);
-		}
+		return new StaticData\StaticItemDto($result, $this);
 	}
 
 	/**
@@ -2101,28 +2069,8 @@ class LeagueAPI
 	 */
 	public function getStaticLanguageStrings( string $locale = 'en_US', string $version = null ): StaticData\StaticLanguageStringsDto
 	{
-		$result = false;
-		try
-		{
-			// Fetch StaticData from JSON files
-			$result = DataDragonAPI::getStaticLanguageStrings($locale, $version);
-			if (!$result) throw new ServerException("StaticData failed to be loaded.");
-
-			$this->result_data = $result;
-		}
-		catch (DataDragonExceptions\SettingsException $ex)
-		{
-			throw new SettingsException("DataDragon API was not initialized properly! StaticData endpoints cannot be used.");
-		}
-		catch (DataDragonExceptions\ArgumentException $ex)
-		{
-			throw new RequestException($ex->getMessage(), $ex->getCode());
-		}
-		finally
-		{
-			// Parse array and create instances
-			return new StaticData\StaticLanguageStringsDto($result, $this);
-		}
+		$result = $this->_makeStaticCall("RiotAPI\\DataDragonAPI\\DataDragonAPI::getStaticLanguageStrings", $locale, $version);
+		return new StaticData\StaticLanguageStringsDto($result, $this);
 	}
 
 	/**
@@ -2134,26 +2082,11 @@ class LeagueAPI
 	 * @return array
 	 * @throws RequestException
 	 * @throws ServerException
+	 * @throws SettingsException
 	 */
 	public function getStaticLanguages(): array
 	{
-		$result = false;
-		try
-		{
-			// Fetch StaticData from JSON files
-			$result = DataDragonAPI::getStaticLanguages();
-			if (!$result) throw new ServerException("StaticData failed to be loaded.");
-
-			$this->result_data = $result;
-		}
-		catch (DataDragonExceptions\ArgumentException $ex)
-		{
-			throw new RequestException($ex->getMessage(), $ex->getCode());
-		}
-		finally
-		{
-			return $result;
-		}
+		return $this->_makeStaticCall("RiotAPI\\DataDragonAPI\\DataDragonAPI::getStaticLanguages");
 	}
 
 	/**
@@ -2172,28 +2105,8 @@ class LeagueAPI
 	 */
 	public function getStaticMaps( string $locale = 'en_US', string $version = null ): StaticData\StaticMapDataDto
 	{
-		$result = false;
-		try
-		{
-			// Fetch StaticData from JSON files
-			$result = DataDragonAPI::getStaticMaps($locale, $version);
-			if (!$result) throw new ServerException("StaticData failed to be loaded.");
-
-			$this->result_data = $result;
-		}
-		catch (DataDragonExceptions\SettingsException $ex)
-		{
-			throw new SettingsException("DataDragon API was not initialized properly! StaticData endpoints cannot be used.");
-		}
-		catch (DataDragonExceptions\ArgumentException $ex)
-		{
-			throw new RequestException($ex->getMessage(), $ex->getCode());
-		}
-		finally
-		{
-			// Parse array and create instances
-			return new StaticData\StaticMapDataDto($result, $this);
-		}
+		$result = $this->_makeStaticCall("RiotAPI\\DataDragonAPI\\DataDragonAPI::getStaticMaps", $locale, $version);
+		return new StaticData\StaticMapDataDto($result, $this);
 	}
 
 	/**
@@ -2212,28 +2125,8 @@ class LeagueAPI
 	 */
 	public function getStaticMasteries( string $locale = 'en_US', string $version = null ): StaticData\StaticMasteryListDto
 	{
-		$result = false;
-		try
-		{
-			// Fetch StaticData from JSON files
-			$result = DataDragonAPI::getStaticMasteries($locale, $version);
-			if (!$result) throw new ServerException("StaticData failed to be loaded.");
-
-			$this->result_data = $result;
-		}
-		catch (DataDragonExceptions\SettingsException $ex)
-		{
-			throw new SettingsException("DataDragon API was not initialized properly! StaticData endpoints cannot be used.");
-		}
-		catch (DataDragonExceptions\ArgumentException $ex)
-		{
-			throw new RequestException($ex->getMessage(), $ex->getCode());
-		}
-		finally
-		{
-			// Parse array and create instances
-			return new StaticData\StaticMasteryListDto($result, $this);
-		}
+		$result = $this->_makeStaticCall("RiotAPI\\DataDragonAPI\\DataDragonAPI::getStaticMasteries", $locale, $version);
+		return new StaticData\StaticMasteryListDto($result, $this);
 	}
 
 	/**
@@ -2253,28 +2146,8 @@ class LeagueAPI
 	 */
 	public function getStaticMastery( int $mastery_id, string $locale = 'en_US', string $version = null ): StaticData\StaticMasteryDto
 	{
-		$result = false;
-		try
-		{
-			// Fetch StaticData from JSON files
-			$result = DataDragonAPI::getStaticMastery($mastery_id, $locale, $version);
-			if (!$result) throw new ServerException("StaticData failed to be loaded.");
-
-			$this->result_data = $result;
-		}
-		catch (DataDragonExceptions\SettingsException $ex)
-		{
-			throw new SettingsException("DataDragon API was not initialized properly! StaticData endpoints cannot be used.");
-		}
-		catch (DataDragonExceptions\ArgumentException $ex)
-		{
-			throw new RequestException($ex->getMessage(), $ex->getCode());
-		}
-		finally
-		{
-			// Parse array and create instances
-			return new StaticData\StaticMasteryDto($result, $this);
-		}
+		$result = $this->_makeStaticCall("RiotAPI\\DataDragonAPI\\DataDragonAPI::getStaticMastery", $mastery_id, $locale, $version);
+		return new StaticData\StaticMasteryDto($result, $this);
 	}
 
 	/**
@@ -2293,28 +2166,8 @@ class LeagueAPI
 	 */
 	public function getStaticProfileIcons( string $locale = 'en_US', string $version = null ): StaticData\StaticProfileIconDataDto
 	{
-		$result = false;
-		try
-		{
-			// Fetch StaticData from JSON files
-			$result = DataDragonAPI::getStaticProfileIcons($locale, $version);
-			if (!$result) throw new ServerException("StaticData failed to be loaded.");
-
-			$this->result_data = $result;
-		}
-		catch (DataDragonExceptions\SettingsException $ex)
-		{
-			throw new SettingsException("DataDragon API was not initialized properly! StaticData endpoints cannot be used.");
-		}
-		catch (DataDragonExceptions\ArgumentException $ex)
-		{
-			throw new RequestException($ex->getMessage(), $ex->getCode());
-		}
-		finally
-		{
-			// Parse array and create instances
-			return new StaticData\StaticProfileIconDataDto($result, $this);
-		}
+		$result = $this->_makeStaticCall("RiotAPI\\DataDragonAPI\\DataDragonAPI::getStaticProfileIcons", $locale, $version);
+		return new StaticData\StaticProfileIconDataDto($result, $this);
 	}
 
 	/**
@@ -2326,27 +2179,12 @@ class LeagueAPI
 	 * @return StaticData\StaticRealmDto
 	 * @throws RequestException
 	 * @throws ServerException
+	 * @throws SettingsException
 	 */
     public function getStaticRealm(): StaticData\StaticRealmDto
     {
-	    $result = false;
-	    try
-	    {
-		    // Fetch StaticData from JSON files
-		    $result = DataDragonAPI::getStaticRealms($this->getSetting(self::SET_REGION));
-		    if (!$result) throw new ServerException("StaticData failed to be loaded.");
-
-		    $this->result_data = $result;
-	    }
-	    catch (DataDragonExceptions\ArgumentException $ex)
-	    {
-		    throw new RequestException($ex->getMessage(), $ex->getCode());
-	    }
-	    finally
-	    {
-		    // Parse array and create instances
-		    return new StaticData\StaticRealmDto($result, $this);
-	    }
+	    $result = $this->_makeStaticCall("RiotAPI\\DataDragonAPI\\DataDragonAPI::getStaticRealms", $this->getSetting(self::SET_REGION));
+	    return new StaticData\StaticRealmDto($result, $this);
     }
 
 	/**
@@ -2365,34 +2203,16 @@ class LeagueAPI
 	 */
     public function getStaticReforgedRunePaths( string $locale = 'en_US', string $version = null ): StaticData\StaticReforgedRunePathList
     {
-	    $result = false;
-	    try
-	    {
-		    // Fetch StaticData from JSON files
-		    $result = DataDragonAPI::getStaticReforgedRunes($locale, $version);
-		    if (!$result) throw new ServerException("StaticData failed to be loaded.");
+	    $result = $this->_makeStaticCall("RiotAPI\\DataDragonAPI\\DataDragonAPI::getStaticReforgedRunes", $locale, $version);
 
-		    // Create missing data
-		    $r = [];
-		    foreach ($result as $path)
-		    	$r[$path['id']] = $path;
-		    $result = [ 'paths' => $r ];
+	    // Create missing data
+	    $r = [];
+	    foreach ($result as $path)
+		    $r[$path['id']] = $path;
+	    $result = [ 'paths' => $r ];
+	    $this->result_data = $result;
 
-		    $this->result_data = $result;
-	    }
-	    catch (DataDragonExceptions\SettingsException $ex)
-	    {
-		    throw new SettingsException("DataDragon API was not initialized properly! StaticData endpoints cannot be used.");
-	    }
-	    catch (DataDragonExceptions\ArgumentException $ex)
-	    {
-		    throw new RequestException($ex->getMessage(), $ex->getCode());
-	    }
-	    finally
-	    {
-		    // Parse array and create instances
-		    return new StaticData\StaticReforgedRunePathList($result, $this);
-	    }
+	    return new StaticData\StaticReforgedRunePathList($result, $this);
     }
 
 	/**
@@ -2411,42 +2231,24 @@ class LeagueAPI
 	 */
     public function getStaticReforgedRunes( string $locale = 'en_US', string $version = null ): StaticData\StaticReforgedRuneList
     {
-	    $result = false;
-	    try
-	    {
-		    // Fetch StaticData from JSON files
-		    $result = DataDragonAPI::getStaticReforgedRunes($locale, $version);
-		    if (!$result) throw new ServerException("StaticData failed to be loaded.");
+	    $result = $this->_makeStaticCall("RiotAPI\\DataDragonAPI\\DataDragonAPI::getStaticReforgedRunes", $locale, $version);
 
-		    // Create missing data
-		    $r = [];
-		    foreach ($result as $path)
+	    // Create missing data
+	    $r = [];
+	    foreach ($result as $path)
+	    {
+		    foreach ($path['slots'] as $slot)
 		    {
-			    foreach ($path['slots'] as $slot)
+			    foreach ($slot['runes'] as $item)
 			    {
-				    foreach ($slot['runes'] as $item)
-				    {
-					    $r[$item['id']] = $item;
-				    }
+				    $r[$item['id']] = $item;
 			    }
 		    }
-		    $result = [ 'runes' => $r ];
+	    }
+	    $result = [ 'runes' => $r ];
+	    $this->result_data = $result;
 
-		    $this->result_data = $result;
-	    }
-	    catch (DataDragonExceptions\SettingsException $ex)
-	    {
-		    throw new SettingsException("DataDragon API was not initialized properly! StaticData endpoints cannot be used.");
-	    }
-	    catch (DataDragonExceptions\ArgumentException $ex)
-	    {
-		    throw new RequestException($ex->getMessage(), $ex->getCode());
-	    }
-	    finally
-	    {
-		    // Parse array and create instances
-		    return new StaticData\StaticReforgedRuneList($result, $this);
-	    }
+	    return new StaticData\StaticReforgedRuneList($result, $this);
     }
 
 	/**
@@ -2465,28 +2267,8 @@ class LeagueAPI
 	 */
 	public function getStaticRunes( string $locale = 'en_US', string $version = null ): StaticData\StaticRuneListDto
 	{
-		$result = false;
-		try
-		{
-			// Fetch StaticData from JSON files
-			$result = DataDragonAPI::getStaticRunes($locale, $version);
-			if (!$result) throw new ServerException("StaticData failed to be loaded.");
-
-			$this->result_data = $result;
-		}
-		catch (DataDragonExceptions\SettingsException $ex)
-		{
-			throw new SettingsException("DataDragon API was not initialized properly! StaticData endpoints cannot be used.");
-		}
-		catch (DataDragonExceptions\ArgumentException $ex)
-		{
-			throw new RequestException($ex->getMessage(), $ex->getCode());
-		}
-		finally
-		{
-			// Parse array and create instances
-			return new StaticData\StaticRuneListDto($result, $this);
-		}
+		$result = $this->_makeStaticCall("RiotAPI\\DataDragonAPI\\DataDragonAPI::getStaticRunes", $locale, $version);
+		return new StaticData\StaticRuneListDto($result, $this);
 	}
 
 	/**
@@ -2506,28 +2288,8 @@ class LeagueAPI
 	 */
 	public function getStaticRune( int $rune_id, string $locale = 'en_US', string $version = null ): StaticData\StaticRuneDto
 	{
-		$result = false;
-		try
-		{
-			// Fetch StaticData from JSON files
-			$result = DataDragonAPI::getStaticRune($rune_id, $locale, $version);
-			if (!$result) throw new ServerException("StaticData failed to be loaded.");
-
-			$this->result_data = $result;
-		}
-		catch (DataDragonExceptions\SettingsException $ex)
-		{
-			throw new SettingsException("DataDragon API was not initialized properly! StaticData endpoints cannot be used.");
-		}
-		catch (DataDragonExceptions\ArgumentException $ex)
-		{
-			throw new RequestException($ex->getMessage(), $ex->getCode());
-		}
-		finally
-		{
-			// Parse array and create instances
-			return new StaticData\StaticRuneDto($result, $this);
-		}
+		$result = $this->_makeStaticCall("RiotAPI\\DataDragonAPI\\DataDragonAPI::getStaticRune", $rune_id, $locale, $version);
+		return new StaticData\StaticRuneDto($result, $this);
 	}
 
 	/**
@@ -2547,28 +2309,8 @@ class LeagueAPI
 	 */
 	public function getStaticSummonerSpells( bool $data_by_key = false, string $locale = 'en_US', string $version = null ): StaticData\StaticSummonerSpellListDto
 	{
-		$result = false;
-		try
-		{
-			// Fetch StaticData from JSON files
-			$result = DataDragonAPI::getStaticSummonerSpells($locale, $version, $data_by_key);
-			if (!$result) throw new ServerException("StaticData failed to be loaded.");
-
-			$this->result_data = $result;
-		}
-		catch (DataDragonExceptions\SettingsException $ex)
-		{
-			throw new SettingsException("DataDragon API was not initialized properly! StaticData endpoints cannot be used.");
-		}
-		catch (DataDragonExceptions\ArgumentException $ex)
-		{
-			throw new RequestException($ex->getMessage(), $ex->getCode());
-		}
-		finally
-		{
-			// Parse array and create instances
-			return new StaticData\StaticSummonerSpellListDto($result, $this);
-		}
+		$result = $this->_makeStaticCall("RiotAPI\\DataDragonAPI\\DataDragonAPI::getStaticSummonerSpells", $locale, $version, $data_by_key);
+		return new StaticData\StaticSummonerSpellListDto($result, $this);
 	}
 
 	/**
@@ -2588,28 +2330,8 @@ class LeagueAPI
 	 */
 	public function getStaticSummonerSpell( int $summoner_spell_id, string $locale = 'en_US', string $version = null ): StaticData\StaticSummonerSpellDto
 	{
-		$result = false;
-		try
-		{
-			// Fetch StaticData from JSON files
-			$result = DataDragonAPI::getStaticSummonerSpellById($summoner_spell_id, $locale, $version);
-			if (!$result) throw new ServerException("StaticData failed to be loaded.");
-
-			$this->result_data = $result;
-		}
-		catch (DataDragonExceptions\SettingsException $ex)
-		{
-			throw new SettingsException("DataDragon API was not initialized properly! StaticData endpoints cannot be used.");
-		}
-		catch (DataDragonExceptions\ArgumentException $ex)
-		{
-			throw new RequestException($ex->getMessage(), $ex->getCode());
-		}
-		finally
-		{
-			// Parse array and create instances
-			return new StaticData\StaticSummonerSpellDto($result, $this);
-		}
+		$result = $this->_makeStaticCall("RiotAPI\\DataDragonAPI\\DataDragonAPI::getStaticSummonerSpellById", $summoner_spell_id, $locale, $version);
+		return new StaticData\StaticSummonerSpellDto($result, $this);
 	}
 
 	/**
@@ -2629,28 +2351,8 @@ class LeagueAPI
 	 */
 	public function getStaticSummonerSpellByKey( string $summoner_spell_key, string $locale = 'en_US', string $version = null ): StaticData\StaticSummonerSpellDto
 	{
-		$result = false;
-		try
-		{
-			// Fetch StaticData from JSON files
-			$result = DataDragonAPI::getStaticSummonerSpell($summoner_spell_key, $locale, $version);
-			if (!$result) throw new ServerException("StaticData failed to be loaded.");
-
-			$this->result_data = $result;
-		}
-		catch (DataDragonExceptions\SettingsException $ex)
-		{
-			throw new SettingsException("DataDragon API was not initialized properly! StaticData endpoints cannot be used.");
-		}
-		catch (DataDragonExceptions\ArgumentException $ex)
-		{
-			throw new RequestException($ex->getMessage(), $ex->getCode());
-		}
-		finally
-		{
-			// Parse array and create instances
-			return new StaticData\StaticSummonerSpellDto($result, $this);
-		}
+		$result = $this->_makeStaticCall("RiotAPI\\DataDragonAPI\\DataDragonAPI::getStaticSummonerSpell", $summoner_spell_key, $locale, $version);
+		return new StaticData\StaticSummonerSpellDto($result, $this);
 	}
 
 	/**
@@ -2662,27 +2364,11 @@ class LeagueAPI
 	 * @return array
 	 * @throws RequestException
 	 * @throws ServerException
+	 * @throws SettingsException
 	 */
 	public function getStaticVersions(): array
 	{
-		$result = false;
-		try
-		{
-			// Fetch StaticData from JSON files
-			$result = DataDragonAPI::getStaticVersions();
-			if (!$result) throw new ServerException("StaticData failed to be loaded.");
-
-			$this->result_data = $result;
-		}
-		catch (DataDragonExceptions\ArgumentException $ex)
-		{
-			throw new RequestException($ex->getMessage(), $ex->getCode());
-		}
-		finally
-		{
-			// Return data
-			return $result;
-		}
+		return $this->_makeStaticCall("RiotAPI\\DataDragonAPI\\DataDragonAPI::getStaticVersions");
 	}
 
 

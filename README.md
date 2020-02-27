@@ -34,7 +34,7 @@
 | Versions | API Updates | Library features | Branch |
 |----------|-------------|------------------|--------|
 | [![Packagist](https://img.shields.io/badge/packagist-v4.x.x-blue.svg)](https://packagist.org/packages/dolejska-daniel/riot-api) ![](https://img.shields.io/badge/php->=7.1-blue.svg) | ✔ | ✔ | [master](https://github.com/dolejska-daniel/riot-api) |
-| [![Packagist](https://img.shields.io/badge/packagist-v3.x.x-blue.svg)](https://packagist.org/packages/dolejska-daniel/riot-api) ![](https://img.shields.io/badge/php-^7.0-blue.svg) | ✔ | ❌ | [v3-dev](https://github.com/dolejska-daniel/riot-api/tree/v3-dev) |
+| [![Packagist](https://img.shields.io/badge/packagist-v3.x.x-blue.svg)](https://packagist.org/packages/dolejska-daniel/riot-api) ![](https://img.shields.io/badge/php-^7.0-blue.svg) | ❌ | ❌ | [v3-dev](https://github.com/dolejska-daniel/riot-api/tree/v3-dev) |
 
 
 # [Introduction](https://github.com/dolejska-daniel/riot-api/wiki/Home#introduction)
