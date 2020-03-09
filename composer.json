@@ -15,7 +15,7 @@
 	"require": {
 		"nette/utils": "^2|^3",
 		"guzzlehttp/guzzle": "^6",
-		"symfony/console": "^v4",
+		"symfony/console": "^4|^5",
 		"symfony/cache": ">=4.3.8",
 		"psr/cache": "^1",
 		"php": ">=7.1",
