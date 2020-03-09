@@ -190,7 +190,6 @@ class StaticDataEndpointTest extends RiotAPITestCase
 		$result = $api->getStaticMaps();
 
 		$this->assertSameSize($api->getResult()['data'], $result->data);
-		$this->assertArrayHasKey(10, $result->data, "Twisted Treeline map not found.");
 		$this->assertArrayHasKey(11, $result->data, "Summoner's Rift map not found.");
 	}
 
@@ -325,7 +324,7 @@ class StaticDataEndpointTest extends RiotAPITestCase
 		$this->assertSame('Exhaust', $result->data['SummonerExhaust']->name);
 		$this->assertSame('SummonerExhaust', $result->data['SummonerExhaust']->id);
 		$this->assertSame('3', $result->data['SummonerExhaust']->key);
-		$this->assertSame('Exhausts target enemy champion, reducing their Movement Speed by 30%, and their damage dealt by 40% for 2.5 seconds.', $result->data['SummonerExhaust']->description);
+		$this->assertSame('Exhausts target enemy champion, reducing their Movement Speed by 30%, and their damage dealt by 40% for 3 seconds.', $result->data['SummonerExhaust']->description);
 
 		$this->assertArrayHasKey('SummonerFlash', $result->data);
 		$this->assertSame('Flash', $result->data['SummonerFlash']->name);
@@ -348,7 +347,7 @@ class StaticDataEndpointTest extends RiotAPITestCase
 		$this->assertSame('Exhaust', $result->data[3]->name);
 		$this->assertSame('SummonerExhaust', $result->data[3]->id);
 		$this->assertSame('3', $result->data[3]->key);
-		$this->assertSame('Exhausts target enemy champion, reducing their Movement Speed by 30%, and their damage dealt by 40% for 2.5 seconds.', $result->data[3]->description);
+		$this->assertSame('Exhausts target enemy champion, reducing their Movement Speed by 30%, and their damage dealt by 40% for 3 seconds.', $result->data[3]->description);
 
 		$this->assertSame('Flash', $result->data[4]->name);
 		$this->assertSame('SummonerFlash', $result->data[4]->id);
