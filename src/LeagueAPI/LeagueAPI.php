@@ -2472,6 +2472,7 @@ class LeagueAPI
 	{
 		$resultPromise = $this->setEndpoint("/lol/match/" . self::RESOURCE_MATCH_VERSION . "/matches/{$match_id}/by-tournament-code/{$tournament_code}")
 			->setResource(self::RESOURCE_MATCH, "/matches/%i/by-tournament-code/%s")
+			->useKey(self::SET_TOURNAMENT_KEY)
 			->makeCall();
 
 		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
@@ -2501,6 +2502,7 @@ class LeagueAPI
 	{
 		$resultPromise = $this->setEndpoint("/lol/match/" . self::RESOURCE_MATCH_VERSION . "/matches/by-tournament-code/{$tournament_code}/ids")
 			->setResource(self::RESOURCE_MATCH, "/matches/by-tournament-code/%s/ids")
+			->useKey(self::SET_TOURNAMENT_KEY)
 			->makeCall();
 
 		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
