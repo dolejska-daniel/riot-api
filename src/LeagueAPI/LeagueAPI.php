@@ -1988,6 +1988,9 @@ class LeagueAPI
 	 */
 	public function getStaticChampion( int $champion_id, bool $extended = false, string $locale = 'en_US', string $version = null ): StaticData\StaticChampionDto
 	{
+		if ($champion_id == -1)
+			return new StaticData\StaticChampionDto(["id" => -1, "name" => "None"], $this);
+
 		$result = $this->_makeStaticCall("RiotAPI\\DataDragonAPI\\DataDragonAPI::getStaticChampionByKey", $champion_id, $locale, $version);
 		if ($extended && $result)
 		{
