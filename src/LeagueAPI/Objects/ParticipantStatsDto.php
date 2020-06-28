@@ -441,6 +441,15 @@ class ParticipantStatsDto extends ApiObject
 	 * @var int $perk0Var3
 	 */
 	public $perk0Var3;
+	
+	/** @var int $statPerk0 */
+	public $statPerk0;
+
+	/** @var int $statPerk1 */
+	public $statPerk1;
+
+	/** @var int $statPerk2 */
+	public $statPerk2;
 
 	/** @var int $visionWardsBoughtInGame */
 	public $visionWardsBoughtInGame;
