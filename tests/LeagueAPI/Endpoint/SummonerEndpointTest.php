@@ -97,36 +97,36 @@ class SummonerEndpointTest extends RiotAPITestCase
 	}
 
 	public function emptySummonerNameProvider(): array
-    {
-        return [
-            'Empty string' => [
-                'summonerName' => ''
-            ],
-            'String containing one space' => [
-                'summonerName' => ' '
-            ],
-            'String containing two space' => [
-                'summonerName' => '  '
-            ],
-            'String containing multiple spaces' => [
-                'summonerName' => '       '
-            ],
-        ];
-    }
+	{
+		return [
+			'Empty string' => [
+				'summonerName' => ''
+			],
+			'String containing one space' => [
+				'summonerName' => ' '
+			],
+			'String containing two space' => [
+				'summonerName' => '  '
+			],
+			'String containing multiple spaces' => [
+				'summonerName' => '       '
+			],
+		];
+	}
 
-    /**
-     * @depends testInit
-     * @dataProvider emptySummonerNameProvider
-     *
-     * @param LeagueAPI $api
-     */
+	/**
+	 * @depends testInit
+	 * @dataProvider emptySummonerNameProvider
+	 *
+	 * @param LeagueAPI $api
+	 */
 	public function testGetSummonerByNameThrowsAnExceptionInCaseNoNameIsSubmitted(string $summonerName, LeagueAPI $api)
-    {
-        $this->expectException(RequestParameterException::class);
-        $this->expectExceptionMessage('Provided summoner name must not be empty');
+	{
+		$this->expectException(RequestParameterException::class);
+		$this->expectExceptionMessage('Provided summoner name must not be empty');
 
-        $api->getSummonerByName($summonerName);
-    }
+		$api->getSummonerByName($summonerName);
+	}
 
 	/**
 	 * @depends testInit
