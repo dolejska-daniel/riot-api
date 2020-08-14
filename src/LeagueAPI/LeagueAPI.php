@@ -2791,6 +2791,7 @@ class LeagueAPI
 	{
 		$resultPromise = $this->setEndpoint("/tft/league/" . self::RESOURCE_TFT_LEAGUE_VERSION . "/entries/by-summoner/{$encrypted_summoner_id}")
 			->setResource(self::RESOURCE_TFT_LEAGUE, "/entries/by-summoner/%s")
+			->useKey(self::SET_TFT_KEY)
 			->makeCall();
 
 		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
@@ -2823,6 +2824,7 @@ class LeagueAPI
 	{
 		$resultPromise = $this->setEndpoint("/tft/league/" . self::RESOURCE_TFT_LEAGUE_VERSION . "/leagues/{$league_id}")
 			->setResource(self::RESOURCE_TFT_LEAGUE, "/leagues/%s")
+			->useKey(self::SET_TFT_KEY)
 			->makeCall();
 
 		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
@@ -2855,6 +2857,7 @@ class LeagueAPI
 		$resultPromise = $this->setEndpoint("/tft/league/" . self::RESOURCE_TFT_LEAGUE_VERSION . "/entries/{$tier}/{$division}")
 			->setResource(self::RESOURCE_LEAGUE, "/entries/%s/%s")
 			->addQuery('page', $page)
+			->useKey(self::SET_TFT_KEY)
 			->makeCall();
 
 		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
@@ -2885,6 +2888,7 @@ class LeagueAPI
 	{
 		$resultPromise = $this->setEndpoint("/tft/league/" . self::RESOURCE_TFT_LEAGUE_VERSION . "/challenger")
 			->setResource(self::RESOURCE_TFT_LEAGUE, "/challenger")
+			->useKey(self::SET_TFT_KEY)
 			->makeCall();
 
 		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
@@ -2912,6 +2916,7 @@ class LeagueAPI
 	{
 		$resultPromise = $this->setEndpoint("/tft/league/" . self::RESOURCE_TFT_LEAGUE_VERSION . "/grandmaster")
 			->setResource(self::RESOURCE_TFT_LEAGUE, "/grandmaster")
+			->useKey(self::SET_TFT_KEY)
 			->makeCall();
 
 		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
@@ -2939,6 +2944,7 @@ class LeagueAPI
 	{
 		$resultPromise = $this->setEndpoint("/tft/league/" . self::RESOURCE_TFT_LEAGUE_VERSION . "/master")
 			->setResource(self::RESOURCE_TFT_LEAGUE, "/master")
+			->useKey(self::SET_TFT_KEY)
 			->makeCall();
 
 		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
