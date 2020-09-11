@@ -3,6 +3,7 @@
 # Composer files
 vendor/
 composer.phar
+composer.lock
 
 # Testing data
 tests/Coverage/
