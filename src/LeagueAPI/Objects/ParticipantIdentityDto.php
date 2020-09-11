@@ -25,20 +25,22 @@ namespace RiotAPI\LeagueAPI\Objects;
  *
  * Used in:
  *   match (v4)
- *     @link https://developer.riotgames.com/apis#match-v4/GET_getMatchIdsByTournamentCode
+ *     @link https://developer.riotgames.com/apis#match-v4/GET_getMatch
  *     @link https://developer.riotgames.com/apis#match-v4/GET_getMatchByTournamentCode
  *
  * @package RiotAPI\LeagueAPI\Objects
  */
 class ParticipantIdentityDto extends ApiObject
 {
+	/** @var int $participantId */
+	public $participantId;
+
 	/**
-	 *   Player information.
+	 *   Player information not included in the response for custom matches. Custom 
+	 * matches are considered private unless a tournament code was used to create the 
+	 * match.
 	 *
 	 * @var PlayerDto $player
 	 */
 	public $player;
-
-	/** @var int $participantId */
-	public $participantId;
 }

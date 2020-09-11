@@ -21,39 +21,31 @@ namespace RiotAPI\LeagueAPI\Objects;
 
 
 /**
- *   Class MatchReferenceDto
+ *   Class AccountDto
  *
  * Used in:
- *   match (v4)
- *     @link https://developer.riotgames.com/apis#match-v4/GET_getMatchlist
- *
- * @linkable getStaticChampion($champion)
+ *   account (v1)
+ *     @link https://developer.riotgames.com/apis#account-v1/GET_getByPuuid
+ *     @link https://developer.riotgames.com/apis#account-v1/GET_getByRiotId
  *
  * @package RiotAPI\LeagueAPI\Objects
  */
-class MatchReferenceDto extends ApiObjectLinkable
+class AccountDto extends ApiObject
 {
-	/** @var int $gameId */
-	public $gameId;
+	/** @var string $puuid */
+	public $puuid;
 
-	/** @var string $role */
-	public $role;
+	/**
+	 *   This field may be excluded if the account doesn't have a gameName.
+	 *
+	 * @var string $gameName
+	 */
+	public $gameName;
 
-	/** @var int $season */
-	public $season;
-
-	/** @var string $platformId */
-	public $platformId;
-
-	/** @var int $champion */
-	public $champion;
-
-	/** @var int $queue */
-	public $queue;
-
-	/** @var string $lane */
-	public $lane;
-
-	/** @var int $timestamp */
-	public $timestamp;
+	/**
+	 *   This field may be excluded if the account doesn't have a tagLine.
+	 *
+	 * @var string $tagLine
+	 */
+	public $tagLine;
 }

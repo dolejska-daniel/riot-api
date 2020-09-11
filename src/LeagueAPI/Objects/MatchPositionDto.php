@@ -31,9 +31,9 @@ namespace RiotAPI\LeagueAPI\Objects;
  */
 class MatchPositionDto extends ApiObject
 {
-	/** @var int $y */
-	public $y;
-
 	/** @var int $x */
 	public $x;
+
+	/** @var int $y */
+	public $y;
 }

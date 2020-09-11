@@ -25,7 +25,7 @@ namespace RiotAPI\LeagueAPI\Objects;
  *
  * Used in:
  *   match (v4)
- *     @link https://developer.riotgames.com/apis#match-v4/GET_getMatchIdsByTournamentCode
+ *     @link https://developer.riotgames.com/apis#match-v4/GET_getMatch
  *     @link https://developer.riotgames.com/apis#match-v4/GET_getMatchByTournamentCode
  *   tft-match (v1)
  *     @link https://developer.riotgames.com/apis#tft-match-v1/GET_getMatchIdsByPUUID
@@ -36,15 +36,11 @@ namespace RiotAPI\LeagueAPI\Objects;
  */
 class ParticipantDto extends ApiObjectLinkable
 {
-	/**
-	 *   Participant statistics.
-	 *
-	 * @var ParticipantStatsDto $stats
-	 */
-	public $stats;
-
 	/** @var int $participantId */
 	public $participantId;
+
+	/** @var int $championId */
+	public $championId;
 
 	/**
 	 *   List of legacy Rune information. Not included for matches played with 
@@ -55,11 +51,11 @@ class ParticipantDto extends ApiObjectLinkable
 	public $runes;
 
 	/**
-	 *   Participant timeline data.
+	 *   Participant statistics.
 	 *
-	 * @var ParticipantTimelineDto $timeline
+	 * @var ParticipantStatsDto $stats
 	 */
-	public $timeline;
+	public $stats;
 
 	/**
 	 *   100 for blue side. 200 for red side.
@@ -69,19 +65,25 @@ class ParticipantDto extends ApiObjectLinkable
 	public $teamId;
 
 	/**
+	 *   Participant timeline data.
+	 *
+	 * @var ParticipantTimelineDto $timeline
+	 */
+	public $timeline;
+
+	/**
+	 *   First Summoner Spell id.
+	 *
+	 * @var int $spell1Id
+	 */
+	public $spell1Id;
+
+	/**
 	 *   Second Summoner Spell id.
 	 *
 	 * @var int $spell2Id
 	 */
 	public $spell2Id;
-
-	/**
-	 *   List of legacy Mastery information. Not included for matches played with 
-	 * Runes Reforged.
-	 *
-	 * @var MasteryDto[] $masteries
-	 */
-	public $masteries;
 
 	/**
 	 *   Highest ranked tier achieved for the previous season in a specific subset 
@@ -94,29 +96,26 @@ class ParticipantDto extends ApiObjectLinkable
 	public $highestAchievedSeasonTier;
 
 	/**
-	 *   First Summoner Spell id.
+	 *   List of legacy Mastery information. Not included for matches played with 
+	 * Runes Reforged.
 	 *
-	 * @var int $spell1Id
+	 * @var MasteryDto[] $masteries
 	 */
-	public $spell1Id;
-
-	/** @var int $championId */
-	public $championId;
+	public $masteries;
 
 	/**
-	 *   Participant placement upon elimination.
+	 *   Participant's companion.
 	 *
-	 * @var int $placement
+	 * @var CompanionDto $companion
 	 */
-	public $placement;
+	public $companion;
 
 	/**
-	 *   Participant Little Legend level. Note: This is not the number of active 
-	 * units.
+	 *   Gold left after participant was eliminated.
 	 *
-	 * @var int $level
+	 * @var int $gold_left
 	 */
-	public $level;
+	public $gold_left;
 
 	/**
 	 *   The round the participant was eliminated in. Note: If the player was 
@@ -127,25 +126,19 @@ class ParticipantDto extends ApiObjectLinkable
 	public $last_round;
 
 	/**
-	 *   The number of seconds before the participant was eliminated.
+	 *   Participant Little Legend level. Note: This is not the number of active 
+	 * units.
 	 *
-	 * @var float $time_eliminated
+	 * @var int $level
 	 */
-	public $time_eliminated;
+	public $level;
 
 	/**
-	 *   Participant's companion.
+	 *   Participant placement upon elimination.
 	 *
-	 * @var CompanionDto $companion
+	 * @var int $placement
 	 */
-	public $companion;
-
-	/**
-	 *   A complete list of traits for the participant's active units.
-	 *
-	 * @var TraitDto[] $traits
-	 */
-	public $traits;
+	public $placement;
 
 	/**
 	 *   Number of players the participant eliminated.
@@ -162,6 +155,13 @@ class ParticipantDto extends ApiObjectLinkable
 	public $puuid;
 
 	/**
+	 *   The number of seconds before the participant was eliminated.
+	 *
+	 * @var float $time_eliminated
+	 */
+	public $time_eliminated;
+
+	/**
 	 *   Damage the participant dealt to other players.
 	 *
 	 * @var int $total_damage_to_players
@@ -169,16 +169,16 @@ class ParticipantDto extends ApiObjectLinkable
 	public $total_damage_to_players;
 
 	/**
+	 *   A complete list of traits for the participant's active units.
+	 *
+	 * @var TraitDto[] $traits
+	 */
+	public $traits;
+
+	/**
 	 *   A list of active units for the participant.
 	 *
 	 * @var UnitDto[] $units
 	 */
 	public $units;
-
-	/**
-	 *   Gold left after participant was eliminated.
-	 *
-	 * @var int $gold_left
-	 */
-	public $gold_left;
 }

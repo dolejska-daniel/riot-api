@@ -34,39 +34,11 @@ namespace RiotAPI\LeagueAPI\Objects;
 class CurrentGameParticipant extends ApiObjectLinkable
 {
 	/**
-	 *   The ID of the profile icon used by this participant.
-	 *
-	 * @var int $profileIconId
-	 */
-	public $profileIconId;
-
-	/**
 	 *   The ID of the champion played by this participant.
 	 *
 	 * @var int $championId
 	 */
 	public $championId;
-
-	/**
-	 *   The summoner name of this participant.
-	 *
-	 * @var string $summonerName
-	 */
-	public $summonerName;
-
-	/**
-	 *   List of Game Customizations.
-	 *
-	 * @var GameCustomizationObject[] $gameCustomizationObjects
-	 */
-	public $gameCustomizationObjects;
-
-	/**
-	 *   Flag indicating whether or not this participant is a bot.
-	 *
-	 * @var bool $bot
-	 */
-	public $bot;
 
 	/**
 	 *   Perks/Runes Reforged Information.
@@ -76,11 +48,18 @@ class CurrentGameParticipant extends ApiObjectLinkable
 	public $perks;
 
 	/**
-	 *   The ID of the second summoner spell used by this participant.
+	 *   The ID of the profile icon used by this participant.
 	 *
-	 * @var int $spell2Id
+	 * @var int $profileIconId
 	 */
-	public $spell2Id;
+	public $profileIconId;
+
+	/**
+	 *   Flag indicating whether or not this participant is a bot.
+	 *
+	 * @var bool $bot
+	 */
+	public $bot;
 
 	/**
 	 *   The team ID of this participant, indicating the participant's team.
@@ -90,11 +69,11 @@ class CurrentGameParticipant extends ApiObjectLinkable
 	public $teamId;
 
 	/**
-	 *   The ID of the first summoner spell used by this participant.
+	 *   The summoner name of this participant.
 	 *
-	 * @var int $spell1Id
+	 * @var string $summonerName
 	 */
-	public $spell1Id;
+	public $summonerName;
 
 	/**
 	 *   The encrypted summoner ID of this participant.
@@ -102,4 +81,25 @@ class CurrentGameParticipant extends ApiObjectLinkable
 	 * @var string $summonerId
 	 */
 	public $summonerId;
+
+	/**
+	 *   The ID of the first summoner spell used by this participant.
+	 *
+	 * @var int $spell1Id
+	 */
+	public $spell1Id;
+
+	/**
+	 *   The ID of the second summoner spell used by this participant.
+	 *
+	 * @var int $spell2Id
+	 */
+	public $spell2Id;
+
+	/**
+	 *   List of Game Customizations.
+	 *
+	 * @var GameCustomizationObject[] $gameCustomizationObjects
+	 */
+	public $gameCustomizationObjects;
 }

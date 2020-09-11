@@ -31,32 +31,32 @@ namespace RiotAPI\LeagueAPI\Objects;
  */
 class MatchParticipantFrameDto extends ApiObject
 {
-	/** @var int $totalGold */
-	public $totalGold;
-
-	/** @var int $teamScore */
-	public $teamScore;
-
 	/** @var int $participantId */
 	public $participantId;
-
-	/** @var int $level */
-	public $level;
-
-	/** @var int $currentGold */
-	public $currentGold;
 
 	/** @var int $minionsKilled */
 	public $minionsKilled;
 
+	/** @var int $teamScore */
+	public $teamScore;
+
 	/** @var int $dominionScore */
 	public $dominionScore;
 
-	/** @var MatchPositionDto $position */
-	public $position;
+	/** @var int $totalGold */
+	public $totalGold;
+
+	/** @var int $level */
+	public $level;
 
 	/** @var int $xp */
 	public $xp;
+
+	/** @var int $currentGold */
+	public $currentGold;
+
+	/** @var MatchPositionDto $position */
+	public $position;
 
 	/** @var int $jungleMinionsKilled */
 	public $jungleMinionsKilled;

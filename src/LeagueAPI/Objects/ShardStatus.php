@@ -33,14 +33,14 @@ namespace RiotAPI\LeagueAPI\Objects;
  */
 class ShardStatus extends ApiObjectIterable
 {
-	/** @var string $name */
-	public $name;
-
-	/** @var string $region_tag */
-	public $region_tag;
+	/** @var string[] $locales */
+	public $locales;
 
 	/** @var string $hostname */
 	public $hostname;
+
+	/** @var string $name */
+	public $name;
 
 	/** @var Service[] $services */
 	public $services;
@@ -48,6 +48,6 @@ class ShardStatus extends ApiObjectIterable
 	/** @var string $slug */
 	public $slug;
 
-	/** @var string[] $locales */
-	public $locales;
+	/** @var string $region_tag */
+	public $region_tag;
 }

@@ -21,39 +21,27 @@ namespace RiotAPI\LeagueAPI\Objects;
 
 
 /**
- *   Class MatchReferenceDto
+ *   Class TournamentPhaseDto
  *
  * Used in:
- *   match (v4)
- *     @link https://developer.riotgames.com/apis#match-v4/GET_getMatchlist
- *
- * @linkable getStaticChampion($champion)
+ *   clash (v1)
+ *     @link https://developer.riotgames.com/apis#clash-v1/GET_getTournaments
+ *     @link https://developer.riotgames.com/apis#clash-v1/GET_getTournamentByTeam
+ *     @link https://developer.riotgames.com/apis#clash-v1/GET_getTournamentById
  *
  * @package RiotAPI\LeagueAPI\Objects
  */
-class MatchReferenceDto extends ApiObjectLinkable
+class TournamentPhaseDto extends ApiObject
 {
-	/** @var int $gameId */
-	public $gameId;
+	/** @var int $id */
+	public $id;
 
-	/** @var string $role */
-	public $role;
+	/** @var int $registrationTime */
+	public $registrationTime;
 
-	/** @var int $season */
-	public $season;
+	/** @var int $startTime */
+	public $startTime;
 
-	/** @var string $platformId */
-	public $platformId;
-
-	/** @var int $champion */
-	public $champion;
-
-	/** @var int $queue */
-	public $queue;
-
-	/** @var string $lane */
-	public $lane;
-
-	/** @var int $timestamp */
-	public $timestamp;
+	/** @var bool $cancelled */
+	public $cancelled;
 }

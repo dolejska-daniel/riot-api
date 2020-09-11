@@ -39,14 +39,8 @@ namespace RiotAPI\LeagueAPI\Objects;
  */
 class LeagueItemDto extends ApiObject
 {
-	/** @var string $summonerName */
-	public $summonerName;
-
-	/** @var bool $hotStreak */
-	public $hotStreak;
-
-	/** @var MiniSeriesDto $miniSeries */
-	public $miniSeries;
+	/** @var bool $freshBlood */
+	public $freshBlood;
 
 	/**
 	 *   Winning team on Summoners Rift.
@@ -55,8 +49,26 @@ class LeagueItemDto extends ApiObject
 	 */
 	public $wins;
 
+	/** @var string $summonerName */
+	public $summonerName;
+
+	/** @var MiniSeriesDto $miniSeries */
+	public $miniSeries;
+
+	/** @var bool $inactive */
+	public $inactive;
+
 	/** @var bool $veteran */
 	public $veteran;
+
+	/** @var bool $hotStreak */
+	public $hotStreak;
+
+	/** @var string $rank */
+	public $rank;
+
+	/** @var int $leaguePoints */
+	public $leaguePoints;
 
 	/**
 	 *   Losing team on Summoners Rift.
@@ -65,22 +77,10 @@ class LeagueItemDto extends ApiObject
 	 */
 	public $losses;
 
-	/** @var bool $freshBlood */
-	public $freshBlood;
-
-	/** @var bool $inactive */
-	public $inactive;
-
-	/** @var string $rank */
-	public $rank;
-
 	/**
 	 *   Player's encrypted summonerId.
 	 *
 	 * @var string $summonerId
 	 */
 	public $summonerId;
-
-	/** @var int $leaguePoints */
-	public $leaguePoints;
 }

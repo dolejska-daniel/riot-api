@@ -32,18 +32,26 @@ namespace RiotAPI\LeagueAPI\Objects;
 class TraitDto extends ApiObject
 {
 	/**
-	 *   Total tiers for the trait.
-	 *
-	 * @var int $tier_total
-	 */
-	public $tier_total;
-
-	/**
 	 *   Trait name.
 	 *
 	 * @var string $name
 	 */
 	public $name;
+
+	/**
+	 *   Number of units with this trait.
+	 *
+	 * @var int $num_units
+	 */
+	public $num_units;
+
+	/**
+	 *   Current style for this trait. (0 = No style, 1 = Bronze, 2 = Silver, 3 = 
+	 * Gold, 4 = Chromatic).
+	 *
+	 * @var int $style
+	 */
+	public $style;
 
 	/**
 	 *   Current active tier for the trait.
@@ -53,9 +61,9 @@ class TraitDto extends ApiObject
 	public $tier_current;
 
 	/**
-	 *   Number of units with this trait.
+	 *   Total tiers for the trait.
 	 *
-	 * @var int $num_units
+	 * @var int $tier_total
 	 */
-	public $num_units;
+	public $tier_total;
 }

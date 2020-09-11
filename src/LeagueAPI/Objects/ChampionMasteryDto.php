@@ -36,6 +36,14 @@ namespace RiotAPI\LeagueAPI\Objects;
 class ChampionMasteryDto extends ApiObjectLinkable
 {
 	/**
+	 *   Number of points needed to achieve next level. Zero if player reached 
+	 * maximum champion level for this champion.
+	 *
+	 * @var int $championPointsUntilNextLevel
+	 */
+	public $championPointsUntilNextLevel;
+
+	/**
 	 *   Is chest granted for this champion or not in current season.
 	 *
 	 * @var bool $chestGranted
@@ -43,34 +51,11 @@ class ChampionMasteryDto extends ApiObjectLinkable
 	public $chestGranted;
 
 	/**
-	 *   Champion level for specified player and champion combination.
-	 *
-	 * @var int $championLevel
-	 */
-	public $championLevel;
-
-	/**
-	 *   Total number of champion points for this player and champion combination - 
-	 * they are used to determine championLevel.
-	 *
-	 * @var int $championPoints
-	 */
-	public $championPoints;
-
-	/**
 	 *   Champion ID for this entry.
 	 *
 	 * @var int $championId
 	 */
 	public $championId;
-
-	/**
-	 *   Number of points needed to achieve next level. Zero if player reached 
-	 * maximum champion level for this champion.
-	 *
-	 * @var int $championPointsUntilNextLevel
-	 */
-	public $championPointsUntilNextLevel;
 
 	/**
 	 *   Last time this champion was played by this player - in Unix milliseconds 
@@ -81,11 +66,26 @@ class ChampionMasteryDto extends ApiObjectLinkable
 	public $lastPlayTime;
 
 	/**
-	 *   The token earned for this champion to levelup.
+	 *   Champion level for specified player and champion combination.
 	 *
-	 * @var int $tokensEarned
+	 * @var int $championLevel
 	 */
-	public $tokensEarned;
+	public $championLevel;
+
+	/**
+	 *   Summoner ID for this entry. (Encrypted).
+	 *
+	 * @var string $summonerId
+	 */
+	public $summonerId;
+
+	/**
+	 *   Total number of champion points for this player and champion combination - 
+	 * they are used to determine championLevel.
+	 *
+	 * @var int $championPoints
+	 */
+	public $championPoints;
 
 	/**
 	 *   Number of points earned since current level has been achieved.
@@ -95,9 +95,9 @@ class ChampionMasteryDto extends ApiObjectLinkable
 	public $championPointsSinceLastLevel;
 
 	/**
-	 *   Summoner ID for this entry. (Encrypted).
+	 *   The token earned for this champion to levelup.
 	 *
-	 * @var string $summonerId
+	 * @var int $tokensEarned
 	 */
-	public $summonerId;
+	public $tokensEarned;
 }

@@ -39,16 +39,16 @@ class MetadataDto extends ApiObject
 	public $data_version;
 
 	/**
-	 *   A list of encrypted participant PUUIDs.
-	 *
-	 * @var string[] $participants
-	 */
-	public $participants;
-
-	/**
 	 *   Match id.
 	 *
 	 * @var string $match_id
 	 */
 	public $match_id;
+
+	/**
+	 *   A list of encrypted participant PUUIDs.
+	 *
+	 * @var string[] $participants
+	 */
+	public $participants;
 }

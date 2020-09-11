@@ -25,7 +25,7 @@ namespace RiotAPI\LeagueAPI\Objects;
  *
  * Used in:
  *   match (v4)
- *     @link https://developer.riotgames.com/apis#match-v4/GET_getMatchIdsByTournamentCode
+ *     @link https://developer.riotgames.com/apis#match-v4/GET_getMatch
  *     @link https://developer.riotgames.com/apis#match-v4/GET_getMatchByTournamentCode
  *   tft-match (v1)
  *     @link https://developer.riotgames.com/apis#tft-match-v1/GET_getMatchIdsByPUUID
@@ -34,12 +34,16 @@ namespace RiotAPI\LeagueAPI\Objects;
  */
 class MatchDto extends ApiObject
 {
+	/** @var int $gameId */
+	public $gameId;
+
 	/**
-	 *   Please refer to the Game Constants documentation.
+	 *   Participant identity information. Participant identity information is 
+	 * purposefully excluded for custom games.
 	 *
-	 * @var int $seasonId
+	 * @var ParticipantIdentityDto[] $participantIdentities
 	 */
-	public $seasonId;
+	public $participantIdentities;
 
 	/**
 	 *   Please refer to the Game Constants documentation.
@@ -48,23 +52,26 @@ class MatchDto extends ApiObject
 	 */
 	public $queueId;
 
-	/** @var int $gameId */
-	public $gameId;
+	/**
+	 *   Please refer to the Game Constants documentation.
+	 *
+	 * @var string $gameType
+	 */
+	public $gameType;
 
 	/**
-	 *   Participant identity information.
+	 *   Match duration in seconds.
 	 *
-	 * @var ParticipantIdentityDto[] $participantIdentities
+	 * @var int $gameDuration
 	 */
-	public $participantIdentities;
+	public $gameDuration;
 
 	/**
-	 *   The major.minor version typically indicates the patch the match was played 
-	 * on.
+	 *   Team information.
 	 *
-	 * @var string $gameVersion
+	 * @var TeamStatsDto[] $teams
 	 */
-	public $gameVersion;
+	public $teams;
 
 	/**
 	 *   Platform where the match was played.
@@ -74,11 +81,27 @@ class MatchDto extends ApiObject
 	public $platformId;
 
 	/**
+	 *   Designates the timestamp when champion select ended and the loading screen 
+	 * appeared, NOT when the game timer was at 0:00.
+	 *
+	 * @var int $gameCreation
+	 */
+	public $gameCreation;
+
+	/**
 	 *   Please refer to the Game Constants documentation.
 	 *
-	 * @var string $gameMode
+	 * @var int $seasonId
 	 */
-	public $gameMode;
+	public $seasonId;
+
+	/**
+	 *   The major.minor version typically indicates the patch the match was played 
+	 * on.
+	 *
+	 * @var string $gameVersion
+	 */
+	public $gameVersion;
 
 	/**
 	 *   Please refer to the Game Constants documentation.
@@ -90,16 +113,9 @@ class MatchDto extends ApiObject
 	/**
 	 *   Please refer to the Game Constants documentation.
 	 *
-	 * @var string $gameType
+	 * @var string $gameMode
 	 */
-	public $gameType;
-
-	/**
-	 *   Team information.
-	 *
-	 * @var TeamStatsDto[] $teams
-	 */
-	public $teams;
+	public $gameMode;
 
 	/**
 	 *   Participant information.
@@ -109,19 +125,11 @@ class MatchDto extends ApiObject
 	public $participants;
 
 	/**
-	 *   Match duration in seconds.
+	 *   Match metadata.
 	 *
-	 * @var int $gameDuration
+	 * @var MetadataDto $metadata
 	 */
-	public $gameDuration;
-
-	/**
-	 *   Designates the timestamp when champion select ended and the loading screen 
-	 * appeared, NOT when the game timer was at 0:00.
-	 *
-	 * @var int $gameCreation
-	 */
-	public $gameCreation;
+	public $metadata;
 
 	/**
 	 *   Match info.
@@ -129,11 +137,4 @@ class MatchDto extends ApiObject
 	 * @var InfoDto $info
 	 */
 	public $info;
-
-	/**
-	 *   Match metadata.
-	 *
-	 * @var MetadataDto $metadata
-	 */
-	public $metadata;
 }

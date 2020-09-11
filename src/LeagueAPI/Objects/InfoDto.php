@@ -39,25 +39,32 @@ class InfoDto extends ApiObject
 	public $game_datetime;
 
 	/**
-	 *   Participants.
-	 *
-	 * @var ParticipantDto[] $participants
-	 */
-	public $participants;
-
-	/**
-	 *   Teamfight Tactics set number.
-	 *
-	 * @var int $tft_set_number
-	 */
-	public $tft_set_number;
-
-	/**
 	 *   Game length in seconds.
 	 *
 	 * @var float $game_length
 	 */
 	public $game_length;
+
+	/**
+	 *   Game variation key. Game variations documented in TFT static data.
+	 *
+	 * @var string $game_variation
+	 */
+	public $game_variation;
+
+	/**
+	 *   Game client version.
+	 *
+	 * @var string $game_version
+	 */
+	public $game_version;
+
+	/**
+	 *   Participants.
+	 *
+	 * @var ParticipantDto[] $participants
+	 */
+	public $participants;
 
 	/**
 	 *   Please refer to the League of Legends documentation.
@@ -67,9 +74,9 @@ class InfoDto extends ApiObject
 	public $queue_id;
 
 	/**
-	 *   Game client version.
+	 *   Teamfight Tactics set number.
 	 *
-	 * @var string $game_version
+	 * @var int $tft_set_number
 	 */
-	public $game_version;
+	public $tft_set_number;
 }

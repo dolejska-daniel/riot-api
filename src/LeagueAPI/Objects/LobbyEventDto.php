@@ -34,18 +34,18 @@ namespace RiotAPI\LeagueAPI\Objects;
 class LobbyEventDto extends ApiObject
 {
 	/**
-	 *   The type of event that was triggered.
-	 *
-	 * @var string $eventType
-	 */
-	public $eventType;
-
-	/**
 	 *   The summonerId that triggered the event (Encrypted).
 	 *
 	 * @var string $summonerId
 	 */
 	public $summonerId;
+
+	/**
+	 *   The type of event that was triggered.
+	 *
+	 * @var string $eventType
+	 */
+	public $eventType;
 
 	/**
 	 *   Timestamp from the event.

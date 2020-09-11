@@ -34,27 +34,6 @@ namespace RiotAPI\LeagueAPI\Objects;
 class Participant extends ApiObjectLinkable
 {
 	/**
-	 *   The ID of the profile icon used by this participant.
-	 *
-	 * @var int $profileIconId
-	 */
-	public $profileIconId;
-
-	/**
-	 *   The ID of the champion played by this participant.
-	 *
-	 * @var int $championId
-	 */
-	public $championId;
-
-	/**
-	 *   The summoner name of this participant.
-	 *
-	 * @var string $summonerName
-	 */
-	public $summonerName;
-
-	/**
 	 *   Flag indicating whether or not this participant is a bot.
 	 *
 	 * @var bool $bot
@@ -67,6 +46,27 @@ class Participant extends ApiObjectLinkable
 	 * @var int $spell2Id
 	 */
 	public $spell2Id;
+
+	/**
+	 *   The ID of the profile icon used by this participant.
+	 *
+	 * @var int $profileIconId
+	 */
+	public $profileIconId;
+
+	/**
+	 *   The summoner name of this participant.
+	 *
+	 * @var string $summonerName
+	 */
+	public $summonerName;
+
+	/**
+	 *   The ID of the champion played by this participant.
+	 *
+	 * @var int $championId
+	 */
+	public $championId;
 
 	/**
 	 *   The team ID of this participant, indicating the participant's team.

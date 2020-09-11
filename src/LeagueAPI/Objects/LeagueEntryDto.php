@@ -37,17 +37,30 @@ namespace RiotAPI\LeagueAPI\Objects;
  */
 class LeagueEntryDto extends ApiObject
 {
-	/** @var string $queueType */
-	public $queueType;
+	/** @var string $leagueId */
+	public $leagueId;
+
+	/**
+	 *   Player's summonerId (Encrypted).
+	 *
+	 * @var string $summonerId
+	 */
+	public $summonerId;
 
 	/** @var string $summonerName */
 	public $summonerName;
 
-	/** @var bool $hotStreak */
-	public $hotStreak;
+	/** @var string $queueType */
+	public $queueType;
 
-	/** @var MiniSeriesDto $miniSeries */
-	public $miniSeries;
+	/** @var string $tier */
+	public $tier;
+
+	/** @var string $rank */
+	public $rank;
+
+	/** @var int $leaguePoints */
+	public $leaguePoints;
 
 	/**
 	 *   Winning team on Summoners Rift. First placement in Teamfight Tactics.
@@ -55,9 +68,6 @@ class LeagueEntryDto extends ApiObject
 	 * @var int $wins
 	 */
 	public $wins;
-
-	/** @var bool $veteran */
-	public $veteran;
 
 	/**
 	 *   Losing team on Summoners Rift. Second through eighth placement in 
@@ -67,28 +77,18 @@ class LeagueEntryDto extends ApiObject
 	 */
 	public $losses;
 
-	/** @var string $rank */
-	public $rank;
+	/** @var bool $hotStreak */
+	public $hotStreak;
 
-	/** @var string $leagueId */
-	public $leagueId;
-
-	/** @var bool $inactive */
-	public $inactive;
+	/** @var bool $veteran */
+	public $veteran;
 
 	/** @var bool $freshBlood */
 	public $freshBlood;
 
-	/** @var string $tier */
-	public $tier;
+	/** @var bool $inactive */
+	public $inactive;
 
-	/**
-	 *   Player's summonerId (Encrypted).
-	 *
-	 * @var string $summonerId
-	 */
-	public $summonerId;
-
-	/** @var int $leaguePoints */
-	public $leaguePoints;
+	/** @var MiniSeriesDto $miniSeries */
+	public $miniSeries;
 }

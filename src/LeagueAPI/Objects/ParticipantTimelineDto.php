@@ -25,21 +25,13 @@ namespace RiotAPI\LeagueAPI\Objects;
  *
  * Used in:
  *   match (v4)
- *     @link https://developer.riotgames.com/apis#match-v4/GET_getMatchIdsByTournamentCode
+ *     @link https://developer.riotgames.com/apis#match-v4/GET_getMatch
  *     @link https://developer.riotgames.com/apis#match-v4/GET_getMatchByTournamentCode
  *
  * @package RiotAPI\LeagueAPI\Objects
  */
 class ParticipantTimelineDto extends ApiObject
 {
-	/**
-	 *   Participant's calculated lane. MID and BOT are legacy values. (Legal 
-	 * values: MID, MIDDLE, TOP, JUNGLE, BOT, BOTTOM).
-	 *
-	 * @var string $lane
-	 */
-	public $lane;
-
 	/** @var int $participantId */
 	public $participantId;
 
@@ -52,33 +44,11 @@ class ParticipantTimelineDto extends ApiObject
 	public $csDiffPerMinDeltas;
 
 	/**
-	 *   Gold for a specified period.
+	 *   Damage taken for a specified period.
 	 *
-	 * @var float[] $goldPerMinDeltas
+	 * @var float[] $damageTakenPerMinDeltas
 	 */
-	public $goldPerMinDeltas;
-
-	/**
-	 *   Experience difference versus the calculated lane opponent(s) for a 
-	 * specified period.
-	 *
-	 * @var float[] $xpDiffPerMinDeltas
-	 */
-	public $xpDiffPerMinDeltas;
-
-	/**
-	 *   Creeps for a specified period.
-	 *
-	 * @var float[] $creepsPerMinDeltas
-	 */
-	public $creepsPerMinDeltas;
-
-	/**
-	 *   Experience change for a specified period.
-	 *
-	 * @var float[] $xpPerMinDeltas
-	 */
-	public $xpPerMinDeltas;
+	public $damageTakenPerMinDeltas;
 
 	/**
 	 *   Participant's calculated role. (Legal values: DUO, NONE, SOLO, DUO_CARRY, 
@@ -97,9 +67,39 @@ class ParticipantTimelineDto extends ApiObject
 	public $damageTakenDiffPerMinDeltas;
 
 	/**
-	 *   Damage taken for a specified period.
+	 *   Experience change for a specified period.
 	 *
-	 * @var float[] $damageTakenPerMinDeltas
+	 * @var float[] $xpPerMinDeltas
 	 */
-	public $damageTakenPerMinDeltas;
+	public $xpPerMinDeltas;
+
+	/**
+	 *   Experience difference versus the calculated lane opponent(s) for a 
+	 * specified period.
+	 *
+	 * @var float[] $xpDiffPerMinDeltas
+	 */
+	public $xpDiffPerMinDeltas;
+
+	/**
+	 *   Participant's calculated lane. MID and BOT are legacy values. (Legal 
+	 * values: MID, MIDDLE, TOP, JUNGLE, BOT, BOTTOM).
+	 *
+	 * @var string $lane
+	 */
+	public $lane;
+
+	/**
+	 *   Creeps for a specified period.
+	 *
+	 * @var float[] $creepsPerMinDeltas
+	 */
+	public $creepsPerMinDeltas;
+
+	/**
+	 *   Gold for a specified period.
+	 *
+	 * @var float[] $goldPerMinDeltas
+	 */
+	public $goldPerMinDeltas;
 }

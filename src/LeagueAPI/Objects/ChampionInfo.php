@@ -31,12 +31,12 @@ namespace RiotAPI\LeagueAPI\Objects;
  */
 class ChampionInfo extends ApiObject
 {
+	/** @var int $maxNewPlayerLevel */
+	public $maxNewPlayerLevel;
+
 	/** @var int[] $freeChampionIdsForNewPlayers */
 	public $freeChampionIdsForNewPlayers;
 
 	/** @var int[] $freeChampionIds */
 	public $freeChampionIds;
-
-	/** @var int $maxNewPlayerLevel */
-	public $maxNewPlayerLevel;
 }

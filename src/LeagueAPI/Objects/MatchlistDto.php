@@ -33,15 +33,21 @@ namespace RiotAPI\LeagueAPI\Objects;
  */
 class MatchlistDto extends ApiObjectIterable
 {
-	/** @var MatchReferenceDto[] $matches */
-	public $matches;
-
-	/** @var int $totalGames */
-	public $totalGames;
-
 	/** @var int $startIndex */
 	public $startIndex;
 
+	/**
+	 *   There is a known issue that this field doesn't correctly return the total 
+	 * number of games that match the parameters of the request. Please paginate using 
+	 * beginIndex until you reach the end of a player's matchlist.
+	 *
+	 * @var int $totalGames
+	 */
+	public $totalGames;
+
 	/** @var int $endIndex */
 	public $endIndex;
+
+	/** @var MatchReferenceDto[] $matches */
+	public $matches;
 }

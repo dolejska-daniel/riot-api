@@ -30,11 +30,23 @@ namespace RiotAPI\LeagueAPI\Objects;
  *     @link https://developer.riotgames.com/apis#summoner-v4/GET_getBySummonerName
  *     @link https://developer.riotgames.com/apis#summoner-v4/GET_getByPUUID
  *     @link https://developer.riotgames.com/apis#summoner-v4/GET_getBySummonerId
+ *   tft-summoner (v1)
+ *     @link https://developer.riotgames.com/apis#tft-summoner-v1/GET_getByAccountId
+ *     @link https://developer.riotgames.com/apis#tft-summoner-v1/GET_getBySummonerName
+ *     @link https://developer.riotgames.com/apis#tft-summoner-v1/GET_getByPUUID
+ *     @link https://developer.riotgames.com/apis#tft-summoner-v1/GET_getBySummonerId
  *
  * @package RiotAPI\LeagueAPI\Objects
  */
 class SummonerDto extends ApiObject
 {
+	/**
+	 *   Encrypted account ID. Max length 56 characters.
+	 *
+	 * @var string $accountId
+	 */
+	public $accountId;
+
 	/**
 	 *   ID of the summoner icon associated with the summoner.
 	 *
@@ -43,11 +55,27 @@ class SummonerDto extends ApiObject
 	public $profileIconId;
 
 	/**
+	 *   Date summoner was last modified specified as epoch milliseconds. The 
+	 * following events will update this timestamp: summoner name change, summoner level 
+	 * change, or profile icon change.
+	 *
+	 * @var int $revisionDate
+	 */
+	public $revisionDate;
+
+	/**
 	 *   Summoner name.
 	 *
 	 * @var string $name
 	 */
 	public $name;
+
+	/**
+	 *   Encrypted summoner ID. Max length 63 characters.
+	 *
+	 * @var string $id
+	 */
+	public $id;
 
 	/**
 	 *   Encrypted PUUID. Exact length of 78 characters.
@@ -62,27 +90,4 @@ class SummonerDto extends ApiObject
 	 * @var int $summonerLevel
 	 */
 	public $summonerLevel;
-
-	/**
-	 *   Date summoner was last modified specified as epoch milliseconds. The 
-	 * following events will update this timestamp: profile icon change, playing the 
-	 * tutorial or advanced tutorial, finishing a game, summoner name change.
-	 *
-	 * @var int $revisionDate
-	 */
-	public $revisionDate;
-
-	/**
-	 *   Encrypted summoner ID. Max length 63 characters.
-	 *
-	 * @var string $id
-	 */
-	public $id;
-
-	/**
-	 *   Encrypted account ID. Max length 56 characters.
-	 *
-	 * @var string $accountId
-	 */
-	public $accountId;
 }

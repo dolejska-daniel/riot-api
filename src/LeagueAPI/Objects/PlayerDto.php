@@ -24,59 +24,71 @@ namespace RiotAPI\LeagueAPI\Objects;
  *   Class PlayerDto
  *
  * Used in:
- *   lor-ranked (v1)
- *     @link https://developer.riotgames.com/apis#lor-ranked-v1/GET_getLeaderboards
+ *   clash (v1)
+ *     @link https://developer.riotgames.com/apis#clash-v1/GET_getPlayersBySummoner
+ *     @link https://developer.riotgames.com/apis#clash-v1/GET_getTeamById
  *   match (v4)
- *     @link https://developer.riotgames.com/apis#match-v4/GET_getMatchIdsByTournamentCode
+ *     @link https://developer.riotgames.com/apis#match-v4/GET_getMatch
  *     @link https://developer.riotgames.com/apis#match-v4/GET_getMatchByTournamentCode
  *
  * @package RiotAPI\LeagueAPI\Objects
  */
 class PlayerDto extends ApiObject
 {
-	/** @var string $name */
-	public $name;
+	/** @var string $summonerId */
+	public $summonerId;
 
-	/** @var int $rank */
-	public $rank;
-
-	/** @var string $currentPlatformId */
-	public $currentPlatformId;
-
-	/** @var string $summonerName */
-	public $summonerName;
-
-	/** @var string $matchHistoryUri */
-	public $matchHistoryUri;
+	/** @var string $teamId */
+	public $teamId;
 
 	/**
-	 *   Original platformId.
+	 *   (Legal values: UNSELECTED, FILL, TOP, JUNGLE, MIDDLE, BOTTOM, UTILITY).
 	 *
-	 * @var string $platformId
+	 * @var string $position
 	 */
-	public $platformId;
+	public $position;
 
 	/**
-	 *   Player's current accountId (Encrypted).
+	 *   (Legal values: CAPTAIN, MEMBER).
 	 *
-	 * @var string $currentAccountId
+	 * @var string $role
 	 */
-	public $currentAccountId;
+	public $role;
 
 	/** @var int $profileIcon */
 	public $profileIcon;
 
 	/**
-	 *   Player's summonerId (Encrypted).
-	 *
-	 * @var string $summonerId
-	 */
-	public $summonerId;
-
-	/**
-	 *   Player's original accountId (Encrypted).
+	 *   Player's original accountId.
 	 *
 	 * @var string $accountId
 	 */
 	public $accountId;
+
+	/** @var string $matchHistoryUri */
+	public $matchHistoryUri;
+
+	/**
+	 *   Player's current accountId when the match was played.
+	 *
+	 * @var string $currentAccountId
+	 */
+	public $currentAccountId;
+
+	/**
+	 *   Player's current platformId when the match was played.
+	 *
+	 * @var string $currentPlatformId
+	 */
+	public $currentPlatformId;
+
+	/** @var string $summonerName */
+	public $summonerName;
+
+	/**
+	 *   Player's original platformId.
+	 *
+	 * @var string $platformId
+	 */
+	public $platformId;
 }

@@ -21,39 +21,45 @@ namespace RiotAPI\LeagueAPI\Objects;
 
 
 /**
- *   Class MatchReferenceDto
+ *   Class TeamDto
  *
  * Used in:
- *   match (v4)
- *     @link https://developer.riotgames.com/apis#match-v4/GET_getMatchlist
- *
- * @linkable getStaticChampion($champion)
+ *   clash (v1)
+ *     @link https://developer.riotgames.com/apis#clash-v1/GET_getTeamById
  *
  * @package RiotAPI\LeagueAPI\Objects
  */
-class MatchReferenceDto extends ApiObjectLinkable
+class TeamDto extends ApiObject
 {
-	/** @var int $gameId */
-	public $gameId;
+	/** @var string $id */
+	public $id;
 
-	/** @var string $role */
-	public $role;
+	/** @var int $tournamentId */
+	public $tournamentId;
 
-	/** @var int $season */
-	public $season;
+	/** @var string $name */
+	public $name;
 
-	/** @var string $platformId */
-	public $platformId;
+	/** @var int $iconId */
+	public $iconId;
 
-	/** @var int $champion */
-	public $champion;
+	/** @var int $tier */
+	public $tier;
 
-	/** @var int $queue */
-	public $queue;
+	/**
+	 *   Summoner ID of the team captain.
+	 *
+	 * @var string $captain
+	 */
+	public $captain;
 
-	/** @var string $lane */
-	public $lane;
+	/** @var string $abbreviation */
+	public $abbreviation;
 
-	/** @var int $timestamp */
-	public $timestamp;
+	/**
+	 *   Team members.
+	 *
+	 * @var PlayerDto[] $players
+	 */
+	public $players;
 }

@@ -34,6 +34,14 @@ namespace RiotAPI\LeagueAPI\Objects;
 class ProviderRegistrationParameters extends ApiObject
 {
 	/**
+	 *   The region in which the provider will be running tournaments. (Legal 
+	 * values: BR, EUNE, EUW, JP, LAN, LAS, NA, OCE, PBE, RU, TR).
+	 *
+	 * @var string $region
+	 */
+	public $region;
+
+	/**
 	 *   The provider's callback URL to which tournament game results in this 
 	 * region should be posted. The URL must be well-formed, use the http or https 
 	 * protocol, and use the default port for the protocol (http URLs must use port 80, 
@@ -42,12 +50,4 @@ class ProviderRegistrationParameters extends ApiObject
 	 * @var string $url
 	 */
 	public $url;
-
-	/**
-	 *   The region in which the provider will be running tournaments. (Legal 
-	 * values: BR, EUNE, EUW, JP, LAN, LAS, NA, OCE, PBE, RU, TR).
-	 *
-	 * @var string $region
-	 */
-	public $region;
 }

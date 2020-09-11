@@ -34,33 +34,19 @@ namespace RiotAPI\LeagueAPI\Objects;
 class FeaturedGameInfo extends ApiObjectIterable
 {
 	/**
-	 *   The ID of the game.
-	 *
-	 * @var int $gameId
-	 */
-	public $gameId;
-
-	/**
-	 *   The game start time represented in epoch milliseconds.
-	 *
-	 * @var int $gameStartTime
-	 */
-	public $gameStartTime;
-
-	/**
-	 *   The ID of the platform on which the game is being played.
-	 *
-	 * @var string $platformId
-	 */
-	public $platformId;
-
-	/**
 	 *   The game mode (Legal values: CLASSIC, ODIN, ARAM, TUTORIAL, ONEFORALL, 
 	 * ASCENSION, FIRSTBLOOD, KINGPORO).
 	 *
 	 * @var string $gameMode
 	 */
 	public $gameMode;
+
+	/**
+	 *   The amount of time in seconds that has passed since the game started.
+	 *
+	 * @var int $gameLength
+	 */
+	public $gameLength;
 
 	/**
 	 *   The ID of the map.
@@ -84,11 +70,32 @@ class FeaturedGameInfo extends ApiObjectIterable
 	public $bannedChampions;
 
 	/**
+	 *   The ID of the game.
+	 *
+	 * @var int $gameId
+	 */
+	public $gameId;
+
+	/**
 	 *   The observer information.
 	 *
 	 * @var Observer $observers
 	 */
 	public $observers;
+
+	/**
+	 *   The queue type (queue types are documented on the Game Constants page).
+	 *
+	 * @var int $gameQueueConfigId
+	 */
+	public $gameQueueConfigId;
+
+	/**
+	 *   The game start time represented in epoch milliseconds.
+	 *
+	 * @var int $gameStartTime
+	 */
+	public $gameStartTime;
 
 	/**
 	 *   The participant information.
@@ -98,16 +105,9 @@ class FeaturedGameInfo extends ApiObjectIterable
 	public $participants;
 
 	/**
-	 *   The amount of time in seconds that has passed since the game started.
+	 *   The ID of the platform on which the game is being played.
 	 *
-	 * @var int $gameLength
+	 * @var string $platformId
 	 */
-	public $gameLength;
-
-	/**
-	 *   The queue type (queue types are documented on the Game Constants page).
-	 *
-	 * @var int $gameQueueConfigId
-	 */
-	public $gameQueueConfigId;
+	public $platformId;
 }

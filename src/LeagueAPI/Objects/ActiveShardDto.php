@@ -21,39 +21,22 @@ namespace RiotAPI\LeagueAPI\Objects;
 
 
 /**
- *   Class MatchReferenceDto
+ *   Class ActiveShardDto
  *
  * Used in:
- *   match (v4)
- *     @link https://developer.riotgames.com/apis#match-v4/GET_getMatchlist
- *
- * @linkable getStaticChampion($champion)
+ *   account (v1)
+ *     @link https://developer.riotgames.com/apis#account-v1/GET_getActiveShard
  *
  * @package RiotAPI\LeagueAPI\Objects
  */
-class MatchReferenceDto extends ApiObjectLinkable
+class ActiveShardDto extends ApiObject
 {
-	/** @var int $gameId */
-	public $gameId;
+	/** @var string $puuid */
+	public $puuid;
 
-	/** @var string $role */
-	public $role;
+	/** @var string $game */
+	public $game;
 
-	/** @var int $season */
-	public $season;
-
-	/** @var string $platformId */
-	public $platformId;
-
-	/** @var int $champion */
-	public $champion;
-
-	/** @var int $queue */
-	public $queue;
-
-	/** @var string $lane */
-	public $lane;
-
-	/** @var int $timestamp */
-	public $timestamp;
+	/** @var string $activeShard */
+	public $activeShard;
 }

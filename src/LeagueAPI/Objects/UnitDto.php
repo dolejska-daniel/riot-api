@@ -32,13 +32,6 @@ namespace RiotAPI\LeagueAPI\Objects;
 class UnitDto extends ApiObject
 {
 	/**
-	 *   Unit tier.
-	 *
-	 * @var int $tier
-	 */
-	public $tier;
-
-	/**
 	 *   A list of the unit's items. Please refer to the Teamfight Tactics 
 	 * documentation for item ids.
 	 *
@@ -66,4 +59,11 @@ class UnitDto extends ApiObject
 	 * @var int $rarity
 	 */
 	public $rarity;
+
+	/**
+	 *   Unit tier.
+	 *
+	 * @var int $tier
+	 */
+	public $tier;
 }

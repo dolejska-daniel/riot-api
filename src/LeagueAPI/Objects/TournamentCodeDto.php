@@ -32,13 +32,6 @@ namespace RiotAPI\LeagueAPI\Objects;
 class TournamentCodeDto extends ApiObject
 {
 	/**
-	 *   The game map for the tournament code game.
-	 *
-	 * @var string $map
-	 */
-	public $map;
-
-	/**
 	 *   The tournament code.
 	 *
 	 * @var string $code
@@ -53,19 +46,25 @@ class TournamentCodeDto extends ApiObject
 	public $spectators;
 
 	/**
-	 *   The tournament code's region. (Legal values: BR, EUNE, EUW, JP, LAN, LAS, 
-	 * NA, OCE, PBE, RU, TR).
+	 *   The lobby name for the tournament code game.
 	 *
-	 * @var string $region
+	 * @var string $lobbyName
 	 */
-	public $region;
+	public $lobbyName;
 
 	/**
-	 *   The provider's ID.
+	 *   The metadata for tournament code.
 	 *
-	 * @var int $providerId
+	 * @var string $metaData
 	 */
-	public $providerId;
+	public $metaData;
+
+	/**
+	 *   The password for the tournament code game.
+	 *
+	 * @var string $password
+	 */
+	public $password;
 
 	/**
 	 *   The team size for the tournament code game.
@@ -75,11 +74,11 @@ class TournamentCodeDto extends ApiObject
 	public $teamSize;
 
 	/**
-	 *   The summonerIds of the participants (Encrypted).
+	 *   The provider's ID.
 	 *
-	 * @var string[] $participants
+	 * @var int $providerId
 	 */
-	public $participants;
+	public $providerId;
 
 	/**
 	 *   The pick mode for tournament code game.
@@ -96,20 +95,6 @@ class TournamentCodeDto extends ApiObject
 	public $tournamentId;
 
 	/**
-	 *   The lobby name for the tournament code game.
-	 *
-	 * @var string $lobbyName
-	 */
-	public $lobbyName;
-
-	/**
-	 *   The password for the tournament code game.
-	 *
-	 * @var string $password
-	 */
-	public $password;
-
-	/**
 	 *   The tournament code's ID.
 	 *
 	 * @var int $id
@@ -117,9 +102,24 @@ class TournamentCodeDto extends ApiObject
 	public $id;
 
 	/**
-	 *   The metadata for tournament code.
+	 *   The tournament code's region. (Legal values: BR, EUNE, EUW, JP, LAN, LAS, 
+	 * NA, OCE, PBE, RU, TR).
 	 *
-	 * @var string $metaData
+	 * @var string $region
 	 */
-	public $metaData;
+	public $region;
+
+	/**
+	 *   The game map for the tournament code game.
+	 *
+	 * @var string $map
+	 */
+	public $map;
+
+	/**
+	 *   The summonerIds of the participants (Encrypted).
+	 *
+	 * @var string[] $participants
+	 */
+	public $participants;
 }

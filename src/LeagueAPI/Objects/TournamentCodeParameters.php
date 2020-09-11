@@ -34,11 +34,22 @@ namespace RiotAPI\LeagueAPI\Objects;
 class TournamentCodeParameters extends ApiObject
 {
 	/**
-	 *   The spectator type of the game. (Legal values: NONE, LOBBYONLY, ALL).
+	 *   Optional list of encrypted summonerIds in order to validate the players 
+	 * eligible to join the lobby. NOTE: We currently do not enforce participants at the 
+	 * team level, but rather the aggregate of teamOne and teamTwo. We may add the 
+	 * ability to enforce at the team level in the future.
 	 *
-	 * @var string $spectatorType
+	 * @var string[] $allowedSummonerIds
 	 */
-	public $spectatorType;
+	public $allowedSummonerIds;
+
+	/**
+	 *   Optional string that may contain any data in any format, if specified at 
+	 * all. Used to denote any custom information about the game.
+	 *
+	 * @var string $metadata
+	 */
+	public $metadata;
 
 	/**
 	 *   The team size of the game. Valid values are 1-5.
@@ -56,16 +67,6 @@ class TournamentCodeParameters extends ApiObject
 	public $pickType;
 
 	/**
-	 *   Optional list of encrypted summonerIds in order to validate the players 
-	 * eligible to join the lobby. NOTE: We currently do not enforce participants at the 
-	 * team level, but rather the aggregate of teamOne and teamTwo. We may add the 
-	 * ability to enforce at the team level in the future.
-	 *
-	 * @var string[] $allowedSummonerIds
-	 */
-	public $allowedSummonerIds;
-
-	/**
 	 *   The map type of the game. (Legal values: SUMMONERS_RIFT, TWISTED_TREELINE, 
 	 * HOWLING_ABYSS).
 	 *
@@ -74,10 +75,9 @@ class TournamentCodeParameters extends ApiObject
 	public $mapType;
 
 	/**
-	 *   Optional string that may contain any data in any format, if specified at 
-	 * all. Used to denote any custom information about the game.
+	 *   The spectator type of the game. (Legal values: NONE, LOBBYONLY, ALL).
 	 *
-	 * @var string $metadata
+	 * @var string $spectatorType
 	 */
-	public $metadata;
+	public $spectatorType;
 }

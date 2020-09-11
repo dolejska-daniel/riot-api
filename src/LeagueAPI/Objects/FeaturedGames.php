@@ -34,16 +34,16 @@ namespace RiotAPI\LeagueAPI\Objects;
 class FeaturedGames extends ApiObjectIterable
 {
 	/**
-	 *   The suggested interval to wait before requesting FeaturedGames again.
-	 *
-	 * @var int $clientRefreshInterval
-	 */
-	public $clientRefreshInterval;
-
-	/**
 	 *   The list of featured games.
 	 *
 	 * @var FeaturedGameInfo[] $gameList
 	 */
 	public $gameList;
+
+	/**
+	 *   The suggested interval to wait before requesting FeaturedGames again.
+	 *
+	 * @var int $clientRefreshInterval
+	 */
+	public $clientRefreshInterval;
 }

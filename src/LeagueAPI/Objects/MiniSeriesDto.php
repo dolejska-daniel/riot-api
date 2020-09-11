@@ -45,11 +45,11 @@ namespace RiotAPI\LeagueAPI\Objects;
  */
 class MiniSeriesDto extends ApiObject
 {
-	/** @var string $progress */
-	public $progress;
-
 	/** @var int $losses */
 	public $losses;
+
+	/** @var string $progress */
+	public $progress;
 
 	/** @var int $target */
 	public $target;

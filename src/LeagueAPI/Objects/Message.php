@@ -36,21 +36,21 @@ class Message extends ApiObjectIterable
 	/** @var string $severity */
 	public $severity;
 
+	/** @var string $updated_at */
+	public $updated_at;
+
 	/** @var string $author */
 	public $author;
-
-	/** @var string $created_at */
-	public $created_at;
 
 	/** @var Translation[] $translations */
 	public $translations;
 
-	/** @var string $updated_at */
-	public $updated_at;
-
-	/** @var string $content */
-	public $content;
+	/** @var string $created_at */
+	public $created_at;
 
 	/** @var string $id */
 	public $id;
+
+	/** @var string $content */
+	public $content;
 }

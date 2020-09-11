@@ -34,18 +34,18 @@ namespace RiotAPI\LeagueAPI\Objects;
 class Perks extends ApiObjectIterable
 {
 	/**
-	 *   Primary runes path.
-	 *
-	 * @var int $perkStyle
-	 */
-	public $perkStyle;
-
-	/**
 	 *   IDs of the perks/runes assigned.
 	 *
 	 * @var int[] $perkIds
 	 */
 	public $perkIds;
+
+	/**
+	 *   Primary runes path.
+	 *
+	 * @var int $perkStyle
+	 */
+	public $perkStyle;
 
 	/**
 	 *   Secondary runes path.

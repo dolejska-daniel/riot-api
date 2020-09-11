@@ -25,16 +25,16 @@ namespace RiotAPI\LeagueAPI\Objects;
  *
  * Used in:
  *   match (v4)
- *     @link https://developer.riotgames.com/apis#match-v4/GET_getMatchIdsByTournamentCode
+ *     @link https://developer.riotgames.com/apis#match-v4/GET_getMatch
  *     @link https://developer.riotgames.com/apis#match-v4/GET_getMatchByTournamentCode
  *
  * @package RiotAPI\LeagueAPI\Objects
  */
 class MasteryDto extends ApiObject
 {
-	/** @var int $masteryId */
-	public $masteryId;
-
 	/** @var int $rank */
 	public $rank;
+
+	/** @var int $masteryId */
+	public $masteryId;
 }

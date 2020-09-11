@@ -33,9 +33,6 @@ namespace RiotAPI\LeagueAPI\Objects;
  */
 class Service extends ApiObjectIterable
 {
-	/** @var string $status */
-	public $status;
-
 	/** @var Incident[] $incidents */
 	public $incidents;
 
@@ -44,4 +41,7 @@ class Service extends ApiObjectIterable
 
 	/** @var string $slug */
 	public $slug;
+
+	/** @var string $status */
+	public $status;
 }

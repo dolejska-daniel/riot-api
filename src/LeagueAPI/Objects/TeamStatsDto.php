@@ -25,7 +25,7 @@ namespace RiotAPI\LeagueAPI\Objects;
  *
  * Used in:
  *   match (v4)
- *     @link https://developer.riotgames.com/apis#match-v4/GET_getMatchIdsByTournamentCode
+ *     @link https://developer.riotgames.com/apis#match-v4/GET_getMatch
  *     @link https://developer.riotgames.com/apis#match-v4/GET_getMatchByTournamentCode
  *
  * @package RiotAPI\LeagueAPI\Objects
@@ -33,47 +33,11 @@ namespace RiotAPI\LeagueAPI\Objects;
 class TeamStatsDto extends ApiObject
 {
 	/**
-	 *   Flag indicating whether or not the team scored the first Dragon kill.
+	 *   Number of towers the team destroyed.
 	 *
-	 * @var bool $firstDragon
+	 * @var int $towerKills
 	 */
-	public $firstDragon;
-
-	/**
-	 *   Flag indicating whether or not the team destroyed the first inhibitor.
-	 *
-	 * @var bool $firstInhibitor
-	 */
-	public $firstInhibitor;
-
-	/**
-	 *   If match queueId has a draft, contains banned champion data, otherwise 
-	 * empty.
-	 *
-	 * @var TeamBansDto[] $bans
-	 */
-	public $bans;
-
-	/**
-	 *   Number of times the team killed Baron.
-	 *
-	 * @var int $baronKills
-	 */
-	public $baronKills;
-
-	/**
-	 *   Flag indicating whether or not the team scored the first Rift Herald kill.
-	 *
-	 * @var bool $firstRiftHerald
-	 */
-	public $firstRiftHerald;
-
-	/**
-	 *   Flag indicating whether or not the team scored the first Baron kill.
-	 *
-	 * @var bool $firstBaron
-	 */
-	public $firstBaron;
+	public $towerKills;
 
 	/**
 	 *   Number of times the team killed Rift Herald.
@@ -90,11 +54,61 @@ class TeamStatsDto extends ApiObject
 	public $firstBlood;
 
 	/**
-	 *   100 for blue side. 200 for red side.
+	 *   Number of inhibitors the team destroyed.
 	 *
-	 * @var int $teamId
+	 * @var int $inhibitorKills
 	 */
-	public $teamId;
+	public $inhibitorKills;
+
+	/**
+	 *   If match queueId has a draft, contains banned champion data, otherwise 
+	 * empty.
+	 *
+	 * @var TeamBansDto[] $bans
+	 */
+	public $bans;
+
+	/**
+	 *   Flag indicating whether or not the team scored the first Baron kill.
+	 *
+	 * @var bool $firstBaron
+	 */
+	public $firstBaron;
+
+	/**
+	 *   Flag indicating whether or not the team scored the first Dragon kill.
+	 *
+	 * @var bool $firstDragon
+	 */
+	public $firstDragon;
+
+	/**
+	 *   For Dominion matches, specifies the points the team had at game end.
+	 *
+	 * @var int $dominionVictoryScore
+	 */
+	public $dominionVictoryScore;
+
+	/**
+	 *   Number of times the team killed Dragon.
+	 *
+	 * @var int $dragonKills
+	 */
+	public $dragonKills;
+
+	/**
+	 *   Number of times the team killed Baron.
+	 *
+	 * @var int $baronKills
+	 */
+	public $baronKills;
+
+	/**
+	 *   Flag indicating whether or not the team destroyed the first inhibitor.
+	 *
+	 * @var bool $firstInhibitor
+	 */
+	public $firstInhibitor;
 
 	/**
 	 *   Flag indicating whether or not the team destroyed the first tower.
@@ -111,25 +125,18 @@ class TeamStatsDto extends ApiObject
 	public $vilemawKills;
 
 	/**
-	 *   Number of inhibitors the team destroyed.
+	 *   Flag indicating whether or not the team scored the first Rift Herald kill.
 	 *
-	 * @var int $inhibitorKills
+	 * @var bool $firstRiftHerald
 	 */
-	public $inhibitorKills;
+	public $firstRiftHerald;
 
 	/**
-	 *   Number of towers the team destroyed.
+	 *   100 for blue side. 200 for red side.
 	 *
-	 * @var int $towerKills
+	 * @var int $teamId
 	 */
-	public $towerKills;
-
-	/**
-	 *   For Dominion matches, specifies the points the team had at game end.
-	 *
-	 * @var int $dominionVictoryScore
-	 */
-	public $dominionVictoryScore;
+	public $teamId;
 
 	/**
 	 *   String indicating whether or not the team won. There are only two values 
@@ -138,11 +145,4 @@ class TeamStatsDto extends ApiObject
 	 * @var string $win
 	 */
 	public $win;
-
-	/**
-	 *   Number of times the team killed Dragon.
-	 *
-	 * @var int $dragonKills
-	 */
-	public $dragonKills;
 }

@@ -31,12 +31,12 @@ namespace RiotAPI\LeagueAPI\Objects;
  */
 class Translation extends ApiObject
 {
+	/** @var string $updated_at */
+	public $updated_at;
+
 	/** @var string $locale */
 	public $locale;
 
 	/** @var string $content */
 	public $content;
-
-	/** @var string $updated_at */
-	public $updated_at;
 }

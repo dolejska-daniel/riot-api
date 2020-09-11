@@ -31,35 +31,23 @@ namespace RiotAPI\LeagueAPI\Objects;
  */
 class MatchEventDto extends ApiObject
 {
-	/** @var string $eventType */
-	public $eventType;
+	/** @var string $laneType */
+	public $laneType;
 
-	/** @var string $towerType */
-	public $towerType;
-
-	/** @var int $teamId */
-	public $teamId;
+	/** @var int $skillSlot */
+	public $skillSlot;
 
 	/** @var string $ascendedType */
 	public $ascendedType;
 
-	/** @var int $killerId */
-	public $killerId;
+	/** @var int $creatorId */
+	public $creatorId;
 
-	/** @var string $levelUpType */
-	public $levelUpType;
+	/** @var int $afterId */
+	public $afterId;
 
-	/** @var string $pointCaptured */
-	public $pointCaptured;
-
-	/** @var int[] $assistingParticipantIds */
-	public $assistingParticipantIds;
-
-	/** @var string $wardType */
-	public $wardType;
-
-	/** @var string $monsterType */
-	public $monsterType;
+	/** @var string $eventType */
+	public $eventType;
 
 	/**
 	 *   (Legal values: CHAMPION_KILL, WARD_PLACED, WARD_KILL, BUILDING_KILL, 
@@ -70,39 +58,51 @@ class MatchEventDto extends ApiObject
 	 */
 	public $type;
 
-	/** @var int $skillSlot */
-	public $skillSlot;
+	/** @var string $levelUpType */
+	public $levelUpType;
 
-	/** @var int $victimId */
-	public $victimId;
-
-	/** @var int $timestamp */
-	public $timestamp;
-
-	/** @var int $afterId */
-	public $afterId;
-
-	/** @var string $monsterSubType */
-	public $monsterSubType;
-
-	/** @var string $laneType */
-	public $laneType;
-
-	/** @var int $itemId */
-	public $itemId;
+	/** @var string $wardType */
+	public $wardType;
 
 	/** @var int $participantId */
 	public $participantId;
 
-	/** @var string $buildingType */
-	public $buildingType;
+	/** @var string $towerType */
+	public $towerType;
 
-	/** @var int $creatorId */
-	public $creatorId;
+	/** @var int $itemId */
+	public $itemId;
+
+	/** @var int $beforeId */
+	public $beforeId;
+
+	/** @var string $pointCaptured */
+	public $pointCaptured;
+
+	/** @var string $monsterType */
+	public $monsterType;
+
+	/** @var string $monsterSubType */
+	public $monsterSubType;
+
+	/** @var int $teamId */
+	public $teamId;
 
 	/** @var MatchPositionDto $position */
 	public $position;
 
-	/** @var int $beforeId */
-	public $beforeId;
+	/** @var int $killerId */
+	public $killerId;
+
+	/** @var int $timestamp */
+	public $timestamp;
+
+	/** @var int[] $assistingParticipantIds */
+	public $assistingParticipantIds;
+
+	/** @var string $buildingType */
+	public $buildingType;
+
+	/** @var int $victimId */
+	public $victimId;
 }

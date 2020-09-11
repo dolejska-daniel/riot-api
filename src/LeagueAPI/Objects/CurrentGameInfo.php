@@ -41,11 +41,32 @@ class CurrentGameInfo extends ApiObjectIterable
 	public $gameId;
 
 	/**
+	 *   The game type.
+	 *
+	 * @var string $gameType
+	 */
+	public $gameType;
+
+	/**
 	 *   The game start time represented in epoch milliseconds.
 	 *
 	 * @var int $gameStartTime
 	 */
 	public $gameStartTime;
+
+	/**
+	 *   The ID of the map.
+	 *
+	 * @var int $mapId
+	 */
+	public $mapId;
+
+	/**
+	 *   The amount of time in seconds that has passed since the game started.
+	 *
+	 * @var int $gameLength
+	 */
+	public $gameLength;
 
 	/**
 	 *   The ID of the platform on which the game is being played.
@@ -62,25 +83,18 @@ class CurrentGameInfo extends ApiObjectIterable
 	public $gameMode;
 
 	/**
-	 *   The ID of the map.
-	 *
-	 * @var int $mapId
-	 */
-	public $mapId;
-
-	/**
-	 *   The game type.
-	 *
-	 * @var string $gameType
-	 */
-	public $gameType;
-
-	/**
 	 *   Banned champion information.
 	 *
 	 * @var BannedChampion[] $bannedChampions
 	 */
 	public $bannedChampions;
+
+	/**
+	 *   The queue type (queue types are documented on the Game Constants page).
+	 *
+	 * @var int $gameQueueConfigId
+	 */
+	public $gameQueueConfigId;
 
 	/**
 	 *   The observer information.
@@ -95,18 +109,4 @@ class CurrentGameInfo extends ApiObjectIterable
 	 * @var CurrentGameParticipant[] $participants
 	 */
 	public $participants;
-
-	/**
-	 *   The amount of time in seconds that has passed since the game started.
-	 *
-	 * @var int $gameLength
-	 */
-	public $gameLength;
-
-	/**
-	 *   The queue type (queue types are documented on the Game Constants page).
-	 *
-	 * @var int $gameQueueConfigId
-	 */
-	public $gameQueueConfigId;
 }
