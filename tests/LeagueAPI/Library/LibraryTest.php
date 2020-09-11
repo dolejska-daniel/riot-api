@@ -341,7 +341,7 @@ class LibraryTest extends RiotAPITestCase
 	public function testCurlException()
 	{
 		$this->expectException(RequestException::class);
-		$this->expectExceptionMessage('LeagueAPI: Request error occured');
+		$this->expectExceptionMessage('LeagueAPI: Request could not be sent');
 
 		$api = new LeagueAPI([
 			LeagueAPI::SET_KEY         => RiotAPITestCase::getApiKey(),
