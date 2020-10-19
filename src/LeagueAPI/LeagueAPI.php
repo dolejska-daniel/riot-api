@@ -90,8 +90,8 @@ class LeagueAPI
 		SET_VERIFY_SSL               = 'SET_VERIFY_SSL',               /** Specifies whether or not to verify SSL (verification often fails on localhost) **/
 		SET_KEY                      = 'SET_KEY',                      /** API key used by default **/
 		SET_TFT_KEY					 = 'SET_TFT_KEY',				   /** API TFT key used by default **/
-		SET_KEY_INCLUDE_TYPE         = 'SET_KEY_INCLUDE_TYPE',         /** API key request include type (header, query) **/
 		SET_TOURNAMENT_KEY           = 'SET_TOURNAMENT_KEY',           /** API key used when working with tournaments **/
+		SET_KEY_INCLUDE_TYPE         = 'SET_KEY_INCLUDE_TYPE',         /** API key request include type (header, query) **/
 		SET_INTERIM                  = 'SET_INTERIM',                  /** Used to set whether or not is your application in Interim mode (Tournament STUB endpoints) **/
 		SET_CACHE_PROVIDER           = 'SET_CACHE_PROVIDER',           /** Specifies CacheProvider class name **/
 		SET_CACHE_PROVIDER_PARAMS    = 'SET_CACHE_PROVIDER_PARAMS',    /** Specifies parameters passed to CacheProvider class when initializing **/
@@ -911,6 +911,45 @@ class LeagueAPI
 			$this->setSetting(self::SET_ORIG_REGION, null);
 		}
 		return $this;
+	}
+
+	/**
+	 * The AMERICAS routing value serves NA, BR, LAN, LAS, and OCE.
+	 * The ASIA routing value serves KR and JP.
+	 * The EUROPE routing value serves EUNE, EUW, TR, and RU.
+	 *
+	 * @param string $platform
+	 *
+	 * @throws GeneralException
+	 * @throws SettingsException
+	 */
+	public function setTemporaryContinentRegionForPlatform(string $platform)
+	{
+		switch (strtolower($platform))
+		{
+			case Platform::EUROPE_WEST:
+			case Platform::EUROPE_EAST:
+			case Platform::TURKEY:
+			case Platform::RUSSIA:
+				$this->setTemporaryRegion(Region::EUROPE);
+				break;
+
+			case Platform::NORTH_AMERICA:
+			case Platform::LAMERICA_NORTH:
+			case Platform::LAMERICA_SOUTH:
+			case Platform::BRASIL:
+			case Platform::OCEANIA:
+				$this->setTemporaryRegion(Region::AMERICAS);
+				break;
+
+			case Platform::KOREA:
+			case Platform::JAPAN:
+				$this->setTemporaryRegion(Region::ASIA);
+				break;
+
+			default:
+				throw new GeneralException("Unable to convert provided platform ID to corresponding continent region.");
+		}
 	}
 
 	/**
@@ -2716,49 +2755,6 @@ class LeagueAPI
 			return new Objects\SummonerDto($result, $this);
 		});
 	}
-	/**
-		The AMERICAS routing value serves NA, BR, LAN, LAS, and OCE. The ASIA routing value serves KR and JP. The EUROPE routing value serves EUNE, EUW, TR, and RU.
-	*/
-	public function _ReverseRegion($region){
-		switch (strtoupper($region)) {
-			case 'EUW1':
-				$this->setTemporaryRegion("europe");
-				break;
-			case 'EUN1':
-				$this->setTemporaryRegion("europe");
-				break;
-			case 'TR1':
-				$this->setTemporaryRegion("europe");
-				break;
-			case 'RU':
-				$this->setTemporaryRegion("europe");
-				break;
-			case 'NA1':
-				$this->setTemporaryRegion("americas");
-				break;
-			case 'BR1':
-				$this->setTemporaryRegion("americas");
-				break;
-			case 'LA1':
-				$this->setTemporaryRegion("americas");
-				break;
-			case 'LA2':
-				$this->setTemporaryRegion("americas");
-				break;
-			case 'OC1':
-				$this->setTemporaryRegion("americas");
-				break;
-			case 'KR':
-				$this->setTemporaryRegion("asia");
-				break;
-			case 'JP1':
-				$this->setTemporaryRegion("asia");
-				break;
-			default:
-				# code...
-				break;
-		}
-	}
 
 	/**
 	 * ==================================================================dd=
@@ -2961,13 +2957,14 @@ class LeagueAPI
 	 **/
 	const RESOURCE_TFT_MATCH = '1481:tft-match';
 	const RESOURCE_TFT_MATCH_VERSION = 'v1';
+
 	/**
 	 *   Retrieve match by match ID.
 	 *
 	 * @cli-name get
-	 * @cli-namespace match
+	 * @cli-namespace tft-match
 	 *
-	 * @param int $match_id
+	 * @param string $match_id
 	 *
 	 * @return Objects\MatchDto
 	 *
@@ -2979,13 +2976,15 @@ class LeagueAPI
 	 *
 	 * @link https://developer.riotgames.com/apis#tft-match-v1/GET_getMatch
 	 */
-	public function getTFTMatch( $match_id )
+	public function getTFTMatch( string $match_id )
 	{
-		$this->_ReverseRegion(explode("_", $match_id)[0]);
+		$this->setTemporaryContinentRegionForPlatform(explode("_", $match_id)[0]);
 		$resultPromise = $this->setEndpoint("/tft/match/" . self::RESOURCE_TFT_MATCH_VERSION . "/matches/{$match_id}")
 			->setResource(self::RESOURCE_TFT_MATCH, "/matches/%i")
 			->useKey(self::SET_TFT_KEY)
 			->makeCall();
+
+		$this->unsetTemporaryRegion();
 		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
 			return new Objects\MatchDto($result, $this);
 		});
@@ -2993,11 +2992,11 @@ class LeagueAPI
 	/**
 	 * Get matchs with Puuid
 	 *
-	 * @cli-name get
-	 * @cli-namespace match
+	 * @cli-name get-by-puuid
+	 * @cli-namespace tft-match
 	 *
 	 * @param string $encrypted_puuid
-	 * @param int $page
+	 * @param int $count
 	 *
 	 * @return Objects\MatchDto
 	 *
@@ -3009,14 +3008,16 @@ class LeagueAPI
 	 *
 	 * @link https://developer.riotgames.com/apis#tft-match-v1/GET_getMatchIdsByPUUID
 	 */
-	public function getTFTMatchByPuuid( $encrypted_puuid, $count = 20)
+	public function getTFTMatchByPuuid( string $encrypted_puuid, int $count = 20 )
 	{
-		$this->_ReverseRegion($this->getSetting(self::SET_PLATFORM));
+		$this->setTemporaryContinentRegionForPlatform($this->getSetting(self::SET_PLATFORM));
 		$resultPromise = $this->setEndpoint("/tft/match/" . self::RESOURCE_TFT_MATCH_VERSION . "/matches/by-puuid/{$encrypted_puuid}/ids")
 			->setResource(self::RESOURCE_TFT_MATCH, "/matches/%i")
 			->addQuery('count', $count)
 			->useKey(self::SET_TFT_KEY)
 			->makeCall();
+
+		$this->unsetTemporaryRegion();
 		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
 			return new Objects\MatchDto($result, $this);
 		});
@@ -3035,7 +3036,7 @@ class LeagueAPI
 	 *   Get TFT single summoner object for a given summoner ID.
 	 *
 	 * @cli-name get
-	 * @cli-namespace summoner
+	 * @cli-namespace tft-summoner
 	 *
 	 * @param string $encrypted_summoner_id
 	 *
@@ -3051,7 +3052,7 @@ class LeagueAPI
 	 */
 	public function getTFTSummoner( string $encrypted_summoner_id )
 	{
-		$resultPromise = $this->setEndpoint("/tft/lol/summoner/".self::RESOURCE_TFT_LEAGUE_VERSION."/summoners/{$encrypted_summoner_id}")
+		$resultPromise = $this->setEndpoint("/tft/lol/summoner/" . self::RESOURCE_TFT_SUMMONER_VERSION . "/summoners/{$encrypted_summoner_id}")
 			->setResource(self::RESOURCE_TFT_SUMMONER, "/summoners/%s")
 			->useKey(self::SET_TFT_KEY)
 			->makeCall();
@@ -3065,7 +3066,7 @@ class LeagueAPI
 	 *   Get TFT summoner for a given summoner name.
 	 *
 	 * @cli-name get-by-name
-	 * @cli-namespace summoner
+	 * @cli-namespace tft-summoner
 	 *
 	 * @param string $summoner_name
 	 *
@@ -3082,7 +3083,7 @@ class LeagueAPI
 	public function getTFTSummonerByName( string $summoner_name )
 	{
 		$summoner_name = str_replace(' ', '', $summoner_name);
-		$resultPromise = $this->setEndpoint("/tft/summoner/" . self::RESOURCE_TFT_LEAGUE_VERSION . "/summoners/by-name/{$summoner_name}")
+		$resultPromise = $this->setEndpoint("/tft/summoner/" . self::RESOURCE_TFT_SUMMONER_VERSION . "/summoners/by-name/{$summoner_name}")
 			->setResource(self::RESOURCE_TFT_SUMMONER, "/summoners/by-name/%s")
 			->useKey(self::SET_TFT_KEY)
 			->makeCall();
@@ -3096,7 +3097,7 @@ class LeagueAPI
 	 *   Get TFT single summoner object for a given summoner's account ID.
 	 *
 	 * @cli-name get-by-account-id
-	 * @cli-namespace summoner
+	 * @cli-namespace tft-summoner
 	 *
 	 * @param string $encrypted_account_id
 	 *
@@ -3112,7 +3113,7 @@ class LeagueAPI
 	 */
 	public function getTFTSummonerByAccountId( string $encrypted_account_id )
 	{
-		$resultPromise = $this->setEndpoint("/tft/lol/summoner/" . self::RESOURCE_TFT_LEAGUE_VERSION . "/summoners/by-account/{$encrypted_account_id}")
+		$resultPromise = $this->setEndpoint("/tft/lol/summoner/" . self::RESOURCE_TFT_SUMMONER_VERSION . "/summoners/by-account/{$encrypted_account_id}")
 			->setResource(self::RESOURCE_TFT_SUMMONER, "/summoners/by-account/%s")
 			->useKey(self::SET_TFT_KEY)
 			->makeCall();
@@ -3126,7 +3127,7 @@ class LeagueAPI
 	 *   Get TFT single summoner object for a given summoner's PUUID.
 	 *
 	 * @cli-name get-by-puuid
-	 * @cli-namespace summoner
+	 * @cli-namespace tft-summoner
 	 *
 	 * @param string $encrypted_puuid
 	 *
@@ -3142,7 +3143,7 @@ class LeagueAPI
 	 */
 	public function getTFTSummonerByPUUID( string $encrypted_puuid )
 	{
-		$resultPromise = $this->setEndpoint("/tft/lol/summoner/" . self::RESOURCE_TFT_LEAGUE_VERSION . "/summoners/by-puuid/{$encrypted_puuid}")
+		$resultPromise = $this->setEndpoint("/tft/lol/summoner/" . self::RESOURCE_TFT_SUMMONER_VERSION . "/summoners/by-puuid/{$encrypted_puuid}")
 			->setResource(self::RESOURCE_TFT_SUMMONER, "/summoners/by-puuid/%s")
 			->useKey(self::SET_TFT_KEY)
 			->makeCall();
