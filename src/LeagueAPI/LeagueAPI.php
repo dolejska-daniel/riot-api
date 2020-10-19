@@ -89,6 +89,7 @@ class LeagueAPI
 		SET_PLATFORM                 = 'SET_PLATFORM',                 /** Set internally by setting region **/
 		SET_VERIFY_SSL               = 'SET_VERIFY_SSL',               /** Specifies whether or not to verify SSL (verification often fails on localhost) **/
 		SET_KEY                      = 'SET_KEY',                      /** API key used by default **/
+		SET_TFT_KEY					 = 'SET_TFT_KEY',				   /** API TFT key used by default **/
 		SET_KEY_INCLUDE_TYPE         = 'SET_KEY_INCLUDE_TYPE',         /** API key request include type (header, query) **/
 		SET_TOURNAMENT_KEY           = 'SET_TOURNAMENT_KEY',           /** API key used when working with tournaments **/
 		SET_INTERIM                  = 'SET_INTERIM',                  /** Used to set whether or not is your application in Interim mode (Tournament STUB endpoints) **/
@@ -204,6 +205,7 @@ class LeagueAPI
 		//  List of allowed setting keys
 		SETTINGS_ALLOWED = [
 			self::SET_KEY,
+			self::SET_TFT_KEY,
 			self::SET_REGION,
 			self::SET_VERIFY_SSL,
 			self::SET_KEY_INCLUDE_TYPE,
@@ -1115,7 +1117,6 @@ class LeagueAPI
 			$this->setTemporaryRegion($overrideRegion);
 
 		$this->used_method = $method;
-		$this->used_key    = self::SET_KEY;
 
 		$requestHeaders = [];
 		$requestPromise = null;
@@ -2715,7 +2716,49 @@ class LeagueAPI
 			return new Objects\SummonerDto($result, $this);
 		});
 	}
-
+	/**
+		The AMERICAS routing value serves NA, BR, LAN, LAS, and OCE. The ASIA routing value serves KR and JP. The EUROPE routing value serves EUNE, EUW, TR, and RU.
+	*/
+	public function _ReverseRegion($region){
+		switch (strtoupper($region)) {
+			case 'EUW1':
+				$this->setTemporaryRegion("europe");
+				break;
+			case 'EUN1':
+				$this->setTemporaryRegion("europe");
+				break;
+			case 'TR1':
+				$this->setTemporaryRegion("europe");
+				break;
+			case 'RU':
+				$this->setTemporaryRegion("europe");
+				break;
+			case 'NA1':
+				$this->setTemporaryRegion("americas");
+				break;
+			case 'BR1':
+				$this->setTemporaryRegion("americas");
+				break;
+			case 'LA1':
+				$this->setTemporaryRegion("americas");
+				break;
+			case 'LA2':
+				$this->setTemporaryRegion("americas");
+				break;
+			case 'OC1':
+				$this->setTemporaryRegion("americas");
+				break;
+			case 'KR':
+				$this->setTemporaryRegion("asia");
+				break;
+			case 'JP1':
+				$this->setTemporaryRegion("asia");
+				break;
+			default:
+				# code...
+				break;
+		}
+	}
 
 	/**
 	 * ==================================================================dd=
@@ -2748,6 +2791,7 @@ class LeagueAPI
 	{
 		$resultPromise = $this->setEndpoint("/tft/league/" . self::RESOURCE_TFT_LEAGUE_VERSION . "/entries/by-summoner/{$encrypted_summoner_id}")
 			->setResource(self::RESOURCE_TFT_LEAGUE, "/entries/by-summoner/%s")
+			->useKey(self::SET_TFT_KEY)
 			->makeCall();
 
 		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
@@ -2780,6 +2824,7 @@ class LeagueAPI
 	{
 		$resultPromise = $this->setEndpoint("/tft/league/" . self::RESOURCE_TFT_LEAGUE_VERSION . "/leagues/{$league_id}")
 			->setResource(self::RESOURCE_TFT_LEAGUE, "/leagues/%s")
+			->useKey(self::SET_TFT_KEY)
 			->makeCall();
 
 		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
@@ -2812,6 +2857,7 @@ class LeagueAPI
 		$resultPromise = $this->setEndpoint("/tft/league/" . self::RESOURCE_TFT_LEAGUE_VERSION . "/entries/{$tier}/{$division}")
 			->setResource(self::RESOURCE_LEAGUE, "/entries/%s/%s")
 			->addQuery('page', $page)
+			->useKey(self::SET_TFT_KEY)
 			->makeCall();
 
 		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
@@ -2842,6 +2888,7 @@ class LeagueAPI
 	{
 		$resultPromise = $this->setEndpoint("/tft/league/" . self::RESOURCE_TFT_LEAGUE_VERSION . "/challenger")
 			->setResource(self::RESOURCE_TFT_LEAGUE, "/challenger")
+			->useKey(self::SET_TFT_KEY)
 			->makeCall();
 
 		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
@@ -2869,6 +2916,7 @@ class LeagueAPI
 	{
 		$resultPromise = $this->setEndpoint("/tft/league/" . self::RESOURCE_TFT_LEAGUE_VERSION . "/grandmaster")
 			->setResource(self::RESOURCE_TFT_LEAGUE, "/grandmaster")
+			->useKey(self::SET_TFT_KEY)
 			->makeCall();
 
 		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
@@ -2896,6 +2944,7 @@ class LeagueAPI
 	{
 		$resultPromise = $this->setEndpoint("/tft/league/" . self::RESOURCE_TFT_LEAGUE_VERSION . "/master")
 			->setResource(self::RESOURCE_TFT_LEAGUE, "/master")
+			->useKey(self::SET_TFT_KEY)
 			->makeCall();
 
 		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
@@ -2912,9 +2961,66 @@ class LeagueAPI
 	 **/
 	const RESOURCE_TFT_MATCH = '1481:tft-match';
 	const RESOURCE_TFT_MATCH_VERSION = 'v1';
-
-	// TODO: Implement TFT match endpoint functions
-
+	/**
+	 *   Retrieve match by match ID.
+	 *
+	 * @cli-name get
+	 * @cli-namespace match
+	 *
+	 * @param int $match_id
+	 *
+	 * @return Objects\MatchDto
+	 *
+	 * @throws SettingsException
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 * @throws GeneralException
+	 *
+	 * @link https://developer.riotgames.com/apis#tft-match-v1/GET_getMatch
+	 */
+	public function getTFTMatch( $match_id )
+	{
+		$this->_ReverseRegion(explode("_", $match_id)[0]);
+		$resultPromise = $this->setEndpoint("/tft/match/" . self::RESOURCE_TFT_MATCH_VERSION . "/matches/{$match_id}")
+			->setResource(self::RESOURCE_TFT_MATCH, "/matches/%i")
+			->useKey(self::SET_TFT_KEY)
+			->makeCall();
+		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
+			return new Objects\MatchDto($result, $this);
+		});
+	}
+	/**
+	 * Get matchs with Puuid
+	 *
+	 * @cli-name get
+	 * @cli-namespace match
+	 *
+	 * @param string $encrypted_puuid
+	 * @param int $page
+	 *
+	 * @return Objects\MatchDto
+	 *
+	 * @throws SettingsException
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 * @throws GeneralException
+	 *
+	 * @link https://developer.riotgames.com/apis#tft-match-v1/GET_getMatchIdsByPUUID
+	 */
+	public function getTFTMatchByPuuid( $encrypted_puuid, $count = 20)
+	{
+		$this->_ReverseRegion($this->getSetting(self::SET_PLATFORM));
+		$resultPromise = $this->setEndpoint("/tft/match/" . self::RESOURCE_TFT_MATCH_VERSION . "/matches/by-puuid/{$encrypted_puuid}/ids")
+			->setResource(self::RESOURCE_TFT_MATCH, "/matches/%i")
+			->addQuery('count', $count)
+			->useKey(self::SET_TFT_KEY)
+			->makeCall();
+		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
+			return new Objects\MatchDto($result, $this);
+		});
+	}
 
 	/**
 	 * ==================================================================dd=
@@ -2925,7 +3031,126 @@ class LeagueAPI
 	const RESOURCE_TFT_SUMMONER = '1483:tft-summoner';
 	const RESOURCE_TFT_SUMMONER_VERSION = 'v1';
 
-	// TODO: Implement TFT summoner endpoint functions
+	/**
+	 *   Get TFT single summoner object for a given summoner ID.
+	 *
+	 * @cli-name get
+	 * @cli-namespace summoner
+	 *
+	 * @param string $encrypted_summoner_id
+	 *
+	 * @return Objects\SummonerDto
+	 *
+	 * @throws SettingsException
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 * @throws GeneralException
+	 *
+	 * @link https://developer.riotgames.com/apis#tft-summoner-v1/GET_getBySummonerId
+	 */
+	public function getTFTSummoner( string $encrypted_summoner_id )
+	{
+		$resultPromise = $this->setEndpoint("/tft/lol/summoner/".self::RESOURCE_TFT_LEAGUE_VERSION."/summoners/{$encrypted_summoner_id}")
+			->setResource(self::RESOURCE_TFT_SUMMONER, "/summoners/%s")
+			->useKey(self::SET_TFT_KEY)
+			->makeCall();
+
+		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
+			return new Objects\SummonerDto($result, $this);
+		});
+	}
+
+	/**
+	 *   Get TFT summoner for a given summoner name.
+	 *
+	 * @cli-name get-by-name
+	 * @cli-namespace summoner
+	 *
+	 * @param string $summoner_name
+	 *
+	 * @return Objects\SummonerDto
+	 *
+	 * @throws SettingsException
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 * @throws GeneralException
+	 *
+	 * @link https://developer.riotgames.com/apis#tft-summoner-v4/GET_getBySummonerName
+	 */
+	public function getTFTSummonerByName( string $summoner_name )
+	{
+		$summoner_name = str_replace(' ', '', $summoner_name);
+		$resultPromise = $this->setEndpoint("/tft/summoner/" . self::RESOURCE_TFT_LEAGUE_VERSION . "/summoners/by-name/{$summoner_name}")
+			->setResource(self::RESOURCE_TFT_SUMMONER, "/summoners/by-name/%s")
+			->useKey(self::SET_TFT_KEY)
+			->makeCall();
+
+		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
+			return new Objects\SummonerDto($result, $this);
+		});
+	}
+
+	/**
+	 *   Get TFT single summoner object for a given summoner's account ID.
+	 *
+	 * @cli-name get-by-account-id
+	 * @cli-namespace summoner
+	 *
+	 * @param string $encrypted_account_id
+	 *
+	 * @return Objects\SummonerDto
+	 *
+	 * @throws SettingsException
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 * @throws GeneralException
+	 *
+	 * @link https://developer.riotgames.com/apis#tft-summoner-v4/GET_getByAccountId
+	 */
+	public function getTFTSummonerByAccountId( string $encrypted_account_id )
+	{
+		$resultPromise = $this->setEndpoint("/tft/lol/summoner/" . self::RESOURCE_TFT_LEAGUE_VERSION . "/summoners/by-account/{$encrypted_account_id}")
+			->setResource(self::RESOURCE_TFT_SUMMONER, "/summoners/by-account/%s")
+			->useKey(self::SET_TFT_KEY)
+			->makeCall();
+
+		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
+			return new Objects\SummonerDto($result, $this);
+		});
+	}
+
+	/**
+	 *   Get TFT single summoner object for a given summoner's PUUID.
+	 *
+	 * @cli-name get-by-puuid
+	 * @cli-namespace summoner
+	 *
+	 * @param string $encrypted_puuid
+	 *
+	 * @return Objects\SummonerDto
+	 *
+	 * @throws SettingsException
+	 * @throws RequestException
+	 * @throws ServerException
+	 * @throws ServerLimitException
+	 * @throws GeneralException
+	 *
+	 * @link https://developer.riotgames.com/apis#tft-summoner-v4/GET_getByPUUID
+	 */
+	public function getTFTSummonerByPUUID( string $encrypted_puuid )
+	{
+		$resultPromise = $this->setEndpoint("/tft/lol/summoner/" . self::RESOURCE_TFT_LEAGUE_VERSION . "/summoners/by-puuid/{$encrypted_puuid}")
+			->setResource(self::RESOURCE_TFT_SUMMONER, "/summoners/by-puuid/%s")
+			->useKey(self::SET_TFT_KEY)
+			->makeCall();
+
+		return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
+			return new Objects\SummonerDto($result, $this);
+		});
+	}
 
 
 	/**
