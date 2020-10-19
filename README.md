@@ -81,10 +81,14 @@ Please refer to [wiki pages](https://github.com/dolejska-daniel/riot-api/wiki/Le
 
 | Resource         | Status |
 | ---------------- | ------ |
+| Account | ![Account resource implemented version](https://img.shields.io/badge/implemented_version-not_yet_implemented-orange.svg) |
 | [Champion](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Resources-and-endpoints#champion-) | ![Champion resource implemented version](https://img.shields.io/badge/implemented_version-v3-brightgreen.svg) |
 | [Champion Mastery](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Resources-and-endpoints#champion-mastery-) | ![Champion Mastery resource implemented version](https://img.shields.io/badge/implemented_version-v4-brightgreen.svg) |
+| Clash | ![Clash resource implemented version](https://img.shields.io/badge/implemented_version-not_yet_implemented-orange.svg) |
 | [League](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Resources-and-endpoints#league-) | ![League resource implemented version](https://img.shields.io/badge/implemented_version-v4-brightgreen.svg) |
 | [League Exp](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Resources-and-endpoints#league-exp-) | ![League Exp resource implemented version](https://img.shields.io/badge/implemented_version-v4-brightgreen.svg) |
+| LOR Match | ![LOR Match resource implemented version](https://img.shields.io/badge/implemented_version-not_yet_implemented-orange.svg) |
+| LOR Ranked | ![LOR Ranked resource implemented version](https://img.shields.io/badge/implemented_version-not_yet_implemented-orange.svg) |
 | Masteries | ![Masteries resource implemented version](https://img.shields.io/badge/implemented_version-deprecated-red.svg) |
 | [Match](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Resources-and-endpoints#match-) | ![Match resource implemented version](https://img.shields.io/badge/implemented_version-v4-brightgreen.svg) |
 | Runes | ![Runes resource implemented version](https://img.shields.io/badge/implemented_version-deprecated-red.svg) |
@@ -99,6 +103,8 @@ Please refer to [wiki pages](https://github.com/dolejska-daniel/riot-api/wiki/Le
 | [Third Party Code](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI%3A-Resources-and-endpoints#third-party-code-) | ![Third Party Code endpoint implemented version](https://img.shields.io/badge/implemented_version-v4-brightgreen.svg) |
 | [Tournament](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Resources-and-endpoints#tournament---tournament-stub-) | ![Tournament resource implemented version](https://img.shields.io/badge/implemented_version-v4-brightgreen.svg) |
 | [Tournament Stub](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-Resources-and-endpoints#tournament---tournament-stub-) | ![Tournament Stub resource implemented version](https://img.shields.io/badge/implemented_version-v4-brightgreen.svg) |
+| VAL Content | ![VAL Content resource implemented version](https://img.shields.io/badge/implemented_version-not_yet_implemented-orange.svg) |
+| VAL Match | ![VAL Match resource implemented version](https://img.shields.io/badge/implemented_version-not_yet_implemented-orange.svg) |
 
 
 ## [Initializing the library](https://github.com/dolejska-daniel/riot-api/wiki/LeagueAPI:-How-to-begin)
