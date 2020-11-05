@@ -102,6 +102,8 @@ class LeagueAPI
 		SET_EXTENSIONS               = 'SET_EXTENSIONS',               /** Specifies ApiObject's extensions **/
 		SET_DATADRAGON_INIT          = 'SET_DATADRAGON_INIT',          /** Specifies whether or not should DataDragonAPI be initialized by this library **/
 		SET_DATADRAGON_PARAMS        = 'SET_DATADRAGON_PARAMS',        /** Specifies parameters passed to DataDragonAPI when initialized **/
+		SET_GUZZLE_CLIENT_CFG        = 'SET_GUZZLE_CLIENT_CFG',        /** Specifies configuration passed to Guzzle library client. */
+		SET_GUZZLE_REQ_CFG           = 'SET_GUZZLE_REQ_CFG',           /** Specifies configuration passed to Guzzle request. */
 		SET_STATICDATA_LINKING       = 'SET_STATICDATA_LINKING',
 		SET_STATICDATA_LOCALE        = 'SET_STATICDATA_LOCALE',
 		SET_STATICDATA_VERSION       = 'SET_STATICDATA_VERSION',
@@ -222,6 +224,8 @@ class LeagueAPI
 			self::SET_EXTENSIONS,
 			self::SET_DATADRAGON_INIT,
 			self::SET_DATADRAGON_PARAMS,
+			self::SET_GUZZLE_CLIENT_CFG,
+			self::SET_GUZZLE_REQ_CFG,
 			self::SET_STATICDATA_LINKING,
 			self::SET_STATICDATA_LOCALE,
 			self::SET_STATICDATA_VERSION,
@@ -265,12 +269,14 @@ class LeagueAPI
 	 * @var array $settings
 	 */
 	protected $settings = array(
-		self::SET_API_BASEURL      => '.api.riotgames.com',
-		self::SET_KEY_INCLUDE_TYPE => self::KEY_AS_HEADER,
-		self::SET_USE_DUMMY_DATA   => false,
-		self::SET_SAVE_DUMMY_DATA  => false,
-		self::SET_VERIFY_SSL       => true,
-		self::SET_DEBUG            => false,
+		self::SET_API_BASEURL       => '.api.riotgames.com',
+		self::SET_KEY_INCLUDE_TYPE  => self::KEY_AS_HEADER,
+		self::SET_USE_DUMMY_DATA    => false,
+		self::SET_SAVE_DUMMY_DATA   => false,
+		self::SET_VERIFY_SSL        => true,
+		self::SET_DEBUG             => false,
+		self::SET_GUZZLE_CLIENT_CFG => [],
+		self::SET_GUZZLE_REQ_CFG    => [],
 	);
 
 	/** @var IRegion $regions */
@@ -416,8 +422,7 @@ class LeagueAPI
 			? $custom_platformDataProvider
 			: new Platform();
 
-		// TODO: Guzzle Client settings?
-		$this->guzzle = new Client();
+		$this->guzzle = new Client($this->getSetting(self::SET_GUZZLE_CLIENT_CFG));
 
 		$this->_setupDefaultCacheProviderSettings();
 
@@ -1088,8 +1093,7 @@ class LeagueAPI
 	{
 		$client = @$this->async_clients[$group];
 		if (!$client)
-			//  TODO: Guzzle Client settings?
-			$this->async_clients[$group] = $client = new Client();
+			$this->async_clients[$group] = $client = new Client($this->getSetting(self::SET_GUZZLE_CLIENT_CFG));
 
 		$this->async_requests[$group][] = $this->next_async_request = new AsyncRequest($client);
 		$this->next_async_request->onFulfilled = $onFulfilled;
@@ -1199,6 +1203,7 @@ class LeagueAPI
 			if ($this->next_async_request)
 				$guzzle = $this->next_async_request->client;
 
+			$options = $this->getSetting(self::SET_GUZZLE_REQ_CFG);
 			$options[RequestOptions::VERIFY] = $this->getSetting(self::SET_VERIFY_SSL);
 			$options[RequestOptions::HEADERS] = $requestHeaders;
 			if ($this->post_data)
