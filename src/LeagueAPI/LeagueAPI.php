@@ -90,6 +90,7 @@ class LeagueAPI
 		SET_VERIFY_SSL               = 'SET_VERIFY_SSL',               /** Specifies whether or not to verify SSL (verification often fails on localhost) **/
 		SET_KEY                      = 'SET_KEY',                      /** API key used by default **/
 		SET_TFT_KEY					 = 'SET_TFT_KEY',				   /** API TFT key used by default **/
+		SET_LOR_KEY					 = 'SET_LOR_KEY',				   /** API LOR key used by default **/
 		SET_TOURNAMENT_KEY           = 'SET_TOURNAMENT_KEY',           /** API key used when working with tournaments **/
 		SET_KEY_INCLUDE_TYPE         = 'SET_KEY_INCLUDE_TYPE',         /** API key request include type (header, query) **/
 		SET_INTERIM                  = 'SET_INTERIM',                  /** Used to set whether or not is your application in Interim mode (Tournament STUB endpoints) **/
@@ -2989,6 +2990,7 @@ class LeagueAPI
 			return new Objects\MatchDto($result, $this);
 		});
 	}
+
 	/**
 	 * Get matchs with Puuid
 	 *
@@ -3152,6 +3154,119 @@ class LeagueAPI
 			return new Objects\SummonerDto($result, $this);
 		});
 	}
+
+
+    /**
+     * ==================================================================dd=
+     *     LOR Match Endpoint Methods
+     *     @link https://developer.riotgames.com/apis#lor-match-v1
+     * ==================================================================dd=
+     **/
+    const RESOURCE_LOR_MATCH = '1490:lor-match';
+    const RESOURCE_LOR_MATCH_VERSION = 'v1';
+
+    /**
+     * Get matches id with Puuid
+     *
+     * @cli-name get-by-puuid
+     * @cli-namespace tft-match
+     *
+     * @param string $encrypted_puuid
+     *
+     * @return Objects\MatchDto
+     *
+     * @throws SettingsException
+     * @throws RequestException
+     * @throws ServerException
+     * @throws ServerLimitException
+     * @throws GeneralException
+     *
+     * @link https://developer.riotgames.com/apis#lor-match-v1/GET_getMatchIdsByPUUID
+     */
+    public function getLoRMatchIdsByPUUID( string $encrypted_puuid )
+    {
+        $this->setTemporaryContinentRegionForPlatform($this->getSetting(self::SET_PLATFORM));
+        $resultPromise = $this->setEndpoint("/lor/match/" . self::RESOURCE_LOR_MATCH_VERSION . "/matches/by-puuid/{$encrypted_puuid}/ids")
+            ->setResource(self::RESOURCE_LOR_MATCH, "/matches/%i")
+            ->useKey(self::SET_LOR_KEY)
+            ->makeCall();
+
+        $this->unsetTemporaryRegion();
+        return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
+            return new Objects\MatchDto($result, $this);
+        });
+    }
+
+    /**
+     * Get matchs with matchId
+     *
+     * @cli-name get-by-matchid
+     * @cli-namespace tft-match
+     *
+     * @param string $match_id
+     *
+     * @return Objects\LoRMatchDto()
+     *
+     * @throws SettingsException
+     * @throws RequestException
+     * @throws ServerException
+     * @throws ServerLimitException
+     * @throws GeneralException
+     *
+     * @link https://developer.riotgames.com/apis#lor-match-v1/GET_getMatch
+     */
+    public function getLoRMatch( string $match_id )
+    {
+        $this->setTemporaryContinentRegionForPlatform($this->getSetting(self::SET_PLATFORM));
+        $resultPromise = $this->setEndpoint("/lor/match/" . self::RESOURCE_LOR_MATCH_VERSION . "/matches/{$match_id}")
+            ->setResource(self::RESOURCE_LOR_MATCH, "/matches/%i")
+            ->useKey(self::SET_LOR_KEY)
+            ->makeCall();
+
+        $this->unsetTemporaryRegion();
+        return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
+            return new Objects\LoRMatchDto($result, $this);
+        });
+    }
+
+    /**
+     * ==================================================================dd=
+     *     LOR Ranked Endpoint Methods
+     *     @link https://developer.riotgames.com/apis#lor-ranked-v1
+     * ==================================================================dd=
+     **/
+    const RESOURCE_LOR_RANKED = '1491:lor-ranked';
+    const RESOURCE_LOR_RANKED_VERSION = 'v1';
+
+    /**
+     * Get LEADERBOARDS
+     *
+     * @cli-name get-leaderboards
+     * @cli-namespace lor-ranked
+     *
+     * @return Objects\LoRPlayerListDto
+     *
+     * @throws SettingsException
+     * @throws RequestException
+     * @throws ServerException
+     * @throws ServerLimitException
+     * @throws GeneralException
+     *
+     * @link https://developer.riotgames.com/apis#lor-ranked-v1/GET_getLeaderboards
+     */
+    public function getLoRLeaderboards()
+    {
+        $this->setTemporaryContinentRegionForPlatform($this->getSetting(self::SET_PLATFORM));
+        $resultPromise = $this->setEndpoint("/lor/ranked/" . self::RESOURCE_LOR_RANKED_VERSION . "/leaderboards")
+            ->setResource(self::RESOURCE_LOR_RANKED, "/leaderboards/%i")
+            ->useKey(self::SET_LOR_KEY)
+            ->makeCall();
+
+        $this->unsetTemporaryRegion();
+        return $this->resolveOrEnqueuePromise($resultPromise, function(array $result) {
+            return new Objects\LoRPlayerListDto($result, $this);
+        });
+    }
 
 
 	/**

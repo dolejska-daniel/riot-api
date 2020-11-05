@@ -1,8 +1,6 @@
 <?php
 
 /**
- * Copyright (C) 2016-2020  Daniel Dolejška
- *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -21,36 +19,51 @@ namespace RiotAPI\LeagueAPI\Objects;
 
 
 /**
- *   Class MetadataDto
+ *   Class LoRInfoDto
  *
  * Used in:
- *   tft-match (v1)
- *     @link https://developer.riotgames.com/apis#tft-match-v1/GET_getMatchIdsByPUUID
  *   lor-match (v1)
  *     @link https://developer.riotgames.com/apis#lor-match-v1/GET_getMatch
  *
  * @package RiotAPI\LeagueAPI\Objects
  */
-class MetadataDto extends ApiObject
+class LoRInfoDto extends ApiObject
 {
 	/**
-	 *   Match data version.
-	 *
-	 * @var string $data_version
+	 *   (Legal values: Constructed, Expeditions, Tutorial)
+     *
+	 * @var string $game_mode
 	 */
-	public $data_version;
+	public $game_mode;
 
 	/**
-	 *   Match id.
-	 *
-	 * @var string $match_id
+	 *   (Legal values: Ranked, Normal, AI, Tutorial, VanillaTrial, Singleton, StandardGauntlet)
+     *
+	 * @var string $game_type
 	 */
-	public $match_id;
+	public $game_type;
 
 	/**
-	 *   A list of encrypted participant PUUIDs.
-	 *
-	 * @var string[] $participants
+	 * @var string $game_start_time_utc
 	 */
-	public $participants;
+	public $game_start_time_utc;
+
+	/**
+	 *   Game client version.
+	 *
+	 * @var string $game_version
+	 */
+	public $game_version;
+
+	/**
+	 * @var LoRPlayerDto[] $players
+	 */
+	public $players;
+
+	/**
+	 *   Total turns taken by both players.
+     *
+	 * @var int $total_turn_count
+	 */
+	public $total_turn_count;
 }
